@@ -1,0 +1,53 @@
+/* Stack · recipe canvas-quiet · allowMultipleAccents.
+   Las 4 capas usan los 4 roles del recipe en simultáneo:
+     l1 · em       (lemon)
+     l2 · accent   (patagonia)
+     l3 · warn     (red)
+     l4 · ink      (ivory) */
+
+section.slide.s-stack {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+}
+.s-stack .eb {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--recipe-accent);
+}
+.s-stack h2 {
+  font-family: var(--font-display); font-size: 120px; line-height: 0.95;
+  margin: 22px 0 96px; letter-spacing: -0.01em;
+}
+.s-stack .layers { display: flex; flex-direction: column; gap: 14px; }
+.s-stack .layer {
+  display: grid; grid-template-columns: 200px 1fr auto;
+  gap: 40px; align-items: center; padding: 22px 32px;
+  background: color-mix(in srgb, var(--recipe-ink) 6%, transparent);
+  border-left: 8px solid;
+}
+.s-stack .l1 { border-color: var(--recipe-em); }
+.s-stack .l2 { border-color: var(--recipe-accent); }
+.s-stack .l3 { border-color: var(--recipe-warn); }
+.s-stack .l4 { border-color: var(--recipe-ink); }
+.s-stack .layer .lbl {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.75;
+}
+.s-stack .layer .items { display: flex; gap: 14px; flex-wrap: wrap; }
+.s-stack .layer .chip {
+  padding: 10px 18px;
+  font-family: var(--font-mono); font-size: 22px; letter-spacing: 0.08em;
+  border: 2px solid color-mix(in srgb, var(--recipe-ink) 20%, transparent);
+  background: var(--recipe-surface);
+}
+.s-stack .layer .v {
+  font-family: var(--font-data); font-size: 38px; font-weight: 700; line-height: 1;
+}
+.s-stack .l1 .v { color: var(--recipe-em); }
+.s-stack .l2 .v { color: var(--recipe-accent); }
+.s-stack .l3 .v { color: var(--recipe-warn); }
+.s-stack .note {
+  margin-top: 36px;
+  font-family: var(--font-editorial); font-style: italic;
+  font-size: 28px; opacity: 0.7;
+}

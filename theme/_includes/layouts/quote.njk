@@ -1,0 +1,24 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+{% set v = variant or "default" %}
+<section class="slide s-quote{% if v != 'default' %} {{ v }}{% endif %}{% if criticalFg %} critical-fg-{{ criticalFg }}{% endif %}" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  {% if v == "testimonial" %}
+    <div class="av">
+      <div class="ini">{{ field(fields, "initials", effectiveMode) | safe }}</div>
+    </div>
+    <div class="content">
+      <q>{{ field(fields, "quote", effectiveMode) | safe }}</q>
+      <div class="cite">
+        <div class="who">{{ field(fields, "who", effectiveMode) | safe }}</div>
+        {% if fields.role %}<div class="role">{{ field(fields, "role", effectiveMode) | safe }}</div>{% endif %}
+      </div>
+    </div>
+  {% else %}
+    <q>{{ field(fields, "quote", effectiveMode) | safe }}</q>
+    <div class="cite"><span class="who">{{ field(fields, "who", effectiveMode) | safe }}</span></div>
+  {% endif %}
+  <span class="sl-label{% if v == 'default' %} dark{% endif %}">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

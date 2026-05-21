@@ -1,0 +1,56 @@
+/* Matrix 2×2 · recipe canvas-quiet · allowMultipleAccents.
+   Las 4 celdas usan los 4 roles del recipe en simultáneo:
+     tl · accent (patagonia)
+     tr · warn   (red)
+     bl · ink    (con bg muted)
+     br · em     (lemon)
+*/
+
+section.slide.s-matrix {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+}
+.s-matrix .eb {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--recipe-em);
+}
+.s-matrix h2 {
+  font-family: var(--font-display); font-size: 120px; line-height: 0.95;
+  margin: 20px 0 80px; letter-spacing: -0.01em;
+}
+.s-matrix .grid {
+  display: grid;
+  grid-template-columns: 70px 1fr 1fr;
+  grid-template-rows: 70px 1fr 1fr;
+  gap: 8px; height: 560px;
+}
+.s-matrix .colhead {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  display: flex; align-items: center; justify-content: center; opacity: 0.7;
+}
+.s-matrix .rowhead {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  display: flex; align-items: center; justify-content: center; opacity: 0.7;
+}
+.s-matrix .cell {
+  padding: 36px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.s-matrix .cell .t {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+}
+.s-matrix .cell .d {
+  font-family: var(--font-editorial); font-style: italic;
+  font-size: 30px; line-height: 1.2;
+}
+.s-matrix .c-tl { background: var(--recipe-accent); color: var(--recipe-surface); }
+.s-matrix .c-tr { background: var(--recipe-warn);   color: var(--recipe-ink); }
+.s-matrix .c-bl { background: color-mix(in srgb, var(--recipe-ink) 6%, transparent); }
+.s-matrix .c-bl .t { color: var(--recipe-accent); }
+.s-matrix .c-bl .d { opacity: 0.6; }
+.s-matrix .c-br { background: var(--recipe-em); color: var(--recipe-surface); }

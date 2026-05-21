@@ -1,0 +1,15 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+<section class="slide s-three-ideas" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+  {% for it in items %}
+  <div class="row">
+    <div class="n">{% if it.n %}{{ it.n }}{% else %}{% if loop.index < 10 %}0{% endif %}{{ loop.index }}{% endif %}</div>
+    <div class="c"><div class="t">{{ it.title | safe }}</div>{% if it.desc %}<div class="d">{{ it.desc | safe }}</div>{% endif %}</div>
+  </div>
+  {% endfor %}
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

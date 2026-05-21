@@ -1,0 +1,56 @@
+/* KPI-grid · recipe canvas-signal · excepción nombrada allowMultipleAccents
+   + allowMultipleStats. Los 4 KPIs usan los 4 roles del recipe en simultáneo
+   como código visual (no decoración):
+     k1 · accent   (patagonia · peso md, no xl)
+     k2 · em       (lemon · número protagonista)
+     k3 · warn     (red · contraste)
+     k4 · ink      (ivory · neutro)
+*/
+
+section.slide.s-kpi-grid {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.s-kpi-grid h2 {
+  font-family: var(--font-display); font-size: 120px; line-height: 0.95;
+  margin: 0 0 48px; letter-spacing: -0.01em;
+}
+.s-kpi-grid .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.s-kpi-grid .kpi {
+  background: var(--recipe-surface);
+  padding: 40px 36px;
+  display: grid; grid-template-rows: 1fr auto auto;
+  gap: 14px; min-height: 320px;
+  border-top: 4px solid;
+}
+.s-kpi-grid .kpi.k1 { border-color: var(--recipe-accent); }
+.s-kpi-grid .kpi.k2 { border-color: var(--recipe-em); }
+.s-kpi-grid .kpi.k3 { border-color: var(--recipe-warn); }
+.s-kpi-grid .kpi.k4 { border-color: var(--recipe-ink); }
+
+.s-kpi-grid .kpi .n {
+  font-family: var(--font-data); font-weight: 700;
+  font-size: 120px; line-height: 0.9; letter-spacing: -0.02em;
+  align-self: end;
+}
+.s-kpi-grid .k1 .n { color: var(--recipe-accent); }
+.s-kpi-grid .k2 .n { color: var(--recipe-em); }
+.s-kpi-grid .k3 .n { color: var(--recipe-warn); }
+/* k4 .n hereda --recipe-ink del color base */
+
+.s-kpi-grid .kpi .d {
+  font-family: var(--font-editorial); font-style: italic;
+  font-size: 24px; line-height: 1.25; opacity: 0.7;
+}
+.s-kpi-grid .kpi .l {
+  font-family: var(--font-mono); font-size: 20px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  opacity: 0.75; align-self: end;
+}
+.s-kpi-grid .foot {
+  margin-top: 44px;
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  opacity: 0.55;
+}

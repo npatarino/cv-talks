@@ -1,0 +1,13 @@
+{# Dual-mode field renderer.
+   Usage: {{ field(fields, "title", mode) | safe }}
+   - mode == "content" → renders the human-facing content
+   - mode == "meta"    → renders the field name (for review/debug/automation)
+#}
+{%- macro field(fields, key, mode) -%}
+{%- set f = fields[key] -%}
+{%- if mode == "meta" -%}
+<span class="field-meta" data-key="{{ key }}" data-source="{{ f.source or 'n/a' }}">{{ f.meta or key }}</span>
+{%- else -%}
+{{ f.content | safe }}
+{%- endif -%}
+{%- endmacro -%}

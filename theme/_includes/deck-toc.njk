@@ -1,0 +1,62 @@
+{#
+  Table of contents for a single deck.
+  Expects: deck (object from deck.json), slug (string), slides (collection).
+#}
+{% set deckUrl = "/talks/decks/" + slug + "/" %}
+{% set seoProps = {
+  site: "talks",
+  title: deck.title,
+  description: deck.subtitle or ("Charla de " + (deck.author or "Nicolás Patarino") + " — " + (slides | length) + " slides."),
+  pathname: deckUrl,
+  isHome: false,
+  og: { type: "article" },
+  jsonLd: [
+    { "@context": "https://schema.org", "@type": "PresentationDigitalDocument", name: deck.title, description: deck.subtitle or "", url: "https://talks.chimi.pro" + deckUrl, datePublished: deck.date or "", inLanguage: "es", numberOfPages: (slides | length), author: { "@type": "Person", name: deck.author or "Nicolás Patarino", url: "https://chimi.pro/sobre-mi" } },
+    { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Charlas", item: "https://talks.chimi.pro/" },
+      { "@type": "ListItem", position: 2, name: deck.title, item: "https://talks.chimi.pro" + deckUrl }
+    ] }
+  ]
+} %}
+<!doctype html>
+<html lang="es">
+<head>
+{% include "partials/seo-head.njk" %}
+<link rel="stylesheet" href="{{ '/talks/styles/tokens.css' | url }}">
+<link rel="stylesheet" href="{{ '/talks/styles/base.css' | url }}">
+</head>
+<body class="index">
+<div class="mode-flag">Mode · {{ site.mode }}</div>
+<h1>{{ deck.title }}</h1>
+<p style="font-family: var(--font-editorial); font-style: italic; font-size: 22px; opacity: 0.7; max-width: 60ch; margin-bottom: 48px;">
+  {% if deck.author %}Charla de {{ deck.author }} · {% endif %}{{ slides | length }} slides.
+</p>
+<div class="toc">
+  {% for slide in slides %}
+    <a href="{{ slide.url | url }}">
+      <span><span class="num">{% if slide.data.order < 10 %}0{% endif %}{{ slide.data.order }}</span>{{ slide.data.label }}</span>
+      <span style="opacity: 0.5;">{{ slide.data.template }}</span>
+    </a>
+  {% endfor %}
+</div>
+
+<p style="margin-top: 48px; font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.65;">
+  <a href="{{ ('/talks/decks/' + slug + '/deck/') | url }}" style="color: var(--lemon); text-decoration: none; border-bottom: 2px solid var(--lemon); padding-bottom: 3px;">▶ Iniciar presentación</a>
+  &nbsp;·&nbsp; <kbd style="background:var(--charcoal-90);padding:2px 8px;border:1px solid rgba(242,230,201,0.2);font-family:var(--font-mono);">P</kbd> para presentar
+  &nbsp;·&nbsp; <a href="{{ '/' | url }}" style="color: var(--ivory); opacity: 0.6; text-decoration: none;">← volver al inicio</a>
+</p>
+<script>
+  (function () {
+    const target = {{ (('/talks/decks/' + slug + '/deck/') | url) | dump | safe }};
+    document.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      if (e.key === "p" || e.key === "P") {
+        e.preventDefault();
+        location.href = target;
+      }
+    });
+  })();
+</script>
+{% include "partials/analytics.njk" %}
+</body>
+</html>

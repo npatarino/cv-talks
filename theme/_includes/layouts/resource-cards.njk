@@ -1,0 +1,32 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+{% set v = variant or "default" %}
+<section class="slide s-resource-cards{% if v != 'default' %} {{ v }}{% endif %}" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+
+  {% if v == "team" %}
+    <div class="grid">
+      {% for m in members %}
+      <div class="mb a{{ loop.index }}">
+        <div class="av">{{ m.initials }}</div>
+        <div class="n">{{ m.name }}</div>
+        <div class="r">{{ m.role }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="list{% if resources and resources.length > 3 %} cols-2{% endif %}">
+      {% for r in resources %}
+      <div class="card c{{ loop.index }}">
+        <div class="icon">{{ r.icon }}</div>
+        <div class="meta"><div class="t">{{ r.title }}</div>{% if r.subtitle %}<div class="s">{{ r.subtitle }}</div>{% endif %}</div>
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <span class="sl-label dark">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

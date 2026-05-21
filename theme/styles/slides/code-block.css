@@ -1,0 +1,48 @@
+/* Code-block · recipe canvas-quiet · variants: default, anti.
+   El syntax highlight es un sub-sistema con sus propios colores (escapa el DS).
+   anti marca con --recipe-warn (red). */
+
+section.slide.s-code-block {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  padding: 80px 110px 140px 140px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.s-code-block h2 {
+  font-family: var(--font-display); font-size: 72px; line-height: 0.95;
+  margin: 0 0 28px; letter-spacing: -0.01em;
+}
+
+.s-code-block pre.code {
+  margin: 0;
+  background: color-mix(in srgb, var(--recipe-ink) 6%, transparent);
+  padding: 28px 0;
+  border-left: 10px solid var(--recipe-accent);
+  font-family: var(--font-mono); font-size: 22px; line-height: 1.5; overflow: hidden;
+}
+
+/* Anti · marca con --recipe-warn (red). */
+.s-code-block.anti pre.code {
+  border-left-color: var(--recipe-warn);
+  color: var(--recipe-warn);
+  font-size: 36px; line-height: 1.5; padding: 44px 56px;
+}
+.s-code-block.anti pre.code .cm { color: var(--recipe-em); }
+
+/* Syntax highlight tokens (default).
+   Los .str/.ty usan colores fuera del DS — sub-sistema autónomo. */
+.s-code-block pre.code .ln {
+  display: inline-block; width: 64px; text-align: right;
+  padding-right: 22px;
+  color: color-mix(in srgb, var(--recipe-ink) 30%, transparent);
+  user-select: none;
+}
+.s-code-block pre.code .kw  { color: var(--recipe-accent); }
+.s-code-block pre.code .fn  { color: var(--recipe-em); }
+.s-code-block pre.code .str { color: #A8C87A; }
+.s-code-block pre.code .num { color: var(--recipe-warn); }
+.s-code-block pre.code .cm  {
+  color: color-mix(in srgb, var(--recipe-ink) 45%, transparent);
+  font-style: italic;
+}
+.s-code-block pre.code .ty  { color: #C097F0; }

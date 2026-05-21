@@ -1,0 +1,16 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+<section class="slide s-speaker-bio" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <div class="ph">
+    <div class="ini">{{ field(fields, "initials", effectiveMode) | safe }}</div>
+  </div>
+  <div class="info">
+    <h2>{{ field(fields, "name", effectiveMode) | safe }}</h2>
+    {% if fields.bio %}<div class="bio">{{ field(fields, "bio", effectiveMode) | safe }}</div>{% endif %}
+    {% if fields.handle %}<div class="social"><span class="h">{{ field(fields, "handle", effectiveMode) | safe }}</span></div>{% endif %}
+  </div>
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

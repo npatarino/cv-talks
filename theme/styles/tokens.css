@@ -1,0 +1,141 @@
+/* ---------------------------------------------------------------------- *
+ *  talks/theme/styles/tokens.css
+ *
+ *  This file has two jobs:
+ *   1. Declare @font-face for the brand typefaces (they live next to this
+ *      file under ./fonts/ and can't be emitted by Style Dictionary).
+ *   2. Pull in design-system tokens and expose legacy aliases so the
+ *      existing slide layouts (--charcoal, --font-display, etc.) keep
+ *      working while we migrate them incrementally to --chimi-* names.
+ *
+ *  The real source of truth is `/design-system/tokens/*.json`, rebuilt
+ *  into `/design-system/dist/tokens.css` via `npm run tokens:build`.
+ * ---------------------------------------------------------------------- */
+
+@import url("/design-system/tokens.css");
+
+/* Brand typefaces — bundled under styles/fonts/ so slides render correctly
+   wherever they're deployed (not just on machines with the fonts installed). */
+/* size-adjust shrinks CHANEY glyphs ~15% so the existing font-size values
+   (tuned against a narrower fallback like Archivo Black) still fit the slide. */
+@font-face {
+  font-family: 'CHANEY';
+  src: url('fonts/CHANEY-Regular.otf') format('opentype');
+  font-weight: 400; font-style: normal; font-display: swap;
+  size-adjust: 82%;
+}
+@font-face {
+  font-family: 'CHANEY';
+  src: url('fonts/CHANEY-Extended.otf') format('opentype');
+  font-weight: 700 900; font-style: normal; font-display: swap;
+  size-adjust: 82%;
+}
+@font-face {
+  font-family: 'At Aero';
+  src: url('fonts/AtAero-Regular.otf') format('opentype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'At Aero';
+  src: url('fonts/AtAero-RegularItalic.otf') format('opentype');
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'At Aero';
+  src: url('fonts/AtAero-Medium.otf') format('opentype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'At Aero';
+  src: url('fonts/AtAero-Semibold.otf') format('opentype');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'At Aero';
+  src: url('fonts/AtAero-Bold.otf') format('opentype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Scilla Narrow';
+  src: url('fonts/ScillaNarrow-Regular.otf') format('opentype');
+  font-weight: 400 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Scilla Narrow';
+  src: url('fonts/ScillaNarrow-RegularItalic.otf') format('opentype');
+  font-weight: 400 700; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Thunder';
+  src: url('fonts/Thunder-VF.ttf') format('truetype-variations');
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Nudica Mono';
+  src: url('fonts/NudicaMono-Regular.otf') format('opentype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Nudica Mono';
+  src: url('fonts/NudicaMono-RegularItalic.otf') format('opentype');
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Nudica Mono';
+  src: url('fonts/NudicaMono-Medium.otf') format('opentype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Nudica Mono';
+  src: url('fonts/NudicaMono-MediumItalic.otf') format('opentype');
+  font-weight: 500; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Nudica Mono';
+  src: url('fonts/NudicaMono-Bold.otf') format('opentype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Nudica Mono';
+  src: url('fonts/NudicaMono-BoldItalic.otf') format('opentype');
+  font-weight: 700; font-style: italic; font-display: swap;
+}
+
+/* ---------------------------------------------------------------------- *
+ *  Legacy aliases — do not add new variables here. Instead, reference the
+ *  --chimi-* tokens directly in your layout CSS. These aliases exist only
+ *  to keep the 28 existing layouts working during incremental migration.
+ * ---------------------------------------------------------------------- */
+:root {
+  --charcoal:       var(--chimi-primitives-color-charcoal-100);
+  --charcoal-90:    var(--chimi-primitives-color-charcoal-90);
+  --charcoal-70:    var(--chimi-primitives-color-charcoal-70);
+  --ivory:          var(--chimi-primitives-color-ivory-base);
+  /* --ivory-soft collapsed to --ivory after the primitive was removed.
+     Layouts that referenced it kept reading the same hex. */
+  --ivory-soft:     var(--chimi-primitives-color-ivory-base);
+  --patagonia:      var(--chimi-primitives-color-patagonia-base);
+  /* --patagonia-deep no longer has a deep primitive; the closest match is
+     the base patagonia. A handful of layouts (agenda, closing-qr, demo,
+     social-embed) still reference it — they'll render with base teal
+     until they migrate to the --chimi-* semantic tokens. */
+  --patagonia-deep: var(--chimi-primitives-color-patagonia-base);
+  --patagonia-soft: var(--chimi-primitives-color-patagonia-soft);
+  --lemon:          var(--chimi-primitives-color-lemon-base);
+  --red:            var(--chimi-primitives-color-red-base);
+
+  --font-display:   var(--chimi-font-family-display);
+  --font-ui:        var(--chimi-font-family-body);
+  --font-editorial: var(--chimi-font-family-editorial);
+  --font-data:      var(--chimi-font-family-data);
+  --font-mono:      var(--chimi-font-family-code);
+}
+
+/* CHANEY stylistic alternates (angled A/I/K/N/O/S/W/X/Y).
+   El set completo de glifos angulados vive entre ss01 y ss02 — activamos ambos
+   en body para que todo herede (igual que packages/brand/shared/styles.css).
+   Opt out con `.no-alt` sobre un elemento puntual. */
+body {
+  font-feature-settings: "ss01", "ss02";
+}
+.no-alt { font-feature-settings: normal !important; }

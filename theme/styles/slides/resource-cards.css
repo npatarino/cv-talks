@@ -1,0 +1,81 @@
+/* Resource-cards · variants:
+     default · paper  (cards reflexivas con borders accent/em/warn)
+     team    · paper  (avatars duotone patagonia)
+*/
+
+section.slide.s-resource-cards {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+}
+.s-resource-cards .eb {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--recipe-warn);
+}
+.s-resource-cards h2 {
+  font-family: var(--font-display); font-size: 120px; line-height: 0.95;
+  margin: 22px 0 56px; letter-spacing: -0.01em;
+}
+
+/* List cards (default · paper) */
+.s-resource-cards .list { display: flex; flex-direction: column; gap: 22px; }
+.s-resource-cards .list.cols-2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 22px 28px;
+}
+.s-resource-cards .card {
+  padding: 30px 36px;
+  background: color-mix(in srgb, var(--recipe-ink) 5%, transparent);
+  display: grid; grid-template-columns: 72px 1fr auto;
+  gap: 28px; align-items: center;
+  border-left: 8px solid;
+}
+.s-resource-cards .card.c1 { border-color: var(--recipe-em); }
+.s-resource-cards .card.c2 { border-color: var(--recipe-warn); }
+.s-resource-cards .card.c3 { border-color: var(--recipe-accent); }
+.s-resource-cards .icon {
+  font-family: var(--font-mono); font-size: 34px; font-weight: 700;
+}
+.s-resource-cards .c1 .icon { color: var(--recipe-em); }
+.s-resource-cards .c2 .icon { color: var(--recipe-warn); }
+.s-resource-cards .c3 .icon { color: var(--recipe-accent); }
+.s-resource-cards .meta .t {
+  font-family: var(--font-display); font-size: 40px; line-height: 1;
+}
+.s-resource-cards .meta .s {
+  font-family: var(--font-editorial); font-style: italic;
+  font-size: 26px; opacity: 0.7; margin-top: 6px;
+}
+.s-resource-cards .tag {
+  font-family: var(--font-mono); font-size: 20px;
+  letter-spacing: 0.15em; opacity: 0.55; text-transform: uppercase;
+}
+
+/* Team grid (variant team · paper) — avatars duotone --recipe-em (patagonia). */
+.s-resource-cards.team .grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px;
+}
+.s-resource-cards.team .mb {
+  display: flex; flex-direction: column; gap: 14px;
+}
+.s-resource-cards.team .mb .av {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 108px;
+}
+.s-resource-cards.team .a1 .av { background: var(--recipe-em); color: var(--recipe-surface); }
+.s-resource-cards.team .a2 .av { background: var(--recipe-warn); color: var(--recipe-surface); }
+.s-resource-cards.team .a3 .av {
+  background: color-mix(in srgb, var(--recipe-em) 35%, var(--recipe-surface));
+  color: var(--recipe-ink);
+}
+.s-resource-cards.team .a4 .av {
+  background: var(--recipe-ink);
+  color: var(--recipe-em);
+}
+.s-resource-cards.team .mb .n {
+  font-family: var(--font-display); font-size: 32px; line-height: 1;
+}
+.s-resource-cards.team .mb .r {
+  font-family: var(--font-mono); font-size: 20px;
+  letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.6;
+}

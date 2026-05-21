@@ -1,0 +1,27 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+<section class="slide s-word-cloud {{ variant }}" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <div class="cloud">
+    {% set contentStr = fields.words.content | striptags %}
+    {% set words = contentStr.split(',') %}
+    {% set sizes = ['w-md', 'w-xs', 'w-sm', 'w-xs', 'w-xl', 'w-xs', 'w-sm', 'w-xs', 'w-lg', 'w-sm', 'w-xs', 'w-md', 'w-xs', 'w-sm', 'w-xs'] %}
+    {% set colors = ['c-em', 'c-ink', 'c-accent', 'c-ink', 'c-warn', 'c-ink', 'c-ink'] %}
+    {% set rotates = ['', '', 'vertical', '', '', '', 'vertical', '', ''] %}
+    {% for word in words.slice(0, 35) %}
+      {% set w = word | trim %}
+      {% if w.length > 0 %}
+        {% set sizeClass = sizes[loop.index0 % sizes.length] %}
+        {% set colorClass = colors[loop.index0 % colors.length] %}
+        {% set rotateClass = '' %}
+        {% if sizeClass == 'w-xs' or sizeClass == 'w-sm' or sizeClass == 'w-md' %}
+          {% set rotateClass = rotates[loop.index0 % rotates.length] %}
+        {% endif %}
+        <span class="word {{ sizeClass }} {{ colorClass }} {{ rotateClass }}">{{ w }}</span>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

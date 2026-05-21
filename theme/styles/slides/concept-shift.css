@@ -1,0 +1,53 @@
+/* Concept-shift · recipe canvas-quiet.
+   "Old" tachado en --recipe-warn (red — la cosa que se descarta).
+   "New" en --recipe-accent (patagonia · peso — la marca del cambio). */
+
+section.slide.s-concept-shift {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  padding: 96px 110px 140px 140px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+}
+.s-concept-shift .old {
+  font-family: var(--font-editorial); font-style: italic; font-weight: 400;
+  font-size: 88px; line-height: 1;
+  text-decoration: line-through;
+  text-decoration-color: var(--recipe-warn);
+  opacity: 0.75;
+  margin-bottom: 10px;
+}
+.s-concept-shift .new {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 180px; line-height: 0.95; letter-spacing: -0.02em;
+  color: var(--recipe-accent);
+  margin: 0;
+}
+.s-concept-shift .new.sm { font-size: 140px; }
+
+/* Variante 'list': palabra "anchor" fija + lista de items tachados */
+.s-concept-shift.list {
+  text-align: left; align-items: flex-start; padding-left: 180px;
+  flex-direction: row; gap: 60px;
+}
+.s-concept-shift.list .anchor {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 96px; line-height: 1; letter-spacing: -0.01em;
+  align-self: center;
+}
+.s-concept-shift.list .items {
+  display: flex; flex-direction: column; gap: 10px;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 96px; line-height: 1.05;
+}
+.s-concept-shift.list .items .it {
+  text-decoration: line-through;
+  text-decoration-thickness: 8px;
+  text-decoration-color: var(--recipe-warn);
+}
+.s-concept-shift.list .items .it.active {
+  text-decoration: none;
+  opacity: 1;
+  color: var(--recipe-accent);
+}

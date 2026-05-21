@@ -1,0 +1,11 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+{% set v = variant or "default" %}
+<section class="slide s-code-block{% if v != 'default' %} {{ v }}{% endif %}" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  {% if fields.title %}<h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>{% endif %}
+  <pre class="code">{{ field(fields, "code", effectiveMode) | safe }}</pre>
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

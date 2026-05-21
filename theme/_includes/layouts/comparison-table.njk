@@ -1,0 +1,28 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+<section class="slide s-comparison-table" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+  <table>
+    <thead>
+      <tr>
+        {% for c in columns %}
+          <th{% if c.featured %} class="feat"{% endif %}>{{ c.label }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ r.label }}</td>
+        {% for cell in r.cells %}
+          <td{% if cell.featured %} class="feat"{% endif %}><span class="{{ cell.kind }}"{% if cell.color %} style="color: {{ cell.color }};"{% endif %}>{{ cell.value }}</span></td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

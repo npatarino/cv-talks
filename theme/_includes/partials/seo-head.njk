@@ -1,0 +1,20 @@
+{# Render the canonical SEO head for talks via the shared filter.
+
+   Expects a Nunjucks variable `seoProps` to be set in the parent
+   template before including this partial. `seoProps` is the same
+   shape the `<SEOHead>` Astro component takes:
+
+     {
+       site: "talks",
+       title: "...",
+       description: "...",
+       pathname: "/talks/decks/<slug>/",
+       isHome: false,
+       includeEcosystemAlternates: false,
+       jsonLd: [ ... ]
+     }
+
+   The filter calls `renderSEOHeadHTML` from
+   `@chimi/design-system/seo/render-head.mjs`, the same string
+   renderer used by every web in the monorepo. #}
+{{ seoProps | seoHead | safe }}

@@ -1,0 +1,19 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+<section class="slide s-closing-qr" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <div>
+    <h1>{{ field(fields, "title", effectiveMode) | safe }}</h1>
+    <div class="rows">
+      {% for r in contacts %}
+      <div class="r"><span class="k">{{ r.k }}</span><span>{{ r.v }}</span></div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="qr">
+    <div class="grid"></div>
+  </div>
+  <span class="sl-label dark">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

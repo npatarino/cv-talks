@@ -1,0 +1,20 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+{% set v = variant or "default" %}
+<section class="slide s-big-concept{% if v != 'default' %} {{ v }}{% endif %}" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  {% if v == "divider" %}
+    <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+    {% if fields.sub %}<div class="sub">{{ field(fields, "sub", effectiveMode) | safe }}</div>{% endif %}
+  {% elif v == "transition" %}
+    <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+  {% elif v == "prompt" %}
+    <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+  {% else %}
+    <h1>{{ field(fields, "title", effectiveMode) | safe }}</h1>
+    {% if fields.note %}<div class="note">{{ field(fields, "note", effectiveMode) | safe }}</div>{% endif %}
+  {% endif %}
+  <span class="sl-label{% if v == 'default' or v == 'divider' or v == 'takeaway' %} dark{% endif %}">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

@@ -1,0 +1,246 @@
+---
+permalink: /talks/template-gallery/index.html
+eleventyExcludeFromCollections: true
+layout: false
+---
+{% set seoProps = {
+  site: "talks",
+  title: "Plantillas de slides",
+  description: "Catálogo de plantillas para slides de Chimichurri Code, con sus variantes y casos de uso. Cada plantilla resuelve un tipo de slide.",
+  pathname: "/talks/template-gallery/",
+  isHome: false,
+  jsonLd: [
+    { "@context": "https://schema.org", "@type": "WebPage", name: "Plantillas de slides", url: "https://talks.chimi.pro/talks/template-gallery/", inLanguage: "es", isPartOf: { "@type": "WebSite", name: "Chimichurri Code · Charlas", url: "https://talks.chimi.pro/" } }
+  ]
+} %}
+<!doctype html>
+<html lang="es">
+  <head>
+    {% include "partials/seo-head.njk" %}
+    <link rel="stylesheet" href="/design-system/tokens.css" />
+    <style>
+      :root {
+        --page-max: 1200px;
+        --page-pad: clamp(16px, 4vw, 48px);
+        --stack-xs: 8px;
+        --stack-sm: 16px;
+        --stack-md: 24px;
+        --stack-lg: 48px;
+        --stack-xl: 96px;
+        --hairline:        color-mix(in srgb, var(--recipe-ink) 12%, transparent);
+        --muted:           color-mix(in srgb, var(--recipe-ink) 62%, transparent);
+        --muted-strong:    color-mix(in srgb, var(--recipe-ink) 80%, transparent);
+        --row-bg:          color-mix(in srgb, var(--recipe-ink) 4%, transparent);
+        --row-bg-hover:    color-mix(in srgb, var(--recipe-accent) 8%, transparent);
+        --thumb-bg:        color-mix(in srgb, var(--recipe-ink) 6%, transparent);
+        --thumb-border:    color-mix(in srgb, var(--recipe-ink) 10%, transparent);
+
+        --web-display-xl: 700 clamp(40px, 6vw, 72px)/0.98 var(--chimi-font-family-display);
+        --web-display-md: 700 clamp(24px, 2.6vw, 32px)/1.05 var(--chimi-font-family-display);
+        --web-body-md: 500 clamp(15px, 1.1vw, 17px)/1.55 var(--chimi-font-family-body);
+        --web-eyebrow: 500 12px/1 var(--chimi-font-family-code);
+        --web-mono-sm: 500 13px/1.4 var(--chimi-font-family-code);
+        --web-meta:    500 13px/1.4 var(--chimi-font-family-body);
+      }
+      *, *::before, *::after { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--recipe-surface);
+        color: var(--recipe-ink);
+        font: var(--web-body-md);
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; text-decoration: none; }
+      .container { max-width: var(--page-max); margin-inline: auto; padding-inline: var(--page-pad); }
+      .eyebrow { font: var(--web-eyebrow); letter-spacing: 0.18em; text-transform: uppercase; color: var(--recipe-accent); }
+      .hero { padding-block: var(--stack-lg) var(--stack-md); }
+      .display-xl { font: var(--web-display-xl); letter-spacing: -0.015em; margin: 0; }
+      .lede { font-size: clamp(17px, 1.4vw, 20px); color: var(--muted-strong); max-width: 60ch; margin-top: var(--stack-sm); }
+      .back-link {
+        display: inline-block;
+        margin-bottom: var(--stack-sm);
+        font: var(--web-eyebrow);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-strong);
+      }
+      .back-link:hover { color: var(--recipe-accent); }
+
+      .template-block {
+        padding-block: var(--stack-md);
+        border-top: 1px solid var(--hairline);
+      }
+      .template-block:first-of-type { border-top: 0; }
+      .template-name {
+        font: var(--web-display-md);
+        margin: 0 0 4px;
+      }
+      .template-name code { font-family: var(--chimi-font-family-code); font-size: 0.7em; color: var(--muted); margin-left: 8px; }
+      .template-desc { color: var(--muted-strong); margin: 0 0 4px; max-width: 70ch; }
+      .template-when { color: var(--muted); margin: 0 0 var(--stack-sm); max-width: 70ch; font-size: 0.95em; }
+      .template-when::before { content: "Cuándo: "; color: var(--recipe-accent); font-weight: 600; }
+
+      .variant-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--stack-md);
+        list-style: none;
+        padding: 0;
+        margin: var(--stack-md) 0 0;
+      }
+      .variant-grid > li { display: flex; }
+      .variant-grid a {
+        display: flex;
+        flex-direction: column;
+        gap: var(--stack-xs);
+        width: 100%;
+        border-radius: 12px;
+      }
+      .variant-grid a:hover { color: var(--recipe-accent); }
+      .variant-grid a:hover .variant-thumb { border-color: var(--recipe-accent); }
+      .variant-grid a.missing { pointer-events: none; cursor: not-allowed; }
+      .variant-grid a.missing .variant-thumb { opacity: 0.5; }
+
+      .variant-thumb {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        background: var(--thumb-bg);
+        border: 1px solid var(--thumb-border);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .variant-thumb iframe {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%;
+        border: 0;
+        pointer-events: none;
+      }
+      .variant-thumb-empty {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        font: var(--web-mono-sm);
+        color: var(--muted);
+        text-align: center;
+        padding: var(--stack-sm);
+        letter-spacing: 0.04em;
+      }
+
+      .variant-caption {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 0 4px;
+      }
+      .variant-name {
+        font-weight: 600;
+        display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px;
+      }
+      .variant-name code {
+        font-family: var(--chimi-font-family-code);
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 0.78em;
+        letter-spacing: 0.02em;
+      }
+      .variant-usage { color: var(--muted-strong); font-size: 0.92em; line-height: 1.45; }
+
+      .variant-recipe {
+        display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px;
+        margin-top: 4px;
+        font-size: 0.78em;
+        color: var(--muted);
+      }
+      .variant-recipe .recipe-label {
+        font-family: var(--chimi-font-family-code);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--recipe-accent);
+      }
+      .variant-recipe code {
+        font-family: var(--chimi-font-family-code);
+        color: var(--muted-strong);
+        letter-spacing: 0.02em;
+      }
+      .variant-recipe .recipe-type {
+        font-family: var(--chimi-font-family-code);
+        color: var(--muted);
+      }
+      .variant-recipe .recipe-fg { color: var(--recipe-em); }
+
+      .footer { margin-top: var(--stack-xl); padding-block: var(--stack-md) var(--stack-lg); border-top: 1px solid var(--hairline); }
+      .footer p { margin: 0; font: var(--web-meta); color: var(--muted); }
+      .footer a { color: var(--muted-strong); }
+      .footer a:hover { color: var(--recipe-accent); }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header class="hero">
+        <a class="back-link" href="/">← volver</a>
+        <p class="eyebrow">Chimi Talks Templates</p>
+        <h1 class="display-xl">Galería de plantillas (Recipes)</h1>
+        <p class="lede">Cada plantilla resuelve un tipo de slide. Las variantes adaptan tono, color o estructura. Pulsá una para verla renderizada.</p>
+      </header>
+
+      {% set tplCollection = collections.templates %}
+      {% for templateName, templateInfo in templates %}
+        <section class="template-block">
+          <h2 class="template-name">{{ templateName }} <code>{{ templateInfo.variants | length }} variant{% if templateInfo.variants | length != 1 %}es{% endif %}</code></h2>
+          <p class="template-desc">{{ templateInfo.description }}</p>
+          <p class="template-when">{{ templateInfo.when }}</p>
+
+          <ul class="variant-grid">
+            {% for variant in templateInfo.variants %}
+              {% set match = false %}
+              {% for tpl in tplCollection %}
+                {% if not match and tpl.data.template == templateName and tpl.fileSlug.endsWith("-" + variant.name) %}
+                  {% set match = tpl %}
+                {% endif %}
+              {% endfor %}
+              <li>
+                {% if match %}
+                  <a href="{{ match.url }}" aria-label="Abrir slide {{ templateName }}-{{ variant.name }}">
+                    <div class="variant-thumb">
+                      <iframe src="{{ match.url }}?embedded=1" title="{{ templateName }}-{{ variant.name }}" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
+                    </div>
+                    <div class="variant-caption">
+                      <span class="variant-name">{{ variant.name }} <code>{{ templateName }}-{{ variant.name }}</code></span>
+                      <span class="variant-usage">{{ variant.usage or variant.note }}</span>
+                      {% if match.data.recipe %}
+                        <span class="variant-recipe">
+                          <span class="recipe-label">Recipe</span>
+                          <code>{{ match.data.recipe }}</code>
+                          {% if typeRecipes[match.data.recipe] %}
+                            <span class="recipe-type">{{ typeRecipes[match.data.recipe].summary }}</span>
+                          {% endif %}
+                          {% if match.data.criticalFg %}
+                            <code class="recipe-fg">+ critical-fg-{{ match.data.criticalFg }}</code>
+                          {% endif %}
+                        </span>
+                      {% endif %}
+                    </div>
+                  </a>
+                {% else %}
+                  <a class="missing" aria-disabled="true">
+                    <div class="variant-thumb">
+                      <span class="variant-thumb-empty">sin slide de referencia</span>
+                    </div>
+                    <div class="variant-caption">
+                      <span class="variant-name">{{ variant.name }} <code>{{ templateName }}-{{ variant.name }}</code></span>
+                      <span class="variant-usage">{{ variant.usage or variant.note }}</span>
+                    </div>
+                  </a>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endfor %}
+
+      <footer class="footer">
+        <p>Powered with <span aria-hidden="true">❤️</span> by <a href="https://chimi.pro">Chimichurri Code</a></p>
+      </footer>
+    </main>
+    {% include "partials/analytics.njk" %}
+  </body>
+</html>

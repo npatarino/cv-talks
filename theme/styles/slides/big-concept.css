@@ -1,0 +1,67 @@
+/* Big-concept · 6 variants, cada uno con su recipe propia.
+   El CSS solo consume --recipe-*; los colores los resuelve el data-recipe.
+   Variants:
+     default     · energy-loud  (lemon surface, charcoal ink, em red)
+     divider     · cool-fresh   (patagonia surface, charcoal ink, em ivory)
+     prompt      · paper   (ivory surface, charcoal ink, em red)
+     transition  · canvas-quiet (charcoal surface, ivory ink, em lemon, italic editorial)
+     disclaimer  · critical     (plasma surface, ivory ink, em charcoal, plasma-alert spec)
+*/
+
+section.slide.s-big-concept {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 96px 160px 140px 200px;
+}
+.s-big-concept h1,
+.s-big-concept h2 {
+  font-family: var(--recipe-font-display);
+  font-weight: var(--recipe-weight-display);
+  letter-spacing: var(--recipe-letter-spacing-primary);
+  opacity: var(--recipe-opacity-primary);
+  font-size: 120px; line-height: 0.95;
+  margin: 0;
+}
+.s-big-concept h1 em,
+.s-big-concept h2 em {
+  font-family: var(--font-editorial); font-style: italic; font-weight: 600;
+  /* CHANEY display + Scilla italic tienen métricas distintas (cap-height y
+     x-height). A misma font-size, Scilla se ve ~25% más chica. 1.4em equilibra
+     visualmente la altura percibida. */
+  font-size: 1.4em; line-height: 0.95;
+  color: var(--recipe-em);
+}
+.s-big-concept .sub,
+.s-big-concept .line,
+.s-big-concept .note {
+  margin-top: 36px;
+  font-family: var(--recipe-font-editorial);
+  font-weight: var(--recipe-weight-editorial);
+  letter-spacing: var(--recipe-letter-spacing-secondary);
+  opacity: var(--recipe-opacity-secondary);
+  font-size: 56px; line-height: 1.25; max-width: 28ch;
+}
+.s-big-concept .sub em,
+.s-big-concept .line em,
+.s-big-concept .note em {
+  color: var(--recipe-em);
+  font-weight: 600; font-style: italic;
+}
+
+/* Transition · excepción tipográfica · italic editorial grande centrada.
+   La paleta sigue viniendo de data-recipe (canvas-quiet) — solo cambia layout. */
+section.slide.s-big-concept.transition {
+  align-items: center; text-align: center;
+  padding-left: 200px; padding-right: 200px;
+}
+.s-big-concept.transition h1,
+.s-big-concept.transition h2 {
+  font-family: var(--recipe-font-editorial);
+  font-weight: var(--recipe-weight-editorial);
+  letter-spacing: var(--recipe-letter-spacing-secondary);
+  opacity: var(--recipe-opacity-secondary);
+  font-size: 180px; line-height: 1;
+}
+.s-big-concept.transition h1 em,
+.s-big-concept.transition h2 em { font-size: 1.2em; }

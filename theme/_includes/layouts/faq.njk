@@ -1,0 +1,15 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+<section class="slide s-faq" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+  {% for qa in qas %}
+  <div class="qa">
+    <div class="q">{{ qa.q | safe }}</div>
+    <div class="a">{{ qa.a | safe }}</div>
+  </div>
+  {% endfor %}
+  <span class="sl-label dark">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

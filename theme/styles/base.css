@@ -1,0 +1,106 @@
+html, body { background: #000; color: var(--ivory); margin: 0; font-family: var(--font-ui); }
+
+section.slide {
+  width: 1920px; height: 1080px;
+  position: relative; overflow: hidden;
+  font-family: var(--font-ui);
+  color: var(--ivory);
+  background: var(--charcoal);
+  padding: 96px 140px;
+  box-sizing: border-box;
+}
+
+/* Hide the slide label by default · kept in the DOM for tooling/scripts. */
+.sl-label { display: none; }
+
+/* Standalone page layout for a single slide · always scales to fit viewport 16:9.
+   The JS in present.js sets the transform on section.slide to keep it in view. */
+body.slide-page {
+  margin: 0; padding: 0;
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+body.slide-page section.slide {
+  position: absolute;
+  top: 0; left: 0;
+  transform-origin: 0 0;
+  /* transform is set inline in <head> (sync) and kept in sync by present.js on resize. */
+  margin: 0;
+}
+/* Presenting is the fullscreen variant · shares the same scaling behaviour. */
+body.presenting { background: #000; }
+
+/* Deck index */
+body.index {
+  padding: 60px 80px; color: var(--ivory); background: var(--charcoal);
+}
+body.index h1 { font-family: var(--font-display); font-size: 72px; margin: 0 0 40px; letter-spacing: -0.01em; }
+body.index .toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+body.index .toc a {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 20px 24px; background: var(--charcoal-90); color: var(--ivory);
+  text-decoration: none; border-left: 4px solid var(--patagonia);
+  font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.08em;
+}
+body.index .toc a:hover { background: var(--charcoal-70); }
+body.index .toc a .num { color: var(--lemon); margin-right: 16px; }
+body.index .mode-flag {
+  position: fixed; top: 20px; right: 20px;
+  padding: 8px 16px; font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  background: var(--lemon); color: var(--charcoal);
+}
+
+/* Variant cycle HUD · se muestra brevemente al apretar `v` en el slide standalone.
+   Sin animaciones: aparece y desaparece de golpe via JS. */
+.variant-hud {
+  position: fixed; bottom: 24px; right: 24px;
+  padding: 10px 18px; font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  background: var(--lemon); color: var(--charcoal);
+  display: none;
+  z-index: 300;
+}
+.variant-hud.show { display: block; }
+
+/* Progressive reveal · listas que se descubren paso a paso al apretar → / ←.
+   visibility: hidden mantiene el espacio (no hay saltos de layout al revelar). */
+[data-reveal-hidden] { visibility: hidden; }
+
+/* Title-icon · imágenes decorativas embebidas dentro de headings (h1/h2) de
+   slides como big-concept, big-stat, etc. Se renderean a 0.7em del font del
+   título — moderado, no compite con el texto.
+   `.title-icons` agrupa varias imágenes en fila (ej. logos AI en "Paradoja
+   del Copilot") y deja un gap entre ellas. */
+section.slide h1 .title-icon,
+section.slide h2 .title-icon {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  vertical-align: middle;
+  object-fit: contain;
+}
+section.slide h1 .title-icons,
+section.slide h2 .title-icons {
+  display: inline-flex;
+  gap: 0.15em;
+  vertical-align: middle;
+}
+
+/* Dual-mode: metadata field display */
+.field-meta {
+  display: inline-block;
+  background: rgba(249, 215, 28, 0.18);
+  border: 2px dashed var(--red);
+  color: var(--lemon);
+  padding: 2px 10px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: none;
+  font-size: 0.8em;
+  font-style: normal;
+  font-weight: 400;
+}
+.field-meta::before { content: "{ "; opacity: 0.5; }
+.field-meta::after  { content: " }"; opacity: 0.5; }

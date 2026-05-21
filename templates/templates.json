@@ -1,0 +1,9 @@
+{
+  "tags": "template",
+  "permalink": "talks/templates/{{ page.fileSlug }}/index.html",
+  "eleventyComputed": {
+    "layout": "layouts/{{ template }}.njk",
+    "slideCss": "{{ template }}",
+    "effectiveMode": "{{ mode or site.mode }}"
+  }
+}

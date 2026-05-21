@@ -1,0 +1,31 @@
+/* Cover · recipe canvas-quiet (default editorial dark).
+   Eyebrow + crossed underline use --recipe-em (lemon).
+   Note: the SVG underline color is set inline in the .md via var(--recipe-em). */
+section.slide.s-cover {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: flex; flex-direction: column; justify-content: center;
+  padding-left: 200px; padding-right: 200px;
+}
+.s-cover .top {
+  position: absolute; top: 96px; left: 200px; right: 200px;
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 22px; letter-spacing: 0.18em;
+  text-transform: uppercase; opacity: 0.55;
+}
+.s-cover .kicker {
+  color: var(--recipe-accent);
+  letter-spacing: 0.2em; text-transform: uppercase;
+  font-family: var(--font-mono); font-size: 22px; margin-bottom: 24px;
+}
+.s-cover h1 {
+  font-family: var(--font-display); font-size: 148px; line-height: 0.9;
+  letter-spacing: -0.015em; margin: 24px 0 0;
+}
+.s-cover h1 .crossed { color: var(--recipe-warn); position: relative; display: inline-block; }
+.s-cover h1 .crossed svg { position: absolute; left: 0; bottom: 4px; width: 100%; height: 36px; }
+.s-cover .deck {
+  margin-top: 36px; max-width: 32ch;
+  font-family: var(--font-editorial); font-style: italic;
+  font-size: 36px; opacity: 0.8; line-height: 1.3;
+}

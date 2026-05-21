@@ -1,0 +1,38 @@
+/* Three-ideas · recipe canvas-signal · allowMultipleAccents + allowMultipleStats.
+   Los 3 numerales rotan los 3 roles del recipe: accent · em · warn. */
+
+section.slide.s-three-ideas {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: flex; flex-direction: column; justify-content: center;
+  padding-left: 200px; padding-right: 200px;
+}
+.s-three-ideas .eb {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--recipe-em);
+}
+.s-three-ideas h2 {
+  font-family: var(--font-display); font-size: 120px;
+  line-height: 0.95; margin: 22px 0 48px;
+}
+.s-three-ideas .row {
+  display: grid; grid-template-columns: 170px 1fr;
+  gap: 40px; align-items: end; margin-bottom: 42px;
+}
+.s-three-ideas .row:last-child { margin-bottom: 0; }
+.s-three-ideas .row .n {
+  font-family: var(--font-display); font-size: 130px; line-height: 0.9;
+}
+.s-three-ideas .row:nth-child(1 of .row) .n { color: var(--recipe-accent); }
+.s-three-ideas .row:nth-child(2 of .row) .n { color: var(--recipe-em); }
+.s-three-ideas .row:nth-child(3 of .row) .n { color: var(--recipe-warn); }
+.s-three-ideas .row .c { padding-bottom: 6px; }
+.s-three-ideas .row .c .t {
+  font-family: var(--font-mono); font-size: 28px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.s-three-ideas .row .c .d {
+  font-family: var(--font-editorial); font-style: italic;
+  font-size: 28px; opacity: 0.7; margin-top: 10px;
+}

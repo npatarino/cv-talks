@@ -1,0 +1,99 @@
+/* Demo · recipe canvas-quiet.
+   El browser frame es un artifact embebido (ivory, charcoal, sus propios colores
+   de chrome y dots). El slide externo es canvas-quiet.
+   Cards usan accent · warn · ink (los 3 numéricos). */
+
+section.slide.s-demo {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  padding: 72px 110px 140px 140px;
+}
+.s-demo .eb {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--recipe-accent);
+}
+.s-demo h2 {
+  font-family: var(--font-display); font-size: 72px; line-height: 0.95;
+  margin: 14px 0 72px; letter-spacing: -0.01em;
+}
+
+/* Browser artifact — ivory paper + chrome local. No usa --recipe-*. */
+.s-demo .browser {
+  background: var(--chimi-primitives-color-ivory-base);
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.s-demo .browser .chrome {
+  display: grid; grid-template-columns: 120px 1fr 120px; gap: 18px;
+  align-items: center; padding: 14px 20px;
+  background: #D9CDAF;
+  border-bottom: 2px solid rgba(28,28,28,0.1);
+}
+.s-demo .browser .chrome .dots { display: flex; gap: 10px; }
+.s-demo .browser .chrome .dots span { width: 16px; height: 16px; border-radius: 50%; }
+.s-demo .browser .chrome .dots .r { background: #E06150; }
+.s-demo .browser .chrome .dots .y { background: #E3B341; }
+.s-demo .browser .chrome .dots .g { background: #6BBF6B; }
+.s-demo .browser .chrome .url {
+  background: var(--chimi-primitives-color-ivory-base);
+  padding: 10px 20px;
+  font-family: var(--font-mono); font-size: 20px; letter-spacing: 0.05em;
+  color: var(--chimi-primitives-color-charcoal-100);
+  border-radius: 6px;
+}
+.s-demo .browser .chrome .url .lock {
+  color: var(--chimi-primitives-color-patagonia-base);
+  margin-right: 8px;
+}
+.s-demo .browser .body {
+  background: var(--chimi-primitives-color-ivory-base);
+  color: var(--chimi-primitives-color-charcoal-100);
+  padding: 50px 60px; min-height: 440px;
+  display: grid; grid-template-columns: 240px 1fr; gap: 40px;
+}
+.s-demo .browser .sidebar {
+  display: flex; flex-direction: column; gap: 14px;
+  font-family: var(--font-mono); font-size: 20px;
+}
+.s-demo .browser .sidebar .item {
+  padding: 12px 16px; border-radius: 6px;
+  letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.6;
+}
+.s-demo .browser .sidebar .item.active {
+  background: var(--chimi-primitives-color-patagonia-base);
+  color: var(--chimi-primitives-color-ivory-base);
+  opacity: 1;
+}
+.s-demo .browser .main h3 {
+  font-family: var(--font-display); font-size: 58px; line-height: 0.95;
+  margin: 0 0 14px;
+}
+.s-demo .browser .main .sub {
+  font-family: var(--font-editorial); font-style: italic;
+  font-size: 24px; opacity: 0.7; margin-bottom: 28px;
+}
+.s-demo .browser .cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+}
+.s-demo .browser .cards .c {
+  padding: 20px 18px;
+  border: 2px solid rgba(28,28,28,0.12);
+  border-radius: 6px;
+}
+.s-demo .browser .cards .c .k {
+  font-family: var(--font-mono); font-size: 14px;
+  letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.6;
+}
+.s-demo .browser .cards .c .v {
+  font-family: var(--font-data); font-weight: 700;
+  font-size: 54px; line-height: 1; margin-top: 6px;
+}
+.s-demo .browser .cards .c1 .v { color: var(--chimi-primitives-color-patagonia-base); }
+.s-demo .browser .cards .c2 .v { color: var(--chimi-primitives-color-red-base); }
+.s-demo .browser .cards .c3 .v { color: var(--chimi-primitives-color-charcoal-100); }
+.s-demo .cap {
+  margin-top: 22px;
+  font-family: var(--font-mono); font-size: 20px;
+  letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.55;
+}

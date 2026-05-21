@@ -1,0 +1,162 @@
+---
+permalink: /index.html
+eleventyExcludeFromCollections: true
+layout: false
+---
+{% set seoProps = {
+  site: "talks",
+  title: "Charlas",
+  description: "Galería de charlas técnicas de Chimichurri Code: decks publicados y plantillas reutilizables para slides en HTML.",
+  pathname: "/",
+  isHome: true,
+  includeEcosystemAlternates: true,
+  jsonLd: [
+    { "@context": "https://schema.org", "@type": "WebSite", name: "Chimichurri Code · Charlas", url: "https://talks.chimi.pro/", inLanguage: "es" },
+    { "@context": "https://schema.org", "@type": "Organization", name: "Chimichurri Code", url: "https://chimi.pro", logo: "https://chimi.pro/favicon.svg" }
+  ]
+} %}
+<!doctype html>
+<html lang="es">
+  <head>
+    {% include "partials/seo-head.njk" %}
+    <link rel="stylesheet" href="/design-system/tokens.css" />
+    <style>
+      :root {
+        --page-max: 960px;
+        --page-pad: clamp(16px, 4vw, 48px);
+        --stack-sm: 16px;
+        --stack-md: 24px;
+        --stack-lg: 48px;
+        --stack-xl: 96px;
+        --hairline:        color-mix(in srgb, var(--recipe-ink) 12%, transparent);
+        --muted:           color-mix(in srgb, var(--recipe-ink) 62%, transparent);
+        --muted-strong:    color-mix(in srgb, var(--recipe-ink) 80%, transparent);
+        --row-bg:          color-mix(in srgb, var(--recipe-ink) 4%, transparent);
+        --row-bg-hover:    color-mix(in srgb, var(--recipe-accent) 8%, transparent);
+
+        --web-display-xl: 700 clamp(48px, 7vw, 96px)/0.95 var(--chimi-font-family-display);
+        --web-display-sm: 700 clamp(22px, 2.4vw, 30px)/1.1 var(--chimi-font-family-display);
+        --web-body-md: 500 clamp(15px, 1.1vw, 17px)/1.55 var(--chimi-font-family-body);
+        --web-eyebrow: 500 12px/1 var(--chimi-font-family-code);
+        --web-meta:    500 13px/1.4 var(--chimi-font-family-body);
+      }
+      *, *::before, *::after { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--recipe-surface);
+        color: var(--recipe-ink);
+        font: var(--web-body-md);
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; text-decoration: none; }
+      .container { max-width: var(--page-max); margin-inline: auto; padding-inline: var(--page-pad); }
+      .eyebrow {
+        font: var(--web-eyebrow);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--recipe-accent);
+      }
+      .hero { padding-block: var(--stack-lg) var(--stack-md); }
+      .display-xl { font: var(--web-display-xl); letter-spacing: -0.015em; margin: 0; }
+      .lede { font-size: clamp(17px, 1.4vw, 20px); color: var(--muted-strong); max-width: 60ch; margin-top: var(--stack-sm); }
+
+      .deck-list { list-style: none; padding: 0; margin: var(--stack-md) 0 0; display: flex; flex-direction: column; gap: 1px; }
+      .deck-list a {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: var(--stack-md);
+        align-items: baseline;
+        padding: var(--stack-md);
+        background: var(--row-bg);
+        border-radius: 8px;
+      }
+      .deck-list a:hover { background: var(--row-bg-hover); color: var(--recipe-accent); }
+      .deck-date { font: var(--web-meta); color: var(--muted); font-variant-numeric: tabular-nums; }
+      .deck-title { font: var(--web-display-sm); margin: 0; }
+      .deck-subtitle { display: block; font: var(--web-meta); color: var(--muted-strong); margin-top: 4px; }
+      .deck-meta { font: var(--web-eyebrow); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+
+      .section-header { margin-block: var(--stack-xl) var(--stack-sm); }
+      .section-header h2 { font: var(--web-display-sm); margin: 4px 0 0; }
+      .section-header .meta { font: var(--web-meta); color: var(--muted); margin-top: 4px; }
+
+      .template-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: var(--stack-sm);
+        margin-top: var(--stack-md);
+        list-style: none;
+        padding: 0;
+      }
+      .template-grid a {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: var(--stack-sm);
+        background: var(--row-bg);
+        border-radius: 8px;
+      }
+      .template-grid a:hover { background: var(--row-bg-hover); color: var(--recipe-accent); }
+      .template-kind {
+        font: var(--web-eyebrow);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .template-label { font-weight: 600; }
+
+      .footer { margin-top: var(--stack-xl); padding-block: var(--stack-md) var(--stack-lg); border-top: 1px solid var(--hairline); }
+      .footer p { margin: 0; font: var(--web-meta); color: var(--muted); }
+      .footer a { color: var(--muted-strong); }
+      .footer a:hover { color: var(--recipe-accent); }
+
+      @media (max-width: 600px) {
+        .deck-list a { grid-template-columns: 1fr; gap: 4px; }
+        .deck-meta { justify-self: start; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header class="hero">
+        <p class="eyebrow">Chimichurri Code · Charlas</p>
+      </header>
+
+      <ul class="deck-list">
+        {% for deck in decks %}
+          <li>
+            <a href="/talks/decks/{{ deck.slug }}/">
+              <span class="deck-date">{{ deck.date or deck.slug.split('-')[0] }}</span>
+              <span>
+                <span class="deck-title">{{ deck.title or deck.slug }}</span>
+                {% if deck.subtitle %}<span class="deck-subtitle">{{ deck.subtitle }}</span>{% endif %}
+              </span>
+              <span class="deck-meta">Abrir →</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <section class="section-header">
+        <p class="eyebrow">Recursos para crear decks</p>
+        <h2>Plantillas.</h2>
+        <p class="meta">La galería con todas las plantillas y sus variantes, lista para inspirarte y para copiar al armar un deck nuevo.</p>
+      </section>
+
+      <ul class="template-grid">
+        <li>
+          <a href="/talks/template-gallery/">
+            <span class="template-kind">Galería</span>
+            <span class="template-label">Chimi Talks Templates</span>
+            <span class="deck-subtitle">Todas las plantillas con cada una de sus variantes.</span>
+          </a>
+        </li>
+      </ul>
+
+      <footer class="footer">
+        <p>Powered with <span aria-hidden="true">❤️</span> by <a href="https://chimi.pro">Chimichurri Code</a></p>
+      </footer>
+    </main>
+    {% include "partials/analytics.njk" %}
+  </body>
+</html>

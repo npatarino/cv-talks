@@ -1,0 +1,55 @@
+/* Icon · slide donde el ícono ES el contenido. Una sola variant.
+   No tiene title/note: si la slide necesita texto, usar big-concept, big-stat
+   o concept-shift con el ícono inline.
+
+   Escala calibrada contra el canvas 1920×1080 y la moderación visual del PDF
+   original: los glyphs (emoji / SVG) ocupan ~140px de altura — modestos, dejan
+   respirar la slide. Para cadenas largas (hasta ~8 íconos) el row aún cabe
+   dentro de los 1520px de área útil con el gap definido. */
+
+section.slide.s-icon {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 120px 200px;
+  position: relative;
+}
+
+.s-icon .icons {
+  display: flex; align-items: center; justify-content: center;
+  gap: 40px; flex-wrap: nowrap;
+  max-width: 1520px;
+}
+.s-icon .icon-cell {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.s-icon .glyph {
+  font-family: var(--font-body);
+  font-size: 140px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.s-icon .glyph:where(:not(:has(svg)):not(:has(img))) {
+  /* Heurística: si no es media (SVG/IMG), asumimos texto-icono y heredamos. */
+  font-family: inherit;
+}
+/* Imágenes PNG/SVG dentro del glyph · escala consistente independiente del
+   font-size del contenedor. 1em = 140px (font-size del glyph). */
+.s-icon .glyph img,
+.s-icon .glyph svg {
+  width: 1em; height: 1em;
+  display: block;
+}
+.s-icon .icon-cell .caption {
+  font-family: var(--font-body);
+  font-size: 22px; line-height: 1.2;
+  opacity: 0.7;
+  font-weight: 500;
+}
+.s-icon .connector {
+  font-family: var(--font-body);
+  font-size: 56px; line-height: 1;
+  color: var(--recipe-ink); opacity: 0.55;
+  font-weight: 300;
+  transform: translateY(-12px);
+}

@@ -1,0 +1,101 @@
+/* Quote · 4 variants, cada una con su recipe.
+   default      · paper   (ivory + charcoal + em red)
+   xl           · paper   (ivory + charcoal + em red, mismo paper a otra escala)
+   testimonial  · paper   (ivory + charcoal + em patagonia, avatar tipo seal)
+   punch        · canvas-quiet (charcoal + ivory + em con highlight lemon)
+*/
+
+section.slide.s-quote {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: flex; flex-direction: column; justify-content: center;
+  padding-left: 200px; padding-right: 200px;
+}
+.s-quote q {
+  font-family: var(--recipe-font-editorial);
+  font-weight: var(--recipe-weight-editorial);
+  letter-spacing: var(--recipe-letter-spacing-primary);
+  opacity: var(--recipe-opacity-primary);
+  font-style: italic;
+  font-size: 120px; line-height: 1.05; max-width: 22ch;
+  display: block;
+}
+.s-quote q::before, .s-quote q::after { content: ''; }
+.s-quote q em {
+  color: var(--recipe-em);
+  font-family: var(--recipe-font-editorial);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.15em; line-height: inherit;
+}
+.s-quote .cite { margin-top: 60px; }
+.s-quote .cite .who {
+  font-family: var(--font-mono); font-size: 24px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+}
+
+/* XL · paper a mayor escala. */
+.s-quote.xl q { font-size: 180px; line-height: 1; letter-spacing: -0.015em; max-width: 18ch; }
+.s-quote.xl .cite .who { opacity: 0.8; font-size: 26px; }
+
+/* Punch · canvas-quiet con highlight em (lemon) como marcador fluorescente.
+   El highlight pinta el background del em, no el text — el ink queda dark. */
+.s-quote.punch q {
+  font-family: var(--recipe-font-editorial);
+  font-weight: var(--recipe-weight-editorial);
+  letter-spacing: var(--recipe-letter-spacing-primary);
+  opacity: var(--recipe-opacity-primary);
+  font-size: 140px;
+  line-height: 1.02;
+  max-width: 20ch;
+}
+.s-quote.punch q em {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--recipe-surface); /* charcoal — texto sobre el highlight */
+  background: var(--recipe-em); /* lemon — el highlight */
+  padding: 0.02em 0.18em 0.08em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  font-size: 1em;
+}
+.s-quote.punch .cite {
+  margin-top: 72px;
+  padding-left: 28px;
+  border-left: 4px solid var(--recipe-accent);
+}
+.s-quote.punch .cite .who {
+  color: var(--recipe-accent);
+  opacity: 1;
+  font-size: 26px;
+}
+
+/* Testimonial · paper con avatar circular tipo seal.
+   El avatar es charcoal con iniciales lemon — los colores del avatar son
+   código visual local, no parte de la recipe. */
+section.slide.s-quote.testimonial {
+  display: grid; grid-template-columns: 440px 1fr; gap: 80px;
+  align-items: center; padding: 96px 140px 140px 200px;
+}
+.s-quote.testimonial .av {
+  width: 440px; height: 440px;
+  background: var(--chimi-primitives-color-charcoal-100);
+  border-radius: 50%;
+  position: relative; overflow: hidden; flex-shrink: 0;
+}
+.s-quote.testimonial .av .ini {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 200px;
+  color: var(--chimi-primitives-color-lemon-base); line-height: 1;
+}
+.s-quote.testimonial q { font-size: 70px; line-height: 1.15; letter-spacing: -0.005em; max-width: 22ch; }
+.s-quote.testimonial .cite { margin-top: 44px; display: flex; flex-direction: column; gap: 8px; }
+.s-quote.testimonial .cite .who {
+  font-family: var(--font-display); font-size: 44px; line-height: 1;
+  letter-spacing: 0; text-transform: none;
+}
+.s-quote.testimonial .cite .role {
+  font-family: var(--font-mono); font-size: 20px;
+  letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.7;
+}

@@ -1,0 +1,82 @@
+/* Big-stat · recipe canvas-signal (data primary).
+   default     · número Thunder ivory + % accent lemon (em). Eyebrow patagonia.
+   multiplier  · número Thunder lemon (em) + título CHANEY ivory.
+
+   Nota: el prompt original menciona "outlier red en vez de lemon" para el % —
+   eso aplica solo cuando la stat es contraevidencia. Para usarlo, agregá la
+   clase .outlier al .pct y se pinta con --recipe-warn. */
+
+section.slide.s-big-stat {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: flex; flex-direction: column; justify-content: center;
+  padding-left: 200px; padding-right: 200px;
+}
+.s-big-stat .eb {
+  font-family: var(--font-mono); font-size: 22px; letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--recipe-accent);
+  margin-left: 40px; margin-top: 30px;
+}
+.s-big-stat .big {
+  font-family: var(--recipe-font-data);
+  font-weight: var(--recipe-weight-data);
+  letter-spacing: var(--recipe-letter-spacing-primary);
+  opacity: var(--recipe-opacity-primary);
+  font-size: 640px; line-height: 0.82; margin-top: 60px;
+}
+.s-big-stat .big .pct {
+  color: var(--recipe-em);
+  font-size: 240px; vertical-align: top;
+  display: inline-block; position: relative; top: 100px; margin-left: -16px;
+}
+.s-big-stat .big .pct.outlier { color: var(--recipe-warn); }
+
+/* critical-fg-stat: el numeral entero (no solo el %) toma plasma vía --recipe-em
+   override de la clase. Aplicado a big-stat-critical (canvas-signal portadora). */
+.s-big-stat.critical-fg-stat .big { color: var(--recipe-em); }
+.s-big-stat .ex {
+  font-family: var(--recipe-font-editorial);
+  font-weight: var(--recipe-weight-editorial);
+  letter-spacing: var(--recipe-letter-spacing-secondary);
+  opacity: var(--recipe-opacity-secondary);
+  font-size: 44px; line-height: 1.25; margin-top: 24px; max-width: 30ch;
+}
+.s-big-stat .src {
+  font-family: var(--font-mono); font-size: 20px; opacity: 0.5;
+  letter-spacing: 0.15em; text-transform: uppercase; margin-top: 20px;
+}
+
+/* Variant multiplier · número Thunder em (lemon) + título CHANEY ink. */
+.s-big-stat.multiplier .eb { color: var(--recipe-em); margin: 0; }
+.s-big-stat.multiplier .wrap { display: grid; grid-template-columns: auto 1fr; gap: 32px; align-items: center; margin-top: 60px; }
+.s-big-stat.multiplier .n {
+  font-family: var(--recipe-font-primary);
+  font-weight: var(--recipe-weight-primary);
+  letter-spacing: var(--recipe-letter-spacing-primary);
+  opacity: var(--recipe-opacity-primary);
+  font-size: 420px; line-height: 0.82;
+  color: var(--recipe-em);
+}
+.s-big-stat.multiplier .c .t {
+  font-family: var(--recipe-font-secondary);
+  font-weight: var(--recipe-weight-secondary);
+  letter-spacing: var(--recipe-letter-spacing-secondary);
+  opacity: var(--recipe-opacity-secondary);
+  font-size: 80px; line-height: 0.95;
+}
+.s-big-stat.multiplier .c .d {
+  margin-top: 36px;
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 36px;
+  line-height: 1.3;
+}
+.s-big-stat.multiplier .foot {
+  position: absolute; bottom: 140px; left: 140px; right: 110px;
+  padding-top: 36px;
+  border-top: 4px solid var(--recipe-surface);
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+}

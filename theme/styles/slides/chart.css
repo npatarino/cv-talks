@@ -1,0 +1,101 @@
+/* Chart · recipe canvas-signal · variants: bar (default), line.
+   allowMultipleAccents + allowMultipleStats — las barras y serie usan los
+   4 roles del recipe en simultáneo (accent · em · warn · ink).
+   Bar colors come from the .md frontmatter inline (var(--recipe-*)). */
+
+section.slide.s-chart {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.s-chart h2 {
+  font-family: var(--font-display); font-size: 120px; line-height: 0.95;
+  margin: 0 0 44px; letter-spacing: -0.01em;
+}
+.s-chart .note {
+  font-family: var(--font-editorial); font-style: italic;
+  font-size: 32px; opacity: 0.75; margin-top: 40px;
+}
+
+/* Bar */
+.s-chart.bar .chart {
+  display: flex; align-items: flex-end; gap: 40px; height: 520px;
+  border-bottom: 4px solid color-mix(in srgb, var(--recipe-ink) 20%, transparent);
+  padding-bottom: 14px;
+}
+.s-chart.bar .bar {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end; gap: 14px; height: 100%;
+}
+.s-chart.bar .bar .b { width: 100%; position: relative; min-height: 1px; }
+.s-chart.bar .bar .b .n {
+  position: absolute; top: -42px; left: 0; right: 0;
+  text-align: center; font-family: var(--font-data);
+  font-size: 34px; font-weight: 700;
+}
+.s-chart.bar .bar .lbl {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.7;
+}
+
+/* Line — area + dotted serie + peak. */
+.s-chart.line .eb { color: var(--recipe-em); }
+.s-chart.line h2 { font-size: 92px; margin-bottom: 28px; }
+.s-chart.line .chart {
+  position: relative; height: 440px;
+  border-left: 3px solid color-mix(in srgb, var(--recipe-ink) 25%, transparent);
+  border-bottom: 3px solid color-mix(in srgb, var(--recipe-ink) 25%, transparent);
+  padding: 10px 0;
+}
+.s-chart.line .chart svg.paths {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; overflow: visible;
+}
+.s-chart.line .chart .grid line {
+  stroke: color-mix(in srgb, var(--recipe-ink) 8%, transparent);
+  stroke-width: 1; vector-effect: non-scaling-stroke;
+}
+.s-chart.line .chart .area { fill: var(--recipe-accent); opacity: 0.25; }
+.s-chart.line .chart .serie {
+  fill: none; stroke: var(--recipe-accent); stroke-width: 4;
+  stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+}
+.s-chart.line .chart .serie2 {
+  fill: none; stroke: var(--recipe-em); stroke-width: 4;
+  stroke-dasharray: 10 8; stroke-linecap: round; vector-effect: non-scaling-stroke;
+}
+.s-chart.line .chart .dot {
+  position: absolute;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--recipe-accent);
+  border: 3px solid var(--recipe-surface);
+  transform: translate(-50%, -50%);
+}
+.s-chart.line .chart .dot.peak {
+  width: 28px; height: 28px;
+  background: var(--recipe-em);
+  border: 3px solid var(--recipe-surface);
+}
+.s-chart.line .chart .dot-label {
+  position: absolute;
+  font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.1em;
+  color: var(--recipe-ink); white-space: nowrap;
+  transform: translate(0, -100%);
+  padding-left: 24px;
+}
+.s-chart.line .xaxis {
+  display: grid; margin-top: 14px;
+  font-family: var(--font-mono); font-size: 20px;
+  letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7;
+}
+.s-chart.line .legend {
+  margin-top: 24px; display: flex; gap: 40px;
+  font-family: var(--font-mono); font-size: 20px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.s-chart.line .legend span::before {
+  display: inline-block; width: 24px; height: 4px;
+  margin-right: 10px; vertical-align: middle; content: '';
+}
+.s-chart.line .legend .a::before { background: var(--recipe-accent); }
+.s-chart.line .legend .b::before { background: var(--recipe-em); }
