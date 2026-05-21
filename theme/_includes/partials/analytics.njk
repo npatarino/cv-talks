@@ -1,0 +1,4 @@
+{# Shared analytics snippet for Eleventy talks pages.
+   Sets the site id for @chimi/analytics' standalone snippet, then loads it. #}
+<script>window.__CHIMI_SITE__ = "talks";</script>
+<script src="{{ '/analytics/snippet.js' | url }}" defer></script>

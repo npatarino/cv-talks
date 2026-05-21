@@ -1,0 +1,17 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+<section class="slide s-kpi-grid" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+  <div class="grid">
+    {% for k in kpis %}
+    <div class="kpi k{{ loop.index }}">
+      <div class="n">{{ k.n }}</div>
+      <div class="l">{{ k.label }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

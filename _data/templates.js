@@ -1,0 +1,200 @@
+/**
+ * Single source of truth for template metadata.
+ * Used by the gallery index + future tooling (README generation, etc.).
+ *
+ * Per-variant fields:
+ *   - note:  short visual description (colors/structure). Surfaces in present.js
+ *            HUD when cycling variants with `v` and in the in-deck help overlay.
+ *   - usage: when to choose this variant. Surfaces as the caption in
+ *            /talks/template-gallery/ under each thumbnail.
+ *
+ * Keep this in sync with:
+ *   - layouts:  talks/theme/_includes/layouts/<name>.njk
+ *   - styles:   talks/theme/styles/slides/<name>.css
+ * A template listed here without a layout file will break the build.
+ */
+module.exports = {
+  "cover": {
+    description: "Portada del deck · jerarquía editorial con título display, subtítulo italic y cabecera minimalista.",
+    when: "Abrir un deck. Una vez, al principio.",
+    variants: [
+      { name: "default", note: "Fondo charcoal, título display gigante, deck subtitle italic.", usage: "Una vez por deck, como primera slide." }
+    ]
+  },
+  "big-concept": {
+    description: "Slide de idea fuerte · título grande + apoyo editorial. Cinco paletas según el rol en la narrativa.",
+    when: "Anclar una idea, marcar un cambio de sección, cerrar una tensión.",
+    variants: [
+      { name: "default",    note: "Fondo lemon, título display + note italic. Para la idea central del bloque.", usage: "La idea central del bloque · una sola por sección." },
+      { name: "divider",    note: "Fondo patagonia. Separador de sección: título stacked + subtítulo italic.", usage: "Marcar el cambio de sección dentro del deck." },
+      { name: "transition", note: "Fondo charcoal, título italic centrado. Pausas narrativas ('respiremos un minuto').", usage: "Pausa narrativa entre bloques densos." },
+      { name: "prompt",     note: "Fondo red. Preguntas retóricas o llamados a la audiencia.", usage: "Pregunta retórica o call-to-the-room." },
+      { name: "disclaimer", note: "Fondo plasma, texto ivory, em charcoal. Alertas, aclaraciones legales, stop-and-read. Máximo uno por deck.", usage: "Aclaración legal o alerta · máximo una por deck." }
+    ]
+  },
+  "big-stat": {
+    description: "Una métrica enorme como protagonista. El número domina, el texto lo contextualiza.",
+    when: "Cuando el dato es el mensaje. No para listas de KPIs (usá kpi-grid).",
+    variants: [
+      { name: "default",    note: "Número gigante con sufijo (%, x) + explicación italic debajo.", usage: "Una métrica que es el mensaje, con un breve contexto." },
+      { name: "multiplier", note: "Fondo patagonia. Grid número + título display al costado. Para 'N× menos/más'.", usage: "Comparativas tipo 'N× más / N× menos' donde el factor es la noticia." }
+    ]
+  },
+  "quote": {
+    description: "Cita textual con atribución. Tipografía editorial italic.",
+    when: "Citar una fuente externa, un testimonio, una frase autoritativa.",
+    variants: [
+      { name: "default",     note: "Fondo ivory, cita italic con .hl rojo para resaltar palabra clave.", usage: "Cita autoritativa con una palabra clave a resaltar." },
+      { name: "xl",          note: "Fondo charcoal, cita aún más grande. Para momentos de peso máximo.", usage: "Cita de máximo peso · momento dramático del deck." },
+      { name: "testimonial", note: "Fondo patagonia, grid con avatar circular + nombre + rol.", usage: "Testimonio de una persona real, con cara y rol." },
+      { name: "punch",       note: "Fondo charcoal, cita ivory italic con highlight lemon (marcador) + acento patagonia en cite.", usage: "Cita-bomba con palabra resaltada · pegada fuerte sobre dark." }
+    ]
+  },
+  "three-ideas": {
+    description: "Tres (o pocos) puntos numerados con título + descripción editorial.",
+    when: "Cuando la regla de tres aplica. Principios, pilares, síntesis final.",
+    variants: [
+      { name: "default", note: "Fondo charcoal. Número display enorme con color rotativo (patagonia/lemon/red).", usage: "Tres pilares, tres principios, síntesis final · la regla de tres." }
+    ]
+  },
+  "big-list": {
+    description: "Lista grande · 4 variants para distintos tipos de enumeración.",
+    when: "Cuando la lista ES el contenido. Numerar pasos, enumerar señales, definir términos o flagear alertas.",
+    variants: [
+      { name: "numeric",   note: "Números display a la izquierda, texto body.xl, opcional sub-ítems.", usage: "Pasos de un método o agenda ampliada donde el orden importa." },
+      { name: "bullets",   note: "Bullets ▪ patagonia en lugar de numeración.", usage: "Lista grande sin orden implícito · cuando numerar sería ruido." },
+      { name: "checklist", note: "Boxes ✓/✗ a la izquierda · estado por ítem (done/todo/fail).", usage: "Checklist de ejecución, post-mortem, repaso de qué se hizo y qué no." },
+      { name: "glossary",  note: "Grid 2-col · término display + definición italic.", usage: "Definir vocabulario antes de usarlo · ponerse de acuerdo con la audiencia." }
+    ]
+  },
+  "agenda": {
+    description: "Agenda o índice de la charla con numeración.",
+    when: "Una vez, al comienzo: decirle a la audiencia qué va a ver.",
+    variants: [
+      { name: "default", note: "Filas con número + título de sección.", usage: "Una vez al inicio · qué va a ver la audiencia." }
+    ]
+  },
+  "matrix": {
+    description: "2×2 matrix para comparar dos ejes.",
+    when: "Frameworks tipo Eisenhower, priorización, trade-offs bidimensionales.",
+    variants: [
+      { name: "default", note: "Cuatro cuadrantes con labels de ejes.", usage: "Trade-offs en dos ejes · Eisenhower, priorización, framework 2×2." }
+    ]
+  },
+  "roadmap": {
+    description: "Línea de tiempo / secuencia de pasos.",
+    when: "Mostrar fases, milestones, evolución temporal.",
+    variants: [
+      { name: "default",  note: "Pasos de izquierda a derecha (horizontal).", usage: "Fases o milestones en orden · lectura horizontal." },
+      { name: "timeline", note: "Versión vertical con marcadores de fecha.", usage: "Cronología con fechas concretas · lectura vertical." }
+    ]
+  },
+  "code-block": {
+    description: "Bloque de código con tipografía monoespaciada y resaltado mínimo.",
+    when: "Mostrar snippets y configuraciones. La variant anti marca explícitamente un caso a evitar.",
+    variants: [
+      { name: "default", note: "Código plano monospace.", usage: "Snippet o configuración como referencia neutra." },
+      { name: "anti",    note: "Etiquetado como anti-pattern, acento rojo.", usage: "Anti-pattern · 'no hagan esto' explícito." }
+    ]
+  },
+  "chart": {
+    description: "Gráfico simple integrado a la identidad del deck.",
+    when: "Datos que requieren visualización. Si es un número solo, preferí big-stat.",
+    variants: [
+      { name: "bar",  note: "Barras verticales/horizontales.", usage: "Comparar magnitudes entre categorías." },
+      { name: "line", note: "Línea de evolución temporal.", usage: "Evolución a lo largo del tiempo." }
+    ]
+  },
+  "comparison-table": {
+    description: "Tabla de comparación entre opciones/conceptos.",
+    when: "Antes vs después, opción A vs B vs C, trade-offs explícitos.",
+    variants: [
+      { name: "default", note: "Columnas con headers, resaltado por fila.", usage: "Antes vs después, A vs B vs C · trade-offs explícitos." }
+    ]
+  },
+  "kpi-grid": {
+    description: "Grid de múltiples métricas pequeñas.",
+    when: "Dashboard de KPIs, snapshot de resultados. Para UNA métrica destacada, usá big-stat.",
+    variants: [
+      { name: "default", note: "Grid flexible de tarjetas con valor + label.", usage: "Snapshot de varios KPIs · panorama, no foco en uno solo." }
+    ]
+  },
+  "concept-shift": {
+    description: "Antes → después. Dos bloques display enfrentados o una lista con un concepto ancla y variantes.",
+    when: "Visualizar un cambio de paradigma (estado A vs estado B) o variantes alrededor de una misma idea.",
+    variants: [
+      { name: "default", note: "Dos bloques: old (tachado/opaco) + new (fuerte).", usage: "Cambio de paradigma · estado A (viejo) vs estado B (nuevo)." }
+    ]
+  },
+  "resource-cards": {
+    description: "Tarjetas de recursos, links, referencias o personas del equipo.",
+    when: "Cerrar con referencias, bibliografía, créditos del equipo.",
+    variants: [
+      { name: "default", note: "Tarjetas genéricas con título + descripción.", usage: "Bibliografía, links de referencia, recursos para profundizar." },
+      { name: "team",    note: "Tarjetas con avatar + rol para presentar personas.", usage: "Presentar al equipo o créditos con cara y rol." }
+    ]
+  },
+  "speaker-bio": {
+    description: "Bio del speaker · nombre, rol, handles.",
+    when: "Presentarse. Una sola vez, al inicio o cerca del final.",
+    variants: [
+      { name: "default", note: "Nombre display + rol mono + socials.", usage: "Una vez por deck · 'quién soy' al inicio o al final." }
+    ]
+  },
+  "stack": {
+    description: "Pila de tecnologías/herramientas con logos o labels.",
+    when: "Mostrar el stack técnico, integraciones, dependencias.",
+    variants: [
+      { name: "default", note: "Grid de logos o nombres agrupados por capa.", usage: "Mostrar stack técnico, integraciones o dependencias." }
+    ]
+  },
+  "faq": {
+    description: "Preguntas frecuentes con Q/A.",
+    when: "Cierre interactivo, objeciones anticipadas, recap.",
+    variants: [
+      { name: "default", note: "Lista de preguntas con respuesta editorial.", usage: "Anticipar objeciones o recap en formato Q/A." }
+    ]
+  },
+  "closing-qr": {
+    description: "Cierre con código QR como CTA.",
+    when: "Cuando querés un touchpoint digital (link, signup, materiales).",
+    variants: [
+      { name: "default", note: "Título + QR + instrucciones.", usage: "CTA con touchpoint digital · link, signup, descarga de materiales." }
+    ]
+  },
+  "closing-socials": {
+    description: "Cierre con handles de redes y créditos.",
+    when: "Slide final para despedirse: 'dónde encontrarme' + agradecimientos.",
+    variants: [
+      { name: "default", note: "Fondo lemon, título display, socials en fila, credits pequeños.", usage: "Slide final · 'dónde encontrarme' + agradecimientos." }
+    ]
+  },
+  "demo": {
+    description: "Slide de placeholder para demo en vivo.",
+    when: "Marcar el punto donde compartís pantalla o cambiás de contexto.",
+    variants: [
+      { name: "default", note: "Eyebrow 'demo' + título grande + instrucciones.", usage: "Marcar el corte donde compartís pantalla o cambiás de contexto." }
+    ]
+  },
+  "social-embed": {
+    description: "Embed visual de un post social (tweet, LinkedIn, etc.).",
+    when: "Citar a alguien con el contexto visual original. Más fuerte que quote.",
+    variants: [
+      { name: "default", note: "Card estilo tweet con avatar + handle + cuerpo.", usage: "Citar a alguien con el visual original · más fuerte que quote." }
+    ]
+  },
+  "icon": {
+    description: "Slide donde el icono ES el contenido · uno o más glyphs centrados, con captions y/o connectors opcionales. Sin texto grande: si la slide necesita título display, usar big-concept con el ícono inline en el campo title.",
+    when: "Pausa puramente visual o cadena de íconos · cuando los glyphs solos cuentan la idea (símbolo crítico, transición, cadena progresiva).",
+    variants: [
+      { name: "default", note: "Row centrado de uno o más glyphs · captions y connectors opcionales · loader corner opcional.", usage: "Símbolo solo, cadena de íconos (con o sin flechas), pausa visual entre secciones." }
+    ]
+  },
+  "word-cloud": {
+    description: "Nube de palabras responsiva usando tokens del design system.",
+    when: "Lluvia de ideas, feedback de audiencia, o conceptos clave acumulados.",
+    variants: [
+      { name: "default", note: "Fondo oscuro con palabras en distintos tamaños y colores del brand.", usage: "Mostrar múltiples conceptos con distintos pesos visuales." }
+    ]
+  }
+};

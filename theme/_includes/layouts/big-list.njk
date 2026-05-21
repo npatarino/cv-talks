@@ -1,0 +1,56 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+{% set style = variant or "numeric" %}
+<section class="slide s-big-list {{ style }}{% if criticalFg %} critical-fg-{{ criticalFg }}{% endif %}" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  {% if fields.title %}<h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>{% endif %}
+
+  {% if style == "bullets" %}
+    <ul class="bullets">
+      {% for it in items %}
+        <li><span class="n">▪</span><span>{{ it.text | safe }}</span></li>
+      {% endfor %}
+    </ul>
+
+  {% elif style == "checklist" %}
+    <ul class="checklist">
+      {% for it in items %}
+        <li class="{{ it.state or 'todo' }}">
+          <span class="box">{% if it.state == 'fail' %}✗{% elif it.state == 'done' %}✓{% endif %}</span>
+          <span>{{ it.text | safe }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+
+  {% elif style == "glossary" %}
+    <dl class="glossary">
+      {% for it in items %}
+        <div class="term">
+          <dt>{{ it.term | safe }}</dt>
+          <dd>{{ it.desc | safe }}</dd>
+        </div>
+      {% endfor %}
+    </dl>
+
+  {% else %}
+    <ol>
+      {% for it in items %}
+        <li>
+          <span class="n">{{ it.n or (loop.index ~ '.') }}</span>
+          <span>
+            {{ it.text | safe }}
+            {% if it.sub %}
+              <div class="sub">
+                {% for s in it.sub %}<div class="si"><span class="n">{{ s.n }}</span><span>{{ s.text | safe }}</span></div>{% endfor %}
+              </div>
+            {% endif %}
+          </span>
+        </li>
+      {% endfor %}
+    </ol>
+  {% endif %}
+
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

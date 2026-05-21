@@ -1,0 +1,22 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+{% set v = variant or "default" %}
+<section class="slide s-big-stat{% if v != 'default' %} {{ v }}{% endif %}{% if criticalFg %} critical-fg-{{ criticalFg }}{% endif %}" data-recipe="{{ recipe }}" data-label="{{ label }}">
+
+  {% if v == "multiplier" %}
+    <div class="wrap">
+      <div class="n">{{ field(fields, "number", effectiveMode) | safe }}</div>
+      <div class="c">
+        <div class="t">{{ field(fields, "title", effectiveMode) | safe }}</div>
+      </div>
+    </div>
+  {% else %}
+    <div class="big">{{ field(fields, "stat_number", effectiveMode) | safe }}<span class="pct">{{ field(fields, "stat_unit", effectiveMode) | safe }}</span></div>
+    <div class="ex">{{ field(fields, "explanation", effectiveMode) | safe }}</div>
+  {% endif %}
+
+  <span class="sl-label{% if v == 'multiplier' %} dark{% endif %}">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

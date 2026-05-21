@@ -1,0 +1,166 @@
+/* Big-list · recipe canvas-quiet (charcoal + ivory + em lemon + accent patagonia).
+   Variants:
+     numeric   · numerales primarios en ivory (currentColor); sub-numerals (a, b)
+                 en accent patagonia · em en lemon
+     bullets   · marker square en accent patagonia · em en lemon
+     checklist · box ✓/✗ en accent patagonia (done) o warn red (fail)
+     glossary  · 2-col grid · término display + definición italic
+
+   Patagonia con peso: en quiet ya no es solo eyebrow — es el color de bullets,
+   markers, boxes y sub-numerals.
+
+   critical-fg-marker: anula el color de bullets/checklist boxes a plasma. */
+
+section.slide.s-big-list {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  padding: 110px 200px 130px;
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 80px;
+}
+
+/* Title — display CHANEY. em flows through editorial italic en --recipe-em. */
+.s-big-list h2 {
+  font: var(--chimi-type-display-md);
+  letter-spacing: var(--chimi-type-display-md-letterSpacing);
+  margin: 0;
+  max-width: 22ch;
+}
+.s-big-list h2 em {
+  font-family: var(--chimi-font-family-editorial);
+  font-style: italic; font-weight: 600;
+  /* Misma corrección de métrica que big-concept: CHANEY display vs Scilla italic. */
+  font-size: 1.4em;
+  letter-spacing: -0.01em;
+  color: var(--recipe-em);
+}
+
+/* Lists — body.xl, generous gap. */
+.s-big-list ol,
+.s-big-list ul {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column;
+  gap: 32px;
+}
+
+.s-big-list ol > li,
+.s-big-list ul > li {
+  font: var(--chimi-type-body-xl);
+  letter-spacing: var(--chimi-type-body-xl-letterSpacing);
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 32px;
+  align-items: first baseline;
+}
+
+.s-big-list li em {
+  font-family: var(--chimi-font-family-editorial);
+  font-style: italic; font-weight: 600;
+  color: var(--recipe-em);
+}
+.s-big-list li b { font-weight: 700; }
+
+/* Numeric variant — numerales primarios en --recipe-ink (currentColor). */
+.s-big-list ol > li > .n {
+  font: var(--chimi-type-numeral-lg);
+  letter-spacing: var(--chimi-type-numeral-lg-letterSpacing);
+  text-align: right;
+  padding-right: 8px;
+  align-self: baseline;
+  color: currentColor;
+}
+
+/* Bullets variant — square marker en --recipe-accent (patagonia). */
+.s-big-list ul.bullets > li {
+  grid-template-columns: 56px 1fr;
+  gap: 28px;
+}
+.s-big-list ul.bullets > li > .n {
+  display: flex; align-items: center; justify-content: flex-start;
+  height: 1em;
+  font-size: 0;
+}
+.s-big-list ul.bullets > li > .n::before {
+  content: "";
+  display: block;
+  width: 24px; height: 24px;
+  background: var(--recipe-accent);
+  transform: translateY(0.65em);
+}
+
+/* Sub-items — body.lg, sub-numerals en --recipe-accent (patagonia con peso). */
+.s-big-list .sub {
+  font: var(--chimi-type-body-lg);
+  margin-top: 20px;
+  display: flex; flex-direction: column; gap: 10px;
+  opacity: 0.85;
+}
+.s-big-list .sub .si {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 20px;
+  align-items: first baseline;
+}
+.s-big-list .sub .si .n {
+  font: var(--chimi-type-numeral-md);
+  letter-spacing: var(--chimi-type-numeral-md-letterSpacing);
+  text-align: right;
+  color: var(--recipe-accent);
+}
+
+/* Checklist variant — box ✓/✗ en accent (done) o warn (fail). Big scale. */
+.s-big-list ul.checklist > li {
+  grid-template-columns: 80px 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.s-big-list ul.checklist > li > .box {
+  width: 72px; height: 72px;
+  border: 5px solid var(--recipe-accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44px; font-weight: 700;
+  color: var(--recipe-surface);
+  flex-shrink: 0;
+}
+.s-big-list ul.checklist > li.done > .box {
+  background: var(--recipe-accent);
+}
+.s-big-list ul.checklist > li.fail > .box {
+  background: var(--recipe-warn);
+  border-color: var(--recipe-warn);
+  color: var(--recipe-ink);
+}
+
+/* Glossary variant — 2-column grid · término display + definición italic. */
+.s-big-list dl.glossary {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 36px 64px;
+}
+.s-big-list dl.glossary .term {
+  padding: 22px 0;
+  border-top: 2px solid color-mix(in srgb, var(--recipe-ink) 15%, transparent);
+}
+.s-big-list dl.glossary dt {
+  font: var(--chimi-type-display-md);
+  letter-spacing: var(--chimi-type-display-md-letterSpacing);
+  font-size: 56px; line-height: 1;
+}
+.s-big-list dl.glossary dd {
+  margin: 12px 0 0;
+  font-family: var(--chimi-font-family-editorial);
+  font-style: italic;
+  font-size: 28px; line-height: 1.35;
+  opacity: 0.78;
+}
+
+/* critical-fg-marker · bullets, boxes y sub-numerals pasan a plasma. */
+.s-big-list.critical-fg-marker ul.bullets > li > .n::before {
+  background: var(--recipe-warn);
+}
+.s-big-list.critical-fg-marker ul.checklist > li > .box {
+  border-color: var(--recipe-warn);
+}
+.s-big-list.critical-fg-marker ul.checklist > li.done > .box {
+  background: var(--recipe-warn);
+}

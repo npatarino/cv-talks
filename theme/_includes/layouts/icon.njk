@@ -1,0 +1,31 @@
+{% extends "layouts/slide.njk" %}
+
+{# Icon · slide donde el ícono ES el contenido.
+   No tiene title/note: si la slide necesita texto grande, usar big-concept,
+   big-stat o concept-shift con el ícono embebido inline en su campo de texto.
+
+   Acepta:
+     - items[]: arreglo de { glyph, caption?, connector? }
+         · glyph: emoji / SVG inline / texto-icono (ej. "25×"). Renderiza tal cual.
+         · caption: texto chico debajo del glyph (opcional · ej. "4' → 1.5'").
+         · connector: si es true, se pinta como flecha "→" entre glyphs en vez
+           de renderizar un icon-cell. #}
+
+{% block slide %}
+<section class="slide s-icon" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <div class="icons">
+    {% for it in items %}
+      {% if it.connector %}
+        <span class="connector" aria-hidden="true">→</span>
+      {% else %}
+        <div class="icon-cell">
+          <span class="glyph">{{ it.glyph | safe }}</span>
+          {% if it.caption %}<span class="caption">{{ it.caption | safe }}</span>{% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

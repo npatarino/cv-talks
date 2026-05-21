@@ -1,0 +1,21 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+{% set v = variant or "default" %}
+<section class="slide s-concept-shift{% if v != 'default' %} {{ v }}{% endif %}"
+         data-recipe="{{ recipe }}"
+         data-label="{{ label }}">
+  {% if v == "list" %}
+    <div class="anchor">{{ field(fields, "anchor", effectiveMode) | safe }}</div>
+    <div class="items">
+      {% for it in items %}<div class="it{% if it.active %} active{% endif %}"
+        {% if it.color %}style="color: {{ it.color }};"{% endif %}>{{ it.text }}</div>{% endfor %}
+    </div>
+  {% else %}
+    <div class="old">{{ field(fields, "old", effectiveMode) | safe }}</div>
+    <div class="new{% if size %} {{ size }}{% endif %}">{{ field(fields, "new", effectiveMode) | safe }}</div>
+  {% endif %}
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

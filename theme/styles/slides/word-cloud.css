@@ -1,0 +1,64 @@
+/* Word Cloud Slide
+   Dibuja una nube de palabras densa y responsiva simulando un layout compacto.
+*/
+
+section.slide.s-word-cloud {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.s-word-cloud .cloud {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  gap: 16px 32px;
+}
+
+/* Word tokens */
+.s-word-cloud .word {
+  display: inline-block;
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  margin: 0;
+  transform-origin: center;
+  transition: opacity 0.3s ease;
+}
+
+.s-word-cloud .word[data-reveal-hidden] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.s-word-cloud .word.vertical {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.s-word-cloud.strikethrough .word {
+  text-decoration: line-through;
+  text-decoration-thickness: 0.05em;
+  text-decoration-color: var(--recipe-warn);
+}
+
+/* Sizes */
+.s-word-cloud .w-xs { font-family: var(--font-body); font-size: 24px; font-weight: 500; }
+.s-word-cloud .w-sm { font-family: var(--font-editorial); font-size: 36px; font-style: italic; }
+.s-word-cloud .w-md { font-family: var(--font-data); font-size: 60px; font-weight: 700; }
+.s-word-cloud .w-lg { font-family: var(--font-display); font-size: 90px; font-weight: 600; }
+.s-word-cloud .w-xl { font-family: var(--font-display); font-size: 150px; font-weight: 800; letter-spacing: -0.03em; }
+
+/* Colors */
+.s-word-cloud .c-ink { color: var(--recipe-ink); }
+.s-word-cloud .c-em { color: var(--recipe-em); }
+.s-word-cloud .c-accent { color: var(--recipe-accent); }
+.s-word-cloud .c-warn { color: var(--recipe-warn); }

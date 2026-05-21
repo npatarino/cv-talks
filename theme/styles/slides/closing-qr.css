@@ -1,0 +1,53 @@
+/* Closing-qr · recipe paper. QR es un artifact local (charcoal disc + ivory marks). */
+
+section.slide.s-closing-qr {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: grid; grid-template-columns: 7fr 5fr;
+  gap: 80px; align-items: center; padding: 96px 140px;
+}
+.s-closing-qr h1 {
+  font-family: var(--font-display); font-size: 160px; line-height: 0.9;
+  letter-spacing: -0.025em; margin: 0;
+}
+.s-closing-qr h1 em {
+  color: var(--recipe-em);
+  font-family: var(--font-editorial); font-style: italic; font-weight: 600;
+  /* Misma corrección de métrica CHANEY display + Scilla italic. */
+  font-size: 1.4em; line-height: 0.95;
+}
+.s-closing-qr .rows {
+  margin-top: 40px;
+  display: flex; flex-direction: column; gap: 12px;
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.s-closing-qr .rows .r {
+  display: grid; grid-template-columns: 160px 1fr; gap: 24px;
+  align-items: center;
+  border-top: 2px solid color-mix(in srgb, var(--recipe-ink) 15%, transparent);
+  padding-top: 16px;
+}
+.s-closing-qr .rows .r .k {
+  color: var(--recipe-em);
+  font-weight: 700;
+}
+.s-closing-qr .qr {
+  aspect-ratio: 1;
+  background: var(--chimi-primitives-color-charcoal-100);
+  padding: 28px; position: relative;
+  display: flex; flex-direction: column; gap: 16px;
+  justify-self: end; width: 100%; max-width: 440px;
+}
+.s-closing-qr .qr .grid {
+  flex: 1; background-image:
+    linear-gradient(90deg, var(--chimi-primitives-color-ivory-base) 0 12%, transparent 12% 20%, var(--chimi-primitives-color-ivory-base) 20% 28%, transparent 28% 40%, var(--chimi-primitives-color-ivory-base) 40% 52%, transparent 52% 60%, var(--chimi-primitives-color-ivory-base) 60% 72%, transparent 72% 84%, var(--chimi-primitives-color-ivory-base) 84% 100%),
+    linear-gradient(0deg, var(--chimi-primitives-color-ivory-base) 0 8%, transparent 8% 16%, var(--chimi-primitives-color-ivory-base) 16% 32%, transparent 32% 44%, var(--chimi-primitives-color-ivory-base) 44% 56%, transparent 56% 72%, var(--chimi-primitives-color-ivory-base) 72% 80%, transparent 80% 92%, var(--chimi-primitives-color-ivory-base) 92% 100%);
+  background-size: 100% 100%; background-blend-mode: multiply;
+}
+.s-closing-qr .qr .cap {
+  font-family: var(--font-mono); font-size: 18px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--chimi-primitives-color-ivory-base);
+  text-align: center;
+}

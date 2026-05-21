@@ -1,0 +1,134 @@
+{#
+  Fullscreen iframe-based player for a single deck.
+  Expects: deck (object from deck.json), slides (collection).
+#}
+<!doctype html>
+<html lang="es">
+<head>
+<meta name="chimi-seo-skip" content="player surface — fullscreen iframe embedder, not a public landing">
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ deck.title }} · Deck</title>
+<link rel="stylesheet" href="{{ '/talks/styles/tokens.css' | url }}">
+<link rel="stylesheet" href="{{ '/talks/styles/base.css' | url }}">
+<script>
+// Mode detect — controla la UI del deck-player (single deck-frame vs
+// viewer-stack de iframes con scroll-snap). Los iframes individuales
+// que carga el viewer-stack van SIN `?view=mobile` para que se rendericen
+// en 16:9 escalado como una imagen, no como página web linealizada.
+//
+// Resolución:
+//   1. Explicit `?view=presentation|mobile` query param.
+//   2. Heuristic: viewport < 768px → mobile UI; ≥ 768 → presentation UI.
+(function () {
+  var sp = new URLSearchParams(location.search);
+  var explicit = sp.get('view');
+  var mode;
+  if (explicit === 'mobile' || explicit === 'presentation') {
+    mode = explicit;
+  } else {
+    mode = window.innerWidth < 768 ? 'mobile' : 'presentation';
+  }
+  document.documentElement.setAttribute('data-view', mode);
+})();
+</script>
+<style>
+  html, body { margin: 0; padding: 0; background: #000; }
+  /* Default (presentation) deck-player layout — single iframe filling
+     the viewport with key navigation handled by deck.js. */
+  html:not([data-view="mobile"]) body { height: 100vh; overflow: hidden; }
+  html:not([data-view="mobile"]) .deck-frame {
+    position: fixed; inset: 0;
+    width: 100vw; height: 100vh;
+    border: 0;
+    background: #000;
+  }
+  .deck-controls {
+    position: fixed; top: 20px; right: 20px;
+    display: flex; gap: 8px; z-index: 101;
+  }
+  .deck-controls button {
+    padding: 10px 16px; font-family: var(--font-mono); font-size: 13px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--charcoal-90); color: var(--ivory);
+    border: 2px solid var(--patagonia); cursor: pointer;
+  }
+  .deck-controls button:hover { background: var(--patagonia); color: var(--charcoal); }
+  body.fullscreen .deck-controls { display: none; }
+  .deck-hud {
+    position: fixed; bottom: 20px; left: 20px;
+    padding: 8px 16px; font-family: var(--font-mono); font-size: 13px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--charcoal-90); color: var(--ivory); opacity: 0.7;
+    border-left: 3px solid var(--lemon); pointer-events: none;
+    z-index: 100;
+  }
+  body.fullscreen .deck-hud { display: none; }
+
+  /* ─── Mobile viewer ─────────────────────────────────────────────── *
+   *  Replaces the single-iframe + key-nav presentation with a
+   *  vertically scrollable stack. Each slide gets its own iframe
+   *  sized exactly `100vw × 100svh` and CSS scroll-snap pins them
+   *  one-per-screen. The iframes append `?view=mobile` to the slide
+   *  URL so each slide loads with the mobile-flow layout from
+   *  viewer-mobile.css.
+   * ────────────────────────────────────────────────────────────── */
+  html[data-view="mobile"] body { overflow: hidden; }
+  html[data-view="mobile"] .deck-frame { display: none; }
+  html[data-view="mobile"] .deck-hud { display: none; }
+  html[data-view="mobile"] .deck-controls { display: none; }
+  html[data-view="mobile"] .viewer-stack {
+    position: fixed; inset: 0;
+    width: 100vw; height: 100svh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  html[data-view="mobile"] .viewer-slide {
+    width: 100vw;
+    height: 100svh;
+    border: 0;
+    display: block;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    background: var(--charcoal);
+  }
+  /* Hide the vertical stack when not in mobile mode so the
+     presentation iframe is the only visible surface. */
+  html:not([data-view="mobile"]) .viewer-stack { display: none; }
+</style>
+</head>
+<body>
+
+<iframe class="deck-frame" id="deck-frame" title="slide"></iframe>
+
+<div class="viewer-stack" aria-label="Mobile viewer">
+{%- for s in slides %}
+  <iframe class="viewer-slide" loading="lazy" title="{{ s.data.label }}" src="{{ s.url | url }}"></iframe>
+{%- endfor %}
+</div>
+
+<div class="deck-controls">
+  <button data-action="fullscreen" title="F · Fullscreen">⛶ Fullscreen</button>
+</div>
+<div class="deck-hud" id="deck-hud">— / —</div>
+
+<script>
+window.__SLIDES__ = [
+{%- for s in slides %}
+  { order: {{ s.data.order }}, url: "{{ s.url | url }}", label: {{ s.data.label | dump | safe }}{% if s.data.revealStart != undefined %}, revealStart: {{ s.data.revealStart }}{% endif %} }{% if not loop.last %},{% endif %}
+{%- endfor %}
+];
+// Skip the presentation deck script in mobile mode — the viewer-stack
+// is a pure CSS scroll-snap layout, no JS coordination needed.
+if (document.documentElement.getAttribute('data-view') !== 'mobile') {
+  var s = document.createElement('script');
+  s.src = "{{ '/talks/assets/deck.js' | url }}";
+  document.head.appendChild(s);
+}
+</script>
+{% include "partials/analytics.njk" %}
+</body>
+</html>

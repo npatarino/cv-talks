@@ -1,0 +1,30 @@
+/* Closing-socials · recipe canvas-quiet por default + allowDeckOverride.
+   Si el deck necesita otro fondo (ej: energy-loud para una despedida loud),
+   override la recipe en el frontmatter del .md. */
+
+section.slide.s-closing-socials {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  padding: 96px 110px 140px 140px;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center;
+}
+.s-closing-socials h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 150px; line-height: 1; letter-spacing: -0.02em;
+  margin: 0;
+}
+.s-closing-socials .socials {
+  margin-top: 140px; display: flex; gap: 28px;
+  align-items: center; justify-content: center;
+  font-size: 56px; line-height: 1;
+}
+.s-closing-socials .socials img {
+  width: 1em; height: 1em;
+  object-fit: contain;
+}
+.s-closing-socials .credits {
+  margin-top: 24px;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 44px; line-height: 1.2; letter-spacing: -0.005em;
+}

@@ -1,0 +1,9 @@
+---
+permalink: /talks/templates/deck/index.html
+eleventyExcludeFromCollections: true
+eleventyComputed:
+  layout: ""
+---
+{% set deck = { title: "Templates · gallery as deck" } %}
+{% set slides = collections.templates %}
+{% include "deck-player.njk" %}

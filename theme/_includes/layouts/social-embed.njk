@@ -1,0 +1,18 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+<section class="slide s-social-embed" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <div class="post">
+    <div class="head">
+      <div class="avatar">{{ field(fields, "avatar", effectiveMode) | safe }}</div>
+      <div class="who">
+        <div class="n">{{ field(fields, "name", effectiveMode) | safe }}</div>
+        <div class="h">{{ field(fields, "handle", effectiveMode) | safe }}</div>
+      </div>
+    </div>
+    <div class="body">{{ field(fields, "body", effectiveMode) | safe }}</div>
+  </div>
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

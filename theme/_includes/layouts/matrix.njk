@@ -1,0 +1,20 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+<section class="slide s-matrix" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+  <div class="grid">
+    <div></div>
+    <div class="colhead">{{ field(fields, "col1", effectiveMode) | safe }}</div>
+    <div class="colhead">{{ field(fields, "col2", effectiveMode) | safe }}</div>
+    <div class="rowhead">{{ field(fields, "row1", effectiveMode) | safe }}</div>
+    <div class="cell c-tl"><div class="t">{{ cells.tl.title | safe }}</div>{% if cells.tl.desc %}<div class="d">{{ cells.tl.desc | safe }}</div>{% endif %}</div>
+    <div class="cell c-tr"><div class="t">{{ cells.tr.title | safe }}</div>{% if cells.tr.desc %}<div class="d">{{ cells.tr.desc | safe }}</div>{% endif %}</div>
+    <div class="rowhead">{{ field(fields, "row2", effectiveMode) | safe }}</div>
+    <div class="cell c-bl"><div class="t">{{ cells.bl.title | safe }}</div>{% if cells.bl.desc %}<div class="d">{{ cells.bl.desc | safe }}</div>{% endif %}</div>
+    <div class="cell c-br"><div class="t">{{ cells.br.title | safe }}</div>{% if cells.br.desc %}<div class="d">{{ cells.br.desc | safe }}</div>{% endif %}</div>
+  </div>
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

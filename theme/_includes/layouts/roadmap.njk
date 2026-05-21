@@ -1,0 +1,40 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+{% set v = variant or "horizontal" %}
+<section class="slide s-roadmap{% if v != 'horizontal' %} {{ v }}{% endif %}" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+
+  {% if v == "timeline" %}
+    <div class="tl">
+      {% for it in items %}
+      <div class="item">
+        <div class="bubble" style="background: {{ it.color }}; color: {{ it.textColor or 'var(--ivory)' }};">{{ it.badge }}</div>
+        <div class="txt">{{ it.content | safe }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="track">
+      <div class="axis"><div class="done" style="width: {{ progress or '40%' }};"></div></div>
+      <div class="steps" style="grid-template-columns: repeat({{ steps | length }}, 1fr);">
+        {% for s in steps %}
+        <div class="step{% if s.state %} {{ s.state }}{% endif %}">
+          <div class="q">{{ s.q }}</div>
+          <div class="t">{{ s.title | safe }}</div>
+          {% if s.desc %}<div class="d">{{ s.desc | safe }}</div>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% if legend %}
+    <div class="legend">
+      {% for l in legend %}<span class="{{ l.key }}">{{ l.label }}</span>{% endfor %}
+    </div>
+    {% endif %}
+  {% endif %}
+
+  <span class="sl-label{% if v == 'timeline' %} dark{% endif %}">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

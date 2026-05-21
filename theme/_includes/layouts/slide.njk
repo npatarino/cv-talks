@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta name="chimi-seo-skip" content="player surface — slide pages are embedded in deck-player, not public landings">
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ order }} · {{ label }} — {{ site.title }}</title>
+<link rel="stylesheet" href="{{ '/talks/styles/tokens.css' | url }}">
+<link rel="stylesheet" href="{{ '/talks/styles/base.css' | url }}">
+<link rel="stylesheet" href="{{ '/talks/styles/viewer-mobile.css' | url }}">
+{% if slideCss %}<link rel="stylesheet" href="{{ ('/talks/styles/slides/' + slideCss + '.css') | url }}">{% endif %}
+<script>
+// Mode detect — runs synchronously before the body is parsed so the
+// inline transform script (and any CSS scoped to data-view) sees the
+// correct value on first paint.
+//
+// Default is `presentation` (16:9 escalado, letterboxed) — el slide
+// se comporta como una imagen 16:9 en todos los contextos (deck player,
+// gallery thumbnails, slide standalone, móvil). El modo `mobile` solo
+// se activa con un `?view=mobile` explícito; ese modo lineariza el
+// slide en flujo natural y solo tiene sentido como página web (ej.
+// previews compartibles fuera del player).
+(function () {
+  var sp = new URLSearchParams(location.search);
+  var explicit = sp.get('view');
+  var mode = (explicit === 'mobile') ? 'mobile' : 'presentation';
+  document.documentElement.setAttribute('data-view', mode);
+})();
+
+// Apply scale transform before section.slide is parsed — prevents a flash
+// of the unscaled 1920×1080 slide before present.js runs. Skip in mobile
+// view: viewer-mobile.css disables the fixed-canvas layout entirely so
+// the transform would just shrink the natural-flow content.
+(function () {
+  if (document.documentElement.getAttribute('data-view') === 'mobile') return;
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var s = Math.min(vw / 1920, vh / 1080);
+  var x = (vw - 1920 * s) / 2, y = (vh - 1080 * s) / 2;
+  document.write(
+    '<style>body.slide-page section.slide{transform:translate(' +
+    x + 'px,' + y + 'px) scale(' + s + ');}</style>'
+  );
+})();
+</script>
+</head>
+<body class="slide-page{% if effectiveMode == 'meta' %} mode-meta{% endif %}" data-slide-order="{{ order }}">
+{% block slide %}{% endblock %}
+
+<div id="variant-hud" class="variant-hud"></div>
+
+<script>
+window.__SLIDES__ = [
+{%- for s in collections.slides %}
+  { order: {{ s.data.order }}, url: "{{ s.url | url }}", label: {{ s.data.label | dump | safe }}{% if s.data.revealStart != undefined %}, revealStart: {{ s.data.revealStart }}{% endif %} }{% if not loop.last %},{% endif %}
+{%- endfor %}
+];
+window.__TEMPLATE__ = {{ template | dump | safe }};
+window.__VARIANT__ = {{ (variant or "default") | dump | safe }};
+{# Cada variant lleva su `recipe` (y `criticalFg`) leído del archivo de la galería —
+   así present.js puede swappear el data-recipe al ciclar variants con `v`, igual
+   que cuando la galería renderiza cada variant como un thumbnail aparte. #}
+{%- set tplCollection = collections.templates -%}
+window.__TEMPLATE_INFO__ = {
+{%- for tname, tmeta in templates %}
+  {{ tname | dump | safe }}: {
+    variants: [
+      {%- for v in tmeta.variants -%}
+        {%- set match = false -%}
+        {%- for tpl in tplCollection -%}
+          {%- if not match and tpl.data.template == tname and tpl.fileSlug.endsWith("-" + v.name) -%}
+            {%- set match = tpl -%}
+          {%- endif -%}
+        {%- endfor %}
+        { name: {{ v.name | dump | safe }}, note: {{ v.note | dump | safe }}
+          {%- if match %}, recipe: {{ match.data.recipe | dump | safe }}
+            {%- if match.data.criticalFg %}, criticalFg: {{ match.data.criticalFg | dump | safe }}{%- endif -%}
+          {%- endif -%}
+        }{% if not loop.last %},{% endif %}
+      {%- endfor %}
+    ]
+  }{% if not loop.last %},{% endif %}
+{%- endfor %}
+};
+</script>
+<script src="{{ '/talks/assets/present.js' | url }}"></script>
+{% include "partials/analytics.njk" %}
+</body>
+</html>

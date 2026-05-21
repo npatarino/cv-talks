@@ -1,0 +1,52 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+{% set v = variant or "bar" %}
+<section class="slide s-chart {{ v }}" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+
+  {% if v == "bar" %}
+    <div class="chart">
+      {% for b in bars %}
+      <div class="bar">
+        <div class="b" style="height: {{ b.pct }}%; background: {{ b.color }};"><div class="n"{% if b.nColor %} style="color: {{ b.nColor }};"{% endif %}>{{ b.value }}</div></div>
+        <div class="lbl">{{ b.label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  {% elif v == "line" %}
+    {% set vbW = 1000 %}
+    {% set vbH = 400 %}
+    <div class="chart">
+      <svg class="paths" viewBox="0 0 {{ vbW }} {{ vbH }}" preserveAspectRatio="none">
+        <g class="grid">
+          <line x1="0" y1="80"  x2="1000" y2="80"/>
+          <line x1="0" y1="160" x2="1000" y2="160"/>
+          <line x1="0" y1="240" x2="1000" y2="240"/>
+          <line x1="0" y1="320" x2="1000" y2="320"/>
+        </g>
+        {% if line.area %}<path class="area" d="{{ line.area }}"/>{% endif %}
+        <path class="serie" d="{{ line.path }}"/>
+        {% if line.path2 %}<path class="serie2" d="{{ line.path2 }}"/>{% endif %}
+      </svg>
+      {% for p in line.points %}
+        <div class="dot{% if p.kind == 'peak' %} peak{% endif %}"
+             style="left: {{ (p.x / vbW * 100) }}%; top: {{ (p.y / vbH * 100) }}%;"></div>
+      {% endfor %}
+      {% for l in line.labels %}
+        <div class="dot-label"
+             style="left: {{ (l.x / vbW * 100) }}%; top: {{ (l.y / vbH * 100) }}%;{% if l.opacity %}opacity: {{ l.opacity }};{% endif %}">{{ l.text }}</div>
+      {% endfor %}
+    </div>
+    <div class="xaxis" style="grid-template-columns: repeat({{ line.xaxis | length }}, 1fr);">
+      {% for x in line.xaxis %}<span>{{ x }}</span>{% endfor %}
+    </div>
+    <div class="legend">
+      {% for l in line.legend %}<span class="{{ l.key }}">{{ l.label }}</span>{% endfor %}
+    </div>
+  {% endif %}
+
+  <span class="sl-label{% if v == 'line' %} dark{% endif %}">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

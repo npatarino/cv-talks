@@ -1,0 +1,26 @@
+/* FAQ · recipe paper (informativo, no cálido). */
+
+section.slide.s-faq {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.s-faq h2 {
+  font-family: var(--font-display); font-size: 120px; line-height: 0.95;
+  margin: 0 0 44px; letter-spacing: -0.01em;
+}
+.s-faq .qa {
+  border-top: 2px solid var(--recipe-ink);
+  padding: 24px 0;
+}
+.s-faq .qa:last-child {
+  border-bottom: 2px solid var(--recipe-ink);
+}
+.s-faq .qa .q {
+  font-family: var(--font-display); font-size: 38px; line-height: 1.1;
+}
+.s-faq .qa .a {
+  font-family: var(--font-editorial); font-style: italic;
+  font-size: 24px; line-height: 1.35; opacity: 0.78;
+  margin-top: 8px; max-width: 58ch;
+}

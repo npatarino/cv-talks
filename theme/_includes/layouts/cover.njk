@@ -1,0 +1,17 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{% block slide %}
+<section class="slide s-cover" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  {% if fields.brand or fields.index %}
+  <div class="top">
+    <span class="brand">{% if fields.brand %}{{ field(fields, "brand", effectiveMode) | safe }}{% endif %}</span>
+    <span class="index">{% if fields.index %}{{ field(fields, "index", effectiveMode) | safe }}{% endif %}</span>
+  </div>
+  {% endif %}
+  {% if fields.kicker %}<div class="kicker">{{ field(fields, "kicker", effectiveMode) | safe }}</div>{% endif %}
+  <h1>{{ field(fields, "title", effectiveMode) | safe }}</h1>
+  {% if fields.deck %}<div class="deck">{{ field(fields, "deck", effectiveMode) | safe }}</div>{% endif %}
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{
+  "name": "@chimichurricode/talks",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chimichurri Code — modular slide system (Eleventy).",
+  "scripts": {
+    "sync:fonts": "node scripts/sync-fonts.mjs",
+    "build": "bun run sync:fonts && eleventy && bun scripts/build-seo.mjs",
+    "serve": "bun run sync:fonts && eleventy --serve",
+    "serve:meta": "bun run sync:fonts && SLIDE_MODE=meta eleventy --serve"
+  },
+  "dependencies": {
+    "@chimichurricode/design-system": "^0.7.2",
+    "@chimichurricode/analytics": "^0.1.0"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}
