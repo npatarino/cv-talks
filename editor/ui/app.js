@@ -617,13 +617,65 @@ function renderGallery(query) {
   }
 }
 
+// Shared zoom popup (reused across all cards)
+let zoomPopup = null;
+let zoomIframe = null;
+let zoomHideTimer = null;
+
+function ensureZoomPopup() {
+  if (zoomPopup) return;
+  zoomPopup = document.createElement('div');
+  zoomPopup.className = 'tmpl-zoom-popup';
+  zoomPopup.style.display = 'none';
+  zoomIframe = document.createElement('iframe');
+  zoomIframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
+  zoomPopup.appendChild(zoomIframe);
+  document.body.appendChild(zoomPopup);
+}
+
+function showZoom(slide, card) {
+  ensureZoomPopup();
+  clearTimeout(zoomHideTimer);
+  zoomIframe.src = slide.previewUrl;
+  zoomPopup.style.display = 'block';
+  positionZoom(card);
+}
+
+function positionZoom(card) {
+  if (!zoomPopup) return;
+  const rect = card.getBoundingClientRect();
+  const popW = 640, popH = 360;
+  const vpW = window.innerWidth, vpH = window.innerHeight;
+
+  // Try right of card, fall back to left
+  let left = rect.right + 12;
+  if (left + popW > vpW - 8) left = rect.left - popW - 12;
+  if (left < 8) left = 8;
+
+  // Vertically center on card, clamp to viewport
+  let top = rect.top + rect.height / 2 - popH / 2;
+  top = Math.max(8, Math.min(vpH - popH - 8, top));
+
+  zoomPopup.style.left = left + 'px';
+  zoomPopup.style.top = top + 'px';
+  zoomPopup.style.width = popW + 'px';
+  zoomPopup.style.height = popH + 'px';
+}
+
+function hideZoom() {
+  clearTimeout(zoomHideTimer);
+  zoomHideTimer = setTimeout(() => {
+    if (zoomPopup) zoomPopup.style.display = 'none';
+  }, 120);
+}
+
 function buildTmplCard(slide) {
   const card = document.createElement('div');
   card.className = 'tmpl-card';
   card.dataset.template = slide.template;
   card.dataset.variant = slide.variant;
 
-  // Scaled iframe preview
+  // Scaled iframe preview (thumbnail in the card)
   const previewWrap = document.createElement('div');
   previewWrap.className = 'tmpl-card-preview';
 
@@ -633,15 +685,12 @@ function buildTmplCard(slide) {
   iframe.setAttribute('loading', 'lazy');
   iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts');
 
-  // Scale iframe: fit 1920px into card width dynamically
   function scaleIframe() {
-    const cardW = previewWrap.clientWidth || 200;
-    const scale = cardW / 1920;
+    const w = previewWrap.clientWidth || 300;
+    const scale = w / 1920;
     iframe.style.transform = `scale(${scale})`;
-    iframe.style.height = `${1080 * scale}px`;
   }
 
-  // Observe card resize
   const ro = new ResizeObserver(scaleIframe);
   ro.observe(previewWrap);
   iframe.addEventListener('load', scaleIframe);
@@ -658,6 +707,12 @@ function buildTmplCard(slide) {
   card.appendChild(info);
 
   card.addEventListener('click', () => selectTmplCard(card, slide));
+
+  // Hover zoom
+  card.addEventListener('mouseenter', () => showZoom(slide, card));
+  card.addEventListener('mouseleave', hideZoom);
+  card.addEventListener('mousemove', () => positionZoom(card));
+
   return card;
 }
 
@@ -763,6 +818,7 @@ function closeModals() {
   dom.modalAdd.hidden = true;
   dom.modalConfirm.hidden = true;
   pendingDelete = null;
+  if (zoomPopup) zoomPopup.style.display = 'none';
 }
 
 // ---- Event wiring ----
