@@ -63,15 +63,28 @@ function parseBlock(lines, startIndex, indent) {
     const key = trimmed.slice(lineIndent, colonIdx).trim();
     const rest = trimmed.slice(colonIdx + 1).trim();
 
-    if (rest === '' || rest === '|' || rest === '>') {
-      // Could be a block or nested mapping — look ahead
+    if (rest === '|' || rest === '>') {
+      // Block scalar (literal | or folded >) — collect indented lines
+      if (i + 1 < lines.length) {
+        const nextLine = lines[i + 1];
+        const blockIndent = nextLine.length - nextLine.trimStart().length;
+        if (blockIndent > indent) {
+          const block = parseBlockScalar(lines, i + 1, blockIndent, rest === '>');
+          result[key] = block.value;
+          i = block.nextIndex;
+          continue;
+        }
+      }
+      result[key] = '';
+    } else if (rest === '') {
+      // Could be nested mapping or array — look ahead
       if (i + 1 < lines.length) {
         const nextLine = lines[i + 1];
         const nextIndent = nextLine.length - nextLine.trimStart().length;
 
         if (nextIndent > indent) {
           const nextTrimmed = nextLine.trimStart();
-          if (nextTrimmed.startsWith('- ') || nextTrimmed.startsWith('-\n')) {
+          if (nextTrimmed.startsWith('- ') || nextTrimmed.startsWith('-\n') || nextTrimmed === '-') {
             // Array value
             const arr = parseArray(lines, i + 1, nextIndent);
             result[key] = arr.value;
@@ -107,6 +120,42 @@ function parseBlock(lines, startIndex, indent) {
 }
 
 /**
+ * Parse a YAML block scalar (| literal or > folded).
+ * Collects lines at `indent` level and joins them.
+ * Appends a trailing newline as per YAML spec (clip chomping).
+ */
+function parseBlockScalar(lines, startIndex, indent, folded = false) {
+  const collected = [];
+  let i = startIndex;
+
+  while (i < lines.length) {
+    const line = lines[i];
+    const trimmedEnd = line.trimEnd();
+
+    // Empty line in a block scalar — preserve as blank line
+    if (trimmedEnd.trim() === '') {
+      collected.push('');
+      i++;
+      continue;
+    }
+
+    const lineIndent = trimmedEnd.length - trimmedEnd.trimStart().length;
+    if (lineIndent < indent) break;
+
+    collected.push(trimmedEnd.slice(indent));
+    i++;
+  }
+
+  // Strip trailing empty lines, then add one final newline (clip chomping)
+  while (collected.length > 0 && collected[collected.length - 1] === '') collected.pop();
+
+  const separator = folded ? ' ' : '\n';
+  const value = collected.join(separator) + '\n';
+
+  return { value, nextIndex: i };
+}
+
+/**
  * Parse a YAML array block.
  */
 function parseArray(lines, startIndex, indent) {
@@ -127,7 +176,7 @@ function parseArray(lines, startIndex, indent) {
       break;
     }
 
-    const itemContent = trimStart.slice(2).trim();
+    const itemContent = trimStart === '-' ? '' : trimStart.slice(2).trim();
 
     if (itemContent.startsWith('{')) {
       result.push(parseInlineObject(itemContent));
@@ -311,6 +360,14 @@ function dumpObject(obj, indent) {
         out += `${pad}${key}:\n`;
         out += dumpValue(v, indent + 1);
       }
+    } else if (typeof v === 'string' && v.includes('\n')) {
+      // Use block scalar for multiline strings
+      const blockIndent = '  '.repeat(indent + 1);
+      const lines = v.replace(/\n$/, '').split('\n');
+      out += `${pad}${key}: |\n`;
+      for (const line of lines) {
+        out += `${blockIndent}${line}\n`;
+      }
     } else {
       out += `${pad}${key}: ${dumpValue(v, indent)}\n`;
     }
@@ -346,7 +403,12 @@ function dumpArrayItem(item, indent) {
 
 function isShallowInlineCandidate(obj) {
   const vals = Object.values(obj);
-  return vals.every(v => v === null || typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean');
+  return vals.every(v =>
+    v === null ||
+    typeof v === 'number' ||
+    typeof v === 'boolean' ||
+    (typeof v === 'string' && !v.includes('\n'))
+  );
 }
 
 function serializeInlineObject(obj) {
@@ -359,7 +421,12 @@ function serializeInlineObject(obj) {
 function quoteString(str) {
   if (str === '') return '""';
   // Use double quotes if the string contains special characters
-  const needsQuoting = /[:#\[\]{},|>&*!'"@`%?]|^\s|\s$/.test(str) || str.includes('\n');
+  const needsQuoting =
+    /[:#\[\]{},|>&*!'"@`%?]|^\s|\s$/.test(str) ||
+    str.includes('\n') ||
+    // Strings that look like scalars must be quoted to round-trip correctly
+    str === 'true' || str === 'false' || str === 'null' || str === '~' ||
+    /^-?\d+(\.\d+)?$/.test(str);
   if (!needsQuoting) return str;
   // Use single quotes if no single quotes in string
   if (!str.includes("'")) return `'${str}'`;
