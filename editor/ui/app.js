@@ -20,7 +20,6 @@ const state = {
   // Per-slide badges
   dirtyFiles: new Set(),       // unsaved form changes (yellow)
   uncommittedFiles: new Set(), // saved but not committed (teal)
-  autoSaveTimer: null,
 };
 
 // ---- DOM refs ----
@@ -116,7 +115,6 @@ async function loadSlides() {
 // ---- Slide selection ----
 
 async function selectSlide(filename) {
-  if (state.hasUnsaved && state.selectedFilename) await saveCurrentSlide(true);
   state.selectedFilename = filename;
   state.hasUnsaved = false;
   setStatus(false);
@@ -532,12 +530,6 @@ function markUnsaved() {
     state.dirtyFiles.add(state.selectedFilename);
     renderSidebar();
   }
-
-  // Auto-save after 600ms of inactivity
-  clearTimeout(state.autoSaveTimer);
-  state.autoSaveTimer = setTimeout(() => {
-    if (state.hasUnsaved) saveCurrentSlide(true);
-  }, 600);
 }
 
 async function refreshGitStatus() {
