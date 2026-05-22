@@ -90,47 +90,65 @@
   <!-- Add Slide Modal -->
   <div id="modal-add" class="modal" hidden>
     <div class="modal-backdrop"></div>
-    <div class="modal-content">
+    <div class="modal-content modal-gallery">
       <div class="modal-header">
         <h2>Add Slide</h2>
-        <button class="btn-icon modal-close">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </button>
+        <div class="modal-header-right">
+          <input type="text" id="gallery-search" placeholder="Search templates…" autocomplete="off">
+          <button class="btn-icon modal-close">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
       </div>
-      <div class="modal-body">
-        <label class="form-field">
-          <span class="field-label">Template</span>
-          <select id="new-template"></select>
-        </label>
-        <label class="form-field">
-          <span class="field-label">Variant</span>
-          <select id="new-variant"></select>
-        </label>
-        <label class="form-field">
-          <span class="field-label">Recipe</span>
-          <select id="new-recipe">
-            <option value="canvas-quiet">canvas-quiet</option>
-            <option value="canvas-signal">canvas-signal</option>
-            <option value="paper">paper</option>
-            <option value="energy-loud">energy-loud</option>
-            <option value="cool-fresh">cool-fresh</option>
-            <option value="critical">critical</option>
-          </select>
-        </label>
-        <label class="form-field">
-          <span class="field-label">Label</span>
-          <input type="text" id="new-label" placeholder="Slide label…">
-        </label>
-        <label class="form-field">
-          <span class="field-label">Insert at position</span>
-          <input type="number" id="new-position" min="1" value="1">
-        </label>
+
+      <!-- Two-column layout: gallery left, config right -->
+      <div class="modal-gallery-layout">
+        <!-- Template gallery -->
+        <div class="gallery-pane">
+          <div id="gallery-grid">
+            <div class="gallery-loading">Loading templates…</div>
+          </div>
+        </div>
+
+        <!-- Config panel -->
+        <div class="gallery-config">
+          <div id="selected-preview-wrap">
+            <div class="selected-preview-placeholder">Select a template</div>
+          </div>
+
+          <div class="config-fields">
+            <label class="form-field">
+              <span class="field-label">Recipe</span>
+              <select id="new-recipe">
+                <option value="canvas-quiet">canvas-quiet</option>
+                <option value="canvas-signal">canvas-signal</option>
+                <option value="paper">paper</option>
+                <option value="energy-loud">energy-loud</option>
+                <option value="cool-fresh">cool-fresh</option>
+                <option value="critical">critical</option>
+              </select>
+            </label>
+            <label class="form-field">
+              <span class="field-label">Label</span>
+              <input type="text" id="new-label" placeholder="Slide label…">
+            </label>
+            <label class="form-field">
+              <span class="field-label">Insert at position</span>
+              <input type="number" id="new-position" min="1" value="1">
+            </label>
+          </div>
+
+          <!-- Hidden inputs for selected template/variant -->
+          <input type="hidden" id="new-template" value="">
+          <input type="hidden" id="new-variant" value="">
+        </div>
       </div>
+
       <div class="modal-footer">
         <button class="btn-secondary modal-close">Cancel</button>
-        <button class="btn-primary" id="btn-add-confirm">Add Slide</button>
+        <button class="btn-primary" id="btn-add-confirm" disabled>Add Slide</button>
       </div>
     </div>
   </div>

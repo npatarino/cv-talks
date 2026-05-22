@@ -14,7 +14,7 @@
 
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { listDecks } from './api/decks.mjs';
+import { listDecks, listTemplateSlides } from './api/decks.mjs';
 import {
   listSlides,
   getSlide,
@@ -70,6 +70,11 @@ async function route(req) {
   // GET /api/templates
   if (method === 'GET' && pathname === '/api/templates') {
     return json(getTemplatesMeta());
+  }
+
+  // GET /api/template-slides
+  if (method === 'GET' && pathname === '/api/template-slides') {
+    return json(listTemplateSlides());
   }
 
   // GET /api/decks/:slug/slides
