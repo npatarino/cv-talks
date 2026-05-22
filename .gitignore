@@ -7,3 +7,8 @@ _site/
 
 # Synced from @chimichurricode/design-system at build time
 theme/styles/fonts/
+
+# Test artifacts
+coverage/
+test-results/
+playwright-report/
