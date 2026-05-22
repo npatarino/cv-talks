@@ -14,15 +14,16 @@ const TEMPLATES_DIR = path.join(TALKS_ROOT, 'templates');
 
 /**
  * List all available decks with their metadata.
+ * @param {string} [decksRoot] - override for testing; defaults to DECKS_DIR
  */
-export function listDecks() {
-  if (!fs.existsSync(DECKS_DIR)) return [];
+export function listDecks(decksRoot = DECKS_DIR) {
+  if (!fs.existsSync(decksRoot)) return [];
 
-  return fs.readdirSync(DECKS_DIR, { withFileTypes: true })
+  return fs.readdirSync(decksRoot, { withFileTypes: true })
     .filter(e => e.isDirectory())
     .map(e => {
       const slug = e.name;
-      const metaPath = path.join(DECKS_DIR, slug, `${slug}.json`);
+      const metaPath = path.join(decksRoot, slug, `${slug}.json`);
       const meta = fs.existsSync(metaPath)
         ? JSON.parse(fs.readFileSync(metaPath, 'utf8'))
         : {};
@@ -36,9 +37,11 @@ export function listDecks() {
 
 /**
  * Get the absolute path to a deck's directory.
+ * @param {string} slug
+ * @param {string} [decksRoot] - override for testing; defaults to DECKS_DIR
  */
-export function deckDir(slug) {
-  return path.join(DECKS_DIR, slug);
+export function deckDir(slug, decksRoot = DECKS_DIR) {
+  return path.join(decksRoot, slug);
 }
 
 export { TALKS_ROOT };
