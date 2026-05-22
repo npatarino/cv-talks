@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { listDecks, listTemplateSlides, TALKS_ROOT } from './decks.mjs';
+import { listDecks, listTemplateSlides, deckDir, TALKS_ROOT } from './decks.mjs';
 import {
   listSlides,
   getSlide,
@@ -33,13 +33,22 @@ export function err(message, status = 400) {
   return json({ error: message }, status);
 }
 
+// ---------- helpers ----------
+
+/** Guard against path traversal in URL slug segments. */
+function validSlug(s) {
+  return typeof s === 'string' && /^[a-z0-9][a-z0-9_.-]*$/i.test(s) ? s : null;
+}
+
 // ---------- router ----------
 
 /**
  * @param {Request} req
  * @param {(filePath: string) => Promise<Response>} serveFile - injected file server
+ * @param {string} [uiDir] - path to the editor UI directory
+ * @param {string} [decksRoot] - override decks root for testing
  */
-export async function route(req, serveFile, uiDir = '') {
+export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
   const url = new URL(req.url);
   const pathname = url.pathname;
   const method = req.method;
@@ -73,8 +82,10 @@ export async function route(req, serveFile, uiDir = '') {
   // GET /api/decks/:slug/assets
   const assetsMatch = pathname.match(/^\/api\/decks\/([^/]+)\/assets$/);
   if (method === 'GET' && assetsMatch) {
-    const [, slug] = assetsMatch;
-    const dir = path.join(TALKS_ROOT, 'decks', slug, 'assets');
+    const [, rawSlug] = assetsMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
+    const dir = path.join(deckDir(slug, decksRoot), 'assets');
     try {
       const files = fs.readdirSync(dir)
         .filter(f => /\.(png|jpg|jpeg|svg|gif|webp|avif)$/i.test(f))
@@ -106,47 +117,62 @@ export async function route(req, serveFile, uiDir = '') {
   const slideMatch  = pathname.match(/^\/api\/decks\/([^/]+)\/slides\/([^/]+)$/);
 
   if (method === 'GET' && slidesMatch) {
-    const [, slug] = slidesMatch;
-    try { return json(listSlides(slug)); }
+    const [, rawSlug] = slidesMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
+    try { return json(listSlides(slug, decksRoot)); }
     catch (e) { return err(e.message, 404); }
   }
 
   if (method === 'POST' && slidesMatch) {
-    const [, slug] = slidesMatch;
+    const [, rawSlug] = slidesMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
     try {
       const body = await req.json();
-      return json(createSlide(slug, body), 201);
+      return json(createSlide(slug, body, decksRoot), 201);
     } catch (e) { return err(e.message); }
   }
 
   // POST /api/decks/:slug/reorder
   const reorderMatch = pathname.match(/^\/api\/decks\/([^/]+)\/reorder$/);
   if (method === 'POST' && reorderMatch) {
-    const [, slug] = reorderMatch;
+    const [, rawSlug] = reorderMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
     try {
       const { order } = await req.json();
-      return json(reorderSlides(slug, order));
+      if (!Array.isArray(order) || !order.every(f => typeof f === 'string')) {
+        return err('order must be an array of filenames');
+      }
+      return json(reorderSlides(slug, order, decksRoot));
     } catch (e) { return err(e.message); }
   }
 
   if (method === 'GET' && slideMatch) {
-    const [, slug, filename] = slideMatch;
-    try { return json(getSlide(slug, filename)); }
+    const [, rawSlug, filename] = slideMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
+    try { return json(getSlide(slug, filename, decksRoot)); }
     catch (e) { return err(e.message, 404); }
   }
 
   if (method === 'PUT' && slideMatch) {
-    const [, slug, filename] = slideMatch;
+    const [, rawSlug, filename] = slideMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
     try {
       const body = await req.json();
-      return json(updateSlide(slug, filename, body));
+      return json(updateSlide(slug, filename, body, decksRoot));
     } catch (e) { return err(e.message); }
   }
 
   // POST /api/decks/:slug/slides/:filename/git-revert
   const gitRevertMatch = pathname.match(/^\/api\/decks\/([^/]+)\/slides\/([^/]+)\/git-revert$/);
   if (method === 'POST' && gitRevertMatch) {
-    const [, slug, filename] = gitRevertMatch;
+    const [, rawSlug, filename] = gitRevertMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
     const relPath = `decks/${slug}/${filename}`;
     const result = spawnSync('git', ['checkout', 'HEAD', '--', relPath], {
       cwd: TALKS_ROOT, encoding: 'utf8',
@@ -154,24 +180,31 @@ export async function route(req, serveFile, uiDir = '') {
     if (result.status !== 0) {
       return err(result.stderr || 'git checkout failed');
     }
-    try { return json(getSlide(slug, filename)); }
+    try { return json(getSlide(slug, filename, decksRoot)); }
     catch { return json({ ok: true }); }
   }
 
   // DELETE /api/decks/:slug/slides/:filename
   if (method === 'DELETE' && slideMatch) {
-    const [, slug, filename] = slideMatch;
-    try { return json(removeSlide(slug, filename)); }
+    const [, rawSlug, filename] = slideMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
+    try { return json(removeSlide(slug, filename, decksRoot)); }
     catch (e) { return err(e.message, 404); }
   }
 
   // POST /api/decks/:slug/slides/:filename/move
   const moveMatch = pathname.match(/^\/api\/decks\/([^/]+)\/slides\/([^/]+)\/move$/);
   if (method === 'POST' && moveMatch) {
-    const [, slug, filename] = moveMatch;
+    const [, rawSlug, filename] = moveMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
     try {
       const { position } = await req.json();
-      return json(moveSlideTo(slug, filename, position));
+      if (typeof position !== 'number') {
+        return err('position must be a number');
+      }
+      return json(moveSlideTo(slug, filename, position, decksRoot));
     } catch (e) { return err(e.message); }
   }
 

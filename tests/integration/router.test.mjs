@@ -2,30 +2,21 @@
  * Integration tests for editor/api/router.mjs
  *
  * Calls route() directly with real Request objects.
- * Slides API calls operate against a temporary directory injected via
- * vi.mock of decks.mjs — same approach as slides.test.mjs.
+ * Uses the decksRoot parameter to redirect filesystem operations
+ * to a temporary directory — no vi.mock needed.
  * No HTTP server is started.
  */
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-
-let tmpRoot;
-
-vi.mock('../../editor/api/decks.mjs', async (importOriginal) => {
-  const original = await importOriginal();
-  return {
-    ...original,
-    deckDir: (slug) => path.join(tmpRoot, slug),
-  };
-});
-
-const { route } = await import('../../editor/api/router.mjs');
+import { route } from '../../editor/api/router.mjs';
 
 // ---------- helpers ----------
 
 const BASE = 'http://localhost:3001';
+
+let tmpRoot;
 
 function req(method, pathname, body) {
   const init = { method };
@@ -36,8 +27,8 @@ function req(method, pathname, body) {
   return new Request(`${BASE}${pathname}`, init);
 }
 
-async function callRoute(method, pathname, body) {
-  const res = await route(req(method, pathname, body), null, '');
+async function call(method, pathname, body) {
+  const res = await route(req(method, pathname, body), null, '', tmpRoot);
   const data = await res.json();
   return { status: res.status, data };
 }
@@ -66,7 +57,7 @@ afterEach(() => {
 
 describe('OPTIONS preflight', () => {
   it('returns 204 with CORS headers', async () => {
-    const res = await route(req('OPTIONS', '/api/decks'), null, '');
+    const res = await route(req('OPTIONS', '/api/decks'), null, '', tmpRoot);
     expect(res.status).toBe(204);
     expect(res.headers.get('Access-Control-Allow-Origin')).toBe('*');
     expect(res.headers.get('Access-Control-Allow-Methods')).toContain('GET');
@@ -77,13 +68,13 @@ describe('OPTIONS preflight', () => {
 
 describe('GET /api/decks', () => {
   it('returns 200 with an array', async () => {
-    const { status, data } = await callRoute('GET', '/api/decks');
+    const { status, data } = await call('GET', '/api/decks');
     expect(status).toBe(200);
     expect(Array.isArray(data)).toBe(true);
   });
 
   it('includes real decks from the project', async () => {
-    const { data } = await callRoute('GET', '/api/decks');
+    const { data } = await call('GET', '/api/decks');
     const slugs = data.map(d => d.slug);
     expect(slugs).toContain('2026-03-productividad-toxica');
   });
@@ -93,7 +84,7 @@ describe('GET /api/decks', () => {
 
 describe('GET /api/templates', () => {
   it('returns 200 with template metadata', async () => {
-    const { status, data } = await callRoute('GET', '/api/templates');
+    const { status, data } = await call('GET', '/api/templates');
     expect(status).toBe(200);
     expect(typeof data).toBe('object');
     expect(data).toHaveProperty('cover');
@@ -104,7 +95,7 @@ describe('GET /api/templates', () => {
 
 describe('GET /api/template-slides', () => {
   it('returns 200 with at least 40 slides', async () => {
-    const { status, data } = await callRoute('GET', '/api/template-slides');
+    const { status, data } = await call('GET', '/api/template-slides');
     expect(status).toBe(200);
     expect(Array.isArray(data)).toBe(true);
     expect(data.length).toBeGreaterThanOrEqual(40);
@@ -115,7 +106,7 @@ describe('GET /api/template-slides', () => {
 
 describe('GET /api/git-status', () => {
   it('returns 200 with a modified array', async () => {
-    const { status, data } = await callRoute('GET', '/api/git-status');
+    const { status, data } = await call('GET', '/api/git-status');
     expect(status).toBe(200);
     expect(Array.isArray(data.modified)).toBe(true);
   });
@@ -125,7 +116,7 @@ describe('GET /api/git-status', () => {
 
 describe('GET /api/decks/:slug/assets', () => {
   it('returns empty array for deck without assets folder', async () => {
-    const { status, data } = await callRoute('GET', '/api/decks/nonexistent-deck/assets');
+    const { status, data } = await call('GET', '/api/decks/nonexistent-deck/assets');
     expect(status).toBe(200);
     expect(data).toEqual([]);
   });
@@ -139,7 +130,7 @@ describe('GET /api/decks/:slug/slides', () => {
     writeSlide(dir, '01-cover.md', 1);
     writeSlide(dir, '02-concept.md', 2);
 
-    const { status, data } = await callRoute('GET', '/api/decks/my-deck/slides');
+    const { status, data } = await call('GET', '/api/decks/my-deck/slides');
     expect(status).toBe(200);
     expect(data).toHaveLength(2);
     expect(data[0].filename).toBe('01-cover.md');
@@ -147,7 +138,7 @@ describe('GET /api/decks/:slug/slides', () => {
 
   it('returns empty array for deck with no slides', async () => {
     makeDeck('empty-deck');
-    const { status, data } = await callRoute('GET', '/api/decks/empty-deck/slides');
+    const { status, data } = await call('GET', '/api/decks/empty-deck/slides');
     expect(status).toBe(200);
     expect(data).toEqual([]);
   });
@@ -158,7 +149,7 @@ describe('GET /api/decks/:slug/slides', () => {
 describe('POST /api/decks/:slug/slides', () => {
   it('creates a slide and returns 201', async () => {
     makeDeck('my-deck');
-    const { status, data } = await callRoute('POST', '/api/decks/my-deck/slides', {
+    const { status, data } = await call('POST', '/api/decks/my-deck/slides', {
       template: 'cover',
       recipe: 'canvas-quiet',
       label: 'New Cover',
@@ -171,7 +162,7 @@ describe('POST /api/decks/:slug/slides', () => {
 
   it('creates a file on disk', async () => {
     const dir = makeDeck('my-deck');
-    await callRoute('POST', '/api/decks/my-deck/slides', {
+    await call('POST', '/api/decks/my-deck/slides', {
       template: 'cover', label: 'Cover', position: 1,
     });
     const files = fs.readdirSync(dir).filter(f => f.endsWith('.md'));
@@ -189,7 +180,7 @@ describe('GET /api/decks/:slug/slides/:filename', () => {
       '---\ntemplate: cover\norder: 1\nlabel: Cover\nrecipe: canvas-quiet\nvariant: default\n---\n# Body\n',
       'utf8',
     );
-    const { status, data } = await callRoute('GET', '/api/decks/my-deck/slides/01-cover.md');
+    const { status, data } = await call('GET', '/api/decks/my-deck/slides/01-cover.md');
     expect(status).toBe(200);
     expect(data.filename).toBe('01-cover.md');
     expect(data.data.template).toBe('cover');
@@ -198,7 +189,7 @@ describe('GET /api/decks/:slug/slides/:filename', () => {
 
   it('returns 404 for nonexistent slide', async () => {
     makeDeck('my-deck');
-    const { status } = await callRoute('GET', '/api/decks/my-deck/slides/missing.md');
+    const { status } = await call('GET', '/api/decks/my-deck/slides/missing.md');
     expect(status).toBe(404);
   });
 });
@@ -210,20 +201,19 @@ describe('PUT /api/decks/:slug/slides/:filename', () => {
     const dir = makeDeck('my-deck');
     writeSlide(dir, '01-cover.md', 1, { label: 'Original' });
 
-    const { status, data } = await callRoute('PUT', '/api/decks/my-deck/slides/01-cover.md', {
+    const { status, data } = await call('PUT', '/api/decks/my-deck/slides/01-cover.md', {
       data: { label: 'Updated' },
     });
     expect(status).toBe(200);
     expect(data.filename).toBe('01-cover.md');
 
-    // Verify on disk
-    const { data: saved } = await callRoute('GET', '/api/decks/my-deck/slides/01-cover.md');
+    const { data: saved } = await call('GET', '/api/decks/my-deck/slides/01-cover.md');
     expect(saved.data.label).toBe('Updated');
   });
 
   it('returns 400 for nonexistent slide', async () => {
     makeDeck('my-deck');
-    const { status } = await callRoute('PUT', '/api/decks/my-deck/slides/missing.md', { data: {} });
+    const { status } = await call('PUT', '/api/decks/my-deck/slides/missing.md', { data: {} });
     expect(status).toBe(400);
   });
 });
@@ -236,7 +226,7 @@ describe('DELETE /api/decks/:slug/slides/:filename', () => {
     writeSlide(dir, '01-a.md', 1);
     writeSlide(dir, '02-b.md', 2);
 
-    const { status, data } = await callRoute('DELETE', '/api/decks/my-deck/slides/01-a.md');
+    const { status, data } = await call('DELETE', '/api/decks/my-deck/slides/01-a.md');
     expect(status).toBe(200);
     expect(Array.isArray(data)).toBe(true);
     expect(data).toHaveLength(1);
@@ -245,7 +235,7 @@ describe('DELETE /api/decks/:slug/slides/:filename', () => {
 
   it('returns 404 for nonexistent slide', async () => {
     makeDeck('my-deck');
-    const { status } = await callRoute('DELETE', '/api/decks/my-deck/slides/missing.md');
+    const { status } = await call('DELETE', '/api/decks/my-deck/slides/missing.md');
     expect(status).toBe(404);
   });
 });
@@ -259,7 +249,7 @@ describe('POST /api/decks/:slug/slides/:filename/move', () => {
     writeSlide(dir, '02-b.md', 2, { label: 'B' });
     writeSlide(dir, '03-c.md', 3, { label: 'C' });
 
-    const { status, data } = await callRoute(
+    const { status, data } = await call(
       'POST', '/api/decks/my-deck/slides/01-a.md/move', { position: 3 },
     );
     expect(status).toBe(200);
@@ -276,7 +266,7 @@ describe('POST /api/decks/:slug/reorder', () => {
     writeSlide(dir, '02-b.md', 2, { label: 'B' });
     writeSlide(dir, '03-c.md', 3, { label: 'C' });
 
-    const { status, data } = await callRoute('POST', '/api/decks/my-deck/reorder', {
+    const { status, data } = await call('POST', '/api/decks/my-deck/reorder', {
       order: ['03-c.md', '01-a.md', '02-b.md'],
     });
     expect(status).toBe(200);
@@ -284,11 +274,28 @@ describe('POST /api/decks/:slug/reorder', () => {
   });
 });
 
+// ─── Input validation ─────────────────────────────────────────────────────────
+
+describe('Input validation', () => {
+  it('POST reorder returns 400 when order is not an array', async () => {
+    makeDeck('my-deck');
+    const { status } = await call('POST', '/api/decks/my-deck/reorder', { order: 'not-an-array' });
+    expect(status).toBe(400);
+  });
+
+  it('POST move returns 400 when position is not a number', async () => {
+    const dir = makeDeck('my-deck');
+    writeSlide(dir, '01-a.md', 1);
+    const { status } = await call('POST', '/api/decks/my-deck/slides/01-a.md/move', { position: 'first' });
+    expect(status).toBe(400);
+  });
+});
+
 // ─── Unknown route ────────────────────────────────────────────────────────────
 
 describe('Unknown routes', () => {
   it('returns 404 when no serveFile is provided', async () => {
-    const res = await route(req('GET', '/unknown'), null, '');
+    const res = await route(req('GET', '/unknown'), null, '', tmpRoot);
     expect(res.status).toBe(404);
   });
 });
@@ -299,27 +306,22 @@ describe('Full CRUD workflow', () => {
   it('create → read → update → delete → verify renumbering', async () => {
     makeDeck('my-deck');
 
-    // Create two slides
-    await callRoute('POST', '/api/decks/my-deck/slides', { template: 'cover', label: 'First', position: 1 });
-    await callRoute('POST', '/api/decks/my-deck/slides', { template: 'big-concept', label: 'Second', position: 2 });
+    await call('POST', '/api/decks/my-deck/slides', { template: 'cover', label: 'First', position: 1 });
+    await call('POST', '/api/decks/my-deck/slides', { template: 'big-concept', label: 'Second', position: 2 });
 
-    // Read list
-    const { data: list } = await callRoute('GET', '/api/decks/my-deck/slides');
+    const { data: list } = await call('GET', '/api/decks/my-deck/slides');
     expect(list).toHaveLength(2);
     const first = list[0];
 
-    // Update
-    await callRoute('PUT', `/api/decks/my-deck/slides/${first.filename}`, {
+    await call('PUT', `/api/decks/my-deck/slides/${first.filename}`, {
       data: { label: 'Updated First' },
     });
-    const { data: updated } = await callRoute('GET', `/api/decks/my-deck/slides/${first.filename}`);
+    const { data: updated } = await call('GET', `/api/decks/my-deck/slides/${first.filename}`);
     expect(updated.data.label).toBe('Updated First');
 
-    // Delete first slide
-    await callRoute('DELETE', `/api/decks/my-deck/slides/${first.filename}`);
+    await call('DELETE', `/api/decks/my-deck/slides/${first.filename}`);
 
-    // Verify renumbering — only one slide left, order = 1
-    const { data: remaining } = await callRoute('GET', '/api/decks/my-deck/slides');
+    const { data: remaining } = await call('GET', '/api/decks/my-deck/slides');
     expect(remaining).toHaveLength(1);
     expect(remaining[0].order).toBe(1);
   });
