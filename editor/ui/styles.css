@@ -202,20 +202,20 @@ body { height: 100vh; overflow: hidden; }
 }
 
 .slide-badge {
-  width: 7px; height: 7px;
-  border-radius: 50%;
+  width: 6px; height: 6px;
+  border-radius: 2px;       /* square-ish, not circle like recipe dot */
   flex-shrink: 0;
   display: inline-block;
 }
 
 .badge-dirty {
   background: #f59e0b;
-  box-shadow: 0 0 4px rgba(245,158,11,0.6);
+  box-shadow: 0 0 0 1px rgba(245,158,11,0.4);
 }
 
 .badge-uncommitted {
   background: #02B5B9;
-  box-shadow: 0 0 4px rgba(2,181,185,0.5);
+  box-shadow: 0 0 0 1px rgba(2,181,185,0.4);
 }
 
 .recipe-dot {
