@@ -263,10 +263,11 @@ async function moveSelected(direction) {
 
 function updateSlideActions() {
   const idx = state.slides.findIndex(s => s.filename === state.selectedFilename);
+  const hasSlide = idx >= 0;
   dom.btnMoveUp.disabled = idx <= 0;
-  dom.btnMoveDown.disabled = idx < 0 || idx >= state.slides.length - 1;
-  dom.btnDeleteSlide.disabled = idx < 0;
-  dom.btnRevert.disabled = !state.hasUnsaved || idx < 0;
+  dom.btnMoveDown.disabled = !hasSlide || idx >= state.slides.length - 1;
+  dom.btnDeleteSlide.disabled = !hasSlide;
+  dom.btnRevert.disabled = !hasSlide;  // always available when a slide is selected
 }
 
 async function revertSlide() {
@@ -819,25 +820,20 @@ function setStatus(status) {
   if (status === 'saving') {
     el.className = 'status-saving'; el.textContent = 'Saving…';
     dom.btnSave.disabled = true;
-    dom.btnRevert.disabled = true;
   } else if (status === 'saved') {
     el.className = 'status-saved'; el.textContent = 'Saved';
     dom.btnSave.disabled = true;
-    dom.btnRevert.disabled = true;
     state.hasUnsaved = false;
     setTimeout(() => { if (!state.hasUnsaved) { el.className = 'status-idle'; el.textContent = 'All saved'; } }, 2000);
   } else if (status === 'unsaved') {
     el.className = 'status-unsaved'; el.textContent = 'Unsaved changes';
     dom.btnSave.disabled = false;
-    dom.btnRevert.disabled = false;
   } else if (status === 'error') {
     el.className = 'status-error'; el.textContent = 'Save failed';
     dom.btnSave.disabled = false;
-    dom.btnRevert.disabled = false;
   } else {
     el.className = 'status-idle'; el.textContent = 'All saved';
     dom.btnSave.disabled = true;
-    dom.btnRevert.disabled = true;
   }
 }
 
