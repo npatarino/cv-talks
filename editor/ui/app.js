@@ -35,6 +35,7 @@ const dom = {
   saveStatus: $('save-status'),
   btnSave: $('btn-save'),
   btnAddSlide: $('btn-add-slide'),
+  btnRevert: $('btn-revert'),
   btnMoveUp: $('btn-move-up'),
   btnMoveDown: $('btn-move-down'),
   btnDeleteSlide: $('btn-delete-slide'),
@@ -265,6 +266,24 @@ function updateSlideActions() {
   dom.btnMoveUp.disabled = idx <= 0;
   dom.btnMoveDown.disabled = idx < 0 || idx >= state.slides.length - 1;
   dom.btnDeleteSlide.disabled = idx < 0;
+  dom.btnRevert.disabled = !state.hasUnsaved || idx < 0;
+}
+
+async function revertSlide() {
+  if (!state.selectedFilename || !state.currentDeck) return;
+  state.dirtyFiles.delete(state.selectedFilename);
+  state.hasUnsaved = false;
+  setStatus(false);
+  try {
+    const slide = await apiFetch(`/api/decks/${state.currentDeck}/slides/${state.selectedFilename}`);
+    state.slideData = slide;
+    renderForm(slide);
+    renderSidebar();
+    updateSlideActions();
+    toast('Changes reverted');
+  } catch (e) {
+    toast('Revert failed: ' + e.message, 'error');
+  }
 }
 
 // ---- Form rendering ----
@@ -462,21 +481,41 @@ function mkRichTextEditor(field, htmlValue, deckSlug) {
     }
   });
 
-  function wrapSelection(tag) {
-    restoreSelection();
+  function toggleWrap(tag) {
+    // Don't need restoreSelection — e.preventDefault() on mousedown keeps the selection
     const sel = window.getSelection();
     if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return;
     const range = sel.getRangeAt(0);
-    try {
-      const el = document.createElement(tag);
-      range.surroundContents(el);
-      sel.removeAllRanges();
-      const r = document.createRange();
-      r.selectNodeContents(el);
-      sel.addRange(r);
-    } catch {
-      // Selection spans multiple elements — use execCommand fallback
-      document.execCommand(tag === 'strong' ? 'bold' : 'italic');
+
+    // Check if the selection's anchor is already inside a <tag> element
+    let node = range.commonAncestorContainer;
+    if (node.nodeType === 3) node = node.parentElement;
+    let existingEl = null;
+    while (node && node !== editor) {
+      if (node.tagName && node.tagName.toLowerCase() === tag) { existingEl = node; break; }
+      node = node.parentElement;
+    }
+
+    if (existingEl) {
+      // Unwrap: replace the element with its children
+      const parent = existingEl.parentNode;
+      const frag = document.createDocumentFragment();
+      while (existingEl.firstChild) frag.appendChild(existingEl.firstChild);
+      parent.replaceChild(frag, existingEl);
+    } else {
+      // Wrap
+      try {
+        const el = document.createElement(tag);
+        range.surroundContents(el);
+        // Reselect the wrapped content
+        sel.removeAllRanges();
+        const r = document.createRange();
+        r.selectNodeContents(el);
+        sel.addRange(r);
+      } catch {
+        // Selection spans multiple nodes — fallback to execCommand
+        document.execCommand(tag === 'strong' ? 'bold' : 'italic');
+      }
     }
     markUnsaved();
   }
@@ -497,8 +536,22 @@ function mkRichTextEditor(field, htmlValue, deckSlug) {
   }
 
   function clearFormat() {
-    restoreSelection();
     document.execCommand('removeFormat');
+    // Also unwrap any <em>/<strong> that removeFormat might miss
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      const range = sel.getRangeAt(0);
+      let node = range.commonAncestorContainer;
+      if (node.nodeType === 3) node = node.parentElement;
+      ['em', 'strong', 'b', 'i'].forEach(tag => {
+        if (node.tagName && node.tagName.toLowerCase() === tag) {
+          const parent = node.parentNode;
+          const frag = document.createDocumentFragment();
+          while (node.firstChild) frag.appendChild(node.firstChild);
+          parent.replaceChild(frag, node);
+        }
+      });
+    }
     markUnsaved();
   }
 
@@ -558,17 +611,17 @@ function mkRichTextEditor(field, htmlValue, deckSlug) {
   }
 
   // Toolbar button handlers
+  // e.preventDefault() keeps the editor focused and selection intact — no editor.focus() needed
   toolbar.addEventListener('mousedown', e => {
     const btn = e.target.closest('[data-cmd]');
     if (!btn) return;
     const cmd = btn.dataset.cmd;
     if (cmd === 'img') { e.preventDefault(); openAssetPicker(); return; }
     e.preventDefault();
-    editor.focus();
     switch (cmd) {
-      case 'em':     wrapSelection('em'); break;
-      case 'strong': wrapSelection('strong'); break;
-      case 'br':     editor.focus(); insertBR(); break;
+      case 'em':     toggleWrap('em'); break;
+      case 'strong': toggleWrap('strong'); break;
+      case 'br':     insertBR(); break;
       case 'clear':  clearFormat(); break;
     }
   });
@@ -764,17 +817,27 @@ function setStatus(status) {
   const el = dom.saveStatus;
   el.className = '';
   if (status === 'saving') {
-    el.className = 'status-saving'; el.textContent = 'Saving…'; dom.btnSave.disabled = true;
+    el.className = 'status-saving'; el.textContent = 'Saving…';
+    dom.btnSave.disabled = true;
+    dom.btnRevert.disabled = true;
   } else if (status === 'saved') {
-    el.className = 'status-saved'; el.textContent = 'Saved'; dom.btnSave.disabled = true;
+    el.className = 'status-saved'; el.textContent = 'Saved';
+    dom.btnSave.disabled = true;
+    dom.btnRevert.disabled = true;
     state.hasUnsaved = false;
     setTimeout(() => { if (!state.hasUnsaved) { el.className = 'status-idle'; el.textContent = 'All saved'; } }, 2000);
   } else if (status === 'unsaved') {
-    el.className = 'status-unsaved'; el.textContent = 'Unsaved changes'; dom.btnSave.disabled = false;
+    el.className = 'status-unsaved'; el.textContent = 'Unsaved changes';
+    dom.btnSave.disabled = false;
+    dom.btnRevert.disabled = false;
   } else if (status === 'error') {
-    el.className = 'status-error'; el.textContent = 'Save failed'; dom.btnSave.disabled = false;
+    el.className = 'status-error'; el.textContent = 'Save failed';
+    dom.btnSave.disabled = false;
+    dom.btnRevert.disabled = false;
   } else {
-    el.className = 'status-idle'; el.textContent = 'All saved'; dom.btnSave.disabled = true;
+    el.className = 'status-idle'; el.textContent = 'All saved';
+    dom.btnSave.disabled = true;
+    dom.btnRevert.disabled = true;
   }
 }
 
@@ -1083,6 +1146,7 @@ function closeModals() {
 function wireEvents() {
   dom.deckSelector.addEventListener('change', e => selectDeck(e.target.value));
   dom.btnSave.addEventListener('click', () => saveCurrentSlide());
+  dom.btnRevert.addEventListener('click', revertSlide);
   dom.btnAddSlide.addEventListener('click', () => {
     if (!state.currentDeck) { toast('Select a deck first'); return; }
     openAddModal().catch(e => toast('Failed to open: ' + e.message, 'error'));
