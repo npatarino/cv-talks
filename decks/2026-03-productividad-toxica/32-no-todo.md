@@ -2,13 +2,9 @@
 template: quote
 recipe: canvas-quiet
 order: 32
-label: "No todo..."
+label: No todo...
 variant: default
 fields:
-  quote:
-    content: 'No todo lo que<br>se puede hacer…<br>se <em>debería</em> hacer.'
-    meta: "Quote_Text"
-  who:
-    content: ""
-    meta: "Quote_Attribution"
+  quote: { content: 'No todo lo que<br>se puede hacer…<br>se <em>debería</em> hacer.', meta: Quote_Text }
+  who: { content: "", meta: Quote_Attribution }
 ---

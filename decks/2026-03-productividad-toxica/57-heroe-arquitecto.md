@@ -2,7 +2,7 @@
 template: icon
 recipe: critical
 order: 57
-label: "Héroe → Arquitecto"
+label: Héroe → Arquitecto
 items:
   - { glyph: '<img src="/talks/decks/2026-03-productividad-toxica/assets/hero-celebrate.png" alt="">' }
   - { connector: true }

@@ -2,8 +2,8 @@
 template: big-concept
 recipe: cool-fresh
 order: 23
-label: "SPACE Metrics · intro"
+label: SPACE Metrics · intro
 variant: divider
 fields:
-  title: { content: "SPACE<br>METRICS.", meta: "Title_Text" }
+  title: { content: 'SPACE<br>METRICS.', meta: Title_Text }
 ---

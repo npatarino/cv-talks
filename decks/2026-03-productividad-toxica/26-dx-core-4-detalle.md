@@ -3,10 +3,10 @@ template: big-list
 recipe: canvas-quiet
 variant: numeric
 order: 26
-label: "DX Core 4 · cuatro dimensiones"
+label: DX Core 4 · cuatro dimensiones
 items:
-  - { text: "Speed" }
-  - { text: "Effectiveness" }
-  - { text: "Quality" }
-  - { text: "Impact" }
+  - { text: Speed }
+  - { text: Effectiveness }
+  - { text: Quality }
+  - { text: Impact }
 ---
