@@ -700,13 +700,118 @@ function cleanHTML(html) {
     .trim();
 }
 
+// ---- Glyph field helpers ----
+
+const IMAGE_EXT_RE = /\.(png|jpg|jpeg|svg|gif|webp|avif)$/i;
+const IMG_ASSETS_RE = /^<img\s[^>]*src="[^"]*\/assets\/([^"]+)"[^>]*>$/i;
+
+/** Extract display value from a glyph — filename or emoji/symbol */
+function glyphToDisplay(raw) {
+  const m = (raw ?? '').match(IMG_ASSETS_RE);
+  return m ? m[1] : (raw ?? '');
+}
+
+/** Convert display value back to glyph storage format */
+function displayToGlyph(display, deckSlug) {
+  if (!display) return '';
+  if (display.startsWith('<')) return display; // already HTML
+  if (IMAGE_EXT_RE.test(display)) {
+    return `<img src="/talks/decks/${deckSlug}/assets/${display}" alt="">`;
+  }
+  return display; // emoji or plain text
+}
+
+function mkGlyphInput(rawValue, deckSlug) {
+  const displayValue = glyphToDisplay(rawValue);
+  const isImage = IMAGE_EXT_RE.test(displayValue);
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'glyph-input-wrap';
+  wrapper.setAttribute('data-item-field', 'glyph');
+  wrapper.setAttribute('data-glyph-wrapper', 'true');
+
+  // Preview
+  const preview = document.createElement('div');
+  preview.className = 'glyph-preview';
+  if (isImage && deckSlug) {
+    const imgSrc = `http://localhost:8080/talks/decks/${deckSlug}/assets/${displayValue}`;
+    preview.innerHTML = `<img src="${imgSrc}" alt="">`;
+  } else {
+    preview.textContent = displayValue || '—';
+  }
+
+  // Text input (shows just the filename or emoji)
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'glyph-text-input';
+  input.placeholder = 'emoji or image.png';
+  input.value = displayValue;
+  input.addEventListener('input', () => {
+    const v = input.value.trim();
+    if (IMAGE_EXT_RE.test(v) && deckSlug) {
+      preview.innerHTML = `<img src="http://localhost:8080/talks/decks/${deckSlug}/assets/${v}" alt="">`;
+    } else {
+      preview.textContent = v || '—';
+    }
+    markUnsaved();
+  });
+
+  // Asset picker button
+  const pickerBtn = document.createElement('button');
+  pickerBtn.type = 'button';
+  pickerBtn.className = 'rte-btn';
+  pickerBtn.title = 'Pick from assets';
+  pickerBtn.textContent = '🖼';
+
+  let pickerEl = null;
+  pickerBtn.addEventListener('click', async () => {
+    if (pickerEl) { pickerEl.remove(); pickerEl = null; return; }
+    const assets = await apiFetch(`/api/decks/${deckSlug}/assets`).catch(() => []);
+    if (!assets.length) { toast('No images in assets folder'); return; }
+
+    pickerEl = document.createElement('div');
+    pickerEl.className = 'asset-picker';
+    const grid = document.createElement('div');
+    grid.className = 'asset-grid';
+    assets.forEach(filename => {
+      const item2 = document.createElement('div');
+      item2.className = 'asset-item';
+      item2.title = filename;
+      item2.innerHTML = `<img src="http://localhost:8080/talks/decks/${deckSlug}/assets/${filename}" alt="${filename}"><span>${filename}</span>`;
+      item2.addEventListener('click', () => {
+        input.value = filename;
+        preview.innerHTML = `<img src="http://localhost:8080/talks/decks/${deckSlug}/assets/${filename}" alt="">`;
+        markUnsaved();
+        pickerEl.remove(); pickerEl = null;
+        document.removeEventListener('mousedown', outsideClick);
+      });
+      grid.appendChild(item2);
+    });
+    pickerEl.appendChild(grid);
+    const btnRect = pickerBtn.getBoundingClientRect();
+    pickerEl.style.cssText = `position:fixed;top:${btnRect.bottom + 4}px;left:${Math.min(btnRect.left, window.innerWidth - 270)}px;z-index:200`;
+    document.body.appendChild(pickerEl);
+    const outsideClick = e => { if (pickerEl && !pickerEl.contains(e.target)) { pickerEl.remove(); pickerEl = null; document.removeEventListener('mousedown', outsideClick); } };
+    setTimeout(() => document.addEventListener('mousedown', outsideClick), 0);
+  });
+
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:6px;align-items:center';
+  row.appendChild(input);
+  row.appendChild(pickerBtn);
+
+  wrapper.appendChild(preview);
+  wrapper.appendChild(row);
+  return wrapper;
+}
+
 // ---- Items editor ----
 
 function renderItemsEditor(items, template, variant) {
   const container = document.createElement('div');
   container.className = 'items-list';
   container.setAttribute('data-items-list', 'true');
-  items.forEach((item, idx) => addItemRow(container, item, idx, template, variant));
+  items.forEach((item, idx) => addItemRow(container, item, idx, template, variant, state.currentDeck));
   const addBtn = mkAddItemBtn(container, items, template, variant);
   container.appendChild(addBtn);
   dom.formBody.appendChild(container);
@@ -720,7 +825,7 @@ function mkAddItemBtn(container, items, template, variant) {
     const item = emptyItem(template, variant);
     items.push(item);
     btn.remove();
-    addItemRow(container, item, items.length - 1, template, variant);
+    addItemRow(container, item, items.length - 1, template, variant, state.currentDeck);
     container.appendChild(mkAddItemBtn(container, items, template, variant));
     markUnsaved();
   });
@@ -739,7 +844,7 @@ function emptyItem(template, variant) {
   return { text: '' };
 }
 
-function addItemRow(container, item, idx, template, variant) {
+function addItemRow(container, item, idx, template, variant, deckSlug) {
   const row = document.createElement('div');
   row.className = 'item-row';
   row.dataset.itemIndex = idx;
@@ -778,16 +883,23 @@ function addItemRow(container, item, idx, template, variant) {
     const lbl = document.createElement('span');
     lbl.className = 'field-label';
     lbl.textContent = key;
-    const ta = document.createElement('textarea');
-    ta.dataset.itemField = key;
-    ta.value = item[key] ?? '';
-    ta.rows = 2;
-    ta.style.minHeight = '40px';
-    ta.addEventListener('input', markUnsaved);
+
+    let inputEl;
+    if (key === 'glyph') {
+      inputEl = mkGlyphInput(item[key] ?? '', deckSlug);
+    } else {
+      inputEl = document.createElement('textarea');
+      inputEl.dataset.itemField = key;
+      inputEl.value = item[key] ?? '';
+      inputEl.rows = 2;
+      inputEl.style.minHeight = '40px';
+      inputEl.addEventListener('input', markUnsaved);
+    }
+
     const w = document.createElement('div');
     w.style.cssText = 'display:flex;flex-direction:column;gap:3px';
     w.appendChild(lbl);
-    w.appendChild(ta);
+    w.appendChild(inputEl);
     fields.appendChild(w);
   });
   row.appendChild(fields);
@@ -828,7 +940,15 @@ function collectFormData() {
     const rows = container.querySelectorAll('.item-row');
     newData.items = [...rows].map(row => {
       const item = {};
-      row.querySelectorAll('[data-item-field]').forEach(i => { item[i.dataset.itemField] = i.value; });
+      row.querySelectorAll('[data-item-field]').forEach(el => {
+        const key = el.dataset.itemField;
+        if (el.dataset.glyphWrapper) {
+          const textInput = el.querySelector('.glyph-text-input');
+          item[key] = displayToGlyph(textInput?.value ?? '', state.currentDeck);
+        } else {
+          item[key] = el.value;
+        }
+      });
       return item;
     });
   }
