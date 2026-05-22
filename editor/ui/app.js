@@ -209,8 +209,7 @@ function renderSidebar() {
         <span class="slide-label" title="${escHtml(slide.label)}">${escHtml(slide.label)}</span>
         <span class="slide-meta">${slide.template}${slide.variant && slide.variant !== 'default' ? ' · ' + slide.variant : ''}</span>
       </div>
-      ${badge}
-      <span class="recipe-dot recipe-${slide.recipe}" title="${slide.recipe}"></span>`;
+      ${badge}`;
 
     item.addEventListener('click', () => selectSlide(slide.filename));
     item.addEventListener('dragstart', e => { state.draggingFilename = slide.filename; e.dataTransfer.effectAllowed = 'move'; renderSidebar(); });
