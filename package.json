@@ -7,7 +7,8 @@
     "sync:fonts": "node scripts/sync-fonts.mjs",
     "build": "bun run sync:fonts && eleventy && bun scripts/build-seo.mjs",
     "serve": "bun run sync:fonts && eleventy --serve",
-    "serve:meta": "bun run sync:fonts && SLIDE_MODE=meta eleventy --serve"
+    "serve:meta": "bun run sync:fonts && SLIDE_MODE=meta eleventy --serve",
+    "editor": "bun editor/server.mjs"
   },
   "dependencies": {
     "@chimichurricode/design-system": "^0.7.2",
