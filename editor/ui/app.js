@@ -20,6 +20,7 @@ const state = {
   // Per-slide badges
   dirtyFiles: new Set(),       // unsaved form changes (yellow)
   uncommittedFiles: new Set(), // saved but not committed (teal)
+  livePreviewTimer: null,
 };
 
 // ---- DOM refs ----
@@ -846,6 +847,13 @@ function markUnsaved() {
     state.dirtyFiles.add(state.selectedFilename);
     renderSidebar();
   }
+
+  // Live preview: write to disk after 600ms so Eleventy rebuilds the iframe.
+  // This is NOT a "save" — badge stays yellow, Save button required to confirm.
+  clearTimeout(state.livePreviewTimer);
+  if ($('toggle-live-preview')?.checked) {
+    state.livePreviewTimer = setTimeout(() => previewWrite(), 600);
+  }
 }
 
 async function refreshGitStatus() {
@@ -859,6 +867,21 @@ async function refreshGitStatus() {
     });
     renderSidebar();
   } catch { /* git not available, ignore */ }
+}
+
+/** Write to disk silently for live preview — does NOT change save state or badge. */
+async function previewWrite() {
+  if (!state.selectedFilename || !state.currentDeck) return;
+  const newData = collectFormData();
+  if (!newData) return;
+  try {
+    await apiFetch(`/api/decks/${state.currentDeck}/slides/${state.selectedFilename}`, {
+      method: 'PUT',
+      body: JSON.stringify({ data: newData }),
+    });
+    state.slideData = { ...state.slideData, data: newData };
+    // Eleventy detects the file change and rebuilds — iframe updates automatically
+  } catch { /* silent — user can still manually save */ }
 }
 
 function setStatus(status) {
