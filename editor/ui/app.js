@@ -279,14 +279,14 @@ function renderForm(slide) {
   addField('Variant', mkVariantSelect('variant', data.template, data.variant ?? 'default'));
   addField('Recipe', mkRecipeSelect('recipe', data.recipe ?? 'canvas-quiet'));
 
-  // Fields-based content
+  // Fields-based content — rich text editor
   if (data.fields && typeof data.fields === 'object') {
     addSection('Fields');
     for (const [key, fieldObj] of Object.entries(data.fields)) {
       const content = typeof fieldObj === 'object' ? (fieldObj?.content ?? '') : String(fieldObj ?? '');
       const meta = typeof fieldObj === 'object' ? (fieldObj?.meta ?? key) : key;
-      const ta = mkTextarea(`fields.${key}`, content);
-      const wrapper = addField(key, ta);
+      const rte = mkRichTextEditor(`fields.${key}`, content, state.currentDeck);
+      const wrapper = addField(key, rte);
       if (meta !== key) {
         const m = document.createElement('span');
         m.className = 'field-meta';
@@ -309,7 +309,7 @@ function renderForm(slide) {
     { value: 'meta', label: 'meta' },
   ], data.mode ?? ''));
 
-  // Mark unsaved on any change
+  // Mark unsaved on any change (RTEs handle markUnsaved themselves via input event)
   dom.formBody.querySelectorAll('input, textarea, select').forEach(el => {
     el.addEventListener('input', markUnsaved);
     if (el.dataset.field === 'template') {
@@ -329,7 +329,9 @@ function addSection(title) {
 }
 
 function addField(label, input) {
-  const wrapper = document.createElement('label');
+  // Use div instead of label when input is an RTE wrapper (contenteditable inside)
+  const isRTE = input.classList?.contains('rte-wrapper');
+  const wrapper = document.createElement(isRTE ? 'div' : 'label');
   wrapper.className = 'form-field';
   const lbl = document.createElement('span');
   lbl.className = 'field-label';
@@ -382,6 +384,218 @@ function mkVariantSelect(field, template, current) {
 function mkRecipeSelect(field, current) {
   const recipes = ['canvas-quiet', 'canvas-signal', 'paper', 'energy-loud', 'cool-fresh', 'critical'];
   return mkSelect(field, recipes.map(r => ({ value: r, label: r })), current);
+}
+
+// ---- Rich text editor ----
+
+function mkRichTextEditor(field, htmlValue, deckSlug) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'rte-wrapper';
+
+  // Toolbar
+  const toolbar = document.createElement('div');
+  toolbar.className = 'rte-toolbar';
+
+  const btns = [
+    { cmd: 'em',      label: '<em>I</em>',          title: 'Italic / em' },
+    { cmd: 'strong',  label: '<strong>B</strong>',   title: 'Bold / strong' },
+    { cmd: 'sep' },
+    { cmd: 'br',      label: '↵',                    title: 'Line break' },
+    { cmd: 'sep' },
+    { cmd: 'img',     label: '🖼 Image',              title: 'Insert image from assets' },
+    { cmd: 'sep' },
+    { cmd: 'clear',   label: '✕',                    title: 'Remove formatting from selection' },
+  ];
+
+  btns.forEach(({ cmd, label, title }) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    if (cmd === 'sep') { btn.className = 'rte-btn sep'; btn.setAttribute('tabindex', '-1'); toolbar.appendChild(btn); return; }
+    btn.className = 'rte-btn';
+    btn.innerHTML = label;
+    btn.title = title;
+    btn.dataset.cmd = cmd;
+    toolbar.appendChild(btn);
+  });
+
+  // Editor
+  const editor = document.createElement('div');
+  editor.className = 'rte-editor';
+  editor.contentEditable = 'true';
+  editor.dataset.field = field;
+  editor.innerHTML = htmlValue ?? '';
+
+  // Keep a saved selection reference for when picker opens
+  let savedRange = null;
+
+  function saveSelection() {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0 && editor.contains(sel.anchorNode)) {
+      savedRange = sel.getRangeAt(0).cloneRange();
+    }
+  }
+
+  function restoreSelection() {
+    if (!savedRange) return;
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(savedRange);
+  }
+
+  editor.addEventListener('keyup', saveSelection);
+  editor.addEventListener('mouseup', saveSelection);
+  editor.addEventListener('input', markUnsaved);
+
+  // Prevent paste from bringing in external styles
+  editor.addEventListener('paste', e => {
+    e.preventDefault();
+    const text = e.clipboardData.getData('text/plain');
+    document.execCommand('insertText', false, text);
+  });
+
+  // Prevent Enter from creating <div> — insert <br> instead
+  editor.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      restoreSelection();
+      insertBR();
+    }
+  });
+
+  function wrapSelection(tag) {
+    restoreSelection();
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return;
+    const range = sel.getRangeAt(0);
+    try {
+      const el = document.createElement(tag);
+      range.surroundContents(el);
+      sel.removeAllRanges();
+      const r = document.createRange();
+      r.selectNodeContents(el);
+      sel.addRange(r);
+    } catch {
+      // Selection spans multiple elements — use execCommand fallback
+      document.execCommand(tag === 'strong' ? 'bold' : 'italic');
+    }
+    markUnsaved();
+  }
+
+  function insertBR() {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    const br = document.createElement('br');
+    range.insertNode(br);
+    // Move cursor after the br
+    range.setStartAfter(br);
+    range.setEndAfter(br);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    markUnsaved();
+  }
+
+  function clearFormat() {
+    restoreSelection();
+    document.execCommand('removeFormat');
+    markUnsaved();
+  }
+
+  // Asset picker
+  let pickerEl = null;
+
+  async function openAssetPicker() {
+    saveSelection();
+    closePicker();
+
+    const assets = await apiFetch(`/api/decks/${deckSlug}/assets`).catch(() => []);
+    if (assets.length === 0) { toast('No images in assets folder'); return; }
+
+    pickerEl = document.createElement('div');
+    pickerEl.className = 'asset-picker';
+
+    const grid = document.createElement('div');
+    grid.className = 'asset-grid';
+
+    assets.forEach(filename => {
+      const src = `/talks/decks/${deckSlug}/assets/${filename}`;
+      const item = document.createElement('div');
+      item.className = 'asset-item';
+      item.title = filename;
+      item.innerHTML = `<img src="http://localhost:8080${src}" alt="${filename}"><span>${filename}</span>`;
+      item.addEventListener('mousedown', e => {
+        e.preventDefault();
+        restoreSelection();
+        const imgTag = `<img src="${src}" alt="">`;
+        document.execCommand('insertHTML', false, imgTag);
+        markUnsaved();
+        closePicker();
+      });
+      grid.appendChild(item);
+    });
+
+    pickerEl.appendChild(grid);
+
+    // Position below the toolbar button
+    const imgBtn = toolbar.querySelector('[data-cmd="img"]');
+    const btnRect = imgBtn.getBoundingClientRect();
+    pickerEl.style.position = 'fixed';
+    pickerEl.style.top = (btnRect.bottom + 4) + 'px';
+    pickerEl.style.left = Math.min(btnRect.left, window.innerWidth - 270) + 'px';
+    document.body.appendChild(pickerEl);
+
+    setTimeout(() => document.addEventListener('mousedown', outsideClick), 0);
+  }
+
+  function outsideClick(e) {
+    if (pickerEl && !pickerEl.contains(e.target)) closePicker();
+  }
+
+  function closePicker() {
+    if (pickerEl) { pickerEl.remove(); pickerEl = null; }
+    document.removeEventListener('mousedown', outsideClick);
+  }
+
+  // Toolbar button handlers
+  toolbar.addEventListener('mousedown', e => {
+    const btn = e.target.closest('[data-cmd]');
+    if (!btn) return;
+    const cmd = btn.dataset.cmd;
+    if (cmd === 'img') { e.preventDefault(); openAssetPicker(); return; }
+    e.preventDefault();
+    editor.focus();
+    switch (cmd) {
+      case 'em':     wrapSelection('em'); break;
+      case 'strong': wrapSelection('strong'); break;
+      case 'br':     editor.focus(); insertBR(); break;
+      case 'clear':  clearFormat(); break;
+    }
+  });
+
+  wrapper.appendChild(toolbar);
+  wrapper.appendChild(editor);
+  return wrapper;
+}
+
+/** Normalize contenteditable HTML back to clean slide HTML */
+function cleanHTML(html) {
+  return html
+    // Normalize bold/italic from browser defaults
+    .replace(/<b(\s[^>]*)?>/gi, '<strong$1>')
+    .replace(/<\/b>/gi, '</strong>')
+    .replace(/<i(\s[^>]*)?>/gi, '<em$1>')
+    .replace(/<\/i>/gi, '</em>')
+    // Remove contenteditable artifacts: <div>, <p> → flatten with <br>
+    .replace(/<div>/gi, '')
+    .replace(/<\/div>/gi, '<br>')
+    .replace(/<p>/gi, '')
+    .replace(/<\/p>/gi, '<br>')
+    // Strip trailing <br> at end
+    .replace(/(<br\s*\/?>\s*)+$/, '')
+    // Remove style attributes added by execCommand
+    .replace(/ style="[^"]*"/gi, '')
+    .trim();
 }
 
 // ---- Items editor ----
@@ -490,7 +704,8 @@ function collectFormData() {
 
   dom.formBody.querySelectorAll('[data-field]').forEach(el => {
     const field = el.dataset.field;
-    const val = el.value;
+    // contenteditable RTE div uses innerHTML; inputs/selects use value
+    const val = el.contentEditable === 'true' ? cleanHTML(el.innerHTML) : el.value;
     if (field.startsWith('fields.')) {
       const key = field.slice('fields.'.length);
       if (!newData.fields) newData.fields = {};
