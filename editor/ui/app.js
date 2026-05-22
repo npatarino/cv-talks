@@ -119,6 +119,7 @@ async function selectDeck(slug) {
   state.currentDeck = slug;
   state.dirtyFiles.clear();
   state.uncommittedFiles.clear();
+  clearTimeout(state.livePreviewTimer);
   const deck = state.decks.find(d => d.slug === slug);
   dom.deckTitle.textContent = deck?.deck?.title ?? slug;
   await loadSlides();
@@ -980,11 +981,13 @@ async function refreshGitStatus() {
   try {
     const { modified } = await apiFetch('/api/git-status');
     state.uncommittedFiles.clear();
-    modified.forEach(f => {
-      // f is like "decks/slug/01-foo.md" — extract just the basename
-      const basename = f.split('/').pop();
-      if (basename) state.uncommittedFiles.add(basename);
-    });
+    // Only consider files that are actual slide files (.md in decks/)
+    modified
+      .filter(f => f.startsWith('decks/') && f.endsWith('.md'))
+      .forEach(f => {
+        const basename = f.split('/').pop();
+        if (basename) state.uncommittedFiles.add(basename);
+      });
     renderSidebar();
   } catch { /* git not available, ignore */ }
 }
