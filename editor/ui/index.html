@@ -76,7 +76,12 @@
           <div id="preview-placeholder">
             <div class="placeholder-text">Select a slide to preview</div>
           </div>
-          <iframe id="preview-frame" src="about:blank" sandbox="allow-same-origin allow-scripts" style="display:none"></iframe>
+          <!-- No sandbox: Eleventy live-reload needs WebSocket + navigation -->
+          <div id="preview-scaler" style="display:none; position:relative; flex-shrink:0;">
+            <iframe id="preview-frame" src="about:blank"
+              style="position:absolute;top:0;left:0;width:1920px;height:1080px;border:none;transform-origin:top left;box-shadow:0 8px 32px rgba(0,0,0,0.4);border-radius:6px;">
+            </iframe>
+          </div>
         </div>
       </section>
 

@@ -28,9 +28,11 @@ const dom = {
   deckSelector: $('deck-selector'),
   deckTitle: $('deck-title'),
   slideList: $('slide-list'),
+  previewScaler: $('preview-scaler'),
   previewFrame: $('preview-frame'),
   previewPlaceholder: $('preview-placeholder'),
   previewLabel: $('preview-label'),
+  previewContainer: $('preview-container'),
   formBody: $('form-body'),
   saveStatus: $('save-status'),
   btnSave: $('btn-save'),
@@ -48,6 +50,24 @@ const dom = {
   newPosition: $('new-position'),
   confirmMessage: $('confirm-message'),
 };
+
+// ---- Preview scaling ----
+
+function scalePreview() {
+  if (!dom.previewScaler || dom.previewScaler.style.display === 'none') return;
+  const c = dom.previewContainer;
+  const pad = 40;
+  const availW = c.clientWidth - pad;
+  const availH = c.clientHeight - pad;
+  const scale = Math.min(availW / 1920, availH / 1080);
+  const displayW = Math.round(1920 * scale);
+  const displayH = Math.round(1080 * scale);
+  dom.previewScaler.style.width  = displayW + 'px';
+  dom.previewScaler.style.height = displayH + 'px';
+  dom.previewFrame.style.transform = `scale(${scale})`;
+}
+
+new ResizeObserver(scalePreview).observe(document.getElementById('preview-container'));
 
 // ---- API ----
 
@@ -129,13 +149,16 @@ async function selectSlide(filename) {
 
 function updatePreview(slide) {
   dom.previewLabel.textContent = `${slide.data.order}. ${slide.data.label}`;
-  dom.previewFrame.style.display = 'block';
   dom.previewPlaceholder.style.display = 'none';
+  dom.previewScaler.style.display = 'block';
   dom.previewFrame.src = slide.previewUrl;
+  // Scale after content loads (and on every subsequent live-reload)
+  dom.previewFrame.onload = scalePreview;
+  scalePreview();
 }
 
 function clearPreview() {
-  dom.previewFrame.style.display = 'none';
+  dom.previewScaler.style.display = 'none';
   dom.previewPlaceholder.style.display = 'flex';
   dom.previewFrame.src = 'about:blank';
   dom.previewLabel.textContent = 'No slide selected';
@@ -853,7 +876,13 @@ async function saveCurrentSlide(silent = false) {
     state.uncommittedFiles.add(savedFilename);
 
     await loadSlides();
-    // Don't manually reload iframe — Eleventy live reload handles it automatically
+    // Reload the iframe after a short delay — Eleventy will have rebuilt by then
+    // (Eleventy's live-reload also fires automatically, this is a fallback)
+    setTimeout(() => {
+      if (dom.previewFrame.src && dom.previewFrame.src !== 'about:blank') {
+        dom.previewFrame.src = dom.previewFrame.src;
+      }
+    }, 800);
     state.slideData = { ...state.slideData, data: newData };
     setStatus('saved');
     if (!silent) toast('Saved', 'success');
