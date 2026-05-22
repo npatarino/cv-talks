@@ -2,8 +2,8 @@
 template: big-concept
 recipe: critical
 order: 62
-label: "Reducir nuestro protagonismo"
+label: Reducir nuestro protagonismo
 variant: prompt
 fields:
-  title:   { content: "Reducir nuestro<br><em>PROTAGONISMO</em>", meta: "Title_Text" }
+  title: { content: 'Reducir nuestro<br><em>PROTAGONISMO</em>', meta: Title_Text }
 ---

@@ -867,6 +867,15 @@ button { cursor: pointer; font-family: inherit; font-size: 13px; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+.form-reverted {
+  animation: revert-flash 0.7s ease;
+}
+@keyframes revert-flash {
+  0%   { background: rgba(2, 181, 185, 0.18); }
+  60%  { background: rgba(2, 181, 185, 0.08); }
+  100% { background: transparent; }
+}
+
 .toast {
   position: fixed;
   bottom: 20px;
