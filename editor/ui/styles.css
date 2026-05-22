@@ -190,6 +190,23 @@ body { height: 100vh; overflow: hidden; }
   text-overflow: ellipsis;
 }
 
+.slide-badge {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.badge-dirty {
+  background: #f59e0b;
+  box-shadow: 0 0 4px rgba(245,158,11,0.6);
+}
+
+.badge-uncommitted {
+  background: #02B5B9;
+  box-shadow: 0 0 4px rgba(2,181,185,0.5);
+}
+
 .recipe-dot {
   width: 8px; height: 8px;
   border-radius: 50%;

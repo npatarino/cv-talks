@@ -17,6 +17,10 @@ const state = {
   hasUnsaved: false,
   draggingFilename: null,
   dragOverFilename: null,
+  // Per-slide badges
+  dirtyFiles: new Set(),       // unsaved form changes (yellow)
+  uncommittedFiles: new Set(), // saved but not committed (teal)
+  autoSaveTimer: null,
 };
 
 // ---- DOM refs ----
@@ -84,12 +88,16 @@ async function selectDeck(slug) {
     state.currentDeck = null;
     state.slides = [];
     state.selectedFilename = null;
+    state.dirtyFiles.clear();
+    state.uncommittedFiles.clear();
     renderSidebar();
     clearPreview();
     clearForm();
     return;
   }
   state.currentDeck = slug;
+  state.dirtyFiles.clear();
+  state.uncommittedFiles.clear();
   const deck = state.decks.find(d => d.slug === slug);
   dom.deckTitle.textContent = deck?.deck?.title ?? slug;
   await loadSlides();
@@ -102,6 +110,7 @@ async function loadSlides() {
   state.slides = slides;
   dom.newPosition.value = slides.length + 1;
   renderSidebar();
+  refreshGitStatus();
 }
 
 // ---- Slide selection ----
@@ -155,6 +164,14 @@ function renderSidebar() {
     ].filter(Boolean).join(' ');
     item.dataset.filename = slide.filename;
     item.draggable = true;
+    const isDirty = state.dirtyFiles.has(slide.filename);
+    const isUncommitted = !isDirty && state.uncommittedFiles.has(slide.filename);
+    const badge = isDirty
+      ? '<span class="slide-badge badge-dirty" title="Unsaved changes"></span>'
+      : isUncommitted
+        ? '<span class="slide-badge badge-uncommitted" title="Saved, not committed"></span>'
+        : '';
+
     item.innerHTML = `
       <span class="drag-handle" title="Drag to reorder">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -168,6 +185,7 @@ function renderSidebar() {
         <span class="slide-label" title="${escHtml(slide.label)}">${escHtml(slide.label)}</span>
         <span class="slide-meta">${slide.template}${slide.variant && slide.variant !== 'default' ? ' · ' + slide.variant : ''}</span>
       </div>
+      ${badge}
       <span class="recipe-dot recipe-${slide.recipe}" title="${slide.recipe}"></span>`;
 
     item.addEventListener('click', () => selectSlide(slide.filename));
@@ -508,6 +526,31 @@ function collectFormData() {
 function markUnsaved() {
   state.hasUnsaved = true;
   setStatus('unsaved');
+
+  // Mark this slide as dirty (yellow badge)
+  if (state.selectedFilename) {
+    state.dirtyFiles.add(state.selectedFilename);
+    renderSidebar();
+  }
+
+  // Auto-save after 600ms of inactivity
+  clearTimeout(state.autoSaveTimer);
+  state.autoSaveTimer = setTimeout(() => {
+    if (state.hasUnsaved) saveCurrentSlide(true);
+  }, 600);
+}
+
+async function refreshGitStatus() {
+  try {
+    const { modified } = await apiFetch('/api/git-status');
+    state.uncommittedFiles.clear();
+    modified.forEach(f => {
+      // f is like "decks/slug/01-foo.md" — extract just the basename
+      const basename = f.split('/').pop();
+      if (basename) state.uncommittedFiles.add(basename);
+    });
+    renderSidebar();
+  } catch { /* git not available, ignore */ }
 }
 
 function setStatus(status) {
@@ -532,17 +575,24 @@ async function saveCurrentSlide(silent = false) {
   if (!state.selectedFilename || !state.currentDeck) return;
   const newData = collectFormData();
   if (!newData) return;
+  const savedFilename = state.selectedFilename;
   try {
     setStatus('saving');
-    await apiFetch(`/api/decks/${state.currentDeck}/slides/${state.selectedFilename}`, {
+    await apiFetch(`/api/decks/${state.currentDeck}/slides/${savedFilename}`, {
       method: 'PUT',
       body: JSON.stringify({ data: newData }),
     });
+    // Clear dirty badge, add uncommitted badge
+    state.dirtyFiles.delete(savedFilename);
+    state.uncommittedFiles.add(savedFilename);
+
     await loadSlides();
-    dom.previewFrame.src = dom.previewFrame.src;
+    // Don't manually reload iframe — Eleventy live reload handles it automatically
     state.slideData = { ...state.slideData, data: newData };
     setStatus('saved');
     if (!silent) toast('Saved', 'success');
+    // Refresh git status after a short delay (Eleventy may still be building)
+    setTimeout(refreshGitStatus, 1500);
   } catch (e) {
     setStatus('error');
     if (!silent) toast('Save failed: ' + e.message, 'error');
