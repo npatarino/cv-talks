@@ -12,6 +12,7 @@
  * Run Eleventy separately: bun run serve  (on :8080)
  */
 
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
@@ -76,6 +77,19 @@ async function route(req) {
   // GET /api/template-slides
   if (method === 'GET' && pathname === '/api/template-slides') {
     return json(listTemplateSlides());
+  }
+
+  // GET /api/decks/:slug/assets — list image files in deck assets folder
+  const assetsMatch = pathname.match(/^\/api\/decks\/([^/]+)\/assets$/);
+  if (method === 'GET' && assetsMatch) {
+    const [, slug] = assetsMatch;
+    const dir = path.join(UI_DIR.replace('/editor/ui', ''), 'decks', slug, 'assets');
+    try {
+      const files = fs.readdirSync(dir).filter(f =>
+        /\.(png|jpg|jpeg|svg|gif|webp|avif)$/i.test(f)
+      ).sort();
+      return json(files);
+    } catch { return json([]); }
   }
 
   // GET /api/git-status — returns list of modified file paths relative to repo root
