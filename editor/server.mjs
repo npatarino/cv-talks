@@ -14,6 +14,7 @@
 
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
 import { listDecks, listTemplateSlides } from './api/decks.mjs';
 import {
   listSlides,
@@ -75,6 +76,26 @@ async function route(req) {
   // GET /api/template-slides
   if (method === 'GET' && pathname === '/api/template-slides') {
     return json(listTemplateSlides());
+  }
+
+  // GET /api/git-status — returns list of modified file paths relative to repo root
+  if (method === 'GET' && pathname === '/api/git-status') {
+    try {
+      const result = spawnSync('git', ['diff', '--name-only', 'HEAD'], {
+        cwd: UI_DIR.replace('/editor/ui', ''),
+        encoding: 'utf8',
+      });
+      // Also include untracked files that are not ignored
+      const untracked = spawnSync('git', ['ls-files', '--others', '--exclude-standard'], {
+        cwd: UI_DIR.replace('/editor/ui', ''),
+        encoding: 'utf8',
+      });
+      const modified = (result.stdout || '').trim().split('\n').filter(Boolean);
+      const newFiles = (untracked.stdout || '').trim().split('\n').filter(Boolean);
+      return json({ modified: [...modified, ...newFiles] });
+    } catch (e) {
+      return json({ modified: [] });
+    }
   }
 
   // GET /api/decks/:slug/slides
