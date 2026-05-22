@@ -296,38 +296,41 @@ function updateSlideActions() {
 async function revertSlide() {
   if (!state.selectedFilename || !state.currentDeck) return;
   try {
-    const slide = await apiFetch(`/api/decks/${state.currentDeck}/slides/${state.selectedFilename}`);
+    // Run git checkout HEAD -- file on the server
+    const slide = await apiFetch(
+      `/api/decks/${state.currentDeck}/slides/${state.selectedFilename}/git-revert`,
+      { method: 'POST' }
+    );
+
     state.slideData = slide;
     state.dirtyFiles.delete(state.selectedFilename);
+    state.uncommittedFiles.delete(state.selectedFilename);
     state.hasUnsaved = false;
     setStatus(false);
 
-    // Re-render the form with fresh data
     renderForm(slide);
     renderSidebar();
     updateSlideActions();
 
-    // Force update any contenteditable RTEs that the browser might have cached
+    // Force update any contenteditable RTEs
     dom.formBody.querySelectorAll('[data-field][contenteditable]').forEach(rteEl => {
       const field = rteEl.dataset.field;
-      let freshValue = '';
       if (field.startsWith('fields.')) {
         const key = field.slice('fields.'.length);
         const fieldObj = slide.data.fields?.[key];
-        freshValue = typeof fieldObj === 'object' ? (fieldObj?.content ?? '') : String(fieldObj ?? '');
-      }
-      if (rteEl.innerHTML !== freshValue) {
-        rteEl.innerHTML = freshValue;
+        const freshValue = typeof fieldObj === 'object' ? (fieldObj?.content ?? '') : String(fieldObj ?? '');
+        if (rteEl.innerHTML !== freshValue) rteEl.innerHTML = freshValue;
       }
     });
 
-    // Flash form panel so it's obvious something changed
     dom.formBody.classList.add('form-reverted');
     setTimeout(() => dom.formBody.classList.remove('form-reverted'), 700);
 
-    toast('Reverted to saved version', 'success');
+    toast('Reverted to git HEAD', 'success');
+    // Eleventy will detect the file change and rebuild the preview automatically
+    setTimeout(refreshGitStatus, 1000);
   } catch (e) {
-    toast('Revert failed: ' + e.message, 'error');
+    toast('Git revert failed: ' + e.message, 'error');
   }
 }
 

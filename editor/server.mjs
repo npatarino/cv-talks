@@ -158,6 +158,28 @@ async function route(req) {
     } catch (e) { return err(e.message); }
   }
 
+  // POST /api/decks/:slug/slides/:filename/git-revert — restore file to HEAD
+  const gitRevertMatch = pathname.match(/^\/api\/decks\/([^/]+)\/slides\/([^/]+)\/git-revert$/);
+  if (method === 'POST' && gitRevertMatch) {
+    const [, slug, filename] = gitRevertMatch;
+    const relPath = `decks/${slug}/${filename}`;
+    const repoRoot = UI_DIR.replace('/editor/ui', '');
+    const result = spawnSync('git', ['checkout', 'HEAD', '--', relPath], {
+      cwd: repoRoot,
+      encoding: 'utf8',
+    });
+    if (result.status !== 0) {
+      return err(result.stderr || 'git checkout failed');
+    }
+    // Return the restored slide content
+    try {
+      const { getSlide } = await import('./api/slides.mjs');
+      return json(getSlide(slug, filename));
+    } catch (e) {
+      return json({ ok: true });
+    }
+  }
+
   // DELETE /api/decks/:slug/slides/:filename
   if (method === 'DELETE' && slideMatch) {
     const [, slug, filename] = slideMatch;
