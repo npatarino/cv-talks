@@ -8,13 +8,20 @@
     "build": "bun run sync:fonts && eleventy && bun scripts/build-seo.mjs",
     "serve": "bun run sync:fonts && eleventy --serve",
     "serve:meta": "bun run sync:fonts && SLIDE_MODE=meta eleventy --serve",
-    "editor": "bun editor/server.mjs"
+    "editor": "bun editor/server.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@chimichurricode/design-system": "^0.7.2",
     "@chimichurricode/analytics": "^0.1.0"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^3.0.0"
+    "@11ty/eleventy": "^3.0.0",
+    "@playwright/test": "^1.60.0",
+    "@vitest/coverage-v8": "^4.1.7",
+    "vitest": "^4.1.7"
   }
 }
