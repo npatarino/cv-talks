@@ -91,6 +91,44 @@ describe('GET /api/templates', () => {
   });
 });
 
+// ─── GET /api/template-scaffold ───────────────────────────────────────────────
+
+describe('GET /api/template-scaffold', () => {
+  it('returns fields with blank content for big-concept', async () => {
+    const { status, data } = await call('GET', '/api/template-scaffold?template=big-concept&variant=default');
+    expect(status).toBe(200);
+    expect(data.fields).toBeDefined();
+    expect(data.fields.title.content).toBe('');
+    expect(data.fields.note.content).toBe('');
+  });
+
+  it('returns blanked items array for big-list', async () => {
+    const { status, data } = await call('GET', '/api/template-scaffold?template=big-list&variant=numeric');
+    expect(status).toBe(200);
+    expect(Array.isArray(data.items)).toBe(true);
+    data.items.forEach(item => expect(item.text).toBe(''));
+  });
+
+  it('falls back to variant=default when variant is omitted', async () => {
+    const { status, data } = await call('GET', '/api/template-scaffold?template=big-concept');
+    expect(status).toBe(200);
+    expect(data.fields).toBeDefined();
+  });
+
+  it('returns 400 when template is missing', async () => {
+    const { status } = await call('GET', '/api/template-scaffold');
+    expect(status).toBe(400);
+  });
+
+  it('returns empty scaffold for an unknown template', async () => {
+    const { status, data } = await call('GET', '/api/template-scaffold?template=does-not-exist');
+    expect(status).toBe(200);
+    // No fields/items — caller is expected to handle the empty case.
+    expect(data.fields).toBeUndefined();
+    expect(data.items).toBeUndefined();
+  });
+});
+
 // ─── GET /api/template-slides ─────────────────────────────────────────────────
 
 describe('GET /api/template-slides', () => {
@@ -119,6 +157,122 @@ describe('GET /api/decks/:slug/assets', () => {
     const { status, data } = await call('GET', '/api/decks/nonexistent-deck/assets');
     expect(status).toBe(200);
     expect(data).toEqual([]);
+  });
+});
+
+// ─── POST /api/decks/:slug/assets — upload ───────────────────────────────────
+
+describe('POST /api/decks/:slug/assets', () => {
+  // 1x1 transparent PNG — well under the 512px resize threshold so no browser is launched.
+  const PNG_1x1 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+
+  it('uploads a small PNG and returns 201', async () => {
+    makeDeck('my-deck');
+    const { status, data } = await call('POST', '/api/decks/my-deck/assets', {
+      basename: 'tiny',
+      mimeType: 'image/png',
+      dataBase64: PNG_1x1,
+    });
+    expect(status).toBe(201);
+    expect(data.filename).toBe('tiny.png');
+    expect(data.resized).toBe(false);
+  });
+
+  it('writes the file to the deck assets directory', async () => {
+    const dir = makeDeck('my-deck');
+    await call('POST', '/api/decks/my-deck/assets', {
+      basename: 'icon',
+      mimeType: 'image/png',
+      dataBase64: PNG_1x1,
+    });
+    expect(fs.existsSync(path.join(dir, 'assets', 'icon.png'))).toBe(true);
+  });
+
+  it('subsequent GET /assets includes the uploaded file', async () => {
+    makeDeck('my-deck');
+    await call('POST', '/api/decks/my-deck/assets', {
+      basename: 'star',
+      mimeType: 'image/png',
+      dataBase64: PNG_1x1,
+    });
+    const { data } = await call('GET', '/api/decks/my-deck/assets');
+    expect(data).toContain('star.png');
+  });
+
+  it('returns 400 when basename is missing', async () => {
+    makeDeck('my-deck');
+    const { status } = await call('POST', '/api/decks/my-deck/assets', {
+      mimeType: 'image/png',
+      dataBase64: PNG_1x1,
+    });
+    expect(status).toBe(400);
+  });
+
+  it('returns 400 when basename contains a slash', async () => {
+    makeDeck('my-deck');
+    const { status, data } = await call('POST', '/api/decks/my-deck/assets', {
+      basename: '../escape',
+      mimeType: 'image/png',
+      dataBase64: PNG_1x1,
+    });
+    expect(status).toBe(400);
+    expect(data.error).toMatch(/Invalid basename/);
+  });
+
+  it('returns 400 for unsupported mime type', async () => {
+    makeDeck('my-deck');
+    const { status, data } = await call('POST', '/api/decks/my-deck/assets', {
+      basename: 'doc',
+      mimeType: 'application/pdf',
+      dataBase64: PNG_1x1,
+    });
+    expect(status).toBe(400);
+    expect(data.error).toMatch(/Unsupported image type/);
+  });
+
+  it('returns 400 when uploading a duplicate basename', async () => {
+    makeDeck('my-deck');
+    await call('POST', '/api/decks/my-deck/assets', {
+      basename: 'dup', mimeType: 'image/png', dataBase64: PNG_1x1,
+    });
+    const { status, data } = await call('POST', '/api/decks/my-deck/assets', {
+      basename: 'dup', mimeType: 'image/png', dataBase64: PNG_1x1,
+    });
+    expect(status).toBe(400);
+    expect(data.error).toMatch(/already exists/);
+  });
+});
+
+// ─── POST /api/decks/:slug/export-pdf ────────────────────────────────────────
+
+describe('POST /api/decks/:slug/export-pdf', () => {
+  // Skipped by default — full export launches Chromium and depends on a running
+  // Eleventy server at :8080 to serve the slide previewUrl. Run manually when
+  // verifying the PDF pipeline end-to-end.
+  it.skip('exports a deck to a PDF buffer', async () => {
+    const dir = makeDeck('my-deck');
+    writeSlide(dir, '01-cover.md', 1);
+    const res = await route(req('POST', '/api/decks/my-deck/export-pdf'), null, '', tmpRoot);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('Content-Type')).toBe('application/pdf');
+    const buf = await res.arrayBuffer();
+    expect(buf.byteLength).toBeGreaterThan(0);
+    // %PDF header
+    const head = Buffer.from(buf.slice(0, 4)).toString('ascii');
+    expect(head).toBe('%PDF');
+  }, 60_000);
+
+  it('returns 500 when deck has no slides', async () => {
+    makeDeck('empty-deck');
+    const res = await route(req('POST', '/api/decks/empty-deck/export-pdf'), null, '', tmpRoot);
+    expect(res.status).toBe(500);
+    const data = await res.json();
+    expect(data.error).toMatch(/No slides/);
+  });
+
+  it('returns 400 for invalid slug', async () => {
+    const res = await route(req('POST', '/api/decks/..bad/export-pdf'), null, '', tmpRoot);
+    expect(res.status).toBe(400);
   });
 });
 
@@ -167,6 +321,128 @@ describe('POST /api/decks/:slug/slides', () => {
     });
     const files = fs.readdirSync(dir).filter(f => f.endsWith('.md'));
     expect(files).toHaveLength(1);
+  });
+});
+
+describe('POST /api/decks/:slug/slides — scaffolds fields/items', () => {
+  it('seeds empty fields from the template gallery for big-concept', async () => {
+    makeDeck('my-deck');
+    const { status, data } = await call('POST', '/api/decks/my-deck/slides', {
+      template: 'big-concept', variant: 'default', label: 'Empty',
+    });
+    expect(status).toBe(201);
+
+    const { data: saved } = await call('GET', `/api/decks/my-deck/slides/${data.filename}`);
+    // big-concept default has `title` and `note` fields.
+    expect(saved.data.fields).toBeDefined();
+    expect(saved.data.fields.title).toBeDefined();
+    expect(saved.data.fields.title.content).toBe('');
+    expect(saved.data.fields.note).toBeDefined();
+    expect(saved.data.fields.note.content).toBe('');
+  });
+
+  it('seeds empty items array for big-list', async () => {
+    makeDeck('my-deck');
+    const { data } = await call('POST', '/api/decks/my-deck/slides', {
+      template: 'big-list', variant: 'numeric', label: 'Empty list',
+    });
+    const { data: saved } = await call('GET', `/api/decks/my-deck/slides/${data.filename}`);
+    expect(Array.isArray(saved.data.items)).toBe(true);
+    // Each item should have its `text` blanked but key structure preserved.
+    expect(saved.data.items.length).toBeGreaterThan(0);
+    saved.data.items.forEach(item => {
+      expect(item.text).toBe('');
+    });
+  });
+
+  it('explicit fields override the scaffold', async () => {
+    makeDeck('my-deck');
+    const { data } = await call('POST', '/api/decks/my-deck/slides', {
+      template: 'big-concept',
+      label: 'With content',
+      fields: { title: { content: 'Hello', meta: 'Title_Text' } },
+    });
+    const { data: saved } = await call('GET', `/api/decks/my-deck/slides/${data.filename}`);
+    expect(saved.data.fields.title.content).toBe('Hello');
+    // Caller fields fully replace the scaffold — no `note` here.
+    expect(saved.data.fields.note).toBeUndefined();
+  });
+});
+
+describe('POST /api/decks/:slug/slides — insert at intermediate position', () => {
+  it('inserts after the currently-selected slide and renumbers the rest', async () => {
+    // Setup: three slides already in the deck.
+    const dir = makeDeck('my-deck');
+    writeSlide(dir, '01-a.md', 1, { label: 'A' });
+    writeSlide(dir, '02-b.md', 2, { label: 'B' });
+    writeSlide(dir, '03-c.md', 3, { label: 'C' });
+
+    // Simulating the new UI behavior: user has slide B (index 1) selected and clicks
+    // "+ Add slide" — the modal pre-fills position with idx+2 = 3 (just after B).
+    const { status, data } = await call('POST', '/api/decks/my-deck/slides', {
+      template: 'big-concept',
+      label: 'Between B and C',
+      position: 3,
+    });
+    expect(status).toBe(201);
+    expect(data.order).toBe(3);
+
+    // All four slides should now be present with sequential orders 1..4.
+    const { data: list } = await call('GET', '/api/decks/my-deck/slides');
+    expect(list).toHaveLength(4);
+    expect(list.map(s => s.order)).toEqual([1, 2, 3, 4]);
+    expect(list.map(s => s.label)).toEqual(['A', 'B', 'Between B and C', 'C']);
+
+    // The existing slides should have been renamed (renumbered) on disk.
+    const files = fs.readdirSync(dir).filter(f => f.endsWith('.md')).sort();
+    // C was at 03-c.md, now should be 04-c.md.
+    expect(files).toContain('04-c.md');
+    // The original 03-c.md should no longer exist (renamed).
+    expect(files).not.toContain('03-c.md');
+  });
+
+  it('inserts at the start when position is 1', async () => {
+    const dir = makeDeck('my-deck');
+    writeSlide(dir, '01-a.md', 1, { label: 'A' });
+    writeSlide(dir, '02-b.md', 2, { label: 'B' });
+
+    await call('POST', '/api/decks/my-deck/slides', {
+      template: 'cover', label: 'New First', position: 1,
+    });
+
+    const { data: list } = await call('GET', '/api/decks/my-deck/slides');
+    expect(list).toHaveLength(3);
+    expect(list.map(s => s.label)).toEqual(['New First', 'A', 'B']);
+    expect(list.map(s => s.order)).toEqual([1, 2, 3]);
+  });
+
+  it('appends at end when position equals slides.length + 1', async () => {
+    const dir = makeDeck('my-deck');
+    writeSlide(dir, '01-a.md', 1, { label: 'A' });
+    writeSlide(dir, '02-b.md', 2, { label: 'B' });
+
+    await call('POST', '/api/decks/my-deck/slides', {
+      template: 'cover', label: 'Tail', position: 3,
+    });
+
+    const { data: list } = await call('GET', '/api/decks/my-deck/slides');
+    expect(list).toHaveLength(3);
+    expect(list[2].label).toBe('Tail');
+    expect(list[2].order).toBe(3);
+  });
+
+  it('clamps position above slides.length + 1 to end', async () => {
+    const dir = makeDeck('my-deck');
+    writeSlide(dir, '01-a.md', 1);
+    writeSlide(dir, '02-b.md', 2);
+
+    await call('POST', '/api/decks/my-deck/slides', {
+      template: 'cover', label: 'X', position: 99,
+    });
+
+    const { data: list } = await call('GET', '/api/decks/my-deck/slides');
+    expect(list).toHaveLength(3);
+    expect(list[2].label).toBe('X');
   });
 });
 

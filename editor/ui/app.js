@@ -2,6 +2,9 @@
  * cv-talks Slide Editor — Main Application Logic
  */
 
+import { extractSvgFromText } from './clipboard-svg.mjs';
+import { buildAssetInsertHTML, buildAssetSrc, mergeFields, defaultInsertPosition } from './editor-helpers.mjs';
+
 const API = '';
 
 // Loaded async from /api/templates
@@ -42,6 +45,7 @@ const dom = {
   btnMoveUp: $('btn-move-up'),
   btnMoveDown: $('btn-move-down'),
   btnDeleteSlide: $('btn-delete-slide'),
+  btnExportPdf: $('btn-export-pdf'),
   modalAdd: $('modal-add'),
   modalConfirm: $('modal-confirm'),
   newTemplate: $('new-template'),
@@ -111,6 +115,7 @@ async function selectDeck(slug) {
     state.selectedFilename = null;
     state.dirtyFiles.clear();
     state.uncommittedFiles.clear();
+    dom.btnExportPdf.disabled = true;
     renderSidebar();
     clearPreview();
     clearForm();
@@ -119,6 +124,7 @@ async function selectDeck(slug) {
   state.currentDeck = slug;
   state.dirtyFiles.clear();
   state.uncommittedFiles.clear();
+  dom.btnExportPdf.disabled = false;
   clearTimeout(state.livePreviewTimer);
   const deck = state.decks.find(d => d.slug === slug);
   dom.deckTitle.textContent = deck?.deck?.title ?? slug;
@@ -130,7 +136,6 @@ async function loadSlides() {
   if (!state.currentDeck) return;
   const slides = await apiFetch(`/api/decks/${state.currentDeck}/slides`);
   state.slides = slides;
-  dom.newPosition.value = slides.length + 1;
   renderSidebar();
   refreshGitStatus();
 }
@@ -212,6 +217,10 @@ function renderSidebar() {
       ${badge}`;
 
     item.addEventListener('click', () => selectSlide(slide.filename));
+    item.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      openSlideContextMenu(e.clientX, e.clientY, slide.filename);
+    });
     item.addEventListener('dragstart', e => { state.draggingFilename = slide.filename; e.dataTransfer.effectAllowed = 'move'; renderSidebar(); });
     item.addEventListener('dragover', e => { e.preventDefault(); if (state.dragOverFilename !== slide.filename) { state.dragOverFilename = slide.filename; renderSidebar(); } });
     item.addEventListener('dragleave', () => { if (state.dragOverFilename === slide.filename) { state.dragOverFilename = null; renderSidebar(); } });
@@ -381,13 +390,95 @@ function renderForm(slide) {
   dom.formBody.querySelectorAll('input, textarea, select').forEach(el => {
     el.addEventListener('input', markUnsaved);
     if (el.dataset.field === 'template') {
-      el.addEventListener('change', () => {
-        const vs = dom.formBody.querySelector('[data-field="variant"]');
-        if (vs) vs.replaceWith(mkVariantSelect('variant', el.value, 'default'));
-      });
+      el.addEventListener('change', () => onTemplateChange(el.value));
+    }
+    if (el.dataset.field === 'variant') {
+      el.addEventListener('change', () => onVariantChange(el.value));
     }
   });
 }
+
+/**
+ * Reshape the form when the user picks a different template. Fetches the
+ * scaffold for the new template, copies over any fields/items that survive
+ * the key intersection with the current slide, and re-renders.
+ *
+ * The slide on disk keeps its old shape until the user hits Save — until then
+ * the user can still switch back without losing data (form state is held in
+ * `state.slideData`).
+ */
+async function onTemplateChange(newTemplate) {
+  const current = collectFormData();
+  if (!current) return;
+
+  // Variant always resets to "default" — the previous variant only makes sense
+  // within the previous template's variant set.
+  const newVariant = 'default';
+
+  let scaffold;
+  try {
+    scaffold = await apiFetch(`/api/template-scaffold?template=${encodeURIComponent(newTemplate)}&variant=${encodeURIComponent(newVariant)}`);
+  } catch (e) {
+    toast('Failed to load template scaffold: ' + e.message, 'error');
+    return;
+  }
+
+  const merged = {
+    ...current,
+    template: newTemplate,
+    variant: newVariant,
+  };
+
+  // Re-shape fields: start from the scaffold, copy over any matching keys
+  // from the previous slide (preserves content where the new template
+  // expects the same field name, e.g. `title`).
+  if (scaffold.fields) {
+    merged.fields = mergeFields(scaffold.fields, current.fields);
+  } else {
+    delete merged.fields;
+  }
+
+  if (scaffold.items) {
+    // For items there's no meaningful key intersection (an array of glyphs
+    // doesn't map to an array of {text} items), so reset to the scaffold's
+    // shape. Length comes from the scaffold too.
+    merged.items = scaffold.items;
+  } else {
+    delete merged.items;
+  }
+
+  // Mutate in-place so the re-render sees the new shape.
+  state.slideData = { ...state.slideData, data: merged };
+  renderForm(state.slideData);
+  markUnsaved();
+}
+
+/** Same reshape, but only for variant changes (template stays the same). */
+async function onVariantChange(newVariant) {
+  const current = collectFormData();
+  if (!current) return;
+  const template = current.template;
+
+  let scaffold;
+  try {
+    scaffold = await apiFetch(`/api/template-scaffold?template=${encodeURIComponent(template)}&variant=${encodeURIComponent(newVariant)}`);
+  } catch {
+    // Variant changes shouldn't be fatal — just mark unsaved and let the user save.
+    markUnsaved();
+    return;
+  }
+
+  const merged = { ...current, variant: newVariant };
+  if (scaffold.fields) merged.fields = mergeFields(scaffold.fields, current.fields);
+  // For variants we keep existing items as-is — different variants of the same
+  // template (e.g. big-list numeric/bullets/checklist) share the items shape
+  // closely enough that wiping would surprise the user.
+
+  state.slideData = { ...state.slideData, data: merged };
+  renderForm(state.slideData);
+  markUnsaved();
+}
+
 
 function addSection(title) {
   const el = document.createElement('div');
@@ -452,6 +543,238 @@ function mkVariantSelect(field, template, current) {
 function mkRecipeSelect(field, current) {
   const recipes = ['canvas-quiet', 'canvas-signal', 'paper', 'energy-loud', 'cool-fresh', 'critical'];
   return mkSelect(field, recipes.map(r => ({ value: r, label: r })), current);
+}
+
+// ---- Asset upload helpers ----
+
+/**
+ * Pick a file via <input type=file>. Resolves with the File, or null if cancelled.
+ */
+function pickImageFile() {
+  return new Promise(resolve => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/png,image/jpeg,image/jpg,image/webp,image/gif,image/svg+xml,image/avif';
+    input.addEventListener('change', () => resolve(input.files?.[0] ?? null));
+    // If the user closes the dialog without picking, `change` never fires.
+    // We rely on the next picker action to clean up — no leak.
+    input.click();
+  });
+}
+
+/**
+ * Read an image from the clipboard. Returns { blob, mimeType } or null if no image.
+ *
+ * Handles three cases:
+ *  1. Raster images (PNG/JPG/WEBP/GIF/AVIF) — exposed by the browser as
+ *     `image/*` blobs via `ClipboardItem.getType()`.
+ *  2. SVG as `image/svg+xml` blob — rare in practice but covered for
+ *     completeness.
+ *  3. SVG copied as text (the common case from Figma, design tools, or
+ *     "Copy SVG" buttons) — the clipboard exposes it via `text/plain` or
+ *     `text/html`; we sniff the payload to detect `<svg ...>` markup and
+ *     wrap it in a synthetic blob.
+ */
+async function readClipboardImage() {
+  if (!navigator.clipboard?.read) {
+    throw new Error('Clipboard API not available');
+  }
+  const items = await navigator.clipboard.read();
+
+  // Pass 1 — direct image blob (raster or vector).
+  for (const item of items) {
+    const imageType = item.types.find(t => t.startsWith('image/'));
+    if (imageType) {
+      const blob = await item.getType(imageType);
+      return { blob, mimeType: imageType };
+    }
+  }
+
+  // Pass 2 — SVG copied as text. Prefer text/plain because text/html often
+  // wraps the SVG in <html><body> boilerplate or strips it entirely.
+  for (const item of items) {
+    for (const textType of ['text/plain', 'text/html']) {
+      if (!item.types.includes(textType)) continue;
+      const blob = await item.getType(textType);
+      const text = await blob.text();
+      const svgMarkup = extractSvgFromText(text);
+      if (svgMarkup) {
+        return {
+          blob: new Blob([svgMarkup], { type: 'image/svg+xml' }),
+          mimeType: 'image/svg+xml',
+        };
+      }
+    }
+  }
+
+  return null;
+}
+
+
+/** Slugify a filename for use as asset basename. */
+function slugifyAssetName(name) {
+  return name
+    .toLowerCase()
+    .replace(/\.[^.]+$/, '')          // strip extension
+    .normalize('NFD').replace(/[̀-ͯ]/g, '') // strip accents
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60) || 'image';
+}
+
+/** Convert a Blob to base64 (without the data URL prefix). */
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => {
+      const result = r.result;
+      const comma = result.indexOf(',');
+      resolve(result.slice(comma + 1));
+    };
+    r.onerror = () => reject(new Error('Failed to read file'));
+    r.readAsDataURL(blob);
+  });
+}
+
+/**
+ * Modal that prompts the user for a basename. Resolves with the basename
+ * (already slugified) or null if cancelled.
+ */
+function promptAssetName(suggested) {
+  return new Promise(resolve => {
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal';
+    backdrop.innerHTML = `
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-sm">
+        <div class="modal-header"><h2>Name this image</h2></div>
+        <div class="modal-body">
+          <label class="form-field" style="display:flex;flex-direction:column;gap:6px">
+            <span class="field-label">Filename (without extension)</span>
+            <input type="text" id="asset-name-input" autocomplete="off">
+          </label>
+          <p style="margin-top:8px;font-size:12px;color:var(--text-secondary,#888)">
+            Use lowercase letters, numbers, and hyphens. Will be resized to 512px if larger.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" data-action="cancel">Cancel</button>
+          <button class="btn-primary" data-action="ok">Save</button>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+
+    const input = backdrop.querySelector('#asset-name-input');
+    input.value = suggested;
+    input.focus();
+    input.select();
+
+    function close(value) {
+      backdrop.remove();
+      document.removeEventListener('keydown', onKey);
+      resolve(value);
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') close(null);
+      if (e.key === 'Enter') submit();
+    }
+    function submit() {
+      const slug = slugifyAssetName(input.value);
+      if (!slug) { input.focus(); return; }
+      close(slug);
+    }
+    backdrop.querySelector('[data-action=cancel]').addEventListener('click', () => close(null));
+    backdrop.querySelector('.modal-backdrop').addEventListener('click', () => close(null));
+    backdrop.querySelector('[data-action=ok]').addEventListener('click', submit);
+    document.addEventListener('keydown', onKey);
+  });
+}
+
+/**
+ * Upload an asset blob to the server. Returns the saved filename.
+ * Prompts for a name (suggested via `suggestedName`) and asks for confirmation.
+ * Returns null if the user cancels.
+ */
+async function uploadAssetForDeck(deckSlug, blob, mimeType, suggestedName) {
+  const basename = await promptAssetName(suggestedName);
+  if (!basename) return null;
+
+  const dataBase64 = await blobToBase64(blob);
+  try {
+    const result = await apiFetch(`/api/decks/${deckSlug}/assets`, {
+      method: 'POST',
+      body: JSON.stringify({ basename, mimeType, dataBase64 }),
+    });
+    toast(result.resized ? `Saved (resized): ${result.filename}` : `Saved: ${result.filename}`, 'success');
+    return result.filename;
+  } catch (e) {
+    toast('Upload failed: ' + e.message, 'error');
+    return null;
+  }
+}
+
+/**
+ * Build the two "action tile" elements ("+ Upload" and "📋 Paste") that go
+ * at the start of an asset picker grid. Each tile invokes the corresponding
+ * upload flow and calls onComplete(filename) once a file is saved.
+ */
+function buildAssetActionTiles(deckSlug, onComplete) {
+  const uploadTile = document.createElement('div');
+  uploadTile.className = 'asset-item asset-action';
+  uploadTile.title = 'Upload image from your computer';
+  uploadTile.innerHTML = `
+    <div class="asset-action-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M14 5v14M7 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M5 22h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span>Upload…</span>`;
+
+  const pasteTile = document.createElement('div');
+  pasteTile.className = 'asset-item asset-action';
+  pasteTile.title = 'Paste image from clipboard';
+  pasteTile.innerHTML = `
+    <div class="asset-action-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect x="6" y="5" width="16" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+        <rect x="10" y="3" width="8" height="4" rx="1" stroke="currentColor" stroke-width="2"/>
+        <path d="M10 14h8M10 18h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span>Paste…</span>`;
+
+  uploadTile.addEventListener('mousedown', async e => {
+    e.preventDefault();
+    const file = await pickImageFile();
+    if (!file) return;
+    const filename = await uploadAssetForDeck(
+      deckSlug,
+      file,
+      file.type || 'image/png',
+      slugifyAssetName(file.name),
+    );
+    if (filename) onComplete(filename);
+  });
+
+  pasteTile.addEventListener('mousedown', async e => {
+    e.preventDefault();
+    try {
+      const result = await readClipboardImage();
+      if (!result) { toast('No image in clipboard'); return; }
+      const filename = await uploadAssetForDeck(
+        deckSlug,
+        result.blob,
+        result.mimeType,
+        `icon-${Date.now().toString(36)}`,
+      );
+      if (filename) onComplete(filename);
+    } catch (e) {
+      toast('Paste failed: ' + e.message, 'error');
+    }
+  });
+
+  return [uploadTile, pasteTile];
 }
 
 // ---- Rich text editor ----
@@ -612,13 +935,24 @@ function mkRichTextEditor(field, htmlValue, deckSlug) {
     closePicker();
 
     const assets = await apiFetch(`/api/decks/${deckSlug}/assets`).catch(() => []);
-    if (assets.length === 0) { toast('No images in assets folder'); return; }
 
     pickerEl = document.createElement('div');
     pickerEl.className = 'asset-picker';
 
     const grid = document.createElement('div');
     grid.className = 'asset-grid';
+
+    function insertAsset(filename) {
+      restoreSelection();
+      const imgTag = buildAssetInsertHTML(buildAssetSrc(deckSlug, filename));
+      document.execCommand('insertHTML', false, imgTag);
+      markUnsaved();
+      closePicker();
+    }
+
+    // Action tiles (upload, paste) come first
+    buildAssetActionTiles(deckSlug, filename => insertAsset(filename))
+      .forEach(tile => grid.appendChild(tile));
 
     assets.forEach(filename => {
       const src = `/talks/decks/${deckSlug}/assets/${filename}`;
@@ -628,11 +962,7 @@ function mkRichTextEditor(field, htmlValue, deckSlug) {
       item.innerHTML = `<img src="http://localhost:8080${src}" alt="${filename}"><span>${filename}</span>`;
       item.addEventListener('mousedown', e => {
         e.preventDefault();
-        restoreSelection();
-        const imgTag = `<img src="${src}" alt="">`;
-        document.execCommand('insertHTML', false, imgTag);
-        markUnsaved();
-        closePicker();
+        insertAsset(filename);
       });
       grid.appendChild(item);
     });
@@ -764,34 +1094,40 @@ function mkGlyphInput(rawValue, deckSlug) {
   pickerBtn.textContent = '🖼';
 
   let pickerEl = null;
+  let outsideClick = null;
   pickerBtn.addEventListener('click', async () => {
     if (pickerEl) { pickerEl.remove(); pickerEl = null; return; }
     const assets = await apiFetch(`/api/decks/${deckSlug}/assets`).catch(() => []);
-    if (!assets.length) { toast('No images in assets folder'); return; }
 
     pickerEl = document.createElement('div');
     pickerEl.className = 'asset-picker';
     const grid = document.createElement('div');
     grid.className = 'asset-grid';
+
+    function pickAsset(filename) {
+      input.value = filename;
+      preview.innerHTML = `<img src="http://localhost:8080/talks/decks/${deckSlug}/assets/${filename}" alt="">`;
+      markUnsaved();
+      pickerEl.remove(); pickerEl = null;
+      if (outsideClick) document.removeEventListener('mousedown', outsideClick);
+    }
+
+    buildAssetActionTiles(deckSlug, filename => pickAsset(filename))
+      .forEach(tile => grid.appendChild(tile));
+
     assets.forEach(filename => {
       const item2 = document.createElement('div');
       item2.className = 'asset-item';
       item2.title = filename;
       item2.innerHTML = `<img src="http://localhost:8080/talks/decks/${deckSlug}/assets/${filename}" alt="${filename}"><span>${filename}</span>`;
-      item2.addEventListener('click', () => {
-        input.value = filename;
-        preview.innerHTML = `<img src="http://localhost:8080/talks/decks/${deckSlug}/assets/${filename}" alt="">`;
-        markUnsaved();
-        pickerEl.remove(); pickerEl = null;
-        document.removeEventListener('mousedown', outsideClick);
-      });
+      item2.addEventListener('click', () => pickAsset(filename));
       grid.appendChild(item2);
     });
     pickerEl.appendChild(grid);
     const btnRect = pickerBtn.getBoundingClientRect();
     pickerEl.style.cssText = `position:fixed;top:${btnRect.bottom + 4}px;left:${Math.min(btnRect.left, window.innerWidth - 270)}px;z-index:200`;
     document.body.appendChild(pickerEl);
-    const outsideClick = e => { if (pickerEl && !pickerEl.contains(e.target)) { pickerEl.remove(); pickerEl = null; document.removeEventListener('mousedown', outsideClick); } };
+    outsideClick = e => { if (pickerEl && !pickerEl.contains(e.target)) { pickerEl.remove(); pickerEl = null; document.removeEventListener('mousedown', outsideClick); } };
     setTimeout(() => document.addEventListener('mousedown', outsideClick), 0);
   });
 
@@ -1073,7 +1409,9 @@ async function openAddModal() {
   dom.newTemplate.value = '';
   dom.newVariant.value = '';
   dom.newLabel.value = '';
-  dom.newPosition.value = state.slides.length + 1;
+  // Default: insert right after the currently selected slide. Falls back to the
+  // end of the deck if no slide is selected (e.g. empty deck).
+  dom.newPosition.value = defaultInsertPosition(state.slides, state.selectedFilename);
   $('btn-add-confirm').disabled = true;
   selectedTmplCard = null;
 
@@ -1291,12 +1629,84 @@ async function addSlide() {
 
 let pendingDelete = null;
 
-function confirmDelete() {
-  if (!state.selectedFilename) return;
-  const slide = state.slides.find(s => s.filename === state.selectedFilename);
-  pendingDelete = state.selectedFilename;
-  dom.confirmMessage.textContent = `Delete "${slide?.label ?? state.selectedFilename}"? This cannot be undone.`;
+function confirmDelete(filename) {
+  const target = filename ?? state.selectedFilename;
+  if (!target) return;
+  const slide = state.slides.find(s => s.filename === target);
+  pendingDelete = target;
+  dom.confirmMessage.textContent = `Delete "${slide?.label ?? target}"? This cannot be undone.`;
   dom.modalConfirm.hidden = false;
+}
+
+// ---- Slide context menu (right-click on sidebar) ----
+
+let contextMenuEl = null;
+
+function closeSlideContextMenu() {
+  if (contextMenuEl) {
+    contextMenuEl.remove();
+    contextMenuEl = null;
+    document.removeEventListener('mousedown', onContextOutside, true);
+    document.removeEventListener('keydown', onContextEscape, true);
+    window.removeEventListener('scroll', closeSlideContextMenu, true);
+  }
+}
+
+function onContextOutside(e) {
+  if (contextMenuEl && !contextMenuEl.contains(e.target)) closeSlideContextMenu();
+}
+
+function onContextEscape(e) {
+  if (e.key === 'Escape') closeSlideContextMenu();
+}
+
+function openSlideContextMenu(x, y, filename) {
+  closeSlideContextMenu();
+  const menu = document.createElement('div');
+  menu.className = 'context-menu';
+
+  const items = [
+    {
+      label: 'Delete slide',
+      danger: true,
+      icon: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M5 4V2.5h4V4M5.5 6.5v4M8.5 6.5v4M3 4l.7 7.5h6.6L11 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      action: () => confirmDelete(filename),
+    },
+  ];
+
+  items.forEach(({ label, danger, icon, action }) => {
+    const btn = document.createElement('button');
+    btn.className = 'context-menu-item' + (danger ? ' danger' : '');
+    btn.innerHTML = `${icon}<span>${label}</span>`;
+    btn.addEventListener('click', () => {
+      closeSlideContextMenu();
+      action();
+    });
+    menu.appendChild(btn);
+  });
+
+  // Position before measuring — set visibility hidden first so we can read
+  // the size without flashing the menu off-screen.
+  menu.style.visibility = 'hidden';
+  menu.style.position = 'fixed';
+  menu.style.left = x + 'px';
+  menu.style.top = y + 'px';
+  document.body.appendChild(menu);
+
+  // Clamp to viewport
+  const rect = menu.getBoundingClientRect();
+  let left = x, top = y;
+  if (left + rect.width > window.innerWidth - 8) left = window.innerWidth - rect.width - 8;
+  if (top + rect.height > window.innerHeight - 8) top = window.innerHeight - rect.height - 8;
+  menu.style.left = left + 'px';
+  menu.style.top = top + 'px';
+  menu.style.visibility = '';
+
+  contextMenuEl = menu;
+  // Use capture phase so outside-click closes even when other handlers stop propagation.
+  document.addEventListener('mousedown', onContextOutside, true);
+  document.addEventListener('keydown', onContextEscape, true);
+  window.addEventListener('scroll', closeSlideContextMenu, true);
 }
 
 async function doDelete() {
@@ -1322,6 +1732,41 @@ async function doDelete() {
   }
 }
 
+// ---- PDF export ----
+
+async function exportPdf() {
+  if (!state.currentDeck) return;
+  const btn = dom.btnExportPdf;
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="animation:spin 1s linear infinite">
+      <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4" stroke-dasharray="20" stroke-dashoffset="10"/>
+    </svg>
+    <span>Exporting…</span>`;
+
+  try {
+    const res = await fetch(`/api/decks/${state.currentDeck}/export-pdf`, { method: 'POST' });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({ error: res.statusText }));
+      throw new Error(data.error || res.statusText);
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${state.currentDeck}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('PDF exported', 'success');
+  } catch (e) {
+    toast('PDF export failed: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
+  }
+}
+
 // ---- Helpers ----
 
 function escHtml(s) {
@@ -1333,12 +1778,14 @@ function closeModals() {
   dom.modalConfirm.hidden = true;
   pendingDelete = null;
   if (zoomPopup) zoomPopup.style.display = 'none';
+  closeSlideContextMenu();
 }
 
 // ---- Event wiring ----
 
 function wireEvents() {
   dom.deckSelector.addEventListener('change', e => selectDeck(e.target.value));
+  dom.btnExportPdf.addEventListener('click', exportPdf);
   dom.btnSave.addEventListener('click', () => saveCurrentSlide());
   dom.btnRevert.addEventListener('click', revertSlide);
   dom.btnAddSlide.addEventListener('click', () => {
@@ -1347,7 +1794,7 @@ function wireEvents() {
   });
   dom.btnMoveUp.addEventListener('click', () => moveSelected('up'));
   dom.btnMoveDown.addEventListener('click', () => moveSelected('down'));
-  dom.btnDeleteSlide.addEventListener('click', confirmDelete);
+  dom.btnDeleteSlide.addEventListener('click', () => confirmDelete());
   $('gallery-search').addEventListener('input', e => renderGallery(e.target.value));
   $('btn-add-confirm').addEventListener('click', addSlide);
   document.querySelectorAll('.modal-close').forEach(el => el.addEventListener('click', closeModals));
