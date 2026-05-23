@@ -13,7 +13,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "format": "bun scripts/format-decks.mjs",
+    "format:check": "bun scripts/format-decks.mjs --check"
   },
   "dependencies": {
     "@chimichurricode/design-system": "^0.7.2",
