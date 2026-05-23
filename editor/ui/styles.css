@@ -266,6 +266,109 @@ body { height: 100vh; overflow: hidden; }
 
 .placeholder-text { color: var(--text-muted); font-size: 14px; }
 
+/* ---- Speaker notes panel ---- */
+
+#notes-panel {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 160px;
+  min-height: 36px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-surface);
+  position: relative;
+  transition: height 0.15s ease;
+}
+
+#notes-panel.collapsed {
+  height: 36px;
+}
+
+#notes-panel.collapsed #notes-body {
+  display: none;
+}
+
+#notes-resize-handle {
+  position: absolute;
+  top: -4px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  cursor: ns-resize;
+  z-index: 1;
+}
+
+#notes-resize-handle:hover::after,
+#notes-resize-handle:active::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+
+#notes-header {
+  height: 36px;
+  padding: 0 12px 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.notes-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+#notes-toggle-icon {
+  transition: transform 0.15s ease;
+}
+
+#notes-panel.collapsed #notes-toggle-icon {
+  transform: rotate(-90deg);
+}
+
+#notes-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  padding: 0 12px 10px;
+}
+
+#notes-textarea {
+  flex: 1;
+  resize: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 8px 10px;
+  outline: none;
+}
+
+#notes-textarea:focus {
+  border-color: var(--accent);
+}
+
+#notes-textarea:disabled {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+#notes-textarea::placeholder {
+  color: var(--text-muted);
+}
+
 /* ---- Form panel ---- */
 
 #form-panel {
