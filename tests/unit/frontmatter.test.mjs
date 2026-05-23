@@ -315,6 +315,124 @@ describe('parseYaml / serializeYaml round-trip', () => {
   }
 });
 
+// ─── Formatter idempotence: serialize(parse(raw)) === raw ────────────────────
+//
+// These tests verify that files already in canonical form are not modified by
+// the formatter (i.e. bun run format produces no diff noise on clean files).
+
+describe('formatter idempotence', () => {
+  function idempotent(raw) {
+    const { data, body } = parseMd(raw);
+    return serializeMd(data, body) === raw;
+  }
+
+  it('plain unquoted label', () => {
+    const raw = [
+      '---',
+      'template: icon',
+      'recipe: paper',
+      'order: 2',
+      'label: Feedback alegre',
+      'variant: default',
+      '---',
+      '',
+    ].join('\n');
+    expect(idempotent(raw)).toBe(true);
+  });
+
+  it('single-quoted label with special chars', () => {
+    const raw = [
+      '---',
+      'template: big-concept',
+      'recipe: canvas-quiet',
+      'order: 17',
+      "label: '¿Cuánto tarda una idea en llegar a producción?'",
+      'variant: default',
+      '---',
+      '',
+    ].join('\n');
+    expect(idempotent(raw)).toBe(true);
+  });
+
+  it('fields with inline objects', () => {
+    const raw = [
+      '---',
+      'template: big-concept',
+      'recipe: cool-fresh',
+      'order: 1',
+      "label: 'Portada · Viernes 15:30'",
+      'variant: default',
+      'fields:',
+      "  title: { content: '<strong>VIERNES</strong> <em>15:30</em>', meta: Title_Text }",
+      '---',
+      '',
+    ].join('\n');
+    expect(idempotent(raw)).toBe(true);
+  });
+
+  it('items array with inline objects', () => {
+    const raw = [
+      '---',
+      'template: icon',
+      'recipe: paper',
+      'order: 49',
+      'label: Cadena · paso 4',
+      'variant: default',
+      'items:',
+      "  - { glyph: '<img src=\"/assets/a.png\" alt=\"\">' }",
+      "  - { glyph: '<img src=\"/assets/b.png\" alt=\"\">' }",
+      '---',
+      '',
+    ].join('\n');
+    expect(idempotent(raw)).toBe(true);
+  });
+
+  it('multiline notes block scalar', () => {
+    const raw = [
+      '---',
+      'template: big-concept',
+      'recipe: canvas-quiet',
+      'order: 1',
+      'label: Portada',
+      'variant: default',
+      'notes: |',
+      '  Primera línea de notas.',
+      '  Segunda línea.',
+      '---',
+      '',
+    ].join('\n');
+    expect(idempotent(raw)).toBe(true);
+  });
+
+  it('single-line notes without quotes', () => {
+    const raw = [
+      '---',
+      'template: big-concept',
+      'recipe: canvas-quiet',
+      'order: 1',
+      'label: Portada',
+      'variant: default',
+      'notes: Contar mi historia de un viernes a última hora.',
+      '---',
+      '',
+    ].join('\n');
+    expect(idempotent(raw)).toBe(true);
+  });
+
+  it('double-quoted string is not canonical (needs reformat)', () => {
+    const raw = [
+      '---',
+      'template: icon',
+      'order: 2',
+      'label: "Feedback alegre"',
+      '---',
+      '',
+    ].join('\n');
+    // Double quotes where single/bare suffice: not idempotent
+    expect(idempotent(raw)).toBe(false);
+  });
+});
+
 // ─── parseMd / serializeMd ────────────────────────────────────────────────────
 
 describe('parseMd / serializeMd', () => {
