@@ -46,6 +46,10 @@ const dom = {
   btnMoveDown: $('btn-move-down'),
   btnDeleteSlide: $('btn-delete-slide'),
   btnExportPdf: $('btn-export-pdf'),
+  notesPanel: $('notes-panel'),
+  notesTextarea: $('notes-textarea'),
+  btnNotesToggle: $('btn-notes-toggle'),
+  notesResizeHandle: $('notes-resize-handle'),
   modalAdd: $('modal-add'),
   modalConfirm: $('modal-confirm'),
   newTemplate: $('new-template'),
@@ -173,6 +177,8 @@ function clearPreview() {
 
 function clearForm() {
   dom.formBody.innerHTML = '<div class="empty-state">Select a slide to edit</div>';
+  dom.notesTextarea.value = '';
+  dom.notesTextarea.disabled = true;
 }
 
 // ---- Sidebar ----
@@ -385,6 +391,10 @@ function renderForm(slide) {
     { value: 'content', label: 'content' },
     { value: 'meta', label: 'meta' },
   ], data.mode ?? ''));
+
+  // Load speaker notes
+  dom.notesTextarea.value = data.notes ?? '';
+  dom.notesTextarea.disabled = false;
 
   // Mark unsaved on any change (RTEs handle markUnsaved themselves via input event)
   dom.formBody.querySelectorAll('input, textarea, select').forEach(el => {
@@ -1270,6 +1280,14 @@ function collectFormData() {
     }
   });
 
+  // Speaker notes
+  const notesVal = dom.notesTextarea.value;
+  if (notesVal.trim()) {
+    newData.notes = notesVal;
+  } else {
+    delete newData.notes;
+  }
+
   // Items
   const container = dom.formBody.querySelector('[data-items-list]');
   if (container) {
@@ -1805,6 +1823,41 @@ function wireEvents() {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); if (!dom.btnSave.disabled) saveCurrentSlide(); }
     if (e.key === 'Escape') closeModals();
   });
+
+  // Speaker notes: toggle collapse
+  dom.btnNotesToggle.addEventListener('click', () => {
+    dom.notesPanel.classList.toggle('collapsed');
+    const collapsed = dom.notesPanel.classList.contains('collapsed');
+    localStorage.setItem('notesPanelCollapsed', collapsed ? '1' : '0');
+  });
+  if (localStorage.getItem('notesPanelCollapsed') === '1') {
+    dom.notesPanel.classList.add('collapsed');
+  }
+
+  // Speaker notes: mark unsaved on input
+  dom.notesTextarea.addEventListener('input', markUnsaved);
+
+  // Speaker notes: drag-to-resize
+  dom.notesResizeHandle.addEventListener('mousedown', e => {
+    e.preventDefault();
+    const startY = e.clientY;
+    const startH = dom.notesPanel.offsetHeight;
+    function onMove(ev) {
+      const delta = startY - ev.clientY;
+      const newH = Math.max(36, startH + delta);
+      dom.notesPanel.style.height = newH + 'px';
+      if (newH > 36) dom.notesPanel.classList.remove('collapsed');
+    }
+    function onUp() {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      localStorage.setItem('notesPanelHeight', dom.notesPanel.offsetHeight + 'px');
+    }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+  const savedH = localStorage.getItem('notesPanelHeight');
+  if (savedH) dom.notesPanel.style.height = savedH;
 }
 
 // ---- Init ----
