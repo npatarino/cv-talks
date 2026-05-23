@@ -9,6 +9,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { listDecks, listTemplateSlides, deckDir, TALKS_ROOT } from './decks.mjs';
+import { exportDeckPdf } from './pdf.mjs';
+import { uploadAsset } from './assets.mjs';
 import {
   listSlides,
   getSlide,
@@ -17,6 +19,7 @@ import {
   removeSlide,
   reorderSlides,
   moveSlideTo,
+  loadTemplateScaffold,
 } from './slides.mjs';
 import { getTemplatesMeta } from './templates.mjs';
 
@@ -79,6 +82,18 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     return json(listTemplateSlides());
   }
 
+  // GET /api/template-scaffold?template=X&variant=Y
+  // Returns { fields?, items? } with empty content — used by the editor when
+  // the user changes a slide's template so the form can re-render against the
+  // new template's shape.
+  if (method === 'GET' && pathname === '/api/template-scaffold') {
+    const template = url.searchParams.get('template');
+    const variant = url.searchParams.get('variant') ?? 'default';
+    if (!template) return err('Missing template parameter');
+    const scaffold = loadTemplateScaffold(template, variant);
+    return json(scaffold ?? { fields: undefined, items: undefined });
+  }
+
   // GET /api/decks/:slug/assets
   const assetsMatch = pathname.match(/^\/api\/decks\/([^/]+)\/assets$/);
   if (method === 'GET' && assetsMatch) {
@@ -92,6 +107,25 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
         .sort();
       return json(files);
     } catch { return json([]); }
+  }
+
+  // POST /api/decks/:slug/assets — upload a new image
+  // Body: { basename: string, mimeType: string, dataBase64: string }
+  if (method === 'POST' && assetsMatch) {
+    const [, rawSlug] = assetsMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
+    try {
+      const { basename, mimeType, dataBase64 } = await req.json();
+      if (typeof basename !== 'string' || typeof mimeType !== 'string' || typeof dataBase64 !== 'string') {
+        return err('Missing basename, mimeType, or dataBase64');
+      }
+      const buffer = Buffer.from(dataBase64, 'base64');
+      const result = await uploadAsset(slug, { basename, mimeType, buffer }, decksRoot);
+      return json(result, 201);
+    } catch (e) {
+      return err(e.message);
+    }
   }
 
   // GET /api/git-status
@@ -206,6 +240,27 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
       }
       return json(moveSlideTo(slug, filename, position, decksRoot));
     } catch (e) { return err(e.message); }
+  }
+
+  // POST /api/decks/:slug/export-pdf
+  const exportPdfMatch = pathname.match(/^\/api\/decks\/([^/]+)\/export-pdf$/);
+  if (method === 'POST' && exportPdfMatch) {
+    const [, rawSlug] = exportPdfMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
+    try {
+      const pdfBuffer = await exportDeckPdf(slug, decksRoot);
+      return new Response(pdfBuffer, {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': `attachment; filename="${slug}.pdf"`,
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
+    } catch (e) {
+      return err(e.message, 500);
+    }
   }
 
   // ---- Static file serving ----

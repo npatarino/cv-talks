@@ -34,6 +34,9 @@ async function serveFile(filePath) {
 
 const server = Bun.serve({
   port: PORT,
+  // PDF export can take 30–120s depending on deck size (Playwright + Chromium).
+  // Bun's default idleTimeout is 10s, which is too short for that operation.
+  idleTimeout: 255,
   fetch: async (req) => {
     try {
       return await route(req, serveFile, UI_DIR);
