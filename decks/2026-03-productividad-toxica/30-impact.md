@@ -12,4 +12,5 @@ items:
   - { text: 5 teams usan el nuevo pipeline }
   - { text: 0 hotfixes after change }
   - { text: 'Build failures ↓ 40%' }
+notes: Hola
 ---
