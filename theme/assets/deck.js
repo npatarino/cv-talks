@@ -7,6 +7,7 @@
   const slides = window.__SLIDES__ || [];
   const frame = document.getElementById("deck-frame");
   const hud = document.getElementById("deck-hud");
+  const channel = new BroadcastChannel('cv-talks-deck');
 
   function currentIndex() {
     const m = location.hash.match(/#\/([\d.]+)/);
@@ -25,6 +26,7 @@
     if (!s) return;
     history.replaceState(null, "", `#/${s.order}`);
     hud.textContent = `${pad(s.order)} / ${pad(slides[slides.length - 1].order)} · ${s.label}`;
+    channel.postMessage({ type: 'slide', order: s.order });
     const params = new URLSearchParams();
     params.set("present", "1");
     params.set("embedded", "1");
@@ -113,6 +115,14 @@
   });
 
   document.querySelector('[data-action="fullscreen"]').addEventListener("click", toggleFullscreen);
+
+  channel.addEventListener('message', e => {
+    const d = e.data;
+    if (d?.type === 'slide' && typeof d.order === 'number') {
+      const idx = slides.findIndex(s => s.order === d.order);
+      if (idx !== -1 && slides[idx].order !== slides[currentIndex()].order) load(idx);
+    }
+  });
 
   window.addEventListener("message", (e) => {
     const d = e.data;

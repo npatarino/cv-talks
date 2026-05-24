@@ -1,0 +1,342 @@
+{#
+  Speaker view — ventana privada del presentador.
+  Muestra slide actual (thumbnail), siguiente slide, notas, timer y controles.
+  Expects: deck (object), slug (string), slides (collection).
+#}
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{{ deck.title }} · Speaker</title>
+<link rel="stylesheet" href="{{ '/talks/styles/tokens.css' | url }}">
+<link rel="stylesheet" href="{{ '/talks/styles/base.css' | url }}">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0;
+    height: 100%; overflow: hidden;
+    background: #0d0d0d;
+    color: var(--ivory);
+    font-family: var(--font-mono);
+  }
+
+  /* ── Top bar ──────────────────────────────────────────────────────────── */
+  #spk-topbar {
+    height: 48px;
+    background: #111;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    flex-shrink: 0;
+  }
+
+  #spk-hud {
+    flex: 1;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ── Timer ────────────────────────────────────────────────────────────── */
+  #spk-timer-block {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  #spk-timer {
+    font-size: 22px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+    color: var(--lemon);
+    min-width: 5ch;
+    text-align: right;
+  }
+
+  .spk-btn-icon {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--ivory);
+    width: 28px; height: 28px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.7;
+    transition: opacity 0.1s, border-color 0.1s;
+    flex-shrink: 0;
+  }
+  .spk-btn-icon:hover { opacity: 1; border-color: var(--lemon); }
+  .spk-btn-icon:disabled { opacity: 0.2; cursor: default; border-color: transparent; }
+
+  /* ── Open presentation button ─────────────────────────────────────────── */
+  #spk-btn-open {
+    background: var(--lemon);
+    color: #111;
+    border: none;
+    padding: 6px 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+  #spk-btn-open:hover { background: #fff; }
+
+  /* ── Main layout: two columns ────────────────────────────────────────── */
+  #spk-main {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 48px);
+    overflow: hidden;
+  }
+
+  /* ── Left column: slides + nav ────────────────────────────────────────── */
+  #spk-left {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 38%;
+    min-width: 0;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+
+  #spk-slides-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* ── Current slide ────────────────────────────────────────────────────── */
+  #spk-current-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  /* ── Next slides (two side by side) ──────────────────────────────────── */
+  #spk-next-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  #spk-next-thumbs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  #spk-next-thumbs .spk-next-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .spk-slide-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+
+  /* Aspect-ratio container — always 16:9, width drives height */
+  .spk-thumb-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+  }
+
+  .spk-thumb-container iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1920px; height: 1080px;
+    border: none;
+    transform-origin: top left;
+    pointer-events: none;
+  }
+
+  #spk-no-next {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.3;
+  }
+
+  /* ── Bottom nav bar ───────────────────────────────────────────────────── */
+  #spk-nav {
+    flex-shrink: 0;
+    height: 44px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #111;
+  }
+
+  #spk-nav button {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--ivory);
+    padding: 6px 18px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.1s, border-color 0.1s;
+  }
+  #spk-nav button:hover:not(:disabled) { opacity: 1; border-color: var(--lemon); }
+  #spk-nav button:disabled { opacity: 0.2; cursor: default; }
+
+  /* ── Right column: notes ──────────────────────────────────────────────── */
+  #spk-notes-panel {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    padding: 28px 32px 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .spk-notes-title {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.35;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+  }
+
+  #spk-notes {
+    font-family: var(--font-ui), sans-serif;
+    font-size: clamp(20px, 1.8vw, 28px);
+    line-height: 1.55;
+    white-space: pre-wrap;
+    color: var(--ivory);
+  }
+
+  #spk-notes.empty::before {
+    content: 'Sin notas para este slide.';
+    opacity: 0.2;
+    font-style: italic;
+    font-size: 16px;
+    font-family: var(--font-ui), sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<!-- Top bar: hud + timer + open button -->
+<div id="spk-topbar">
+  <div id="spk-hud">— / —</div>
+
+  <div id="spk-timer-block">
+    <span id="spk-timer">00:00</span>
+    <button class="spk-btn-icon" id="spk-btn-start" title="Iniciar timer">▶</button>
+    <button class="spk-btn-icon" id="spk-btn-reset" title="Reiniciar timer">↺</button>
+  </div>
+
+  <button id="spk-btn-open" title="Abrir ventana de presentación">▶ Presentar</button>
+</div>
+
+<!-- Main area: two columns -->
+<div id="spk-main">
+
+  <!-- Left: slides (current + next) + nav -->
+  <div id="spk-left">
+    <div id="spk-slides-col">
+
+      <div id="spk-current-wrap">
+        <div class="spk-slide-label">Slide actual</div>
+        <div class="spk-thumb-container" id="spk-current-container">
+          <iframe id="spk-frame-current" title="Slide actual"></iframe>
+        </div>
+      </div>
+
+      <div id="spk-next-wrap">
+        <div class="spk-slide-label">Siguiente</div>
+        <div id="spk-next-thumbs">
+          <div class="spk-next-item">
+            <div class="spk-thumb-container" id="spk-next-container">
+              <iframe id="spk-frame-next" title="Siguiente slide"></iframe>
+            </div>
+            <div id="spk-next-label" class="spk-slide-label" style="opacity:0.6"></div>
+          </div>
+          <div class="spk-next-item">
+            <div class="spk-thumb-container" id="spk-next2-container">
+              <iframe id="spk-frame-next2" title="Slide +2"></iframe>
+            </div>
+            <div id="spk-next2-label" class="spk-slide-label" style="opacity:0.6"></div>
+          </div>
+          <div class="spk-next-item">
+            <div class="spk-thumb-container" id="spk-next3-container">
+              <iframe id="spk-frame-next3" title="Slide +3"></iframe>
+            </div>
+            <div id="spk-next3-label" class="spk-slide-label" style="opacity:0.6"></div>
+          </div>
+          <div class="spk-next-item">
+            <div class="spk-thumb-container" id="spk-next4-container">
+              <iframe id="spk-frame-next4" title="Slide +4"></iframe>
+            </div>
+            <div id="spk-next4-label" class="spk-slide-label" style="opacity:0.6"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="spk-nav">
+      <button id="spk-btn-prev" disabled>← Anterior</button>
+      <button id="spk-btn-next">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- Right: notes -->
+  <div id="spk-notes-panel">
+    <div class="spk-notes-title">Speaker Notes</div>
+    <div id="spk-notes" class="empty"></div>
+  </div>
+
+</div>
+
+<script>
+window.__SLIDES__ = [
+{%- for s in slides %}
+  { order: {{ s.data.order }}, url: {{ s.url | url | dump | safe }}, label: {{ s.data.label | dump | safe }}, notes: {{ (s.data.notes or '') | dump | safe }} }{% if not loop.last %},{% endif %}
+{%- endfor %}
+];
+window.__DECK_URL__ = {{ ('/talks/decks/' + slug + '/deck/') | url | dump | safe }};
+</script>
+<script src="{{ '/talks/assets/deck-speaker.js' | url }}"></script>
+</body>
+</html>
