@@ -112,7 +112,16 @@ async function loadDecks() {
     decks.map(d => `<option value="${d.slug}">${escHtml(d.deck?.title ?? d.slug)}</option>`).join('');
 }
 
-async function selectDeck(slug) {
+function pushUrlState(slug, filename) {
+  let hash = '';
+  if (slug) {
+    const slide = filename && state.slides.find(s => s.filename === filename);
+    hash = slide ? `#/${slug}/${slide.order}` : `#/${slug}`;
+  }
+  history.replaceState(null, '', location.pathname + hash);
+}
+
+async function selectDeck(slug, initialOrder) {
   if (!slug) {
     state.currentDeck = null;
     state.slides = [];
@@ -120,6 +129,7 @@ async function selectDeck(slug) {
     state.dirtyFiles.clear();
     state.uncommittedFiles.clear();
     dom.btnExportPdf.disabled = true;
+    pushUrlState(null);
     renderSidebar();
     clearPreview();
     clearForm();
@@ -130,10 +140,14 @@ async function selectDeck(slug) {
   state.uncommittedFiles.clear();
   dom.btnExportPdf.disabled = false;
   clearTimeout(state.livePreviewTimer);
+  dom.deckSelector.value = slug;
   const deck = state.decks.find(d => d.slug === slug);
   dom.deckTitle.textContent = deck?.deck?.title ?? slug;
   await loadSlides();
-  if (state.slides.length > 0) await selectSlide(state.slides[0].filename);
+  if (state.slides.length > 0) {
+    const byOrder = initialOrder != null && state.slides.find(s => s.order === initialOrder);
+    await selectSlide(byOrder ? byOrder.filename : state.slides[0].filename);
+  }
 }
 
 async function loadSlides() {
@@ -150,6 +164,7 @@ async function selectSlide(filename) {
   state.selectedFilename = filename;
   state.hasUnsaved = false;
   setStatus(false);
+  pushUrlState(state.currentDeck, filename);
   const slide = await apiFetch(`/api/decks/${state.currentDeck}/slides/${filename}`);
   state.slideData = slide;
   updatePreview(slide);
@@ -1877,6 +1892,16 @@ async function init() {
   }
   // Template gallery loads lazily when modal opens
   await loadDecks();
+
+  // Restore deck + slide from URL hash: #/{slug}/{order}
+  const m = location.hash.match(/^#\/([^/]+)(?:\/(\d+))?$/);
+  if (m) {
+    const [, slug, orderStr] = m;
+    if (state.decks.find(d => d.slug === slug)) {
+      await selectDeck(slug, orderStr ? Number(orderStr) : null);
+      return;
+    }
+  }
 }
 
 init().catch(e => console.error('Editor init failed:', e));
