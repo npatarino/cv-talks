@@ -4,5 +4,6 @@ recipe: critical
 order: 4
 label: Error · plasma
 items:
-  - { glyph: '<img src="/talks/decks/2026-03-productividad-toxica/assets/x-mark.png" alt="">' }
+  - { glyph: '<img src="/talks/decks/2026-03-productividad-toxica/assets/icon-x-mark-white.png" alt="">' }
+variant: default
 ---
