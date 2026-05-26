@@ -26,7 +26,10 @@ export async function exportDeckPdf(slug, decksRoot) {
   const slides = listSlides(slug, decksRoot);
   if (!slides.length) throw new Error('No slides found in deck');
 
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+  });
 
   try {
     // Phase 1 — screenshot every slide to a PNG buffer (avoids iframe cross-origin issues)
