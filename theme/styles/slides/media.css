@@ -1,0 +1,98 @@
+/* Media · recipe canvas-quiet (default).
+   La imagen (fotograma de peli, meme, screenshot) es el artifact protagonista;
+   el texto la enmarca o la comenta. Tres variantes comparten la misma base:
+   - still      · figura enmarcada + subtítulo estilo cine, centrada.
+   - fullbleed  · imagen a sangre 16:9 + titular CHANEY sobre scrim inferior.
+   - split      · imagen a sangre en una mitad + reacción editorial en la otra.
+   El <img> embebido siempre cubre su hueco con object-fit: cover. */
+
+section.slide.s-media {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+}
+.s-media .eb {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--recipe-accent);
+}
+.s-media img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+}
+
+/* ── still ─────────────────────────────────────────────────────────── */
+.s-media.v-still {
+  padding: 84px 140px 120px;
+  display: flex; flex-direction: column;
+}
+.s-media.v-still .frame {
+  position: relative; margin: 28px auto 0; flex: 1;
+  width: auto; max-width: 1320px; aspect-ratio: 16 / 9; min-height: 0;
+  border-radius: 12px; overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+  outline: 1px solid rgba(250,250,248,0.08);
+}
+/* subtítulo estilo cine — texto centrado, sombreado, sobre el bajo del fotograma */
+.s-media.v-still .caption {
+  position: absolute; left: 0; right: 0; bottom: 44px;
+  padding: 0 60px; text-align: center;
+  font-family: var(--font-ui); font-weight: 500; font-size: 46px; line-height: 1.2;
+  color: #fafaf8;
+  text-shadow: 0 2px 2px rgba(0,0,0,0.55), 0 0 18px rgba(0,0,0,0.65);
+}
+.s-media.v-still .caption em {
+  color: var(--recipe-em); font-style: normal;
+}
+.s-media.v-still .src {
+  margin-top: 26px; text-align: right;
+  font-family: var(--font-mono); font-size: 20px;
+  letter-spacing: 0.12em; opacity: 0.5;
+}
+
+/* ── fullbleed ─────────────────────────────────────────────────────── */
+.s-media.v-fullbleed { padding: 0; }
+.s-media.v-fullbleed .frame {
+  position: absolute; inset: 0;
+}
+.s-media.v-fullbleed .scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    rgba(28,28,28,0) 38%, rgba(28,28,28,0.55) 72%, rgba(28,28,28,0.92) 100%);
+}
+.s-media.v-fullbleed .overlay {
+  position: absolute; left: 140px; right: 140px; bottom: 110px;
+}
+.s-media.v-fullbleed .overlay .eb { color: var(--recipe-em); }
+.s-media.v-fullbleed h2 {
+  margin: 18px 0 0;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 132px; line-height: 0.92; letter-spacing: -0.01em;
+  color: #fafaf8;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.45);
+}
+.s-media.v-fullbleed h2 em {
+  color: var(--recipe-em); font-style: normal;
+}
+
+/* ── split ─────────────────────────────────────────────────────────── */
+.s-media.v-split {
+  padding: 0;
+  display: grid; grid-template-columns: 960px 1fr;
+}
+.s-media.v-split .frame { position: relative; height: 100%; }
+.s-media.v-split .aside {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 110px 120px;
+}
+.s-media.v-split h2 {
+  margin: 22px 0 0;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 104px; line-height: 0.94; letter-spacing: -0.01em;
+}
+.s-media.v-split h2 em {
+  color: var(--recipe-em); font-style: normal;
+}
+.s-media.v-split .lede {
+  margin: 40px 0 0; max-width: 18em;
+  font-family: var(--font-editorial); font-style: italic;
+  font-size: 38px; line-height: 1.35; opacity: 0.85;
+}

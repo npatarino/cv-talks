@@ -1,0 +1,37 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{# Media · slide para mostrar un fotograma de película, un meme o cualquier
+   captura como protagonista. La imagen es el artifact; el texto la enmarca.
+   Tres variantes:
+   - still      · fotograma enmarcado + subtítulo estilo cine (default)
+   - fullbleed  · imagen a sangre + titular CHANEY sobre un scrim inferior
+   - split      · imagen a un lado + lectura/reacción al otro #}
+
+{% block slide %}
+<section class="slide s-media v-{{ variant or 'still' }}" data-recipe="{{ recipe }}" data-label="{{ label }}">
+{% if variant == "fullbleed" %}
+  <div class="frame">{{ field(fields, "image", effectiveMode) | safe }}</div>
+  <div class="scrim"></div>
+  <div class="overlay">
+    <div class="eb">{{ field(fields, "eyebrow", effectiveMode) | safe }}</div>
+    <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+  </div>
+{% elif variant == "split" %}
+  <div class="frame">{{ field(fields, "image", effectiveMode) | safe }}</div>
+  <div class="aside">
+    <div class="eb">{{ field(fields, "eyebrow", effectiveMode) | safe }}</div>
+    <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
+    <p class="lede">{{ field(fields, "lede", effectiveMode) | safe }}</p>
+  </div>
+{% else %}
+  <div class="eb">{{ field(fields, "eyebrow", effectiveMode) | safe }}</div>
+  <figure class="frame">
+    {{ field(fields, "image", effectiveMode) | safe }}
+    <figcaption class="caption">{{ field(fields, "caption", effectiveMode) | safe }}</figcaption>
+  </figure>
+  <div class="src">{{ field(fields, "source", effectiveMode) | safe }}</div>
+{% endif %}
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}
