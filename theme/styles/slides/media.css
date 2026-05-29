@@ -1,0 +1,49 @@
+/* Media · recipe canvas-quiet.
+   La imagen (fotograma de peli, meme, screenshot) es el artifact protagonista;
+   un subtítulo estilo cine la remata. El <img> cubre su hueco con object-fit:cover. */
+
+section.slide.s-media {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  padding: 84px 140px 120px;
+  display: flex; flex-direction: column;
+}
+.s-media .eb {
+  font-family: var(--font-mono); font-size: 22px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--recipe-accent);
+}
+.s-media img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+}
+
+.s-media .frame {
+  position: relative; margin: 28px auto 0; flex: 1;
+  width: auto; max-width: 1320px; aspect-ratio: 16 / 9; min-height: 0;
+  border-radius: 12px; overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+  outline: 1px solid rgba(250,250,248,0.08);
+}
+
+/* subtítulo estilo cine — texto centrado sobre un degradado a negro.
+   El degradado vive en el propio figcaption y solo aparece cuando hay texto
+   (:empty → display:none), así garantiza legibilidad sobre cualquier
+   fotograma sin oscurecer la imagen cuando no hay subtítulo. */
+.s-media .caption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 160px 60px 46px; text-align: center;
+  font-family: var(--font-ui); font-weight: 500; font-size: 46px; line-height: 1.2;
+  color: #fafaf8;
+  text-shadow: 0 2px 3px rgba(0,0,0,0.4);
+  background: linear-gradient(180deg,
+    rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 42%, rgba(0,0,0,0.72) 78%, rgba(0,0,0,0.9) 100%);
+}
+.s-media .caption:empty { display: none; }
+.s-media .caption em {
+  color: var(--recipe-em); font-style: normal;
+}
+.s-media .src {
+  margin-top: 26px; text-align: right;
+  font-family: var(--font-mono); font-size: 20px;
+  letter-spacing: 0.12em; opacity: 0.5;
+}
