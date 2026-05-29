@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a1a2b"/>
+      <stop offset="42%" stop-color="#02b5b9"/>
+      <stop offset="72%" stop-color="#ff2079"/>
+      <stop offset="100%" stop-color="#f9d71c"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff7d6"/>
+      <stop offset="60%" stop-color="#f9d71c"/>
+      <stop offset="100%" stop-color="#f9d71c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.55"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <circle cx="820" cy="560" r="230" fill="url(#sun)"/>
+
+  <!-- distant ridge -->
+  <path d="M0 640 L220 560 L440 610 L700 520 L980 600 L1240 540 L1600 600 L1600 900 L0 900 Z"
+        fill="#0a1a2b" opacity="0.55"/>
+  <!-- near ground -->
+  <path d="M0 720 L300 690 L640 730 L1000 700 L1340 740 L1600 710 L1600 900 L0 900 Z"
+        fill="#0a0f16"/>
+  <rect width="1600" height="900" fill="url(#haze)"/>
+
+  <!-- lone figure silhouette, centered low -->
+  <g fill="#05080c">
+    <ellipse cx="800" cy="812" rx="86" ry="14" opacity="0.6"/>
+    <path d="M800 560
+             c-26 0 -40 18 -40 44 c0 18 10 30 22 36
+             l-30 96 c-4 12 4 22 16 22 l8 0 l14 -86 l20 0 l14 86 l8 0
+             c12 0 20 -10 16 -22 l-30 -96 c12 -6 22 -18 22 -36
+             c0 -26 -14 -44 -40 -44 z"/>
+    <circle cx="800" cy="536" r="26"/>
+  </g>
+</svg>
