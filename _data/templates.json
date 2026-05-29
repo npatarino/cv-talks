@@ -337,5 +337,26 @@
         "usage": "Mostrar múltiples conceptos con distintos pesos visuales."
       }
     ]
+  },
+  "media": {
+    "description": "Slide donde una imagen es la protagonista · fotograma de película, meme, screenshot o referencia visual. La imagen es el artifact; el texto la enmarca o la remata. Tres variantes según cuánto pesa el texto frente a la imagen.",
+    "when": "Anclar un punchline visual, mostrar una referencia de cultura pop, o dejar que un screenshot/meme cuente lo que un bullet no puede.",
+    "variants": [
+      {
+        "name": "still",
+        "note": "Fotograma 16:9 enmarcado y centrado, con subtítulo estilo cine sobreimpreso y crédito de fuente. El texto es la frase/subtítulo.",
+        "usage": "Cita visual elegante · cuando la gracia está en el subtítulo sobre el plano."
+      },
+      {
+        "name": "fullbleed",
+        "note": "Imagen a sangre cubriendo el slide, con scrim inferior y titular CHANEY gigante sobreimpreso. Máximo impacto.",
+        "usage": "Momento dramático o de transición · el screenshot llena la pantalla y el titular remata."
+      },
+      {
+        "name": "split",
+        "note": "Imagen a sangre en una mitad, reacción editorial (título display + lede italic) en la otra. Imagen y comentario, lado a lado.",
+        "usage": "Meme de reacción o screenshot que necesita una lectura al lado."
+      }
+    ]
   }
 }

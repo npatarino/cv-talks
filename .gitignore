@@ -16,3 +16,6 @@ playwright-report/
 # Claude Code session-local config (paths absolute to user home).
 # The skills symlink under .claude/skills IS tracked — it points to docs/.agent/skills/.
 .claude/settings.local.json
+
+# Local render mockups
+_mockup/
