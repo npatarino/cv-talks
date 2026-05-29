@@ -160,6 +160,40 @@ body { height: 100vh; overflow: hidden; }
 .slide-item.dragging { opacity: 0.4; }
 .slide-item.drag-over { border-top: 2px solid var(--accent); }
 
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px 4px;
+  margin-top: 4px;
+  pointer-events: none;
+  user-select: none;
+}
+.section-header:first-child { margin-top: 0; }
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0;
+  flex-shrink: 0;
+  color: #fff;
+}
+.section-name {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .drag-handle {
   cursor: grab;
   color: var(--text-muted);
