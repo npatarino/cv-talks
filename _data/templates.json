@@ -337,5 +337,16 @@
         "usage": "Mostrar múltiples conceptos con distintos pesos visuales."
       }
     ]
+  },
+  "media": {
+    "description": "Slide donde una imagen es la protagonista · fotograma de película, meme, screenshot o referencia visual. La imagen es el artifact; un subtítulo estilo cine la remata sobre un degradado a negro que solo aparece cuando hay texto.",
+    "when": "Anclar un punchline visual, mostrar una referencia de cultura pop, o dejar que un fotograma/meme cuente lo que un bullet no puede.",
+    "variants": [
+      {
+        "name": "still",
+        "note": "Fotograma 16:9 enmarcado y centrado, con subtítulo estilo cine sobre degradado a negro (solo si hay texto) y crédito de fuente. El texto es la frase/subtítulo.",
+        "usage": "Cita visual elegante · cuando la gracia está en el subtítulo sobre el plano."
+      }
+    ]
   }
 }
