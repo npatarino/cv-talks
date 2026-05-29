@@ -27,10 +27,15 @@ export function listDecks(decksRoot = DECKS_DIR) {
       const meta = fs.existsSync(metaPath)
         ? JSON.parse(fs.readFileSync(metaPath, 'utf8'))
         : {};
+      const configPath = path.join(decksRoot, slug, 'deck.config.json');
+      const config = fs.existsSync(configPath)
+        ? JSON.parse(fs.readFileSync(configPath, 'utf8'))
+        : null;
       return {
         slug,
         deck: meta.deck ?? { title: slug },
         permalink: meta.permalink ?? `talks/decks/${slug}/{{ page.fileSlug }}/index.html`,
+        config,
       };
     });
 }

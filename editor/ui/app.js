@@ -14,6 +14,7 @@ const TMPL = {};
 const state = {
   decks: [],
   currentDeck: null,
+  currentConfig: null,   // deck.config.json content, or null
   slides: [],
   selectedFilename: null,
   slideData: null,
@@ -143,6 +144,7 @@ async function selectDeck(slug, initialOrder) {
   dom.deckSelector.value = slug;
   const deck = state.decks.find(d => d.slug === slug);
   dom.deckTitle.textContent = deck?.deck?.title ?? slug;
+  state.currentConfig = deck?.config ?? null;
   await loadSlides();
   if (state.slides.length > 0) {
     const byOrder = initialOrder != null && state.slides.find(s => s.order === initialOrder);
@@ -198,13 +200,40 @@ function clearForm() {
 
 // ---- Sidebar ----
 
+// Colors for ANSVA (and any future) section ids
+const SECTION_COLORS = {
+  A1: '#e05252', N: '#e08c3a', S: '#3aaa6e', V: '#3a82d4', A2: '#9b59b6',
+  // fallback for unknown ids
+  default: '#888',
+};
+
+function getSectionForOrder(order) {
+  const sections = state.currentConfig?.structure?.sections;
+  if (!sections) return null;
+  return sections.find(s => order >= s.start && order <= s.end) ?? null;
+}
+
 function renderSidebar() {
   if (!state.currentDeck || state.slides.length === 0) {
     dom.slideList.innerHTML = '<div class="empty-state">No slides</div>';
     return;
   }
   dom.slideList.innerHTML = '';
+  let lastSectionId = null;
   state.slides.forEach(slide => {
+    // Inject section header when entering a new section
+    const section = getSectionForOrder(slide.order);
+    if (section && section.id !== lastSectionId) {
+      lastSectionId = section.id;
+      const color = SECTION_COLORS[section.id] ?? SECTION_COLORS.default;
+      const header = document.createElement('div');
+      header.className = 'section-header';
+      header.innerHTML = `
+        <span class="section-badge" style="background:${color}">${section.id.replace(/\d+$/, '')}</span>
+        <span class="section-name">${escHtml(section.label)}</span>`;
+      dom.slideList.appendChild(header);
+    }
+
     const item = document.createElement('div');
     item.className = [
       'slide-item',

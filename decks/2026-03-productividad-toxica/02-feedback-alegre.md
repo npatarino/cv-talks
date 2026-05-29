@@ -1,6 +1,6 @@
 ---
 template: icon
-recipe: paper
+recipe: energy-loud
 order: 2
 label: Feedback alegre
 items:
