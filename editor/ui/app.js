@@ -412,7 +412,7 @@ function renderForm(slide) {
     for (const [key, fieldObj] of Object.entries(data.fields)) {
       const content = typeof fieldObj === 'object' ? (fieldObj?.content ?? '') : String(fieldObj ?? '');
       const meta = typeof fieldObj === 'object' ? (fieldObj?.meta ?? key) : key;
-      const rte = mkRichTextEditor(`fields.${key}`, content, state.currentDeck);
+      const rte = mkRichTextEditor(`fields.${key}`, content, state.currentDeck, meta);
       const wrapper = addField(key, rte);
       if (meta !== key) {
         const m = document.createElement('span');
@@ -833,7 +833,8 @@ function buildAssetActionTiles(deckSlug, onComplete) {
 
 // ---- Rich text editor ----
 
-function mkRichTextEditor(field, htmlValue, deckSlug) {
+function mkRichTextEditor(field, htmlValue, deckSlug, meta) {
+  const isImageOnly = meta === 'Image_Src';
   const wrapper = document.createElement('div');
   wrapper.className = 'rte-wrapper';
 
@@ -841,7 +842,12 @@ function mkRichTextEditor(field, htmlValue, deckSlug) {
   const toolbar = document.createElement('div');
   toolbar.className = 'rte-toolbar';
 
-  const btns = [
+  // Image-only fields show only the image picker; no text formatting controls.
+  const btns = isImageOnly ? [
+    { cmd: 'img',   label: '🖼 Image', title: 'Select image from assets' },
+    { cmd: 'sep' },
+    { cmd: 'clear', label: '✕',       title: 'Clear image' },
+  ] : [
     { cmd: 'em',      label: '<em>I</em>',          title: 'Italic / em' },
     { cmd: 'strong',  label: '<strong>B</strong>',   title: 'Bold / strong' },
     { cmd: 'sep' },
@@ -865,8 +871,8 @@ function mkRichTextEditor(field, htmlValue, deckSlug) {
 
   // Editor
   const editor = document.createElement('div');
-  editor.className = 'rte-editor';
-  editor.contentEditable = 'true';
+  editor.className = 'rte-editor' + (isImageOnly ? ' rte-editor--image-only' : '');
+  editor.contentEditable = isImageOnly ? 'false' : 'true';
   editor.dataset.field = field;
   editor.innerHTML = htmlValue ?? '';
 
@@ -1308,8 +1314,9 @@ function collectFormData() {
 
   dom.formBody.querySelectorAll('[data-field]').forEach(el => {
     const field = el.dataset.field;
-    // contenteditable RTE div uses innerHTML; inputs/selects use value
-    const val = el.contentEditable === 'true' ? cleanHTML(el.innerHTML) : el.value;
+    // contenteditable RTE div uses innerHTML; image-only RTEs also use innerHTML; inputs/selects use value
+    const isRteDiv = el.classList.contains('rte-editor');
+    const val = isRteDiv ? cleanHTML(el.innerHTML) : el.value;
     if (field.startsWith('fields.')) {
       const key = field.slice('fields.'.length);
       if (!newData.fields) newData.fields = {};
