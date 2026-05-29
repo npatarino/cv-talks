@@ -1,0 +1,19 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{# Media · slide donde una imagen (fotograma de película, meme, screenshot) es
+   el artifact protagonista, siguiendo el patrón de social-embed/demo. Un
+   subtítulo estilo cine la remata sobre un degradado a negro que solo aparece
+   cuando hay texto, garantizando legibilidad sobre cualquier fotograma. #}
+
+{% block slide %}
+<section class="slide s-media v-still" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  <div class="eb">{{ field(fields, "eyebrow", effectiveMode) | safe }}</div>
+  <figure class="frame">
+    {{ field(fields, "image", effectiveMode) | safe }}
+    <figcaption class="caption">{{ field(fields, "caption", effectiveMode) | safe }}</figcaption>
+  </figure>
+  <div class="src">{{ field(fields, "source", effectiveMode) | safe }}</div>
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+{% endblock %}
