@@ -1,0 +1,15 @@
+{
+  "tags": "productividad-slide",
+  "permalink": "talks/decks/productividad/{{ page.fileSlug }}/index.html",
+  "deck": {
+    "title": "Productividad",
+    "subtitle": "Por qué hacer menos, a veces, es el mejor commit del trimestre.",
+    "author": "Nicolás Patarino",
+    "date": "2026-05"
+  },
+  "eleventyComputed": {
+    "layout": "layouts/{{ template }}.njk",
+    "slideCss": "{{ template }}",
+    "effectiveMode": "{{ mode or site.mode }}"
+  }
+}

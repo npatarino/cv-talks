@@ -1,0 +1,12 @@
+{
+  "structure": {
+    "type": "ANSVA",
+    "sections": [
+      { "id": "A1", "label": "Atención",       "start": 1,  "end": 4  },
+      { "id": "N",  "label": "Necesidad",      "start": 5,  "end": 19 },
+      { "id": "S",  "label": "Solución",       "start": 20, "end": 42 },
+      { "id": "V",  "label": "Visualización",  "start": 43, "end": 59 },
+      { "id": "A2", "label": "Acción",         "start": 60, "end": 68 }
+    ]
+  }
+}
