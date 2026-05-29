@@ -1,12 +1,12 @@
 ---
-template: cover
+template: media
 recipe: canvas-quiet
 order: 18
 label: Jurassic Park
-variant: default
+variant: still
 fields:
   eyebrow: { content: "", meta: Eyebrow_Label }
-  image: { content: "", meta: Image_Src }
+  image: { content: '<img src="/talks/decks/productividad/assets/full-pile-of-shit.jpg" alt="">', meta: Image_Src }
   caption: { content: "", meta: Subtitle_Text }
   source: { content: "", meta: Source_Credit }
 ---
