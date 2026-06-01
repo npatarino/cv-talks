@@ -273,9 +273,31 @@ function renderSidebar() {
       e.preventDefault();
       openSlideContextMenu(e.clientX, e.clientY, slide.filename);
     });
-    item.addEventListener('dragstart', e => { state.draggingFilename = slide.filename; e.dataTransfer.effectAllowed = 'move'; renderSidebar(); });
-    item.addEventListener('dragover', e => { e.preventDefault(); if (state.dragOverFilename !== slide.filename) { state.dragOverFilename = slide.filename; renderSidebar(); } });
-    item.addEventListener('dragleave', () => { if (state.dragOverFilename === slide.filename) { state.dragOverFilename = null; renderSidebar(); } });
+    // NOTE: never call renderSidebar() mid-drag — rebuilding the list removes
+    // the node the browser is dragging and aborts the drag (so drop never
+    // fires). During a drag we only toggle CSS classes on the live nodes; the
+    // full re-render happens once on drop.
+    item.addEventListener('dragstart', e => {
+      state.draggingFilename = slide.filename;
+      state.draggingSectionIndex = null;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', slide.filename); // required by Firefox
+      requestAnimationFrame(() => item.classList.add('dragging'));
+    });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (state.dragOverFilename !== slide.filename) {
+        state.dragOverFilename = slide.filename;
+        dom.slideList.querySelectorAll('.slide-item.drag-over')
+          .forEach(el => el.classList.remove('drag-over'));
+        item.classList.add('drag-over');
+      }
+    });
+    item.addEventListener('dragleave', () => {
+      item.classList.remove('drag-over');
+      if (state.dragOverFilename === slide.filename) state.dragOverFilename = null;
+    });
     item.addEventListener('drop', e => {
       e.preventDefault();
       // Dropping a section header onto a slide moves that section's start here.
@@ -288,7 +310,13 @@ function renderSidebar() {
         handleDrop(slide.filename);
       }
     });
-    item.addEventListener('dragend', () => { state.draggingFilename = null; state.dragOverFilename = null; renderSidebar(); });
+    item.addEventListener('dragend', () => {
+      state.draggingFilename = null;
+      state.dragOverFilename = null;
+      state.draggingSectionIndex = null;
+      item.classList.remove('dragging');
+      dom.slideList.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    });
 
     dom.slideList.appendChild(item);
   });
@@ -329,11 +357,15 @@ function makeSectionHeader(section, index) {
       state.draggingSectionIndex = index;
       state.draggingFilename = null;
       e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', `section:${index}`); // required by Firefox
     });
+    // Clean up after the drag without rebuilding the list mid-gesture. A
+    // successful drop re-renders via moveSectionBoundary; a cancelled drop
+    // just clears the highlight on the live nodes.
     header.addEventListener('dragend', () => {
       state.draggingSectionIndex = null;
       state.dragOverFilename = null;
-      renderSidebar();
+      dom.slideList.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
     });
   }
   return header;
