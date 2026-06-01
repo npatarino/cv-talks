@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# dev.sh — Start all local development servers for cv-talks.
+# start-servers.sh — Start all local development servers for cv-talks.
 #
 # Opens two processes in the same terminal session:
 #   :8080  Eleventy (slides + live-reload)
 #   :3001  Editor API + UI
 #
 # Usage:
-#   bun run dev        (via package.json)
-#   ./scripts/dev.sh   (directly)
+#   bun run servers:start (via package.json)
+#   ./scripts/start-servers.sh   (directly)
 #
 # Press Ctrl-C once to stop both servers.
 

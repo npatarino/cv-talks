@@ -23,10 +23,10 @@ Two servers need to run simultaneously:
 
 ```bash
 cd /Users/juansp/projects/chimi/cv-talks
-bun run dev
+bun run servers:start
 ```
 
-This runs `scripts/dev.sh`, which:
+This runs `scripts/start-servers.sh`, which:
 1. Syncs fonts from the design system
 2. Starts Eleventy (`bunx eleventy --serve --quiet`) in the background
 3. Starts the editor (`bun editor/server.mjs`) in the background

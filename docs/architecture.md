@@ -78,8 +78,8 @@ cv-talks/
 ### Development environment
 
 ```
-npm run dev
-  ├─ scripts/dev.sh
+npm run servers:start
+  ├─ scripts/start-servers.sh
   │   ├─ bun editor/server.mjs     → :3001 (editor + API)
   │   └─ eleventy --serve          → :8080 (slide preview)
   │
