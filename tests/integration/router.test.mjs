@@ -602,3 +602,84 @@ describe('Full CRUD workflow', () => {
     expect(remaining[0].order).toBe(1);
   });
 });
+
+// ─── deck structure (ANSVA) ────────────────────────────────────────────────────
+
+describe('deck structure routes', () => {
+  function seedStructuredDeck(slug, slideCount, sections) {
+    const dir = makeDeck(slug);
+    for (let i = 1; i <= slideCount; i++) {
+      writeSlide(dir, `${String(i).padStart(2, '0')}-slide-${i}.md`, i);
+    }
+    fs.writeFileSync(
+      path.join(dir, 'deck.config.json'),
+      JSON.stringify({ structure: { type: 'ANSVA', sections } }, null, 2),
+      'utf8',
+    );
+    return dir;
+  }
+
+  it('GET /structure returns null when the deck has no config', async () => {
+    const dir = makeDeck('plain');
+    writeSlide(dir, '01-a.md', 1);
+    const { status, data } = await call('GET', '/api/decks/plain/structure');
+    expect(status).toBe(200);
+    expect(data).toBeNull();
+  });
+
+  it('GET /structure returns the normalized section map', async () => {
+    seedStructuredDeck('d', 10, [
+      { id: 'A', label: 'A', start: 1, end: 3 },
+      { id: 'B', label: 'B', start: 4, end: 10 },
+    ]);
+    const { data } = await call('GET', '/api/decks/d/structure');
+    expect(data.type).toBe('ANSVA');
+    expect(data.slideCount).toBe(10);
+    expect(data.sections.map(s => s.start)).toEqual([1, 4]);
+    expect(data.sections[1].end).toBe(10);
+  });
+
+  it('POST /structure/boundary moves and persists a boundary', async () => {
+    seedStructuredDeck('d', 10, [
+      { id: 'A', label: 'A', start: 1, end: 5 },
+      { id: 'B', label: 'B', start: 6, end: 10 },
+    ]);
+    const { status, data } = await call('POST', '/api/decks/d/structure/boundary', { index: 1, start: 4 });
+    expect(status).toBe(200);
+    expect(data.sections[0].end).toBe(3);
+    expect(data.sections[1].start).toBe(4);
+  });
+
+  it('POST /structure/boundary rejects non-numeric input', async () => {
+    seedStructuredDeck('d', 5, [{ id: 'A', label: 'A', start: 1, end: 5 }]);
+    const { status } = await call('POST', '/api/decks/d/structure/boundary', { index: 'x', start: 2 });
+    expect(status).toBe(400);
+  });
+
+  it('creating a slide shifts the structure so it keeps tiling the deck', async () => {
+    seedStructuredDeck('d', 10, [
+      { id: 'A', label: 'A', start: 1, end: 5 },
+      { id: 'B', label: 'B', start: 6, end: 10 },
+    ]);
+    await call('POST', '/api/decks/d/slides', { template: 'cover', label: 'New', position: 3 });
+    const { data } = await call('GET', '/api/decks/d/structure');
+    expect(data.slideCount).toBe(11);
+    expect(data.sections[0].end).toBe(6);  // A grew (slide inserted at 3)
+    expect(data.sections[1].start).toBe(7);
+    expect(data.sections[1].end).toBe(11);
+  });
+
+  it('deleting a slide shifts the structure back', async () => {
+    const dir = seedStructuredDeck('d', 10, [
+      { id: 'A', label: 'A', start: 1, end: 5 },
+      { id: 'B', label: 'B', start: 6, end: 10 },
+    ]);
+    const { data: list } = await call('GET', '/api/decks/d/slides');
+    const third = list[2]; // order 3, inside A
+    await call('DELETE', `/api/decks/d/slides/${third.filename}`);
+    const { data } = await call('GET', '/api/decks/d/structure');
+    expect(data.slideCount).toBe(9);
+    expect(data.sections[0].end).toBe(4); // A shrank
+    expect(data.sections[1].start).toBe(5);
+  });
+});
