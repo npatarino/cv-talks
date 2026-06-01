@@ -12,7 +12,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { uploadAsset } from '../../editor/api/assets.mjs';
+import { uploadAsset, imageWidthFromHeader } from '../../editor/api/assets.mjs';
 
 // 1x1 transparent PNG — well below the 512px resize threshold so no browser is launched.
 const PNG_1x1_B64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
@@ -152,6 +152,46 @@ describe('uploadAsset — duplicate guard', () => {
     await expect(
       uploadAsset('test-deck', { basename: 'dup', mimeType: 'image/png', buffer: PNG_1x1 }, tmpRoot),
     ).rejects.toThrow(/already exists/);
+  });
+});
+
+describe('imageWidthFromHeader', () => {
+  // PNG: 8-byte signature, IHDR length(0x0000000D) + "IHDR" + width(BE) + height(BE).
+  function pngHeader(width, height) {
+    const b = Buffer.alloc(24);
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).copy(b, 0);
+    b.writeUInt32BE(13, 8);
+    b.write('IHDR', 12, 'ascii');
+    b.writeUInt32BE(width, 16);
+    b.writeUInt32BE(height, 20);
+    return b;
+  }
+
+  it('reads the width of a 1x1 PNG', () => {
+    expect(imageWidthFromHeader(PNG_1x1)).toBe(1);
+  });
+
+  it('reads the width of a synthetic large PNG', () => {
+    expect(imageWidthFromHeader(pngHeader(1024, 768))).toBe(1024);
+  });
+
+  it('reads the width of a JPEG from its SOF marker', () => {
+    const TINY_JPEG = Buffer.from(
+      'ffd8ffe000104a46494600010100000100010000ffdb004300080606070605080707070909080a0c140d0c0b0b0c1912130f141d1a1f1e1d1a1c1c20242e2720222c231c1c2837292c30313434341f27393d38323c2e333432ffc2000b080001000101011100ffc4001f0000010501010101010100000000000000000102030405060708090a0bffda00080101000000003fffd9',
+      'hex',
+    );
+    expect(imageWidthFromHeader(TINY_JPEG)).toBe(1);
+  });
+
+  it('reads the width of a GIF from its logical screen descriptor', () => {
+    const gif = Buffer.from('GIF89a', 'ascii');
+    const b = Buffer.concat([gif, Buffer.alloc(4)]);
+    b.writeUInt16LE(320, 6);
+    expect(imageWidthFromHeader(b)).toBe(320);
+  });
+
+  it('returns null for an unparseable header', () => {
+    expect(imageWidthFromHeader(Buffer.from('not an image', 'utf8'))).toBeNull();
   });
 });
 

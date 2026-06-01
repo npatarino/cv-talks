@@ -4,7 +4,10 @@
  *
  * Images larger than MAX_ICON_WIDTH px on the long edge are downscaled with
  * Playwright (canvas) — slides only need ~icon-sized assets, so we cap the
- * dimensions to keep file size reasonable. Skips resize when not needed.
+ * dimensions to keep file size reasonable. The image width is read straight
+ * from the file header first, so the (slow) browser only launches when a
+ * resize is actually required; small images and headers we can't parse never
+ * pay for it.
  */
 
 import fs from 'node:fs';
@@ -56,15 +59,70 @@ export async function uploadAsset(slug, opts, decksRoot) {
   // Only raster formats can be resized this way — SVG passes through untouched.
   const isRaster = ['png', 'jpg', 'webp', 'avif', 'gif'].includes(ext);
   if (isRaster) {
-    const resizedBuf = await maybeResize(finalBuffer, mimeType, MAX_ICON_WIDTH);
-    if (resizedBuf) {
-      finalBuffer = resizedBuf;
-      resized = true;
+    // Read the width from the file header first. When we can see the image is
+    // already within the cap, skip the browser entirely. When the header is a
+    // format we can't parse (null), fall back to the browser, which decodes it
+    // properly and re-checks the size before doing any work.
+    const width = imageWidthFromHeader(finalBuffer);
+    if (width === null || width > MAX_ICON_WIDTH) {
+      const resizedBuf = await maybeResize(finalBuffer, mimeType, MAX_ICON_WIDTH);
+      if (resizedBuf) {
+        finalBuffer = resizedBuf;
+        resized = true;
+      }
     }
   }
 
   fs.writeFileSync(targetPath, finalBuffer);
   return { filename, resized };
+}
+
+/**
+ * Read the pixel width of an image straight from its file header, without
+ * decoding it. Supports PNG, GIF, and JPEG (the icon formats slides use).
+ * Returns the width in pixels, or null when the format/header can't be parsed
+ * (the caller then falls back to the browser path).
+ *
+ * Exported for unit testing.
+ */
+export function imageWidthFromHeader(buffer) {
+  try {
+    // PNG — 8-byte signature, then IHDR (length+type) with width at byte 16.
+    if (buffer.length >= 24 &&
+        buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47) {
+      return buffer.readUInt32BE(16);
+    }
+    // GIF — "GIF87a"/"GIF89a", logical screen width is a little-endian u16 at 6.
+    if (buffer.length >= 10 &&
+        buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46) {
+      return buffer.readUInt16LE(6);
+    }
+    // JPEG — walk the marker segments to the start-of-frame (SOFn) header.
+    if (buffer.length >= 4 && buffer[0] === 0xff && buffer[1] === 0xd8) {
+      let i = 2;
+      while (i + 9 < buffer.length) {
+        if (buffer[i] !== 0xff) { i++; continue; }
+        let marker = buffer[i + 1];
+        while (marker === 0xff && i + 2 < buffer.length) { i++; marker = buffer[i + 1]; }
+        // Standalone markers carry no length: SOI/EOI, RSTn, TEM.
+        if (marker === 0xd8 || marker === 0xd9 || (marker >= 0xd0 && marker <= 0xd7) || marker === 0x01) {
+          i += 2;
+          continue;
+        }
+        const segLen = buffer.readUInt16BE(i + 2);
+        // SOFn frame headers (0xC0–0xCF) carry the dimensions, except the
+        // non-frame markers DHT(C4), JPG(C8), DAC(CC). Layout after the marker:
+        // length(2) precision(1) height(2) width(2).
+        const isSOF = marker >= 0xc0 && marker <= 0xcf &&
+          marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc;
+        if (isSOF) return buffer.readUInt16BE(i + 7);
+        i += 2 + segLen;
+      }
+    }
+  } catch {
+    // Malformed header — treat as unknown.
+  }
+  return null;
 }
 
 /**
