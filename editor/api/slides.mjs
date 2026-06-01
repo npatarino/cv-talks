@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { parseMd, serializeMd } from './frontmatter.mjs';
 import { readSlides, renumberSlides, deleteSlide, moveSlide, buildFilename, slugFromFilename } from './renumber.mjs';
 import { deckDir } from './decks.mjs';
+import { syncStructureOnInsert, syncStructureOnDelete } from './structure.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEMPLATES_DIR = path.resolve(__dirname, '../../templates');
@@ -82,6 +83,10 @@ export function createSlide(slug, opts, decksRoot) {
 
   renumberSlides(dir, reordered.map(s => s.filename));
 
+  // Keep the narrative structure (e.g. ANSVA) tiling the deck: the new slide
+  // joins the section it was inserted into; later sections shift down by one.
+  syncStructureOnInsert(dir, position);
+
   const finalFilename = buildFilename(position, slideSlug);
   return {
     filename: finalFilename,
@@ -107,7 +112,14 @@ export function updateSlide(slug, filename, updates, decksRoot) {
 }
 
 export function removeSlide(slug, filename, decksRoot) {
-  return deleteSlide(deckDir(slug, decksRoot), filename);
+  const dir = deckDir(slug, decksRoot);
+  // Capture the slide's order before deletion so the structure can shift
+  // boundaries to match the renumbered deck.
+  const target = readSlides(dir).find(s => s.filename === filename);
+  const order = target?.data.order;
+  const result = deleteSlide(dir, filename);
+  if (order != null) syncStructureOnDelete(dir, order);
+  return result;
 }
 
 export function reorderSlides(slug, filenameOrder, decksRoot) {

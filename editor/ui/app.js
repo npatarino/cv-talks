@@ -14,13 +14,14 @@ const TMPL = {};
 const state = {
   decks: [],
   currentDeck: null,
-  currentConfig: null,   // deck.config.json content, or null
   slides: [],
   selectedFilename: null,
   slideData: null,
   hasUnsaved: false,
   draggingFilename: null,
   dragOverFilename: null,
+  structure: null,            // narrative section map (ANSVA…) for the current deck
+  draggingSectionIndex: null, // section header being dragged to move its boundary
   // Per-slide badges
   dirtyFiles: new Set(),       // unsaved form changes (yellow)
   uncommittedFiles: new Set(), // saved but not committed (teal)
@@ -127,6 +128,7 @@ async function selectDeck(slug, initialOrder) {
     state.currentDeck = null;
     state.slides = [];
     state.selectedFilename = null;
+    state.structure = null;
     state.dirtyFiles.clear();
     state.uncommittedFiles.clear();
     dom.btnExportPdf.disabled = true;
@@ -144,7 +146,6 @@ async function selectDeck(slug, initialOrder) {
   dom.deckSelector.value = slug;
   const deck = state.decks.find(d => d.slug === slug);
   dom.deckTitle.textContent = deck?.deck?.title ?? slug;
-  state.currentConfig = deck?.config ?? null;
   await loadSlides();
   if (state.slides.length > 0) {
     const byOrder = initialOrder != null && state.slides.find(s => s.order === initialOrder);
@@ -156,8 +157,19 @@ async function loadSlides() {
   if (!state.currentDeck) return;
   const slides = await apiFetch(`/api/decks/${state.currentDeck}/slides`);
   state.slides = slides;
+  await loadStructure();
   renderSidebar();
   refreshGitStatus();
+}
+
+/** Load the deck's narrative structure (ANSVA…). Null when the deck has none. */
+async function loadStructure() {
+  if (!state.currentDeck) { state.structure = null; return; }
+  try {
+    state.structure = await apiFetch(`/api/decks/${state.currentDeck}/structure`);
+  } catch {
+    state.structure = null; // deck has no structure — sidebar renders flat
+  }
 }
 
 // ---- Slide selection ----
@@ -207,32 +219,22 @@ const SECTION_COLORS = {
   default: '#888',
 };
 
-function getSectionForOrder(order) {
-  const sections = state.currentConfig?.structure?.sections;
-  if (!sections) return null;
-  return sections.find(s => order >= s.start && order <= s.end) ?? null;
-}
-
 function renderSidebar() {
   if (!state.currentDeck || state.slides.length === 0) {
     dom.slideList.innerHTML = '<div class="empty-state">No slides</div>';
     return;
   }
   dom.slideList.innerHTML = '';
-  let lastSectionId = null;
+
+  // Map slide order → the section that starts there, so we can drop a section
+  // header in front of the slide that opens each section.
+  const sections = state.structure?.sections ?? [];
+  const sectionStarts = new Map();
+  sections.forEach((s, i) => sectionStarts.set(s.start, { section: s, index: i }));
+
   state.slides.forEach(slide => {
-    // Inject section header when entering a new section
-    const section = getSectionForOrder(slide.order);
-    if (section && section.id !== lastSectionId) {
-      lastSectionId = section.id;
-      const color = SECTION_COLORS[section.id] ?? SECTION_COLORS.default;
-      const header = document.createElement('div');
-      header.className = 'section-header';
-      header.innerHTML = `
-        <span class="section-badge" style="background:${color}">${section.id.replace(/\d+$/, '')}</span>
-        <span class="section-name">${escHtml(section.label)}</span>`;
-      dom.slideList.appendChild(header);
-    }
+    const sec = sectionStarts.get(slide.order);
+    if (sec) dom.slideList.appendChild(makeSectionHeader(sec.section, sec.index));
 
     const item = document.createElement('div');
     item.className = [
@@ -274,11 +276,86 @@ function renderSidebar() {
     item.addEventListener('dragstart', e => { state.draggingFilename = slide.filename; e.dataTransfer.effectAllowed = 'move'; renderSidebar(); });
     item.addEventListener('dragover', e => { e.preventDefault(); if (state.dragOverFilename !== slide.filename) { state.dragOverFilename = slide.filename; renderSidebar(); } });
     item.addEventListener('dragleave', () => { if (state.dragOverFilename === slide.filename) { state.dragOverFilename = null; renderSidebar(); } });
-    item.addEventListener('drop', e => { e.preventDefault(); handleDrop(slide.filename); });
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      // Dropping a section header onto a slide moves that section's start here.
+      if (state.draggingSectionIndex != null) {
+        const idx = state.draggingSectionIndex;
+        state.draggingSectionIndex = null;
+        state.dragOverFilename = null;
+        moveSectionBoundary(idx, slide.order);
+      } else {
+        handleDrop(slide.filename);
+      }
+    });
     item.addEventListener('dragend', () => { state.draggingFilename = null; state.dragOverFilename = null; renderSidebar(); });
 
     dom.slideList.appendChild(item);
   });
+}
+
+/**
+ * Build a section header row for the sidebar. Headers mark where each
+ * narrative section (ANSVA…) begins. Every header except the first is
+ * draggable: drop it onto a slide to make that slide the section's first one.
+ */
+function makeSectionHeader(section, index) {
+  const header = document.createElement('div');
+  header.className = 'section-header' + (index === 0 ? ' first' : '');
+  header.dataset.sectionIndex = index;
+  const count = section.end - section.start + 1;
+
+  const grip = index > 0
+    ? `<span class="section-grip" title="Drag onto a slide to move where this section starts">
+         <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+           <circle cx="3" cy="2" r="1" fill="currentColor"/><circle cx="7" cy="2" r="1" fill="currentColor"/>
+           <circle cx="3" cy="5" r="1" fill="currentColor"/><circle cx="7" cy="5" r="1" fill="currentColor"/>
+           <circle cx="3" cy="8" r="1" fill="currentColor"/><circle cx="7" cy="8" r="1" fill="currentColor"/>
+         </svg>
+       </span>`
+    : '<span class="section-grip placeholder"></span>';
+
+  const color = SECTION_COLORS[section.id] ?? SECTION_COLORS.default;
+  const badgeText = (section.id ?? '').replace(/\d+$/, '');
+  header.innerHTML = `
+    ${grip}
+    <span class="section-badge" style="background:${color}">${escHtml(badgeText)}</span>
+    <span class="section-name" title="${escHtml(section.label ?? '')}">${escHtml(section.label ?? '')}</span>
+    <span class="section-count" title="${count} slide${count === 1 ? '' : 's'}">${count}</span>`;
+
+  if (index > 0) {
+    header.draggable = true;
+    header.addEventListener('dragstart', e => {
+      state.draggingSectionIndex = index;
+      state.draggingFilename = null;
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    header.addEventListener('dragend', () => {
+      state.draggingSectionIndex = null;
+      state.dragOverFilename = null;
+      renderSidebar();
+    });
+  }
+  return header;
+}
+
+/** Persist a moved section boundary (its new first-slide order). */
+async function moveSectionBoundary(index, startOrder) {
+  if (!state.currentDeck) return;
+  try {
+    setStatus('saving');
+    state.structure = await apiFetch(`/api/decks/${state.currentDeck}/structure/boundary`, {
+      method: 'POST',
+      body: JSON.stringify({ index, start: startOrder }),
+    });
+    renderSidebar();
+    setStatus('saved');
+    toast('Section boundary moved');
+  } catch (e) {
+    toast('Move boundary failed: ' + e.message, 'error');
+    setStatus(false);
+    renderSidebar();
+  }
 }
 
 async function handleDrop(targetFilename) {

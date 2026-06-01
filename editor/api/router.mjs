@@ -22,6 +22,7 @@ import {
   loadTemplateScaffold,
 } from './slides.mjs';
 import { getTemplatesMeta } from './templates.mjs';
+import { getStructure, setStructureBoundary } from './structure.mjs';
 
 // ---------- response helpers ----------
 
@@ -144,6 +145,30 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
         ],
       });
     } catch { return json({ modified: [] }); }
+  }
+
+  // GET /api/decks/:slug/structure — narrative section map (or null)
+  const structureMatch = pathname.match(/^\/api\/decks\/([^/]+)\/structure$/);
+  if (method === 'GET' && structureMatch) {
+    const slug = validSlug(structureMatch[1]);
+    if (!slug) return err('Invalid deck slug', 400);
+    try { return json(getStructure(slug, decksRoot)); }
+    catch (e) { return err(e.message, 404); }
+  }
+
+  // POST /api/decks/:slug/structure/boundary — move where a section starts.
+  // Body: { index: number, start: number }
+  const boundaryMatch = pathname.match(/^\/api\/decks\/([^/]+)\/structure\/boundary$/);
+  if (method === 'POST' && boundaryMatch) {
+    const slug = validSlug(boundaryMatch[1]);
+    if (!slug) return err('Invalid deck slug', 400);
+    try {
+      const { index, start } = await req.json();
+      if (typeof index !== 'number' || typeof start !== 'number') {
+        return err('index and start must be numbers');
+      }
+      return json(setStructureBoundary(slug, index, start, decksRoot));
+    } catch (e) { return err(e.message); }
   }
 
   // /api/decks/:slug/slides[/:filename]
