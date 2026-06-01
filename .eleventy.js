@@ -31,9 +31,14 @@ module.exports = async function (eleventyConfig) {
 
   for (const slug of listDecks()) {
     const assetsDir = path.join(DECKS_DIR, slug, "assets");
+    const slidesAssetsDir = path.join(DECKS_DIR, slug, "slides", "assets");
     if (fs.existsSync(assetsDir)) {
       eleventyConfig.addPassthroughCopy({
         [`decks/${slug}/assets`]: `talks/decks/${slug}/assets`,
+      });
+    } else if (fs.existsSync(slidesAssetsDir)) {
+      eleventyConfig.addPassthroughCopy({
+        [`decks/${slug}/slides/assets`]: `talks/decks/${slug}/assets`,
       });
     }
   }
@@ -59,7 +64,7 @@ module.exports = async function (eleventyConfig) {
         slideOrder = config.slides || [];
       }
       return api
-        .getFilteredByGlob(`decks/${slug}/*.md`)
+        .getFilteredByGlob([`decks/${slug}/*.md`, `decks/${slug}/slides/*.md`])
         .sort((a, b) => {
           const idxA = slideOrder.indexOf(path.basename(a.inputPath));
           const idxB = slideOrder.indexOf(path.basename(b.inputPath));
@@ -72,7 +77,10 @@ module.exports = async function (eleventyConfig) {
 
   eleventyConfig.addGlobalData("decks", () =>
     listDecks().map((slug) => {
-      const metaPath = path.join(DECKS_DIR, slug, `${slug}.json`);
+      let metaPath = path.join(DECKS_DIR, slug, `${slug}.json`);
+      if (!fs.existsSync(metaPath)) {
+        metaPath = path.join(DECKS_DIR, slug, `${slug}.11tydata.json`);
+      }
       const raw = fs.existsSync(metaPath)
         ? JSON.parse(fs.readFileSync(metaPath, "utf8"))
         : {};
