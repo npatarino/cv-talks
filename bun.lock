@@ -6,7 +6,7 @@
       "name": "@chimichurricode/talks",
       "dependencies": {
         "@chimichurricode/analytics": "^0.1.0",
-        "@chimichurricode/design-system": "^0.7.2",
+        "@chimichurricode/design-system": "^0.7.6",
       },
       "devDependencies": {
         "@11ty/eleventy": "^3.0.0",
@@ -47,7 +47,7 @@
 
     "@chimichurricode/analytics": ["@chimichurricode/analytics@0.1.0", "", { "dependencies": { "web-vitals": "^4.2.0" } }, "sha512-XchHDYlS7AYjLebLOl+XLJiE0vFL2wQ7Kz9iOXrTHpKHP658G5ReVR3EXjasbINqvtXujlRxrexpmKA4fvQCcA=="],
 
-    "@chimichurricode/design-system": ["@chimichurricode/design-system@0.7.2", "", { "peerDependencies": { "astro": "^5.0.0" }, "optionalPeers": ["astro"] }, "sha512-7Blc01WeFQIvu7grdyUIkrV5KbYf1dyWzxQO94qOu5Wcfo4l5m2z3/0Lxh3vQMe+n1jdfKHceg3CCHcohGw+tA=="],
+    "@chimichurricode/design-system": ["@chimichurricode/design-system@0.7.6", "", { "peerDependencies": { "astro": "^5.0.0" }, "optionalPeers": ["astro"] }, "sha512-ClnG9arthbuFlYuPExPtZaSw6BuB0mDlTzsVUousOC48CJYuKCGcVvpDSvUlvu8VfZecvuD+CVtdsgg+EFfCmg=="],
 
     "@emnapi/core": ["@emnapi/core@1.10.0", "", { "dependencies": { "@emnapi/wasi-threads": "1.2.1", "tslib": "^2.4.0" } }, "sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw=="],
 

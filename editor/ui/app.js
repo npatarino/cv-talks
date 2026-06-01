@@ -907,6 +907,15 @@ function buildAssetActionTiles(deckSlug, onComplete) {
     </div>
     <span>Paste…</span>`;
 
+  const browseTile = document.createElement('div');
+  browseTile.className = 'asset-item asset-action';
+  browseTile.title = 'Browse Design System Icons';
+  browseTile.innerHTML = `
+    <div class="asset-action-icon" style="font-size: 20px;">
+      🎨
+    </div>
+    <span>Icons…</span>`;
+
   uploadTile.addEventListener('mousedown', async e => {
     e.preventDefault();
     const file = await pickImageFile();
@@ -937,7 +946,127 @@ function buildAssetActionTiles(deckSlug, onComplete) {
     }
   });
 
-  return [uploadTile, pasteTile];
+  browseTile.addEventListener('mousedown', async e => {
+    e.preventDefault();
+    openIconBrowser(deckSlug, onComplete);
+  });
+
+  return [uploadTile, pasteTile, browseTile];
+}
+
+// ---- Icon Browser Modal ----
+
+let iconBrowserData = null;
+
+async function openIconBrowser(deckSlug, onComplete) {
+  if (!iconBrowserData) {
+    try {
+      iconBrowserData = await apiFetch('/api/design-system/icons');
+    } catch (e) {
+      toast('Failed to load icons: ' + e.message, 'error');
+      return;
+    }
+  }
+
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+
+  const modal = document.createElement('div');
+  modal.className = 'icon-browser-modal';
+
+  const header = document.createElement('div');
+  header.className = 'icon-browser-header';
+  
+  const searchInput = document.createElement('input');
+  searchInput.type = 'text';
+  searchInput.placeholder = 'Search icons...';
+  searchInput.className = 'icon-search-input';
+
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = '✕';
+  closeBtn.className = 'btn-icon';
+  closeBtn.onclick = () => backdrop.remove();
+
+  header.appendChild(searchInput);
+  header.appendChild(closeBtn);
+  modal.appendChild(header);
+
+  const container = document.createElement('div');
+  container.className = 'icon-browser-container';
+  modal.appendChild(container);
+  backdrop.appendChild(modal);
+  document.body.appendChild(backdrop);
+
+  function renderIcons(query) {
+    container.innerHTML = '';
+    
+    // Group by category
+    const grouped = {};
+    for (const icon of iconBrowserData) {
+      if (query && !icon.filename.toLowerCase().includes(query.toLowerCase()) && !icon.category.toLowerCase().includes(query.toLowerCase())) continue;
+      if (!grouped[icon.category]) grouped[icon.category] = [];
+      grouped[icon.category].push(icon);
+    }
+
+    if (Object.keys(grouped).length === 0) {
+      container.innerHTML = '<p class="empty-state">No icons found.</p>';
+      return;
+    }
+
+    for (const [category, icons] of Object.entries(grouped)) {
+      const section = document.createElement('div');
+      section.className = 'icon-category-section';
+      
+      const title = document.createElement('h3');
+      title.textContent = category;
+      section.appendChild(title);
+
+      const grid = document.createElement('div');
+      grid.className = 'icon-browser-grid';
+
+      for (const icon of icons) {
+        const item = document.createElement('div');
+        item.className = 'icon-browser-item';
+        item.title = icon.filename;
+        
+        // Wrap SVG content
+        const svgWrapper = document.createElement('div');
+        svgWrapper.className = 'icon-svg-wrapper';
+        svgWrapper.innerHTML = icon.svgContent;
+        
+        const label = document.createElement('span');
+        label.textContent = icon.filename.replace('.svg', '');
+        
+        item.appendChild(svgWrapper);
+        item.appendChild(label);
+
+        item.addEventListener('click', async () => {
+          const btnTxt = item.querySelector('span');
+          const originalTxt = btnTxt.textContent;
+          btnTxt.textContent = 'Importing...';
+          try {
+            const blob = new Blob([icon.svgContent], { type: 'image/svg+xml' });
+            const filename = await uploadAssetForDeck(deckSlug, blob, 'image/svg+xml', icon.filename);
+            if (filename) {
+              onComplete(filename);
+              backdrop.remove();
+            }
+          } catch (e) {
+            toast('Failed to import icon: ' + e.message, 'error');
+            btnTxt.textContent = originalTxt;
+          }
+        });
+
+        grid.appendChild(item);
+      }
+      section.appendChild(grid);
+      container.appendChild(section);
+    }
+  }
+
+  searchInput.addEventListener('input', e => renderIcons(e.target.value));
+  renderIcons('');
+  searchInput.focus();
 }
 
 // ---- Rich text editor ----
