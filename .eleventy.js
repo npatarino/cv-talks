@@ -51,11 +51,23 @@ module.exports = async function (eleventyConfig) {
   );
 
   for (const slug of listDecks()) {
-    eleventyConfig.addCollection(`deck:${slug}`, (api) =>
-      api
+    eleventyConfig.addCollection(`deck:${slug}`, (api) => {
+      const configPath = path.join(DECKS_DIR, slug, 'deck.config.json');
+      let slideOrder = [];
+      if (fs.existsSync(configPath)) {
+        const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+        slideOrder = config.slides || [];
+      }
+      return api
         .getFilteredByGlob(`decks/${slug}/*.md`)
-        .sort((a, b) => a.data.order - b.data.order)
-    );
+        .sort((a, b) => {
+          const idxA = slideOrder.indexOf(path.basename(a.inputPath));
+          const idxB = slideOrder.indexOf(path.basename(b.inputPath));
+          const posA = idxA === -1 ? Infinity : idxA;
+          const posB = idxB === -1 ? Infinity : idxB;
+          return posA - posB;
+        });
+    });
   }
 
   eleventyConfig.addGlobalData("decks", () =>

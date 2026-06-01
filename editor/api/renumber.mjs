@@ -1,25 +1,28 @@
-/**
- * Renumber slides in a deck after add, move, or delete operations.
- *
- * Rules:
- * - `order` in frontmatter is the authoritative sort key.
- * - Filename prefix (`01-`, `02-`, ...) must always match `order`.
- * - The slug portion (everything after the first number prefix and dash) is preserved.
- * - Files are renamed to `{order padded 2}-{slug}.md`.
- */
-
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseMd, serializeMd } from './frontmatter.mjs';
 
-const SLIDE_FILE_RE = /^(\d+)-(.+)\.md$/;
+const SLIDE_FILE_RE = /^[a-z0-9_-]+\.md$/i;
 
-/**
- * Get all slide files in a deck directory, sorted by current order frontmatter.
- * Returns array of { filename, filepath, data, body } objects.
- */
+function getConfigPath(deckDir) {
+  return path.join(deckDir, 'deck.config.json');
+}
+
+function readConfig(deckDir) {
+  const p = getConfigPath(deckDir);
+  if (fs.existsSync(p)) return JSON.parse(fs.readFileSync(p, 'utf8'));
+  return { slides: [] };
+}
+
+function writeConfig(deckDir, config) {
+  fs.writeFileSync(getConfigPath(deckDir), JSON.stringify(config, null, 2), 'utf8');
+}
+
 export function readSlides(deckDir) {
   if (!fs.existsSync(deckDir)) return [];
+
+  const config = readConfig(deckDir);
+  const slideOrder = config.slides || [];
 
   const files = fs.readdirSync(deckDir).filter(f => {
     if (!f.endsWith('.md')) return false;
@@ -31,115 +34,76 @@ export function readSlides(deckDir) {
     const filepath = path.join(deckDir, filename);
     const raw = fs.readFileSync(filepath, 'utf8');
     const { data, body } = parseMd(raw);
-    return { filename, filepath, data, body };
+    
+    let order = slideOrder.indexOf(filename);
+    if (order === -1) order = Infinity; // Push unordered to the end
+
+    return { filename, filepath, data, body, _order: order };
   });
 
-  return slides.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+  slides.sort((a, b) => a._order - b._order);
+
+  // Inject computed order so rest of the app thinks it's 1-indexed
+  return slides.map((s, i) => {
+    s.data.order = i + 1;
+    return s;
+  });
 }
 
-/**
- * Extract the slug portion from a filename (strips numeric prefix).
- * `01-viernes-1530.md` → `viernes-1530`
- */
 export function slugFromFilename(filename) {
-  const match = filename.match(SLIDE_FILE_RE);
-  if (!match) return filename.replace(/\.md$/, '');
-  return match[2];
+  return filename.replace(/\.md$/, '');
 }
 
-/**
- * Build a filename from order + slug.
- * order=3, slug='my-slide' → '03-my-slide.md'
- */
 export function buildFilename(order, slug) {
-  return `${String(order).padStart(2, '0')}-${slug}.md`;
+  return `${slug}.md`;
 }
 
-/**
- * Renumber all slides in a deck so that order values are 1, 2, 3, ...
- * matching their sort position.
- *
- * Also renames files to match.
- *
- * @param {string} deckDir - absolute path to the deck directory
- * @param {string[]} [newOrder] - optional array of filenames in the desired order.
- *   If omitted, current order frontmatter values are used to determine sort.
- */
 export function renumberSlides(deckDir, newOrder) {
-  const slides = readSlides(deckDir);
-  if (slides.length === 0) return [];
-
-  let sorted;
+  const config = readConfig(deckDir);
+  
   if (newOrder && newOrder.length > 0) {
-    // Reorder by the provided filename sequence
-    const byFilename = Object.fromEntries(slides.map(s => [s.filename, s]));
-    sorted = newOrder
-      .map(fn => byFilename[fn])
-      .filter(Boolean);
-    // Append any slides not in newOrder at the end (shouldn't happen normally)
-    const provided = new Set(newOrder);
-    for (const s of slides) {
-      if (!provided.has(s.filename)) sorted.push(s);
-    }
+    config.slides = newOrder;
   } else {
-    sorted = slides;
+    // If no new order provided, just sync the current sorted slides array
+    config.slides = readSlides(deckDir).map(s => s.filename);
   }
-
-  const result = [];
-
-  // Two-pass rename to avoid conflicts when swapping filenames
-  // Pass 1: rename all to temp names
-  const tempNames = [];
-  for (let i = 0; i < sorted.length; i++) {
-    const slide = sorted[i];
-    const newOrder = i + 1;
-    const slug = slugFromFilename(slide.filename);
-    const newFilename = buildFilename(newOrder, slug);
-    const tempFilename = `__tmp_${i}__${newFilename}`;
-    const tempPath = path.join(deckDir, tempFilename);
-    fs.renameSync(slide.filepath, tempPath);
-    tempNames.push({ tempPath, tempFilename, newFilename, newOrder, slide, slug });
-  }
-
-  // Pass 2: rename from temp to final + update frontmatter
-  for (const { tempPath, newFilename, newOrder: order, slide, slug } of tempNames) {
-    const finalPath = path.join(deckDir, newFilename);
-    const newData = { ...slide.data, order };
-    const newContent = serializeMd(newData, slide.body);
-    fs.writeFileSync(tempPath, newContent, 'utf8');
-    fs.renameSync(tempPath, finalPath);
-    result.push({ filename: newFilename, order, slug, filepath: finalPath });
-  }
-
-  return result;
+  
+  writeConfig(deckDir, config);
+  
+  return readSlides(deckDir).map(s => ({
+    filename: s.filename,
+    order: s.data.order,
+    slug: slugFromFilename(s.filename),
+    filepath: s.filepath
+  }));
 }
 
-/**
- * Delete a slide file and renumber the remaining slides.
- * @returns {Array} - updated slide list after renumbering
- */
 export function deleteSlide(deckDir, filename) {
   const filepath = path.join(deckDir, filename);
-  if (!fs.existsSync(filepath)) throw new Error(`Slide not found: ${filename}`);
-  fs.unlinkSync(filepath);
+  if (fs.existsSync(filepath)) {
+    fs.unlinkSync(filepath);
+  }
+  const config = readConfig(deckDir);
+  if (config.slides) {
+    config.slides = config.slides.filter(f => f !== filename);
+    writeConfig(deckDir, config);
+  }
   return renumberSlides(deckDir);
 }
 
-/**
- * Move a slide to a new position (1-based) and renumber all slides.
- * @param {string} deckDir
- * @param {string} filename - the slide to move
- * @param {number} toPosition - 1-based target position
- * @returns {Array} - updated slide list
- */
 export function moveSlide(deckDir, filename, toPosition) {
-  const slides = readSlides(deckDir);
-  const fromIdx = slides.findIndex(s => s.filename === filename);
-  if (fromIdx === -1) throw new Error(`Slide not found: ${filename}`);
+  const config = readConfig(deckDir);
+  let slides = config.slides || [];
+  
+  const fromIdx = slides.indexOf(filename);
+  if (fromIdx === -1) throw new Error(`Slide not found in config: ${filename}`);
 
   const toIdx = Math.max(0, Math.min(slides.length - 1, toPosition - 1));
   const [moved] = slides.splice(fromIdx, 1);
   slides.splice(toIdx, 0, moved);
 
-  return renumberSlides(deckDir, slides.map(s => s.filename));
+  config.slides = slides;
+  writeConfig(deckDir, config);
+
+  return renumberSlides(deckDir);
 }
