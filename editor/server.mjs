@@ -20,16 +20,31 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const UI_DIR = path.join(__dirname, 'ui');
 const PORT = 3001;
 
+// Bumps every server start. Injected as ?v= on the editor's own assets so a
+// browser — or the port-forward proxy in front of it — can never pin a stale
+// app.js/styles.css to a constant URL across restarts.
+const ASSET_VERSION = Date.now().toString(36);
+
 async function serveFile(filePath) {
   try {
     const file = Bun.file(filePath);
     if (!(await file.exists())) {
       return new Response('Not found', { status: 404 });
     }
-    // The editor is a local dev tool — never let the browser (or a port-forward
-    // proxy) serve a stale app.js/styles.css after an edit. no-store guarantees
-    // a fresh fetch on every reload.
-    return new Response(file, { headers: { 'Cache-Control': 'no-store' } });
+    const NO_STORE = { 'Cache-Control': 'no-store' };
+    // The editor is a local dev tool — assets must never be cached. On top of
+    // no-store, rewrite index.html so app.js/styles.css carry a per-start
+    // version query: any URL-keyed cache (incl. the session port-forward) is
+    // forced to fetch the current build after a restart.
+    if (filePath.endsWith('index.html')) {
+      const html = (await file.text())
+        .replace('href="styles.css"', `href="styles.css?v=${ASSET_VERSION}"`)
+        .replace('src="app.js"', `src="app.js?v=${ASSET_VERSION}"`);
+      return new Response(html, {
+        headers: { ...NO_STORE, 'Content-Type': 'text/html; charset=utf-8' },
+      });
+    }
+    return new Response(file, { headers: NO_STORE });
   } catch {
     return new Response('Not found', { status: 404 });
   }
