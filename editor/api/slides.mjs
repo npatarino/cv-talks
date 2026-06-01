@@ -52,8 +52,7 @@ export function createSlide(slug, opts, decksRoot) {
   const data = {
     template: opts.template ?? 'big-concept',
     recipe: opts.recipe ?? 'canvas-quiet',
-    order: position,
-    label: opts.label ?? `Slide ${position}`,
+        label: opts.label ?? `Slide ${position}`,
     variant: opts.variant ?? 'default',
   };
 
@@ -69,8 +68,7 @@ export function createSlide(slug, opts, decksRoot) {
 
   // Write the new file temporarily with a high order number, then renumber all
   const tempOrder = slides.length + 99;
-  data.order = tempOrder;
-  const tempFilename = buildFilename(tempOrder, slideSlug);
+    const tempFilename = buildFilename(tempOrder, slideSlug);
   const tempPath = path.join(dir, tempFilename);
   fs.writeFileSync(tempPath, serializeMd(data, ''), 'utf8');
 
@@ -90,8 +88,7 @@ export function createSlide(slug, opts, decksRoot) {
   const finalFilename = buildFilename(position, slideSlug);
   return {
     filename: finalFilename,
-    order: position,
-    previewUrl: slidePreviewUrl(slug, finalFilename),
+        previewUrl: slidePreviewUrl(slug, finalFilename),
   };
 }
 
