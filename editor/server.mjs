@@ -26,7 +26,10 @@ async function serveFile(filePath) {
     if (!(await file.exists())) {
       return new Response('Not found', { status: 404 });
     }
-    return new Response(file);
+    // The editor is a local dev tool — never let the browser (or a port-forward
+    // proxy) serve a stale app.js/styles.css after an edit. no-store guarantees
+    // a fresh fetch on every reload.
+    return new Response(file, { headers: { 'Cache-Control': 'no-store' } });
   } catch {
     return new Response('Not found', { status: 404 });
   }
