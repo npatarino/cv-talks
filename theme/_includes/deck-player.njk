@@ -118,7 +118,7 @@
 <script>
 window.__SLIDES__ = [
 {%- for s in slides %}
-  { order: {{ s.data.order }}, url: "{{ s.url | url }}", label: {{ s.data.label | dump | safe }}{% if s.data.revealStart != undefined %}, revealStart: {{ s.data.revealStart }}{% endif %} }{% if not loop.last %},{% endif %}
+  { order: {{ s.data.order | default(loop.index0) }}, url: "{{ s.url | url }}", label: {{ s.data.label | dump | safe }}{% if s.data.revealStart != undefined %}, revealStart: {{ s.data.revealStart }}{% endif %} }{% if not loop.last %},{% endif %}
 {%- endfor %}
 ];
 // Skip the presentation deck script in mobile mode — the viewer-stack

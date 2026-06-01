@@ -332,7 +332,7 @@
 <script>
 window.__SLIDES__ = [
 {%- for s in slides %}
-  { order: {{ s.data.order }}, url: {{ s.url | url | dump | safe }}, label: {{ s.data.label | dump | safe }}, notes: {{ (s.data.notes or '') | dump | safe }} }{% if not loop.last %},{% endif %}
+  { order: {{ s.data.order | default(loop.index0) }}, url: {{ s.url | url | dump | safe }}, label: {{ s.data.label | dump | safe }}, notes: {{ (s.data.notes or '') | dump | safe }} }{% if not loop.last %},{% endif %}
 {%- endfor %}
 ];
 window.__DECK_URL__ = {{ ('/talks/decks/' + slug + '/deck/') | url | dump | safe }};

@@ -34,7 +34,7 @@
 <div class="toc">
   {% for slide in slides %}
     <a href="{{ slide.url | url }}">
-      <span><span class="num">{% if slide.data.order < 10 %}0{% endif %}{{ slide.data.order }}</span>{{ slide.data.label }}</span>
+      <span><span class="num">{% set slideOrder = slide.data.order | default(loop.index) %}{% if slideOrder < 10 %}0{% endif %}{{ slideOrder }}</span>{{ slide.data.label }}</span>
       <span style="opacity: 0.5;">{{ slide.data.template }}</span>
     </a>
   {% endfor %}
