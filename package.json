@@ -4,19 +4,26 @@
   "private": true,
   "description": "Chimichurri Code — modular slide system (Eleventy).",
   "scripts": {
+    "// ----- SERVIDORES LOCALES -----": "Levantar y detener la infraestructura de desarrollo",
     "servers:start": "bash scripts/start-servers.sh",
     "servers:stop": "bash scripts/stop-servers.sh",
-    "sync:fonts": "node scripts/sync-fonts.mjs",
-    "build": "bun run sync:fonts && eleventy && bun scripts/build-seo.mjs",
-    "serve": "bun run sync:fonts && eleventy --serve",
-    "serve:meta": "bun run sync:fonts && SLIDE_MODE=meta eleventy --serve",
-    "editor": "bun editor/server.mjs",
+    "editor:start": "bun editor/server.mjs",
+
+    "// ----- SLIDES (ELEVENTY) -----": "Construcción y visualización estática de las presentaciones",
+    "slides:build": "bun run fonts:sync && eleventy && bun scripts/build-seo.mjs",
+    "slides:serve": "bun run fonts:sync && eleventy --serve",
+    "slides:serve-meta": "bun run fonts:sync && SLIDE_MODE=meta eleventy --serve",
+
+    "// ----- ASSETS & FORMATO -----": "Sincronización de fuentes y formateo de los archivos Markdown",
+    "fonts:sync": "node scripts/sync-fonts.mjs",
+    "decks:format": "bun scripts/format-decks.mjs",
+    "decks:format-check": "bun scripts/format-decks.mjs --check",
+
+    "// ----- TESTING -----": "Pruebas unitarias, cobertura y E2E",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test",
-    "format": "bun scripts/format-decks.mjs",
-    "format:check": "bun scripts/format-decks.mjs --check"
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@chimichurricode/analytics": "^0.1.0",
