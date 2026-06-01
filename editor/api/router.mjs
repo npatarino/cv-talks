@@ -23,6 +23,7 @@ import {
 } from './slides.mjs';
 import { getTemplatesMeta } from './templates.mjs';
 import { getStructure, setStructureBoundary } from './structure.mjs';
+import { listDesignSystemIcons } from './design-system.mjs';
 
 // ---------- response helpers ----------
 
@@ -81,6 +82,14 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
 
   if (method === 'GET' && pathname === '/api/template-slides') {
     return json(listTemplateSlides());
+  }
+
+  if (method === 'GET' && pathname === '/api/design-system/icons') {
+    try {
+      return json(await listDesignSystemIcons());
+    } catch (e) {
+      return err(e.message, 500);
+    }
   }
 
   // GET /api/template-scaffold?template=X&variant=Y
