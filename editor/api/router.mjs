@@ -241,7 +241,9 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     const [, rawSlug, filename] = gitRevertMatch;
     const slug = validSlug(rawSlug);
     if (!slug) return err('Invalid deck slug', 400);
-    const relPath = `decks/${slug}/${filename}`;
+    const slidesDirAbs = path.join(TALKS_ROOT, 'decks', slug, 'slides');
+    const hasSlidesDir = fs.existsSync(slidesDirAbs);
+    const relPath = hasSlidesDir ? `decks/${slug}/slides/${filename}` : `decks/${slug}/${filename}`;
     const result = spawnSync('git', ['checkout', 'HEAD', '--', relPath], {
       cwd: TALKS_ROOT, encoding: 'utf8',
     });
