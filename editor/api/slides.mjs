@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseMd, serializeMd } from './frontmatter.mjs';
-import { readSlides, renumberSlides, deleteSlide, moveSlide, buildFilename, slugFromFilename } from './renumber.mjs';
+import { readSlides, renumberSlides, deleteSlide, moveSlide, buildFilename, slugFromFilename, getSlideDir } from './renumber.mjs';
 import { deckDir } from './decks.mjs';
 import { syncStructureOnInsert, syncStructureOnDelete } from './structure.mjs';
 
@@ -30,7 +30,7 @@ export function listSlides(slug, decksRoot) {
 }
 
 export function getSlide(slug, filename, decksRoot) {
-  const filepath = path.join(deckDir(slug, decksRoot), filename);
+  const filepath = path.join(getSlideDir(deckDir(slug, decksRoot)), filename);
   if (!fs.existsSync(filepath)) throw new Error(`Slide not found: ${filename}`);
   const raw = fs.readFileSync(filepath, 'utf8');
   const { data, body } = parseMd(raw);
@@ -68,8 +68,8 @@ export function createSlide(slug, opts, decksRoot) {
 
   // Write the new file temporarily with a high order number, then renumber all
   const tempOrder = slides.length + 99;
-    const tempFilename = buildFilename(tempOrder, slideSlug);
-  const tempPath = path.join(dir, tempFilename);
+  const tempFilename = buildFilename(tempOrder, slideSlug);
+  const tempPath = path.join(getSlideDir(dir), tempFilename);
   fs.writeFileSync(tempPath, serializeMd(data, ''), 'utf8');
 
   // Reorder: insert the new slide at the desired position
@@ -94,7 +94,7 @@ export function createSlide(slug, opts, decksRoot) {
 
 export function updateSlide(slug, filename, updates, decksRoot) {
   const dir = deckDir(slug, decksRoot);
-  const filepath = path.join(dir, filename);
+  const filepath = path.join(getSlideDir(dir), filename);
   if (!fs.existsSync(filepath)) throw new Error(`Slide not found: ${filename}`);
 
   const raw = fs.readFileSync(filepath, 'utf8');

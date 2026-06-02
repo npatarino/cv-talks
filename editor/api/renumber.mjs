@@ -18,20 +18,26 @@ function writeConfig(deckDir, config) {
   fs.writeFileSync(getConfigPath(deckDir), JSON.stringify(config, null, 2), 'utf8');
 }
 
+export function getSlideDir(deckDir) {
+  const slidesDir = path.join(deckDir, 'slides');
+  return fs.existsSync(slidesDir) ? slidesDir : deckDir;
+}
+
 export function readSlides(deckDir) {
   if (!fs.existsSync(deckDir)) return [];
 
   const config = readConfig(deckDir);
   const slideOrder = config.slides || [];
 
-  const files = fs.readdirSync(deckDir).filter(f => {
+  const targetDir = getSlideDir(deckDir);
+  const files = fs.readdirSync(targetDir).filter(f => {
     if (!f.endsWith('.md')) return false;
     if (f === 'index.md') return false;
     return SLIDE_FILE_RE.test(f);
   });
 
   const slides = files.map(filename => {
-    const filepath = path.join(deckDir, filename);
+    const filepath = path.join(targetDir, filename);
     const raw = fs.readFileSync(filepath, 'utf8');
     const { data, body } = parseMd(raw);
     
@@ -79,7 +85,7 @@ export function renumberSlides(deckDir, newOrder) {
 }
 
 export function deleteSlide(deckDir, filename) {
-  const filepath = path.join(deckDir, filename);
+  const filepath = path.join(getSlideDir(deckDir), filename);
   if (fs.existsSync(filepath)) {
     fs.unlinkSync(filepath);
   }

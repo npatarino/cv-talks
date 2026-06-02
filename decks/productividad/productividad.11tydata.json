@@ -8,8 +8,8 @@
     "date": "2026-05"
   },
   "eleventyComputed": {
-    "layout": "layouts/{{ template }}.njk",
-    "slideCss": "{{ template }}",
+    "layout": "{% if template %}layouts/{{ template }}.njk{% else %}{{ layout }}{% endif %}",
+    "slideCss": "{% if template %}{{ template }}{% endif %}",
     "effectiveMode": "{{ mode or site.mode }}"
   }
 }
