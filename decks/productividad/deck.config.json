@@ -12,25 +12,25 @@
         "id": "N",
         "label": "Necesidad",
         "start": 7,
-        "end": 21
+        "end": 24
       },
       {
         "id": "S",
         "label": "Solución",
-        "start": 22,
-        "end": 46
+        "start": 25,
+        "end": 49
       },
       {
         "id": "V",
         "label": "Visualización",
-        "start": 47,
-        "end": 63
+        "start": 50,
+        "end": 66
       },
       {
         "id": "A2",
         "label": "Acción",
-        "start": 64,
-        "end": 71
+        "start": 67,
+        "end": 73
       }
     ]
   },
@@ -42,20 +42,22 @@
     "error.md",
     "cube.md",
     "mas-productividad.md",
+    "burnout.md",
     "recurring-quote-1.md",
-    "movimiento-impacto.md",
     "esfuerzo-valor.md",
+    "movimiento-impacto.md",
     "actividad-productividad.md",
+    "correr-detras-de-metricas.md",
+    "ley-de-goodhart-2.md",
     "ley-de-goodhart.md",
+    "ley-de-goodhart-quote.md",
     "activo-pasivo.md",
     "codigo-activo.md",
     "codigo-pasivo.md",
     "paradoja-jevons.md",
     "paradoja-copilot.md",
     "productividad-no-codigo.md",
-    "jurassic-park.md",
     "scientificos-jurassic-park.md",
-    "no-todo.md",
     "bebe.md",
     "recurring-quote-2.md",
     "moneyball.md",
