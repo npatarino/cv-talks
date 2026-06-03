@@ -6,5 +6,7 @@ variant: disclaimer
 fields:
   title: { content: '<img src="/talks/decks/2026-03-productividad-toxica/assets/chart-up.png" alt="" class="title-icon"><br><strong>VIERNES</strong> <em>15:30</em>', meta: Title_Text }
   note: { content: "", meta: Note_Text }
-notes: Contar mi historia de un viernes a última hora.
+notes: |
+  Viernes, 15:30 de la tarde, ya estaba contestando los últimos mensajes de Slack. 
+  Después de una semana dura de trabajo, donde no paré de tener reuniones, de desbloquear a muchos equipos, de picar mucho código, estaba agotadísimo, pero la verdad que estaba muy contento.
 ---
