@@ -26,7 +26,7 @@ section.slide.s-icon {
 }
 .s-icon .glyph {
   font-family: var(--font-body);
-  font-size: 140px; line-height: 1;
+  font-size: 100px; line-height: 1;
   display: inline-flex; align-items: center; justify-content: center;
 }
 .s-icon .glyph:where(:not(:has(svg)):not(:has(img))) {
@@ -34,7 +34,7 @@ section.slide.s-icon {
   font-family: inherit;
 }
 /* Imágenes PNG/SVG dentro del glyph · escala consistente independiente del
-   font-size del contenedor. 1em = 140px (font-size del glyph). */
+   font-size del contenedor. 1em = 100px (font-size del glyph). */
 .s-icon .glyph img,
 .s-icon .glyph svg {
   width: 1em; height: 1em;
