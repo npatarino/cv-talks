@@ -14,6 +14,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { deckDir } from './decks.mjs';
+import { getSlideDir } from './renumber.mjs';
 
 const MAX_ICON_WIDTH = 512;
 
@@ -44,7 +45,8 @@ export async function uploadAsset(slug, opts, decksRoot) {
   const ext = EXT_BY_MIME[mimeType];
   if (!ext) throw new Error(`Unsupported image type: ${mimeType}`);
 
-  const assetsDir = path.join(deckDir(slug, decksRoot), 'assets');
+  const baseDir = deckDir(slug, decksRoot);
+  const assetsDir = path.join(getSlideDir(baseDir), 'assets');
   fs.mkdirSync(assetsDir, { recursive: true });
 
   const filename = `${basename}.${ext}`;
