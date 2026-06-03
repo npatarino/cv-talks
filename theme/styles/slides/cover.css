@@ -32,7 +32,7 @@ section.slide.s-cover {
   z-index: 1;
 }
 
-.s-cover .conf-logo {
+section.slide.s-cover > .conf-logo {
   position: absolute;
   top: 96px;
   left: 0;
@@ -41,6 +41,7 @@ section.slide.s-cover {
   justify-content: center;
   align-items: center;
   gap: 24px;
+  margin: 0;
 }
 
 .s-cover .conf-logo p {
