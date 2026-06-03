@@ -61,20 +61,40 @@ layout: false
       .lede { font-size: clamp(17px, 1.4vw, 20px); color: var(--muted-strong); max-width: 60ch; margin-top: var(--stack-sm); }
 
       .deck-list { list-style: none; padding: 0; margin: var(--stack-md) 0 0; display: flex; flex-direction: column; gap: 1px; }
-      .deck-list a {
+      .deck-row {
         display: grid;
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: 1fr auto;
         gap: var(--stack-md);
-        align-items: baseline;
+        align-items: center;
         padding: var(--stack-md);
         background: var(--row-bg);
         border-radius: 8px;
       }
-      .deck-list a:hover { background: var(--row-bg-hover); color: var(--recipe-accent); }
+      .deck-row:hover { background: var(--row-bg-hover); }
+      .deck-open {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: var(--stack-md);
+        align-items: baseline;
+        min-width: 0;
+      }
+      .deck-open:hover { color: var(--recipe-accent); }
       .deck-date { font: var(--web-meta); color: var(--muted); font-variant-numeric: tabular-nums; }
       .deck-title { font: var(--web-display-sm); margin: 0; }
       .deck-subtitle { display: block; font: var(--web-meta); color: var(--muted-strong); margin-top: 4px; }
-      .deck-meta { font: var(--web-eyebrow); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+      .deck-actions { display: flex; gap: 8px; flex-shrink: 0; }
+      .deck-action {
+        font: var(--web-eyebrow);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+        padding: 8px 12px;
+        border: 1px solid var(--hairline);
+        border-radius: 6px;
+        transition: color 0.12s, border-color 0.12s;
+      }
+      .deck-action:hover { color: var(--recipe-accent); border-color: var(--recipe-accent); }
 
       .section-header { margin-block: var(--stack-xl) var(--stack-sm); }
       .section-header h2 { font: var(--web-display-sm); margin: 4px 0 0; }
@@ -111,8 +131,10 @@ layout: false
       .footer a:hover { color: var(--recipe-accent); }
 
       @media (max-width: 600px) {
-        .deck-list a { grid-template-columns: 1fr; gap: 4px; }
-        .deck-meta { justify-self: start; }
+        .deck-row { grid-template-columns: 1fr; gap: var(--stack-sm); }
+        .deck-open { grid-template-columns: 1fr; gap: 4px; }
+        .deck-actions { flex-wrap: wrap; }
+        .deck-action { flex: 1 1 auto; text-align: center; }
       }
     </style>
   </head>
@@ -125,14 +147,19 @@ layout: false
       <ul class="deck-list">
         {% for deck in decks %}
           <li>
-            <a href="/talks/decks/{{ deck.slug }}/">
-              <span class="deck-date">{{ deck.date or deck.slug.split('-')[0] }}</span>
-              <span>
-                <span class="deck-title">{{ deck.title or deck.slug }}</span>
-                {% if deck.subtitle %}<span class="deck-subtitle">{{ deck.subtitle }}</span>{% endif %}
+            <div class="deck-row">
+              <a class="deck-open" href="/talks/decks/{{ deck.slug }}/">
+                <span class="deck-date">{{ deck.date or deck.slug.split('-')[0] }}</span>
+                <span>
+                  <span class="deck-title">{{ deck.title or deck.slug }}</span>
+                  {% if deck.subtitle %}<span class="deck-subtitle">{{ deck.subtitle }}</span>{% endif %}
+                </span>
+              </a>
+              <span class="deck-actions">
+                <a class="deck-action" href="/talks/decks/{{ deck.slug }}/deck/">▶ Present</a>
+                <a class="deck-action" href="/talks/decks/{{ deck.slug }}/speaker/">◉ Present + notes</a>
               </span>
-              <span class="deck-meta">Abrir →</span>
-            </a>
+            </div>
           </li>
         {% endfor %}
       </ul>
