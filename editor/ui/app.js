@@ -1974,6 +1974,11 @@ function openSlideContextMenu(x, y, filename) {
 
   const items = [
     {
+      label: 'Duplicate slide',
+      icon: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 4h5v8h-5zM6.5 2h5v8h-5z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      action: () => duplicateSlide(filename),
+    },
+    {
       label: 'Delete slide',
       danger: true,
       icon: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M5 4V2.5h4V4M5.5 6.5v4M8.5 6.5v4M3 4l.7 7.5h6.6L11 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -2014,6 +2019,29 @@ function openSlideContextMenu(x, y, filename) {
   document.addEventListener('mousedown', onContextOutside, true);
   document.addEventListener('keydown', onContextEscape, true);
   window.addEventListener('scroll', closeSlideContextMenu, true);
+}
+
+async function duplicateSlide(filename) {
+  try {
+    const slide = await apiFetch(`/api/decks/${state.deckSlug}/slides/${filename}`);
+    if (!slide) return;
+    
+    const idx = state.slides.findIndex(s => s.filename === filename);
+    const pos = idx !== -1 ? idx + 2 : undefined;
+    
+    const res = await apiFetch(`/api/decks/${state.deckSlug}/slides`, {
+      method: 'POST',
+      body: JSON.stringify({
+        ...slide.data,
+        slug: filename.replace(/\.md$/, ''),
+        position: pos
+      })
+    });
+    await fetchSlides();
+    selectSlide(res.filename);
+  } catch (err) {
+    showToast('Failed to duplicate slide: ' + err.message);
+  }
 }
 
 async function doDelete() {

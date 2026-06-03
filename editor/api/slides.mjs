@@ -47,7 +47,15 @@ export function createSlide(slug, opts, decksRoot) {
   const slides = readSlides(dir);
 
   const position = Math.max(1, Math.min(slides.length + 1, opts.position ?? slides.length + 1));
-  const slideSlug = opts.slug ?? slugify(opts.label ?? opts.template ?? 'slide');
+  let baseSlug = opts.slug ?? slugify(opts.label ?? opts.template ?? 'slide');
+
+  const existingFilenames = new Set(slides.map(s => s.filename));
+  let slideSlug = baseSlug;
+  let counter = 2;
+  while (existingFilenames.has(buildFilename(position, slideSlug))) {
+    slideSlug = `${baseSlug}-${counter}`;
+    counter++;
+  }
 
   const data = {
     template: opts.template ?? 'big-concept',
