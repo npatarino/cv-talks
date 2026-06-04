@@ -3,7 +3,7 @@ template: icon
 recipe: paper
 label: Bus factor · iconos
 items:
-  - { glyph: '<img src="/talks/decks/2026-03-productividad-toxica/assets/bus.png" alt="">' }
-  - { glyph: '<img src="/talks/decks/2026-03-productividad-toxica/assets/dead.png" alt="">' }
-  - { glyph: '<img src="/talks/decks/2026-03-productividad-toxica/assets/dead.png" alt="">' }
+  - { glyph: '<img src="/talks/decks/productividad/assets/bus.png" alt="">' }
+  - { glyph: '<img src="/talks/decks/productividad/assets/dead.png" alt="">' }
+  - { glyph: '<img src="/talks/decks/productividad/assets/dead.png" alt="">' }
 ---

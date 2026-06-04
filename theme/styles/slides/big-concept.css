@@ -32,6 +32,20 @@ section.slide.s-big-concept {
   font-size: 1.4em; line-height: 0.95;
   color: var(--recipe-em);
 }
+/* Concept-icon · imagen decorativa OPCIONAL por encima del título, como campo
+   propio del template (no embebida en el <h1> con <br>). Se alinea con el
+   título: a la izquierda en default/divider, centrada en transition. */
+.s-big-concept .concept-icon {
+  margin-bottom: 28px;
+}
+.s-big-concept .concept-icon img {
+  display: block;
+  width: auto;
+  height: 120px;
+  object-fit: contain;
+}
+.s-big-concept.transition .concept-icon img { margin: 0 auto; }
+
 .s-big-concept .sub,
 .s-big-concept .line,
 .s-big-concept .note {

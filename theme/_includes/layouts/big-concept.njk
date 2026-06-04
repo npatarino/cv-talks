@@ -4,6 +4,7 @@
 {% block slide %}
 {% set v = variant or "default" %}
 <section class="slide s-big-concept{% if v != 'default' %} {{ v }}{% endif %}" data-recipe="{{ recipe }}" data-label="{{ label }}">
+  {% if fields.icon and fields.icon.content %}<div class="concept-icon">{{ field(fields, "icon", effectiveMode) | safe }}</div>{% endif %}
   {% if v == "divider" %}
     <h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>
     {% if fields.sub %}<div class="sub">{{ field(fields, "sub", effectiveMode) | safe }}</div>{% endif %}

@@ -15,6 +15,12 @@ fields:
       var COLOR_DOT = [255, 255, 255];
       var COLOR_RED = [165, 18, 14];
       var MOUNT = document.getElementById('supernova-bg');
+      if (!MOUNT) return;
+      // Eleventy's dev server live-reloads by diffing the DOM (no full page
+      // reload), which re-runs this inline script. Without tearing down the
+      // previous run we'd stack a new canvas + ResizeObserver + rAF loop on
+      // every rebuild — a memory + CPU leak that drags the whole machine down.
+      if (MOUNT.__supernovaCleanup) MOUNT.__supernovaCleanup();
       var RAMP_MS = 22000, MIN_COUNT = 14, MAX_COUNT = 300, HOLD_MS = 900;
       var COLLAPSE_MS = 2600, RED_HOLD_MS = 1500;
       var CYCLE_MS = RAMP_MS + HOLD_MS + COLLAPSE_MS + RED_HOLD_MS;
@@ -37,7 +43,41 @@ fields:
       canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block';
       MOUNT.appendChild(canvas);
       var ctx = canvas.getContext('2d', { alpha: false });
-      var W = 0, H = 0, dpr = 1, particles = [], startTime = null, raf;
+      // In the editor preview and gallery thumbnails the slide is embedded in a
+      // same-site, non-sandboxed iframe, so it shares the editor's main thread.
+      // The full rAF particle sim would peg that thread and freeze the whole
+      // editor UI (no scroll, no focus). Those contexts load the slide with NO
+      // query params, whereas the real presentation always carries
+      // ?present=1 / &embedded=1 — so detect "embedded but not presenting" and
+      // render a cheap static starfield instead (no rAF, no per-frame work).
+      var inEditorPreview = (window.self !== window.top) &&
+      !/[?&](present|embedded)=/.test(location.search);
+      if (inEditorPreview) {
+      var drawStatic = function () {
+      var r = MOUNT.getBoundingClientRect();
+      var d = Math.min(window.devicePixelRatio || 1, 2);
+      var w = Math.max(1, Math.floor(r.width)), h = Math.max(1, Math.floor(r.height));
+      canvas.width = Math.floor(w * d); canvas.height = Math.floor(h * d);
+      ctx.setTransform(d, 0, 0, d, 0, 0);
+      ctx.fillStyle = 'rgb(' + BG.r + ',' + BG.g + ',' + BG.b + ')';
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      for (var i = 0; i < 70; i++) {
+      ctx.beginPath();
+      ctx.arc(Math.random() * w, Math.random() * h, 0.6 + Math.random() * 1.4, 0, 6.2832);
+      ctx.fill();
+      }
+      };
+      drawStatic();
+      var roStatic = new ResizeObserver(drawStatic); roStatic.observe(MOUNT);
+      MOUNT.__supernovaCleanup = function () {
+      roStatic.disconnect();
+      if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+      MOUNT.__supernovaCleanup = null;
+      };
+      return;
+      }
+      var W = 0, H = 0, dpr = 1, particles = [], startTime = null, raf = null, running = true;
       function makeParticle() {
       return {
       x: Math.random() * W, y: Math.random() * H, angle: Math.random() * Math.PI * 2,
@@ -67,7 +107,27 @@ fields:
       ctx.fillRect(0, 0, W, H);
       }
       var ro = new ResizeObserver(resize); ro.observe(MOUNT); resize(); syncCount(0);
+      function stop() {
+      running = false;
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      ro.disconnect();
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pagehide', stop);
+      if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+      MOUNT.__supernovaCleanup = null;
+      }
+      function onVisibility() {
+      if (document.hidden) {
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      } else if (running && !raf) {
+      startTime = null; raf = requestAnimationFrame(frame);
+      }
+      }
+      MOUNT.__supernovaCleanup = stop;
+      document.addEventListener('visibilitychange', onVisibility);
+      window.addEventListener('pagehide', stop);
       function frame(now) {
+      if (!running) return;
       if (startTime === null) startTime = now;
       var elapsed = now - startTime;
       if (elapsed > CYCLE_MS) {
@@ -83,7 +143,7 @@ fields:
       var breathe = (ft >= 1 && collapse === 0) ? 0.04 * Math.sin(now / 1400) : 0;
       var t = Math.min(1, Math.max(0, ft + breathe));
       syncCount(ft);
-      var speedMul = 1 + SPEED_GAIN * t;
+      var speedMul = 1 + SPEED_GAIN * Math.pow(t, 5);
       var trailAlpha = lerp(0.20, 0.075, t);
       if (collapse > 0) trailAlpha = lerp(0.075, 0.045, Math.min(1, collapse * 1.6));
       var fr = BG.r, fg = BG.g, fb = BG.b;
