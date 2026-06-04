@@ -4,7 +4,8 @@ recipe: cool-fresh
 label: La paradoja del Copilot
 variant: default
 fields:
-  title: { content: '<span class="title-icons"><img src="/talks/decks/2026-03-productividad-toxica/assets/ai-anthropic.png" alt="" class="title-icon"><img src="/talks/decks/2026-03-productividad-toxica/assets/ai-gemini.png" alt="" class="title-icon"></span><br>LA PARADOJA<br>DE&nbsp;<em>Claude</em>', meta: Title_Text }
+  icon: { content: '<span class="title-icons"><img src="/talks/decks/2026-03-productividad-toxica/assets/ai-anthropic.png" alt="" class="title-icon"><img src="/talks/decks/2026-03-productividad-toxica/assets/ai-gemini.png" alt="" class="title-icon"></span>', meta: Image_Src }
+  title: { content: 'LA PARADOJA<br>DE&nbsp;<em>Claude</em>', meta: Title_Text }
 notes: |
   ¿Les suena?
   Nos vendieron que las herramientas como Claude o Copilot nos harían tan eficientes que generaríamos el mismo software en menos tiempo. Ilusos llegamos a creer que tendríamos los viernes libres. Pero caímos en la trampa de Jevons.
