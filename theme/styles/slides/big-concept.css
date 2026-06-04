@@ -39,12 +39,19 @@ section.slide.s-big-concept {
   margin-bottom: 28px;
 }
 .s-big-concept .concept-icon img {
-  display: block;
+  display: inline-block;
   width: auto;
   height: 120px;
   object-fit: contain;
+  vertical-align: middle;
 }
-.s-big-concept.transition .concept-icon img { margin: 0 auto; }
+/* Several icons in a row (e.g. "Paradoja del Copilot") keep a small gap. */
+.s-big-concept .concept-icon .title-icons {
+  display: inline-flex;
+  gap: 0.15em;
+  vertical-align: middle;
+}
+.s-big-concept.transition .concept-icon { text-align: center; }
 
 .s-big-concept .sub,
 .s-big-concept .line,

@@ -4,6 +4,7 @@ recipe: canvas-quiet
 label: Concorde
 variant: divider
 fields:
-  title: { content: '<img src="/talks/decks/2026-03-productividad-toxica/assets/icon-concorde.png" alt="" class="title-icon"><br>Concorde', meta: Title_Text }
+  icon: { content: '<img src="/talks/decks/2026-03-productividad-toxica/assets/icon-concorde.png" alt="" class="title-icon">', meta: Image_Src }
+  title: { content: 'Concorde', meta: Title_Text }
   sub: { content: "", meta: Subtitle_Text }
 ---

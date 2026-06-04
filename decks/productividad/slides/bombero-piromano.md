@@ -4,7 +4,8 @@ recipe: critical
 label: El bombero pirómano
 variant: divider
 fields:
-  title: { content: '<img src="/talks/decks/productividad/assets/icon-fire.png" alt="" class="title-icon"><br>EL BOMBERO<br><em>PIRÓMANO</em>.', meta: Title_Text }
+  icon: { content: '<img src="/talks/decks/productividad/assets/icon-fire.png" alt="" class="title-icon">', meta: Image_Src }
+  title: { content: 'EL BOMBERO<br><em>PIRÓMANO</em>.', meta: Title_Text }
   sub: { content: 'Dejás frágil el deploy del viernes. El lunes 9:00 se cae prod… y solo vos sabés en qué orden reiniciar los servicios.', meta: Subtitle_Text }
 notes: |
   Y así te convertís en el bombero pirómano.
