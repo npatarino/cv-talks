@@ -1,3 +1,11 @@
+---
+title: Script — El mito de la productividad tóxica (slides 1–22)
+tags: [charlas, productividad, script, speaker-notes]
+eleventyExcludeFromCollections: true
+permalink: false
+layout: ""
+---
+
 # Script — El mito de la productividad tóxica (slides 1–22)
 
 > Notas de speaker exportadas desde el deck `productividad`. Cubre desde la portada hasta la slide 22 ("Productividad ≠ Código"). Corresponde a las secciones **Atención** (slides 1–6) y parte de **Necesidad** (slides 7–24) de la estructura ANSVA.

@@ -12,25 +12,25 @@
         "id": "N",
         "label": "Necesidad",
         "start": 7,
-        "end": 24
+        "end": 35
       },
       {
         "id": "S",
         "label": "Solución",
-        "start": 25,
-        "end": 49
+        "start": 36,
+        "end": 59
       },
       {
         "id": "V",
         "label": "Visualización",
-        "start": 50,
-        "end": 66
+        "start": 60,
+        "end": 71
       },
       {
         "id": "A2",
         "label": "Acción",
-        "start": 67,
-        "end": 73
+        "start": 72,
+        "end": 78
       }
     ]
   },
@@ -58,6 +58,17 @@
     "paradoja-copilot.md",
     "productividad-no-codigo.md",
     "scientificos-jurassic-park.md",
+    "terry-childs.md",
+    "10m.md",
+    "bus-factor.md",
+    "bus-factor-icons.md",
+    "empresa-ego.md",
+    "heroe-capa.md",
+    "kudos-publicos.md",
+    "bombero-piromano.md",
+    "insostenibles.md",
+    "heroe-gris.md",
+    "reducir-protagonismo.md",
     "bebe.md",
     "recurring-quote-2.md",
     "moneyball.md",
@@ -70,7 +81,6 @@
     "pregunta-dependencias.md",
     "pregunta-trabajo-extra.md",
     "pregunta-personas.md",
-    "bus-factor-icons.md",
     "pregunta-ticket.md",
     "dx-core-4.md",
     "dx-core-4-detalle.md",
@@ -95,11 +105,6 @@
     "mas-15h.md",
     "no-siempre-se-ve.md",
     "capa-de-ozono.md",
-    "terry-childs.md",
-    "10m.md",
-    "heroe-capa.md",
-    "heroe-gris.md",
-    "reducir-protagonismo.md",
     "practicas-compartir.md",
     "recurring-quote-4.md",
     "cohete.md",

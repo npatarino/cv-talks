@@ -488,7 +488,8 @@ async function revertSlide() {
         const key = field.slice('fields.'.length);
         const fieldObj = slide.data.fields?.[key];
         const freshValue = typeof fieldObj === 'object' ? (fieldObj?.content ?? '') : String(fieldObj ?? '');
-        if (rteEl.innerHTML !== freshValue) rteEl.innerHTML = freshValue;
+        const display = toEditorHTML(freshValue);
+        if (rteEl.innerHTML !== display) rteEl.innerHTML = display;
       }
     });
 
@@ -505,6 +506,14 @@ async function revertSlide() {
 
 // ---- Form rendering ----
 
+// Fields a template supports but a slide may not carry yet. They're surfaced
+// (empty) in the editor so the user can add them without hand-editing the .md.
+// Empty values are dropped on save (see collectFormData) so the markdown stays
+// clean for slides that don't use them.
+const TEMPLATE_OPTIONAL_FIELDS = {
+  'big-concept': { icon: { content: '', meta: 'Image_Src' } },
+};
+
 function renderForm(slide) {
   const { data } = slide;
   dom.formBody.innerHTML = '';
@@ -518,11 +527,28 @@ function renderForm(slide) {
   // Fields-based content — rich text editor
   if (data.fields && typeof data.fields === 'object') {
     addSection('Fields');
-    for (const [key, fieldObj] of Object.entries(data.fields)) {
+
+    // Surface template-optional fields the slide doesn't have yet (e.g. the
+    // big-concept `icon`), rendered first so they sit above the title — which
+    // is exactly where they render on the slide.
+    const optional = TEMPLATE_OPTIONAL_FIELDS[data.template] || {};
+    const entries = [
+      ...Object.entries(optional).filter(([k]) => !(k in data.fields)),
+      ...Object.entries(data.fields),
+    ];
+
+    for (const [key, fieldObj] of entries) {
       const content = typeof fieldObj === 'object' ? (fieldObj?.content ?? '') : String(fieldObj ?? '');
       const meta = typeof fieldObj === 'object' ? (fieldObj?.meta ?? key) : key;
-      const rte = mkRichTextEditor(`fields.${key}`, content, state.currentDeck, meta);
-      const wrapper = addField(key, rte);
+      // Raw HTML/JS blocks (animated backgrounds, embeds, positioned markup)
+      // must NOT go through the contenteditable RTE: a `position:absolute`
+      // child escapes into the panel as an invisible overlay that swallows all
+      // pointer events (freezing the whole editor), and cleanHTML() would strip
+      // its style/script on save. Edit those as plain code instead.
+      const input = isRawHtmlField(content, meta)
+        ? mkTextarea(`fields.${key}`, content)
+        : mkRichTextEditor(`fields.${key}`, content, state.currentDeck, meta);
+      const wrapper = addField(key, input);
       if (meta !== key) {
         const m = document.createElement('span');
         m.className = 'field-meta';
@@ -678,7 +704,21 @@ function mkTextarea(field, value) {
   el.dataset.field = field;
   el.value = value ?? '';
   el.className = 'code-field';
+  el.rows = 6;
+  el.spellcheck = false;
   return el;
+}
+
+/**
+ * True when a field's content is a raw HTML/JS block rather than rich text.
+ * Such content (animated backgrounds, embeds, absolutely/fixed-positioned
+ * markup, <script>/<style>/<iframe>) breaks the contenteditable RTE — both
+ * visually (overlay capturing pointer events) and on save (cleanHTML strips
+ * style/script). These fields are edited as plain code in a textarea.
+ */
+function isRawHtmlField(content, meta) {
+  return meta === 'Image_Background'
+    || /<script\b|<style\b|<iframe\b|position\s*:\s*(absolute|fixed)/i.test(content || '');
 }
 
 function mkSelect(field, options, current) {
@@ -968,6 +1008,14 @@ async function openIconBrowser(deckSlug, onComplete) {
     }
   }
 
+  // Icons/images already imported into this deck — re-fetched each open since
+  // they may have changed. These can be reused without re-uploading.
+  let deckIcons = [];
+  if (deckSlug) {
+    const assets = await apiFetch(`/api/decks/${deckSlug}/assets`).catch(() => []);
+    deckIcons = (assets || []).filter(f => IMAGE_EXT_RE.test(f));
+  }
+
   const backdrop = document.createElement('div');
   backdrop.className = 'modal-backdrop';
 
@@ -999,16 +1047,63 @@ async function openIconBrowser(deckSlug, onComplete) {
 
   function renderIcons(query) {
     container.innerHTML = '';
-    
-    // Group by category
+    const q = query ? query.toLowerCase() : '';
+    let renderedAny = false;
+
+    // Deck-imported icons first — selectable without re-uploading.
+    const matchingDeckIcons = deckIcons.filter(
+      f => !q || f.toLowerCase().includes(q),
+    );
+    if (matchingDeckIcons.length) {
+      renderedAny = true;
+      const section = document.createElement('div');
+      section.className = 'icon-category-section';
+
+      const title = document.createElement('h3');
+      title.textContent = 'In this deck';
+      section.appendChild(title);
+
+      const grid = document.createElement('div');
+      grid.className = 'icon-browser-grid';
+
+      for (const filename of matchingDeckIcons) {
+        const item = document.createElement('div');
+        item.className = 'icon-browser-item';
+        item.title = filename;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'icon-svg-wrapper';
+        const img = document.createElement('img');
+        img.src = `http://localhost:8080/talks/decks/${deckSlug}/assets/${filename}`;
+        img.alt = filename;
+        wrapper.appendChild(img);
+
+        const label = document.createElement('span');
+        label.textContent = filename.replace(/\.[^.]+$/, '');
+
+        item.appendChild(wrapper);
+        item.appendChild(label);
+
+        item.addEventListener('click', () => {
+          onComplete(filename);
+          backdrop.remove();
+        });
+
+        grid.appendChild(item);
+      }
+      section.appendChild(grid);
+      container.appendChild(section);
+    }
+
+    // Group design-system icons by category
     const grouped = {};
     for (const icon of iconBrowserData) {
-      if (query && !icon.filename.toLowerCase().includes(query.toLowerCase()) && !icon.category.toLowerCase().includes(query.toLowerCase())) continue;
+      if (q && !icon.filename.toLowerCase().includes(q) && !icon.category.toLowerCase().includes(q)) continue;
       if (!grouped[icon.category]) grouped[icon.category] = [];
       grouped[icon.category].push(icon);
     }
 
-    if (Object.keys(grouped).length === 0) {
+    if (!renderedAny && Object.keys(grouped).length === 0) {
       container.innerHTML = '<p class="empty-state">No icons found.</p>';
       return;
     }
@@ -1071,6 +1166,17 @@ async function openIconBrowser(deckSlug, onComplete) {
 
 // ---- Rich text editor ----
 
+// The editor server (:3001) does not serve /talks assets — only Eleventy
+// (:8080) does. Slide HTML stores asset URLs as relative `/talks/...` paths so
+// the built site resolves them, but inside the contenteditable we must point
+// them at the Eleventy origin or the <img> renders broken.
+const PREVIEW_ORIGIN = 'http://localhost:8080';
+
+/** Stored slide HTML → editor-renderable HTML (absolutize asset URLs). */
+function toEditorHTML(html) {
+  return (html ?? '').replace(/(<img\b[^>]*\bsrc=")\/talks\//gi, `$1${PREVIEW_ORIGIN}/talks/`);
+}
+
 function mkRichTextEditor(field, htmlValue, deckSlug, meta) {
   const isImageOnly = meta === 'Image_Src';
   const wrapper = document.createElement('div');
@@ -1112,7 +1218,8 @@ function mkRichTextEditor(field, htmlValue, deckSlug, meta) {
   editor.className = 'rte-editor' + (isImageOnly ? ' rte-editor--image-only' : '');
   editor.contentEditable = isImageOnly ? 'false' : 'true';
   editor.dataset.field = field;
-  editor.innerHTML = htmlValue ?? '';
+  if (meta) editor.dataset.meta = meta;
+  editor.innerHTML = toEditorHTML(htmlValue);
 
   // Keep a saved selection reference for when picker opens
   let savedRange = null;
@@ -1237,34 +1344,84 @@ function mkRichTextEditor(field, htmlValue, deckSlug, meta) {
     pickerEl = document.createElement('div');
     pickerEl.className = 'asset-picker';
 
+    const search = document.createElement('input');
+    search.type = 'text';
+    search.className = 'asset-picker-search';
+    search.placeholder = 'Search by name…';
+
     const grid = document.createElement('div');
     grid.className = 'asset-grid';
 
     function insertAsset(filename) {
-      restoreSelection();
-      const imgTag = buildAssetInsertHTML(buildAssetSrc(deckSlug, filename));
-      document.execCommand('insertHTML', false, imgTag);
+      const html = toEditorHTML(buildAssetInsertHTML(buildAssetSrc(deckSlug, filename)));
+
+      // Image-only fields (e.g. the big-concept `icon`) hold a single image —
+      // replace whatever's there rather than appending.
+      if (isImageOnly) {
+        editor.innerHTML = html;
+        markUnsaved();
+        closePicker();
+        return;
+      }
+
+      // Insert via the Range API rather than execCommand: the latter silently
+      // does nothing when the editor isn't the focused element (e.g. after the
+      // icon-browser modal closed), which is exactly when picks were getting
+      // lost — never inserted, never saved.
+      editor.focus();
+      const sel = window.getSelection();
+      const range = (savedRange && editor.contains(savedRange.commonAncestorContainer))
+        ? savedRange
+        : null;
+
+      if (range) {
+        sel.removeAllRanges();
+        sel.addRange(range);
+        range.deleteContents();
+        const frag = range.createContextualFragment(html);
+        const last = frag.lastChild;
+        range.insertNode(frag);
+        if (last) {
+          const after = document.createRange();
+          after.setStartAfter(last);
+          after.collapse(true);
+          sel.removeAllRanges();
+          sel.addRange(after);
+          savedRange = after.cloneRange();
+        }
+      } else {
+        editor.insertAdjacentHTML('beforeend', html);
+      }
+
       markUnsaved();
       closePicker();
     }
 
-    // Action tiles (upload, paste) come first
-    buildAssetActionTiles(deckSlug, filename => insertAsset(filename))
-      .forEach(tile => grid.appendChild(tile));
+    function renderGrid(query) {
+      grid.innerHTML = '';
+      // Action tiles (upload, paste, icons) come first
+      buildAssetActionTiles(deckSlug, filename => insertAsset(filename))
+        .forEach(tile => grid.appendChild(tile));
 
-    assets.forEach(filename => {
-      const src = `/talks/decks/${deckSlug}/assets/${filename}`;
-      const item = document.createElement('div');
-      item.className = 'asset-item';
-      item.title = filename;
-      item.innerHTML = `<img src="http://localhost:8080${src}" alt="${filename}"><span>${filename}</span>`;
-      item.addEventListener('mousedown', e => {
-        e.preventDefault();
-        insertAsset(filename);
+      const q = query ? query.toLowerCase() : '';
+      assets.filter(f => !q || f.toLowerCase().includes(q)).forEach(filename => {
+        const src = `/talks/decks/${deckSlug}/assets/${filename}`;
+        const item = document.createElement('div');
+        item.className = 'asset-item';
+        item.title = filename;
+        item.innerHTML = `<img src="http://localhost:8080${src}" alt="${filename}"><span>${filename}</span>`;
+        item.addEventListener('mousedown', e => {
+          e.preventDefault();
+          insertAsset(filename);
+        });
+        grid.appendChild(item);
       });
-      grid.appendChild(item);
-    });
+    }
 
+    search.addEventListener('input', () => renderGrid(search.value));
+    renderGrid('');
+
+    pickerEl.appendChild(search);
     pickerEl.appendChild(grid);
 
     // Position below the toolbar button
@@ -1325,6 +1482,8 @@ function cleanHTML(html) {
     .replace(/(<br\s*\/?>\s*)+$/, '')
     // Remove style attributes added by execCommand
     .replace(/ style="[^"]*"/gi, '')
+    // Re-relativize asset URLs that were absolutized for in-editor rendering
+    .replace(/(<img\b[^>]*\bsrc=")https?:\/\/localhost:8080\//gi, '$1/')
     .trim();
 }
 
@@ -1399,8 +1558,6 @@ function mkGlyphInput(rawValue, deckSlug) {
 
     pickerEl = document.createElement('div');
     pickerEl.className = 'asset-picker';
-    const grid = document.createElement('div');
-    grid.className = 'asset-grid';
 
     function pickAsset(filename) {
       input.value = filename;
@@ -1410,21 +1567,40 @@ function mkGlyphInput(rawValue, deckSlug) {
       if (outsideClick) document.removeEventListener('mousedown', outsideClick);
     }
 
-    buildAssetActionTiles(deckSlug, filename => pickAsset(filename))
-      .forEach(tile => grid.appendChild(tile));
+    const search = document.createElement('input');
+    search.type = 'text';
+    search.className = 'asset-picker-search';
+    search.placeholder = 'Search by name…';
 
-    assets.forEach(filename => {
-      const item2 = document.createElement('div');
-      item2.className = 'asset-item';
-      item2.title = filename;
-      item2.innerHTML = `<img src="http://localhost:8080/talks/decks/${deckSlug}/assets/${filename}" alt="${filename}"><span>${filename}</span>`;
-      item2.addEventListener('click', () => pickAsset(filename));
-      grid.appendChild(item2);
-    });
+    const grid = document.createElement('div');
+    grid.className = 'asset-grid';
+
+    function renderGrid(query) {
+      grid.innerHTML = '';
+      buildAssetActionTiles(deckSlug, filename => pickAsset(filename))
+        .forEach(tile => grid.appendChild(tile));
+
+      const q = query ? query.toLowerCase() : '';
+      const matching = assets.filter(f => !q || f.toLowerCase().includes(q));
+      matching.forEach(filename => {
+        const item2 = document.createElement('div');
+        item2.className = 'asset-item';
+        item2.title = filename;
+        item2.innerHTML = `<img src="http://localhost:8080/talks/decks/${deckSlug}/assets/${filename}" alt="${filename}"><span>${filename}</span>`;
+        item2.addEventListener('click', () => pickAsset(filename));
+        grid.appendChild(item2);
+      });
+    }
+
+    search.addEventListener('input', () => renderGrid(search.value));
+    renderGrid('');
+
+    pickerEl.appendChild(search);
     pickerEl.appendChild(grid);
     const btnRect = pickerBtn.getBoundingClientRect();
     pickerEl.style.cssText = `position:fixed;top:${btnRect.bottom + 4}px;left:${Math.min(btnRect.left, window.innerWidth - 270)}px;z-index:200`;
     document.body.appendChild(pickerEl);
+    search.focus();
     outsideClick = e => { if (pickerEl && !pickerEl.contains(e.target)) { pickerEl.remove(); pickerEl = null; document.removeEventListener('mousedown', outsideClick); } };
     setTimeout(() => document.addEventListener('mousedown', outsideClick), 0);
   });
@@ -1559,9 +1735,15 @@ function collectFormData() {
       const key = field.slice('fields.'.length);
       if (!newData.fields) newData.fields = {};
       const old = existing.fields?.[key];
-      newData.fields[key] = (typeof old === 'object' && old !== null)
-        ? { ...old, content: val }
-        : val;
+      if (typeof old === 'object' && old !== null) {
+        newData.fields[key] = { ...old, content: val };
+      } else if (el.dataset.meta) {
+        // Newly-added field (not in the slide before): keep the { content, meta }
+        // shape templates expect, using the meta carried by the editor element.
+        newData.fields[key] = { content: val, meta: el.dataset.meta };
+      } else {
+        newData.fields[key] = val;
+      }
     } else if (field === 'mode' && val === '') {
       delete newData.mode;
     } else {
@@ -1594,6 +1776,15 @@ function collectFormData() {
       });
       return item;
     });
+  }
+
+  // Drop empty template-optional fields so slides that don't use them (e.g. a
+  // big-concept without an icon) don't accumulate blank entries in the .md.
+  const optional = TEMPLATE_OPTIONAL_FIELDS[newData.template] || {};
+  for (const k of Object.keys(optional)) {
+    const f = newData.fields?.[k];
+    const content = (f && typeof f === 'object') ? (f.content ?? '') : (f ?? '');
+    if (newData.fields && !String(content).trim()) delete newData.fields[k];
   }
 
   return newData;

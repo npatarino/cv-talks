@@ -11,5 +11,5 @@ fields:
 notes: |
   Y esto es lo que veo que está pasando mucho. Como es tan fácil y tan barato escribir código, no nos paramos a pensar si debemos hacer esa feature, o si es necesario todo el código que nos está metiendo Claude, o Codex, o GPT 5.5.
   Abrimos nuestro IDE favorito, generamos tres microservicios, metemos un par de patrones de diseño, escribimos tests que realmente no están testeando lo importante, pero eso sí, al mediodía creamos nuestra PR de 2000 líneas de código y pensamos... Qué tipo productivo que soy la pucha, qué cerca estoy de que me asciendan.
-  Nos obsesionamos tanto con el 'podemos' porque la IA nos hizo veloces, pero nos olvidamos por completo del debemos.
+  Nos obsesionamos tanto con el 'podemos' porque la IA nos hizo veloces, que nos olvidamos por completo si debemos.
 ---

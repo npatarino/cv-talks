@@ -5,6 +5,7 @@ order: 4
 label: "Big-concept · default"
 variant: default
 fields:
+  icon:    { content: "", meta: "Image_Src" }
   title:   { content: "Hacer menos,<br><em>mejor</em>.", meta: "Title_Text" }
   note:    { content: "El mayor impacto con el menor esfuerzo para mantenerlo.", meta: "Body_Text" }
 ---

@@ -954,9 +954,22 @@ button { cursor: pointer; font-family: inherit; font-size: 13px; }
   color: var(--text-primary);
   background: var(--bg-raised);
   outline: none;
-  overflow-y: auto;
+  overflow: auto;
   max-height: 180px;
   word-break: break-word;
+  /* Containment: if any positioned markup slips into a field, keep it boxed
+     inside this editor so it can never overlay the rest of the editor UI and
+     swallow pointer events (which would freeze clicks/scroll/focus). */
+  position: relative;
+  contain: layout paint;
+}
+
+/* Defensive: neutralize escaping positioned children inside an RTE field. */
+.rte-editor [style*="position:absolute"],
+.rte-editor [style*="position: absolute"],
+.rte-editor [style*="position:fixed"],
+.rte-editor [style*="position: fixed"] {
+  position: static !important;
 }
 
 .rte-editor em    { font-style: italic; color: #ddd; }
@@ -1024,6 +1037,22 @@ button { cursor: pointer; font-family: inherit; font-size: 13px; }
   width: 260px;
   max-height: 280px;
   overflow-y: auto;
+}
+
+.asset-picker-search {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+.asset-picker-search:focus {
+  outline: none;
+  border-color: var(--border-focus, var(--accent));
 }
 
 .asset-grid {
@@ -1255,6 +1284,12 @@ button { cursor: pointer; font-family: inherit; font-size: 13px; }
   width: 100%;
   height: 100%;
   fill: currentColor;
+}
+
+.icon-svg-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .icon-browser-item span {
