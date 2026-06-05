@@ -187,6 +187,32 @@ async function selectSlide(filename) {
   updateSlideActions();
 }
 
+/**
+ * True when ArrowUp/ArrowDown should move the slide selection: a slide is
+ * selected, focus isn't in a text field/contenteditable, and no modal or
+ * picker is open (so we don't hijack their own keyboard handling).
+ */
+function canNavigateSlides(e) {
+  if (!state.selectedFilename || !state.slides?.length) return false;
+  const el = e.target;
+  const tag = el?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return false;
+  if (!dom.modalAdd.hidden || !dom.modalConfirm.hidden) return false;
+  if (document.querySelector('.icon-browser-modal, .asset-picker, .context-menu')) return false;
+  return true;
+}
+
+/** Move the slide selection by `delta` (e.g. -1 up, +1 down) and reveal it. */
+async function navigateSlides(delta) {
+  const idx = state.slides.findIndex(s => s.filename === state.selectedFilename);
+  if (idx === -1) return;
+  const nextIdx = idx + delta;
+  if (nextIdx < 0 || nextIdx >= state.slides.length) return;
+  await selectSlide(state.slides[nextIdx].filename);
+  const el = dom.slideList.querySelector('.slide-item.selected');
+  if (el) el.scrollIntoView({ block: 'nearest' });
+}
+
 function updatePreview(slide) {
   dom.previewLabel.textContent = `${slide.data.order}. ${slide.data.label}`;
   dom.previewPlaceholder.style.display = 'none';
@@ -2344,6 +2370,12 @@ function wireEvents() {
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); if (!dom.btnSave.disabled) saveCurrentSlide(); }
     if (e.key === 'Escape') closeModals();
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      if (canNavigateSlides(e)) {
+        e.preventDefault();
+        navigateSlides(e.key === 'ArrowDown' ? 1 : -1);
+      }
+    }
   });
 
   // Speaker notes: toggle collapse
