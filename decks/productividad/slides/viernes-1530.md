@@ -1,6 +1,6 @@
 ---
 template: big-concept
-recipe: critical
+recipe: energy-loud
 label: 'Portada · Viernes 15:30'
 variant: disclaimer
 fields:

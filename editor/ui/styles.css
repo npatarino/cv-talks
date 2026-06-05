@@ -1213,6 +1213,28 @@ button { cursor: pointer; font-family: inherit; font-size: 13px; }
   gap: 12px;
 }
 
+.icon-browser-close {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  background: var(--bg-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.icon-browser-close:hover {
+  background: var(--red-dim, var(--bg-hover));
+  border-color: var(--red, var(--border));
+  color: var(--red, var(--text-primary));
+}
+
 .icon-search-input {
   flex: 1;
   padding: 8px 12px;
