@@ -14,7 +14,7 @@
         "label": "Necesidad",
         "description": "Los tres problemas principales que quiero mostrar.",
         "start": 7,
-        "end": 33,
+        "end": 30,
         "children": [
           {
             "id": "P1",
@@ -35,7 +35,7 @@
             "label": "Sos un héroe",
             "description": "Sos un héroe.",
             "start": 24,
-            "end": 33
+            "end": 30
           }
         ]
       },
@@ -43,7 +43,7 @@
         "id": "S",
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
-        "start": 34,
+        "start": 31,
         "end": 57
       },
       {
@@ -93,17 +93,16 @@
     "heroe-capa.md",
     "kudos-publicos.md",
     "bombero-piromano.md",
-    "insostenibles.md",
-    "heroe-gris.md",
-    "reducir-protagonismo.md",
     "recurring-quote-2.md",
     "moneyball.md",
-    "automatizacion.md",
-    "automatizacion-plan.md",
     "concorde.md",
     "objetivos-automatizacion.md",
     "icon-sesgo-de-supervivencias.md",
+    "automatizacion-plan.md",
     "pregunta-idea.md",
+    "heroe-gris.md",
+    "automatizacion.md",
+    "reducir-protagonismo.md",
     "pregunta-dependencias.md",
     "pregunta-trabajo-extra.md",
     "pregunta-personas.md",
@@ -119,6 +118,7 @@
     "disclaimer-trabajar-inteligente.md",
     "heroe-arquitecto.md",
     "cargando-0.md",
+    "insostenibles.md",
     "cadena-1.md",
     "cadena-2.md",
     "cadena-3.md",
