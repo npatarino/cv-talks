@@ -2330,24 +2330,24 @@ function openSlideContextMenu(x, y, filename) {
 
 async function duplicateSlide(filename) {
   try {
-    const slide = await apiFetch(`/api/decks/${state.deckSlug}/slides/${filename}`);
+    const slide = await apiFetch(`/api/decks/${state.currentDeck}/slides/${filename}`);
     if (!slide) return;
-    
+
     const idx = state.slides.findIndex(s => s.filename === filename);
     const pos = idx !== -1 ? idx + 2 : undefined;
-    
-    const res = await apiFetch(`/api/decks/${state.deckSlug}/slides`, {
+
+    const res = await apiFetch(`/api/decks/${state.currentDeck}/slides`, {
       method: 'POST',
       body: JSON.stringify({
         ...slide.data,
         slug: filename.replace(/\.md$/, ''),
-        position: pos
-      })
+        position: pos,
+      }),
     });
-    await fetchSlides();
+    await loadSlides();
     selectSlide(res.filename);
   } catch (err) {
-    showToast('Failed to duplicate slide: ' + err.message);
+    toast('Failed to duplicate slide: ' + err.message, 'error');
   }
 }
 

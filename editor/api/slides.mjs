@@ -74,6 +74,12 @@ export function createSlide(slug, opts, decksRoot) {
   if (opts.items) data.items = opts.items;
   else if (scaffold?.items) data.items = scaffold.items;
 
+  // Carry over optional top-level keys when provided (e.g. duplicating a slide
+  // should preserve its speaker notes, mode override, and flags like iconTint).
+  if (opts.notes != null) data.notes = opts.notes;
+  if (opts.mode != null) data.mode = opts.mode;
+  if (opts.iconTint != null) data.iconTint = opts.iconTint;
+
   // Write the new file temporarily with a high order number, then renumber all
   const tempOrder = slides.length + 99;
   const tempFilename = buildFilename(tempOrder, slideSlug);
