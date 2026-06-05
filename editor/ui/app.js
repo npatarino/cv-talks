@@ -1031,9 +1031,23 @@ async function openIconBrowser(deckSlug, onComplete) {
   searchInput.className = 'icon-search-input';
 
   const closeBtn = document.createElement('button');
+  closeBtn.type = 'button';
   closeBtn.textContent = '✕';
-  closeBtn.className = 'btn-icon';
-  closeBtn.onclick = () => backdrop.remove();
+  closeBtn.className = 'icon-browser-close';
+  closeBtn.title = 'Close (Esc)';
+  closeBtn.setAttribute('aria-label', 'Close');
+
+  function closeModal() {
+    backdrop.remove();
+    document.removeEventListener('keydown', onKeydown);
+  }
+  function onKeydown(e) {
+    if (e.key === 'Escape') { e.preventDefault(); closeModal(); }
+  }
+  closeBtn.onclick = closeModal;
+  // Click on the dimmed area outside the modal closes it.
+  backdrop.addEventListener('mousedown', e => { if (e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', onKeydown);
 
   header.appendChild(searchInput);
   header.appendChild(closeBtn);
@@ -1086,7 +1100,7 @@ async function openIconBrowser(deckSlug, onComplete) {
 
         item.addEventListener('click', () => {
           onComplete(filename);
-          backdrop.remove();
+          closeModal();
         });
 
         grid.appendChild(item);
@@ -1144,7 +1158,7 @@ async function openIconBrowser(deckSlug, onComplete) {
             const filename = await uploadAssetForDeck(deckSlug, blob, 'image/svg+xml', icon.filename);
             if (filename) {
               onComplete(filename);
-              backdrop.remove();
+              closeModal();
             }
           } catch (e) {
             toast('Failed to import icon: ' + e.message, 'error');

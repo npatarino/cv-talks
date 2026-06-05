@@ -38,11 +38,19 @@ section.slide.s-big-concept {
 .s-big-concept .concept-icon {
   margin-bottom: 28px;
 }
-.s-big-concept .concept-icon img {
+/* Icon tinted to the recipe ink: the source image is used as a mask and the
+   shape is painted with --recipe-ink, so it always matches the title color. */
+.s-big-concept .concept-icon-tint {
   display: inline-block;
-  width: auto;
+  width: 120px;
   height: 120px;
-  object-fit: contain;
+  background-color: var(--recipe-ink);
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-size: contain;
+          mask-size: contain;
   vertical-align: middle;
 }
 /* Several icons in a row (e.g. "Paradoja del Copilot") keep a small gap. */
