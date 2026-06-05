@@ -5,12 +5,13 @@
 {% set v = variant or "default" %}
 <section class="slide s-big-concept{% if v != 'default' %} {{ v }}{% endif %}" data-recipe="{{ recipe }}" data-label="{{ label }}">
   {% if fields.icon and fields.icon.content %}
-    {%- if effectiveMode == "meta" -%}
-  <div class="concept-icon">{{ field(fields, "icon", effectiveMode) | safe }}</div>
-    {%- else -%}
-  {# Tint the icon to the recipe ink color: turn each <img> into a masked span
-     so any SVG/PNG renders as a solid silhouette in --recipe-ink. #}
+    {%- if iconTint and effectiveMode != "meta" -%}
+  {# Opt-in tint: turn each <img> into a masked span so the icon renders as a
+     solid silhouette in --recipe-ink (matches the title color). #}
   <div class="concept-icon">{{ fields.icon.content | replace(r/<img\b[^>]*?src="([^"]+)"[^>]*>/g, '<span class="concept-icon-tint" style="-webkit-mask-image:url($1);mask-image:url($1)"></span>') | safe }}</div>
+    {%- else -%}
+  {# Default: keep each icon's own colors. #}
+  <div class="concept-icon">{{ field(fields, "icon", effectiveMode) | safe }}</div>
     {%- endif -%}
   {% endif %}
   {% if v == "divider" %}

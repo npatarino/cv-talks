@@ -11,6 +11,7 @@ import { spawnSync } from 'node:child_process';
 import { listDecks, listTemplateSlides, deckDir, TALKS_ROOT } from './decks.mjs';
 import { exportDeckPdf } from './pdf.mjs';
 import { uploadAsset } from './assets.mjs';
+import { getSlideDir } from './renumber.mjs';
 import {
   listSlides,
   getSlide,
@@ -110,7 +111,10 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     const [, rawSlug] = assetsMatch;
     const slug = validSlug(rawSlug);
     if (!slug) return err('Invalid deck slug', 400);
-    const dir = path.join(deckDir(slug, decksRoot), 'assets');
+    // Assets live alongside the slides (decks/<slug>/slides/assets), which is
+    // also where uploadAsset writes them — mirror getSlideDir so the listing
+    // matches what's actually on disk.
+    const dir = path.join(getSlideDir(deckDir(slug, decksRoot)), 'assets');
     try {
       const files = fs.readdirSync(dir)
         .filter(f => /\.(png|jpg|jpeg|svg|gif|webp|avif)$/i.test(f))

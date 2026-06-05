@@ -207,6 +207,51 @@ body { height: 100vh; overflow: hidden; }
   font-size: 10px;
 }
 
+/* Nested sub-section header (e.g. the problems inside Necesidad) */
+.section-header.sub {
+  border-top: none;
+  margin-top: 0;
+  padding: 4px 12px 4px 26px;
+}
+.section-badge.sub {
+  width: auto;
+  min-width: 18px;
+  height: 16px;
+  padding: 0 5px;
+  font-size: 9px;
+  opacity: 0.85;
+}
+.section-header.sub .section-name {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+}
+
+/* Section hover tooltip with the description */
+.section-tooltip {
+  position: fixed;
+  z-index: 400;
+  max-width: 260px;
+  padding: 8px 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.section-tooltip strong {
+  font-size: 12px;
+  color: var(--text-primary);
+}
+.section-tooltip span {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--text-secondary);
+}
+
 .drag-handle {
   cursor: grab;
   color: var(--text-muted);
@@ -468,6 +513,46 @@ body { height: 100vh; overflow: hidden; }
   font-size: 11px;
   color: var(--text-secondary);
   font-weight: 500;
+}
+
+/* Toggle switch (checkbox) — laid out inline with its label. */
+.form-field:has(.switch-input) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.switch-input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.switch-input::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  transition: transform 0.15s, background 0.15s;
+}
+.switch-input:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.switch-input:checked::after {
+  transform: translateX(16px);
+  background: #fff;
 }
 
 .field-meta {

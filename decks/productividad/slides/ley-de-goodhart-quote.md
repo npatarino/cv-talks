@@ -4,7 +4,7 @@ recipe: energy-loud
 label: Ley de Goodhart Quote
 variant: default
 fields:
-  quote: { content: 'When a metric becomes a <em>target</em>, it ceases to be a good measure.', meta: Quote_Text }
+  quote: { content: 'Cuando una métrica se convierte en el <em>objetivo principal</em>, deja de ser una buena medida.', meta: Quote_Text }
   who: { content: Charles Goodhart, meta: Quote_Attribution }
 notes: |
   Hay un economista inglés, Charles Goodhart, que definió lo que Cuando una métrica se convierte en el objetivo principal, deja de ser una buena medida.

@@ -38,8 +38,16 @@ section.slide.s-big-concept {
 .s-big-concept .concept-icon {
   margin-bottom: 28px;
 }
-/* Icon tinted to the recipe ink: the source image is used as a mask and the
-   shape is painted with --recipe-ink, so it always matches the title color. */
+/* Default: the icon keeps its own colors. */
+.s-big-concept .concept-icon img {
+  display: inline-block;
+  width: auto;
+  height: 120px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+/* Opt-in tint: the source image is used as a mask and the shape is painted
+   with --recipe-ink, so it matches the title color. */
 .s-big-concept .concept-icon-tint {
   display: inline-block;
   width: 120px;
