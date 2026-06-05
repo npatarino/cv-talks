@@ -5,30 +5,58 @@
       {
         "id": "A1",
         "label": "Atención",
+        "description": "Mi historia que refleja mi mala perspectiva.",
         "start": 1,
         "end": 6
       },
       {
         "id": "N",
         "label": "Necesidad",
+        "description": "Los tres problemas principales que quiero mostrar.",
         "start": 7,
-        "end": 34
+        "end": 34,
+        "children": [
+          {
+            "id": "P1",
+            "label": "Problema 1",
+            "description": "Perseguimos malas métricas.",
+            "start": 13,
+            "end": 16
+          },
+          {
+            "id": "P2",
+            "label": "Problema 2",
+            "description": "El código no es un activo.",
+            "start": 17,
+            "end": 22
+          },
+          {
+            "id": "P3",
+            "label": "Problema 3",
+            "description": "Sos un héroe.",
+            "start": 23,
+            "end": 34
+          }
+        ]
       },
       {
         "id": "S",
         "label": "Solución",
+        "description": "Cómo solucionamos los problemas presentados.",
         "start": 35,
         "end": 58
       },
       {
         "id": "V",
         "label": "Visualización",
+        "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
         "start": 59,
         "end": 70
       },
       {
         "id": "A2",
         "label": "Acción",
+        "description": "Qué quiero accionar en la audiencia.",
         "start": 71,
         "end": 77
       }

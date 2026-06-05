@@ -241,6 +241,8 @@ function clearForm() {
 // Colors for ANSVA (and any future) section ids
 const SECTION_COLORS = {
   A1: '#e05252', N: '#e08c3a', S: '#3aaa6e', V: '#3a82d4', A2: '#9b59b6',
+  // Sub-sections inside Necesidad share its orange family.
+  P1: '#d98023', P2: '#d98023', P3: '#d98023',
   // fallback for unknown ids
   default: '#888',
 };
@@ -251,6 +253,7 @@ function renderSidebar() {
     return;
   }
   dom.slideList.innerHTML = '';
+  hideSectionTooltip();
 
   // Map slide order → the section that starts there, so we can drop a section
   // header in front of the slide that opens each section.
@@ -258,9 +261,17 @@ function renderSidebar() {
   const sectionStarts = new Map();
   sections.forEach((s, i) => sectionStarts.set(s.start, { section: s, index: i }));
 
+  // Nested sub-sections (e.g. the three problems inside Necesidad) keyed by
+  // the slide order they start on, so we can drop an indented header there.
+  const childStarts = new Map();
+  sections.forEach(s => (s.children ?? []).forEach(c => childStarts.set(c.start, c)));
+
   state.slides.forEach(slide => {
     const sec = sectionStarts.get(slide.order);
     if (sec) dom.slideList.appendChild(makeSectionHeader(sec.section, sec.index));
+
+    const child = childStarts.get(slide.order);
+    if (child) dom.slideList.appendChild(makeSubSectionHeader(child));
 
     const item = document.createElement('div');
     item.className = [
@@ -374,8 +385,11 @@ function makeSectionHeader(section, index) {
   header.innerHTML = `
     ${grip}
     <span class="section-badge" style="background:${color}">${escHtml(badgeText)}</span>
-    <span class="section-name" title="${escHtml(section.label ?? '')}">${escHtml(section.label ?? '')}</span>
+    <span class="section-name">${escHtml(section.label ?? '')}</span>
     <span class="section-count" title="${count} slide${count === 1 ? '' : 's'}">${count}</span>`;
+
+  // Hover tooltip with the section's description (more context than the label).
+  attachSectionTooltip(header, section.label ?? '', section.description);
 
   if (index > 0) {
     header.draggable = true;
@@ -395,6 +409,50 @@ function makeSectionHeader(section, index) {
     });
   }
   return header;
+}
+
+/** Indented header for a nested sub-section (e.g. the problems in Necesidad). */
+function makeSubSectionHeader(child) {
+  const header = document.createElement('div');
+  header.className = 'section-header sub';
+  const count = child.end - child.start + 1;
+  const color = SECTION_COLORS[child.id] ?? SECTION_COLORS.default;
+  header.innerHTML = `
+    <span class="section-grip placeholder"></span>
+    <span class="section-badge sub" style="background:${color}">${escHtml(child.id ?? '')}</span>
+    <span class="section-name">${escHtml(child.label ?? '')}</span>
+    <span class="section-count" title="${count} slide${count === 1 ? '' : 's'}">${count}</span>`;
+  attachSectionTooltip(header, child.label ?? '', child.description);
+  return header;
+}
+
+// ── Section hover tooltip ────────────────────────────────────────────────────
+let sectionTooltipEl = null;
+
+function showSectionTooltip(anchor, label, description) {
+  hideSectionTooltip();
+  const tip = document.createElement('div');
+  tip.className = 'section-tooltip';
+  tip.innerHTML = `<strong>${escHtml(label)}</strong>${description ? `<span>${escHtml(description)}</span>` : ''}`;
+  document.body.appendChild(tip);
+  const r = anchor.getBoundingClientRect();
+  let left = r.right + 8;
+  let top = r.top;
+  const tr = tip.getBoundingClientRect();
+  if (left + tr.width > window.innerWidth - 8) left = r.left - tr.width - 8;
+  if (top + tr.height > window.innerHeight - 8) top = window.innerHeight - tr.height - 8;
+  tip.style.left = Math.max(8, left) + 'px';
+  tip.style.top = Math.max(8, top) + 'px';
+  sectionTooltipEl = tip;
+}
+
+function hideSectionTooltip() {
+  if (sectionTooltipEl) { sectionTooltipEl.remove(); sectionTooltipEl = null; }
+}
+
+function attachSectionTooltip(el, label, description) {
+  el.addEventListener('mouseenter', () => showSectionTooltip(el, label, description));
+  el.addEventListener('mouseleave', hideSectionTooltip);
 }
 
 /** Persist a moved section boundary (its new first-slide order). */
@@ -582,6 +640,11 @@ function renderForm(slide) {
         wrapper.appendChild(m);
       }
     }
+
+    // big-concept: opt-in switch to recolor the icon to the recipe text color.
+    if (data.template === 'big-concept') {
+      addField('Tint icon to text color', mkCheckbox('iconTint', data.iconTint));
+    }
   }
 
   // Items-based content
@@ -757,6 +820,15 @@ function mkSelect(field, options, current) {
     opt.selected = value === current;
     el.appendChild(opt);
   });
+  return el;
+}
+
+function mkCheckbox(field, checked) {
+  const el = document.createElement('input');
+  el.type = 'checkbox';
+  el.dataset.field = field;
+  el.checked = !!checked;
+  el.className = 'switch-input';
   return el;
 }
 
@@ -1770,7 +1842,8 @@ function collectFormData() {
     const field = el.dataset.field;
     // contenteditable RTE div uses innerHTML; image-only RTEs also use innerHTML; inputs/selects use value
     const isRteDiv = el.classList.contains('rte-editor');
-    const val = isRteDiv ? cleanHTML(el.innerHTML) : el.value;
+    const isCheckbox = el.type === 'checkbox';
+    const val = isRteDiv ? cleanHTML(el.innerHTML) : (isCheckbox ? el.checked : el.value);
     if (field.startsWith('fields.')) {
       const key = field.slice('fields.'.length);
       if (!newData.fields) newData.fields = {};
@@ -1786,6 +1859,9 @@ function collectFormData() {
       }
     } else if (field === 'mode' && val === '') {
       delete newData.mode;
+    } else if (isCheckbox) {
+      // Boolean flags (e.g. iconTint): persist only when on, to keep frontmatter clean.
+      if (val) newData[field] = true; else delete newData[field];
     } else {
       newData[field] = val;
     }

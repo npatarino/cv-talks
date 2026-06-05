@@ -79,11 +79,21 @@ export function normalizeSections(sections, n) {
     prev = start;
   }
 
-  return sections.map((s, i) => ({
-    ...s,
-    start: starts[i],
-    end: i < k - 1 ? starts[i + 1] - 1 : n,
-  }));
+  return sections.map((s, i) => {
+    const start = starts[i];
+    const end = i < k - 1 ? starts[i + 1] - 1 : n;
+    const out = { ...s, start, end };
+    // Keep nested sub-sections (e.g. the three problems inside Necesidad)
+    // clamped within their parent's range.
+    if (Array.isArray(s.children)) {
+      out.children = s.children.map(c => {
+        const cs = Math.min(Math.max(c.start, start), end);
+        const ce = Math.min(Math.max(c.end, cs), end);
+        return { ...c, start: cs, end: ce };
+      });
+    }
+    return out;
+  });
 }
 
 /**
@@ -95,6 +105,13 @@ export function shiftOnInsert(sections, position, newCount) {
   const shifted = sections.map(s => ({
     ...s,
     start: s.start >= position ? s.start + 1 : s.start,
+    ...(Array.isArray(s.children) ? {
+      children: s.children.map(c => ({
+        ...c,
+        start: c.start >= position ? c.start + 1 : c.start,
+        end: c.end >= position ? c.end + 1 : c.end,
+      })),
+    } : {}),
   }));
   return normalizeSections(shifted, newCount);
 }
@@ -107,6 +124,13 @@ export function shiftOnDelete(sections, order, newCount) {
   const shifted = sections.map(s => ({
     ...s,
     start: s.start > order ? s.start - 1 : s.start,
+    ...(Array.isArray(s.children) ? {
+      children: s.children.map(c => ({
+        ...c,
+        start: c.start > order ? c.start - 1 : c.start,
+        end: c.end >= order ? c.end - 1 : c.end,
+      })),
+    } : {}),
   }));
   return normalizeSections(shifted, newCount);
 }

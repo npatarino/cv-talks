@@ -74,11 +74,11 @@ section.slide.s-quote {
    El avatar es charcoal con iniciales lemon — los colores del avatar son
    código visual local, no parte de la recipe. */
 section.slide.s-quote.testimonial {
-  display: grid; grid-template-columns: 440px 1fr; gap: 80px;
+  display: grid; grid-template-columns: 280px 1fr; gap: 80px;
   align-items: center; padding: 96px 140px 140px 200px;
 }
 .s-quote.testimonial .av {
-  width: 440px; height: 440px;
+  width: 280px; height: 280px;
   background: var(--chimi-primitives-color-charcoal-100);
   border-radius: 50%;
   position: relative; overflow: hidden; flex-shrink: 0;
@@ -86,8 +86,17 @@ section.slide.s-quote.testimonial {
 .s-quote.testimonial .av .ini {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 200px;
+  font-family: var(--font-display); font-size: 128px;
   color: var(--chimi-primitives-color-lemon-base); line-height: 1;
+}
+/* When the avatar holds an image instead of initials, fit it whole inside the
+   circle. The padding keeps it within the circle's inscribed area so corners
+   aren't clipped by the rounded edge. */
+.s-quote.testimonial .av .ini img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  padding: 36px;
+  box-sizing: border-box;
 }
 .s-quote.testimonial q { font-size: 70px; line-height: 1.15; letter-spacing: -0.005em; max-width: 22ch; }
 .s-quote.testimonial .cite { margin-top: 44px; display: flex; flex-direction: column; gap: 8px; }
