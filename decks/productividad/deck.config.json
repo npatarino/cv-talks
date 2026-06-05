@@ -12,25 +12,25 @@
         "id": "N",
         "label": "Necesidad",
         "start": 7,
-        "end": 35
+        "end": 34
       },
       {
         "id": "S",
         "label": "Solución",
-        "start": 36,
-        "end": 59
+        "start": 35,
+        "end": 58
       },
       {
         "id": "V",
         "label": "Visualización",
-        "start": 60,
-        "end": 71
+        "start": 59,
+        "end": 70
       },
       {
         "id": "A2",
         "label": "Acción",
-        "start": 72,
-        "end": 78
+        "start": 71,
+        "end": 77
       }
     ]
   },
@@ -62,7 +62,6 @@
     "10m.md",
     "bus-factor.md",
     "bus-factor-icons.md",
-    "empresa-ego.md",
     "heroe-capa.md",
     "kudos-publicos.md",
     "bombero-piromano.md",
