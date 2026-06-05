@@ -14,28 +14,28 @@
         "label": "Necesidad",
         "description": "Los tres problemas principales que quiero mostrar.",
         "start": 7,
-        "end": 34,
+        "end": 33,
         "children": [
           {
             "id": "P1",
-            "label": "Problema 1",
+            "label": "Malas métricas",
             "description": "Perseguimos malas métricas.",
             "start": 13,
             "end": 16
           },
           {
             "id": "P2",
-            "label": "Problema 2",
+            "label": "Código no es activo",
             "description": "El código no es un activo.",
             "start": 17,
-            "end": 22
+            "end": 23
           },
           {
             "id": "P3",
-            "label": "Problema 3",
+            "label": "Sos un héroe",
             "description": "Sos un héroe.",
-            "start": 23,
-            "end": 34
+            "start": 24,
+            "end": 33
           }
         ]
       },
@@ -43,22 +43,22 @@
         "id": "S",
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
-        "start": 35,
-        "end": 58
+        "start": 34,
+        "end": 57
       },
       {
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 59,
-        "end": 70
+        "start": 58,
+        "end": 69
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 71,
-        "end": 77
+        "start": 70,
+        "end": 76
       }
     ]
   },
@@ -96,7 +96,6 @@
     "insostenibles.md",
     "heroe-gris.md",
     "reducir-protagonismo.md",
-    "bebe.md",
     "recurring-quote-2.md",
     "moneyball.md",
     "automatizacion.md",
