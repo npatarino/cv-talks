@@ -3,6 +3,7 @@
 
 {% block slide %}
 {% set style = variant or "numeric" %}
+{% set items = items or (itemsMarkdown | parseBigList) %}
 <section class="slide s-big-list {{ style }}{% if criticalFg %} critical-fg-{{ criticalFg }}{% endif %}" data-recipe="{{ recipe }}" data-label="{{ label }}">
   {% if fields.title %}<h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>{% endif %}
 

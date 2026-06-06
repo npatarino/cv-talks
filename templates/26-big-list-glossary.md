@@ -8,9 +8,9 @@ fields:
   title:
     content: "Vocabulario<br>de la <em>charla</em>."
     meta: "Title_Text"
-items:
-  - { term: "Lead Time",   desc: "Tiempo desde el primer commit hasta producción." }
-  - { term: "Deploy Freq", desc: "Despliegues completados por semana." }
-  - { term: "CFR",         desc: "Cambios que generan incidentes / cambios totales." }
-  - { term: "MTTR",        desc: "Tiempo medio para volver a estado operativo." }
+itemsMarkdown: |
+  * **Lead Time**: Tiempo desde el primer commit hasta producción.
+  * **Deploy Freq**: Despliegues completados por semana.
+  * **CFR**: Cambios que generan incidentes / cambios totales.
+  * **MTTR**: Tiempo medio para volver a estado operativo.
 ---

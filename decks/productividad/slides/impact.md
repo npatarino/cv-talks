@@ -5,10 +5,10 @@ variant: bullets
 label: DX Core 4 · Impact
 fields:
   title: { content: IMPACT, meta: Title_Text }
-items:
-  - { text: '% of time spent on new capabilities' }
-  - { text: 'Initiative progress & ROI' }
-  - { text: Revenue per engineer }
-  - { text: 'R&D as % of revenue' }
+itemsMarkdown: |
+  * % of time spent on new capabilities
+  * Initiative progress & ROI
+  * Revenue per engineer
+  * R&D as % of revenue
 notes: Hola
 ---

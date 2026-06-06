@@ -5,13 +5,12 @@ label: Dora Metrics - 2
 variant: numeric
 fields:
   title: { content: "", meta: Title_Text }
-items:
-  - text: Velocidad
-    sub:
-      - { n: "a", text: "Lead Time" }
-      - { n: "b", text: "Deploy Frequency" }
-  - text: Estabilidad
-    sub:
-      - { n: "a", text: "Change Failure Rate" }
-      - { n: "b", text: "Mean Time to Repair" }
+itemsMarkdown: |
+  1. Velocidad
+      a. Lead Time
+      b. Deploy Frequency
+  2. Estabilidad
+      a. Change Failure Rate
+      b. Mean Time to Repair
+notes: Mide si las pipelines de tus sistemas están limpias y funcionan bien.
 ---

@@ -102,11 +102,11 @@ describe('GET /api/template-scaffold', () => {
     expect(data.fields.note.content).toBe('');
   });
 
-  it('returns blanked items array for big-list', async () => {
+  it('returns blanked itemsMarkdown for big-list', async () => {
     const { status, data } = await call('GET', '/api/template-scaffold?template=big-list&variant=numeric');
     expect(status).toBe(200);
-    expect(Array.isArray(data.items)).toBe(true);
-    data.items.forEach(item => expect(item.text).toBe(''));
+    expect(data.itemsMarkdown).toBe('');
+    expect(data.items).toBeUndefined();
   });
 
   it('falls back to variant=default when variant is omitted', async () => {
@@ -341,18 +341,14 @@ describe('POST /api/decks/:slug/slides — scaffolds fields/items', () => {
     expect(saved.data.fields.note.content).toBe('');
   });
 
-  it('seeds empty items array for big-list', async () => {
+  it('seeds empty itemsMarkdown string for big-list', async () => {
     makeDeck('my-deck');
     const { data } = await call('POST', '/api/decks/my-deck/slides', {
       template: 'big-list', variant: 'numeric', label: 'Empty list',
     });
     const { data: saved } = await call('GET', `/api/decks/my-deck/slides/${data.filename}`);
-    expect(Array.isArray(saved.data.items)).toBe(true);
-    // Each item should have its `text` blanked but key structure preserved.
-    expect(saved.data.items.length).toBeGreaterThan(0);
-    saved.data.items.forEach(item => {
-      expect(item.text).toBe('');
-    });
+    expect(saved.data.itemsMarkdown).toBe('');
+    expect(saved.data.items).toBeUndefined();
   });
 
   it('explicit fields override the scaffold', async () => {
