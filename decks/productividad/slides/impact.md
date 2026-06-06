@@ -6,10 +6,9 @@ label: DX Core 4 · Impact
 fields:
   title: { content: IMPACT, meta: Title_Text }
 items:
-  - { text: 'CI time ↓ 30%' }
-  - { text: 'Release time ↓ 50%' }
-  - { text: 5 teams usan el nuevo pipeline }
-  - { text: 0 hotfixes after change }
-  - { text: 'Build failures ↓ 40%' }
+  - { text: '% of time spent on new capabilities' }
+  - { text: 'Initiative progress & ROI' }
+  - { text: Revenue per engineer }
+  - { text: 'R&D as % of revenue' }
 notes: Hola
 ---

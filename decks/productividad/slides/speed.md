@@ -6,8 +6,11 @@ label: DX Core 4 · Speed
 fields:
   title: { content: SPEED, meta: Title_Text }
 items:
-  - { text: Avg time PR → merge }
-  - { text: Avg time merge → release }
-  - { text: Releases per week }
-  - { text: Time to fix build failure }
+  - { text: PR throughput }
+  - { text: Lead time }
+  - { text: Deployment frequency }
+  - { text: Perceived rate of delivery }
+notes: |
+  Seguimos midiendo la velocidad, pero como una guía, como una referencia, no como el objetivo.
+  Porque nos ayudan a encontrar posibles mejoras
 ---
