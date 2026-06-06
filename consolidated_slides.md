@@ -1213,12 +1213,12 @@ raf = requestAnimationFrame(frame);
 
 ## Slide 66: `cierre`
 - **Sección narrativa**: A2: Acción
-- **Template**: `closing-socials` | **Recipe**: `energy-loud` | **Variant**: `N/A` | **Label**: `¿Y ustedes qué opinan?`
+- **Template**: `closing-socials` | **Recipe**: `energy-loud` | **Variant**: `default` | **Label**: `¿Y ustedes qué opinan?`
 
 ### Campos/Textos:
-- **title**: ¿Y USTEDES<br>QUÉ<br>OPINAN?
+- **title**: ¿Y ustedes...<br>... qué&nbsp;<em>opinan</em>?
 - **socials**: <img src="/talks/decks/productividad/assets/social-youtube.png" alt="YouTube"><img src="/talks/decks/productividad/assets/social-twitter.png" alt="X"><img src="/talks/decks/productividad/assets/social-spotify.png" alt="Spotify"><img src="/talks/decks/productividad/assets/social-instagram.png" alt="Instagram"><img src="/talks/decks/productividad/assets/social-twitch.png" alt="Twitch"><img src="/talks/decks/productividad/assets/social-github.png" alt="GitHub">
-- **credits**: NICOLÁS PATARINO · @NPATARINO · @CHIMICHURRICODE
+- **credits**: Nicolás Patarino · @npatarino · @ChimichurriCode
 
 ### Notas del Orador:
 *(Sin notas)*
