@@ -5,17 +5,17 @@ Este documento contiene la estructura completa y el contenido de todas las slide
 ## Estructura de la Presentación (ANSVA)
 
 - **[Slide 1 - 7] Atención** (Mi historia que refleja mi mala perspectiva.)
-- **[Slide 8 - 36] Necesidad** (Los tres problemas principales que quiero mostrar.)
+- **[Slide 8 - 35] Necesidad** (Los tres problemas principales que quiero mostrar.)
   - **[Slide 14 - 17] P1: Malas métricas** (Perseguimos malas métricas.)
   - **[Slide 18 - 24] P2: Código no es activo** (El código no es un activo.)
-  - **[Slide 25 - 34] P3: Sos un héroe** (Sos un héroe.)
-  - **[Slide 36 - 36] PS: Problems summary** (Resumen de los problemas.)
-- **[Slide 37 - 59] Solución** (Cómo solucionamos los problemas presentados.)
-  - **[Slide 37 - 49] S1: Medir mejor** (Medir mejor / DORA / SPACE.)
-  - **[Slide 50 - 54] S2: Automatización** (Automatización y pago de deuda.)
-  - **[Slide 55 - 59] S3: Reducir protagonismo** (Reducir protagonismo y delegar.)
-- **[Slide 60 - 62] Visualización** (Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.)
-- **[Slide 63 - 66] Acción** (Qué quiero accionar en la audiencia.)
+  - **[Slide 25 - 33] P3: Sos un héroe** (Sos un héroe.)
+  - **[Slide 35 - 35] PS: Problems summary** (Resumen de los problemas.)
+- **[Slide 36 - 58] Solución** (Cómo solucionamos los problemas presentados.)
+  - **[Slide 36 - 48] S1: Medir mejor** (Medir mejor / DORA / SPACE.)
+  - **[Slide 49 - 53] S2: Automatización** (Automatización y pago de deuda.)
+  - **[Slide 54 - 58] S3: Reducir protagonismo** (Reducir protagonismo y delegar.)
+- **[Slide 59 - 61] Visualización** (Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.)
+- **[Slide 62 - 65] Acción** (Qué quiero accionar en la audiencia.)
 
 ---
 
@@ -713,21 +713,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 34: `quote-heroe-villano`
-- **Sección narrativa**: N: Necesidad -> P3: Sos un héroe
-- **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita · héroe o villano`
-
-### Campos/Textos:
-- **quote**: O mueres como un <em>héroe</em>, o vives lo suficiente para verte convertido en el <em>villano</em>.
-- **who**: Harvey Dent (The Dark Knight)
-
-### Notas del Orador:
-> Esta frase de Batman define perfectamente el peligro de la cultura del héroe.
-> Si no cambiás a tiempo, el héroe que hoy salva el día se convierte mañana en el villano del equipo: el cuello de botella que frena a todos, el que no comparte conocimiento y el que mantiene vivo el fuego para poder seguir apagándolo.
-
----
-
-## Slide 35: `problemas-summary`
+## Slide 34: `problemas-summary`
 - **Sección narrativa**: N: Necesidad
 - **Template**: `icon` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Problemas - Summary`
 
@@ -744,7 +730,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 36: `recurring-quote-2`
+## Slide 35: `recurring-quote-2`
 - **Sección narrativa**: N: Necesidad -> PS: Problems summary
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (II)`
 
@@ -754,6 +740,19 @@ raf = requestAnimationFrame(frame);
 
 ### Notas del Orador:
 > Grabémoslo a fuego. La productividad no es hacer más, es generar el mayor impacto con el menor mantenimiento.
+
+---
+
+## Slide 36: `dx-core-4`
+- **Sección narrativa**: S: Solución -> S1: Medir mejor
+- **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `divider` | **Label**: `DX Core 4 · intro`
+
+### Campos/Textos:
+- **title**: DX<br>CORE 4.
+
+### Notas del Orador:
+> Y eso es lo que en nuestro sector podemos hacer con DX Code 4.
+> Pero para entender DX Core 4. Necesitamos ver un poco de historia.
 
 ---
 
@@ -775,20 +774,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 38: `dx-core-4`
-- **Sección narrativa**: S: Solución -> S1: Medir mejor
-- **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `divider` | **Label**: `DX Core 4 · intro`
-
-### Campos/Textos:
-- **title**: DX<br>CORE 4.
-
-### Notas del Orador:
-> Y eso es lo que en nuestro sector podemos hacer con DX Code 4.
-> Pero para entender DX Core 4. Necesitamos ver un poco de historia.
-
----
-
-## Slide 39: `dora-metrics`
+## Slide 38: `dora-metrics`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `divider` | **Label**: `Dora metrics`
 
@@ -802,7 +788,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 40: `dora-metrics-2`
+## Slide 39: `dora-metrics-2`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `energy-loud` | **Variant**: `numeric` | **Label**: `Dora Metrics - 2`
 
@@ -824,7 +810,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 41: `dora-metrics-3`
+## Slide 40: `dora-metrics-3`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-concept` | **Recipe**: `canvas-quiet` | **Variant**: `divider` | **Label**: `Space metrics`
 
@@ -838,7 +824,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 42: `dora-metrics-2-2`
+## Slide 41: `dora-metrics-2-2`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `energy-loud` | **Variant**: `numeric` | **Label**: `SPACE Framework`
 
@@ -859,7 +845,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 43: `dx-core-4-2`
+## Slide 42: `dx-core-4-2`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `divider` | **Label**: `DX Core 4 · intro`
 
@@ -873,7 +859,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 44: `speed`
+## Slide 43: `speed`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `energy-loud` | **Variant**: `bullets` | **Label**: `DX Core 4 · Speed`
 
@@ -894,7 +880,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 45: `effectiveness`
+## Slide 44: `effectiveness`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `cool-fresh` | **Variant**: `bullets` | **Label**: `DX Core 4 · Effectiveness`
 
@@ -914,7 +900,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 46: `quality`
+## Slide 45: `quality`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `critical` | **Variant**: `bullets` | **Label**: `DX Core 4 · Quality`
 
@@ -934,7 +920,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 47: `impact`
+## Slide 46: `impact`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `canvas-quiet` | **Variant**: `bullets` | **Label**: `DX Core 4 · Impact`
 
@@ -954,7 +940,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 48: `recurring-quote-2-2`
+## Slide 47: `recurring-quote-2-2`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (II)`
 
@@ -967,7 +953,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 49: `icon-sesgo-de-supervivencias`
+## Slide 48: `icon-sesgo-de-supervivencias`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `prompt` | **Label**: `Sesgo de supervivencias`
 
@@ -982,7 +968,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 50: `automatizacion-2`
+## Slide 49: `automatizacion-2`
 - **Sección narrativa**: S: Solución -> S2: Automatización
 - **Template**: `icon` | **Recipe**: `energy-loud` | **Variant**: `default` | **Label**: `Automatización 2`
 
@@ -994,7 +980,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 51: `automatizacion-ejemplos`
+## Slide 50: `automatizacion-ejemplos`
 - **Sección narrativa**: S: Solución -> S2: Automatización
 - **Template**: `big-list` | **Recipe**: `canvas-quiet` | **Variant**: `checklist` | **Label**: `Automatización ejemplos`
 
@@ -1016,7 +1002,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 52: `icon-80`
+## Slide 51: `icon-80`
 - **Sección narrativa**: S: Solución -> S2: Automatización
 - **Template**: `icon` | **Recipe**: `paper` | **Variant**: `default` | **Label**: `Pagar deuda`
 
@@ -1034,7 +1020,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 53: `recurring-quote-2-2-2`
+## Slide 52: `recurring-quote-2-2-2`
 - **Sección narrativa**: S: Solución -> S2: Automatización
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (II)`
 
@@ -1048,7 +1034,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 54: `heroe-gris`
+## Slide 53: `heroe-gris`
 - **Sección narrativa**: S: Solución -> S2: Automatización
 - **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `default` | **Label**: `Héroe · capa gris`
 
@@ -1061,7 +1047,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 55: `heroe-gris-2`
+## Slide 54: `heroe-gris-2`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `default` | **Label**: `Héroe · capa gris`
 
@@ -1073,7 +1059,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 56: `capa-de-ozono`
+## Slide 55: `capa-de-ozono`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `divider` | **Label**: `Capa de ozono`
 
@@ -1088,7 +1074,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 57: `recurring-quote-3`
+## Slide 56: `recurring-quote-3`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (III)`
 
@@ -1101,7 +1087,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 58: `disclaimer-trabajar-menos`
+## Slide 57: `disclaimer-trabajar-menos`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `big-concept` | **Recipe**: `critical` | **Variant**: `disclaimer` | **Label**: `Disclaimer · no es trabajar menos`
 
@@ -1115,7 +1101,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 59: `cadena-1`
+## Slide 58: `cadena-1`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Visualización 1`
 
@@ -1128,7 +1114,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 60: `cadena-1-2`
+## Slide 59: `cadena-1-2`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Visualización 1`
 
@@ -1142,7 +1128,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 61: `cadena-1-2-2`
+## Slide 60: `cadena-1-2-2`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Visualización 1`
 
@@ -1158,7 +1144,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 62: `cadena-1-2-2-2`
+## Slide 61: `cadena-1-2-2-2`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Visualización 1`
 
@@ -1172,7 +1158,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 63: `recurring-quote-4`
+## Slide 62: `recurring-quote-4`
 - **Sección narrativa**: A2: Acción
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (IV)`
 
@@ -1185,7 +1171,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 64: `viernes-1530-2`
+## Slide 63: `viernes-1530-2`
 - **Sección narrativa**: A2: Acción
 - **Template**: `big-concept` | **Recipe**: `energy-loud` | **Variant**: `disclaimer` | **Label**: `Portada · Viernes 15:30`
 
@@ -1199,7 +1185,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 65: `radiacion`
+## Slide 64: `radiacion`
 - **Sección narrativa**: A2: Acción
 - **Template**: `icon` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Radiación del héroe`
 
@@ -1211,7 +1197,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 66: `cierre`
+## Slide 65: `cierre`
 - **Sección narrativa**: A2: Acción
 - **Template**: `closing-socials` | **Recipe**: `energy-loud` | **Variant**: `default` | **Label**: `¿Y ustedes qué opinan?`
 

@@ -150,11 +150,11 @@
   });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === ' ') {
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) {
       const idx = currentIndex();
       if (idx < slides.length - 1) loadSlide(slides[idx + 1].order);
       e.preventDefault();
-    } else if (e.key === 'ArrowLeft') {
+    } else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {
       const idx = currentIndex();
       if (idx > 0) loadSlide(slides[idx - 1].order);
       e.preventDefault();

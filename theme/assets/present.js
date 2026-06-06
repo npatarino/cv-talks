@@ -232,11 +232,11 @@
       if (!EMBEDDED) location.href = "../";
       e.preventDefault();
     }
-    else if (e.key === "ArrowRight" || e.key === " ") {
+    else if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) {
       if (!tryReveal(+1)) navigate(+1);
       e.preventDefault();
     }
-    else if (e.key === "ArrowLeft") {
+    else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) {
       if (!tryReveal(-1)) navigate(-1);
       e.preventDefault();
     }

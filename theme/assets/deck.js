@@ -77,8 +77,8 @@
   }
 
   window.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight" || e.key === "ArrowLeft" || e.key === " ") {
-      // Arrows/space: forward al iframe para que su present.js decida si
+    if (["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp", "PageDown", "PageUp", " "].includes(e.key)) {
+      // Arrows/space/page keys: forward al iframe para que su present.js decida si
       // revela el próximo item o si navega (vía postMessage de vuelta).
       const win = frame.contentWindow;
       if (win) win.dispatchEvent(new KeyboardEvent("keydown", { key: e.key }));
