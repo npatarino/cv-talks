@@ -3,5 +3,9 @@ template: icon
 recipe: canvas-quiet
 label: Héroe · capa gris
 items:
-  - { glyph: '<img src="/talks/decks/productividad/assets/cape-blue.png" alt="" style="filter: grayscale(1) brightness(0.55);">' }
+  - { glyph: '<img src="/talks/decks/productividad/assets/cape-blue.png" alt="">' }
+variant: default
+notes: |
+  Desheroicificarnos. Reducir nuestro protagonismo.
+  Tu nivel de impacto no se mide por las veces que salvás al mundo, sino por diseñar un sistema tan robusto que funciona perfectamente cuando no estás.
 ---

@@ -51,21 +51,44 @@
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
         "start": 35,
-        "end": 60
+        "end": 63,
+        "children": [
+          {
+            "id": "S1",
+            "label": "Medir mejor",
+            "description": "Medir mejor / DORA / SPACE.",
+            "start": 35,
+            "end": 47
+          },
+          {
+            "id": "S2",
+            "label": "Automatización",
+            "description": "Automatización y pago de deuda.",
+            "start": 48,
+            "end": 52
+          },
+          {
+            "id": "S3",
+            "label": "Reducir protagonismo",
+            "description": "Reducir protagonismo y delegar.",
+            "start": 53,
+            "end": 63
+          }
+        ]
       },
       {
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 61,
-        "end": 72
+        "start": 64,
+        "end": 75
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 73,
-        "end": 79
+        "start": 76,
+        "end": 82
       }
     ]
   },
@@ -120,7 +143,10 @@
     "icon-sesgo-de-supervivencias.md",
     "automatizacion-2.md",
     "automatizacion-ejemplos.md",
+    "icon-80.md",
+    "recurring-quote-2-2-2.md",
     "heroe-gris.md",
+    "heroe-gris-2.md",
     "automatizacion.md",
     "reducir-protagonismo.md",
     "recurring-quote-3.md",
