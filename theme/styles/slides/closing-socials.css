@@ -5,26 +5,64 @@
 section.slide.s-closing-socials {
   background: var(--recipe-surface);
   color: var(--recipe-ink);
-  padding: 96px 110px 140px 140px;
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   text-align: center;
+  height: 1080px;
+  box-sizing: border-box;
 }
+
 .s-closing-socials h1 {
-  font-family: var(--font-display); font-weight: 700;
-  font-size: 150px; line-height: 1; letter-spacing: -0.02em;
-  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 110px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: auto 0;
+  text-transform: uppercase;
 }
+
+/* Footer container spanning edge-to-edge at the bottom */
+.s-closing-socials .closing-footer {
+  width: 100%;
+  background: #000000;
+  padding: 50px 0 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
 .s-closing-socials .socials {
-  margin-top: 140px; display: flex; gap: 28px;
-  align-items: center; justify-content: center;
-  font-size: 56px; line-height: 1;
+  margin: 0;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  line-height: 1;
 }
+
 .s-closing-socials .socials img {
-  width: 1em; height: 1em;
+  width: 1em;
+  height: 1em;
   object-fit: contain;
+  /* Filter to convert any source icon to the exact yellow color (#ffd123) */
+  filter: brightness(0) saturate(100%) invert(81%) sepia(74%) saturate(830%) hue-rotate(348deg) brightness(101%) contrast(101%);
 }
+
 .s-closing-socials .credits {
-  margin-top: 24px;
-  font-family: var(--font-display); font-weight: 700;
-  font-size: 44px; line-height: 1.2; letter-spacing: -0.005em;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  color: var(--recipe-surface, #ffd123);
+  text-transform: uppercase;
 }

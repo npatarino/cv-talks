@@ -4,8 +4,10 @@
 {% block slide %}
 <section class="slide s-closing-socials" data-recipe="{{ recipe }}" data-label="{{ label }}">
   <h1>{{ field(fields, "title", effectiveMode) | safe }}</h1>
-  {% if fields.socials %}<div class="socials">{{ field(fields, "socials", effectiveMode) | safe }}</div>{% endif %}
-  {% if fields.credits %}<div class="credits">{{ field(fields, "credits", effectiveMode) | safe }}</div>{% endif %}
+  <div class="closing-footer">
+    {% if fields.socials %}<div class="socials">{{ field(fields, "socials", effectiveMode) | safe }}</div>{% endif %}
+    {% if fields.credits %}<div class="credits">{{ field(fields, "credits", effectiveMode) | safe }}</div>{% endif %}
+  </div>
   <span class="sl-label">{{ order }} · {{ label }}</span>
 </section>
 {% endblock %}
