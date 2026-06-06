@@ -86,10 +86,14 @@ export function renumberSlides(deckDir, newOrder) {
 
 export function deleteSlide(deckDir, filename) {
   const filepath = path.join(getSlideDir(deckDir), filename);
+  const config = readConfig(deckDir);
+  const exists = fs.existsSync(filepath) || (config.slides && config.slides.includes(filename));
+  if (!exists) {
+    throw new Error('Slide not found');
+  }
   if (fs.existsSync(filepath)) {
     fs.unlinkSync(filepath);
   }
-  const config = readConfig(deckDir);
   if (config.slides) {
     config.slides = config.slides.filter(f => f !== filename);
     writeConfig(deckDir, config);

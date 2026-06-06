@@ -104,7 +104,8 @@ export function createSlide(slug, opts, decksRoot) {
   const finalFilename = buildFilename(position, slideSlug);
   return {
     filename: finalFilename,
-        previewUrl: slidePreviewUrl(slug, finalFilename),
+    order: position,
+    previewUrl: slidePreviewUrl(slug, finalFilename),
   };
 }
 
