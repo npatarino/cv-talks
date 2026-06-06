@@ -4,18 +4,18 @@ Este documento contiene la estructura completa y el contenido de todas las slide
 
 ## Estructura de la Presentación (ANSVA)
 
-- **[Slide 1 - 6] Atención** (Mi historia que refleja mi mala perspectiva.)
-- **[Slide 7 - 35] Necesidad** (Los tres problemas principales que quiero mostrar.)
-  - **[Slide 13 - 16] P1: Malas métricas** (Perseguimos malas métricas.)
-  - **[Slide 17 - 23] P2: Código no es activo** (El código no es un activo.)
-  - **[Slide 24 - 33] P3: Sos un héroe** (Sos un héroe.)
-  - **[Slide 35 - 35] PS: Problems summary** (Resumen de los problemas.)
-- **[Slide 36 - 58] Solución** (Cómo solucionamos los problemas presentados.)
-  - **[Slide 36 - 48] S1: Medir mejor** (Medir mejor / DORA / SPACE.)
-  - **[Slide 49 - 53] S2: Automatización** (Automatización y pago de deuda.)
-  - **[Slide 54 - 58] S3: Reducir protagonismo** (Reducir protagonismo y delegar.)
-- **[Slide 59 - 73] Visualización** (Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.)
-- **[Slide 74 - 80] Acción** (Qué quiero accionar en la audiencia.)
+- **[Slide 1 - 7] Atención** (Mi historia que refleja mi mala perspectiva.)
+- **[Slide 8 - 36] Necesidad** (Los tres problemas principales que quiero mostrar.)
+  - **[Slide 14 - 17] P1: Malas métricas** (Perseguimos malas métricas.)
+  - **[Slide 18 - 24] P2: Código no es activo** (El código no es un activo.)
+  - **[Slide 25 - 34] P3: Sos un héroe** (Sos un héroe.)
+  - **[Slide 36 - 36] PS: Problems summary** (Resumen de los problemas.)
+- **[Slide 37 - 59] Solución** (Cómo solucionamos los problemas presentados.)
+  - **[Slide 37 - 49] S1: Medir mejor** (Medir mejor / DORA / SPACE.)
+  - **[Slide 50 - 54] S2: Automatización** (Automatización y pago de deuda.)
+  - **[Slide 55 - 59] S3: Reducir protagonismo** (Reducir protagonismo y delegar.)
+- **[Slide 60 - 63] Visualización** (Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.)
+- **[Slide 64 - 67] Acción** (Qué quiero accionar en la audiencia.)
 
 ---
 
@@ -322,7 +322,7 @@ raf = requestAnimationFrame(frame);
 ---
 
 ## Slide 7: `mas-productividad`
-- **Sección narrativa**: N: Necesidad
+- **Sección narrativa**: A1: Atención
 - **Template**: `word-cloud` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `+ Productividad · señales falsas`
 
 ### Campos/Textos:
@@ -403,7 +403,7 @@ raf = requestAnimationFrame(frame);
 ---
 
 ## Slide 13: `correr-detras-de-metricas`
-- **Sección narrativa**: N: Necesidad -> P1: Malas métricas
+- **Sección narrativa**: N: Necesidad
 - **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `default` | **Label**: `Correr detrás de métricas`
 
 ### Items de Lista:
@@ -462,7 +462,7 @@ raf = requestAnimationFrame(frame);
 ---
 
 ## Slide 17: `activo-pasivo`
-- **Sección narrativa**: N: Necesidad -> P2: Código no es activo
+- **Sección narrativa**: N: Necesidad -> P1: Malas métricas
 - **Template**: `big-concept` | **Recipe**: `energy-loud` | **Variant**: `default` | **Label**: `Activo & Pasivo financiero`
 
 ### Campos/Textos:
@@ -562,7 +562,7 @@ raf = requestAnimationFrame(frame);
 ---
 
 ## Slide 24: `terry-childs`
-- **Sección narrativa**: N: Necesidad -> P3: Sos un héroe
+- **Sección narrativa**: N: Necesidad -> P2: Código no es activo
 - **Template**: `big-concept` | **Recipe**: `critical` | **Variant**: `divider` | **Label**: `Terry Childs · 2008`
 
 ### Campos/Textos:
@@ -606,7 +606,22 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 27: `bus-factor-icons`
+## Slide 27: `viernes-1530-2`
+- **Sección narrativa**: N: Necesidad -> P3: Sos un héroe
+- **Template**: `big-concept` | **Recipe**: `energy-loud` | **Variant**: `disclaimer` | **Label**: `Portada · Viernes 15:30`
+
+### Campos/Textos:
+- **icon**: <img src="/talks/decks/productividad/assets/clock.svg" alt="" class="title-icon">
+- **title**: <strong>VIERNES</strong> <em>15:30</em>
+- **note**: *(vacío)*
+
+### Notas del Orador:
+> Viernes, 15:30 de la tarde, ya estaba contestando los últimos mensajes de Slack.
+> Después de una semana dura de trabajo, donde no paré de tener reuniones, de desbloquear a muchos equipos, de picar mucho código, estaba agotadísimo, pero la verdad que estaba muy contento.
+
+---
+
+## Slide 28: `bus-factor-icons`
 - **Sección narrativa**: N: Necesidad -> P3: Sos un héroe
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Bus factor · iconos`
 
@@ -623,7 +638,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 28: `bus-factor-icons-3`
+## Slide 29: `bus-factor-icons-3`
 - **Sección narrativa**: N: Necesidad -> P3: Sos un héroe
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Bus factor · iconos`
 
@@ -639,7 +654,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 29: `bus-factor-icons-3-2`
+## Slide 30: `bus-factor-icons-3-2`
 - **Sección narrativa**: N: Necesidad -> P3: Sos un héroe
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Bus factor · iconos`
 
@@ -654,7 +669,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 30: `bus-factor-icons-3-2-2`
+## Slide 31: `bus-factor-icons-3-2-2`
 - **Sección narrativa**: N: Necesidad -> P3: Sos un héroe
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Bus factor · iconos`
 
@@ -668,7 +683,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 31: `bus-factor-icons-2`
+## Slide 32: `bus-factor-icons-2`
 - **Sección narrativa**: N: Necesidad -> P3: Sos un héroe
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Bus factor · iconos`
 
@@ -684,7 +699,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 32: `heroe-capa`
+## Slide 33: `heroe-capa`
 - **Sección narrativa**: N: Necesidad -> P3: Sos un héroe
 - **Template**: `icon` | **Recipe**: `energy-loud` | **Variant**: `default` | **Label**: `Héroe · capa`
 
@@ -698,7 +713,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 33: `bombero-piromano`
+## Slide 34: `bombero-piromano`
 - **Sección narrativa**: N: Necesidad -> P3: Sos un héroe
 - **Template**: `big-concept` | **Recipe**: `critical` | **Variant**: `divider` | **Label**: `El bombero pirómano`
 
@@ -713,7 +728,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 34: `quote-heroe-villano`
+## Slide 35: `quote-heroe-villano`
 - **Sección narrativa**: N: Necesidad
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita · héroe o villano`
 
@@ -727,7 +742,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 35: `problemas-summary`
+## Slide 36: `problemas-summary`
 - **Sección narrativa**: N: Necesidad -> PS: Problems summary
 - **Template**: `icon` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Problemas - Summary`
 
@@ -744,7 +759,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 36: `recurring-quote-2`
+## Slide 37: `recurring-quote-2`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (II)`
 
@@ -757,7 +772,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 37: `moneyball`
+## Slide 38: `moneyball`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `default` | **Label**: `Moneyball`
 
@@ -775,7 +790,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 38: `dx-core-4`
+## Slide 39: `dx-core-4`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `divider` | **Label**: `DX Core 4 · intro`
 
@@ -788,7 +803,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 39: `dora-metrics`
+## Slide 40: `dora-metrics`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `divider` | **Label**: `Dora metrics`
 
@@ -802,7 +817,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 40: `dora-metrics-2`
+## Slide 41: `dora-metrics-2`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `energy-loud` | **Variant**: `numeric` | **Label**: `Dora Metrics - 2`
 
@@ -824,7 +839,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 41: `dora-metrics-3`
+## Slide 42: `dora-metrics-3`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-concept` | **Recipe**: `canvas-quiet` | **Variant**: `divider` | **Label**: `Space metrics`
 
@@ -838,7 +853,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 42: `dora-metrics-2-2`
+## Slide 43: `dora-metrics-2-2`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `energy-loud` | **Variant**: `numeric` | **Label**: `SPACE Framework`
 
@@ -859,7 +874,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 43: `dx-core-4-2`
+## Slide 44: `dx-core-4-2`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `divider` | **Label**: `DX Core 4 · intro`
 
@@ -873,7 +888,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 44: `speed`
+## Slide 45: `speed`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `energy-loud` | **Variant**: `bullets` | **Label**: `DX Core 4 · Speed`
 
@@ -894,7 +909,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 45: `effectiveness`
+## Slide 46: `effectiveness`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `cool-fresh` | **Variant**: `bullets` | **Label**: `DX Core 4 · Effectiveness`
 
@@ -914,7 +929,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 46: `quality`
+## Slide 47: `quality`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `critical` | **Variant**: `bullets` | **Label**: `DX Core 4 · Quality`
 
@@ -934,7 +949,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 47: `impact`
+## Slide 48: `impact`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `big-list` | **Recipe**: `canvas-quiet` | **Variant**: `bullets` | **Label**: `DX Core 4 · Impact`
 
@@ -954,7 +969,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 48: `recurring-quote-2-2`
+## Slide 49: `recurring-quote-2-2`
 - **Sección narrativa**: S: Solución -> S1: Medir mejor
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (II)`
 
@@ -967,7 +982,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 49: `icon-sesgo-de-supervivencias`
+## Slide 50: `icon-sesgo-de-supervivencias`
 - **Sección narrativa**: S: Solución -> S2: Automatización
 - **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `prompt` | **Label**: `Sesgo de supervivencias`
 
@@ -982,7 +997,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 50: `automatizacion-2`
+## Slide 51: `automatizacion-2`
 - **Sección narrativa**: S: Solución -> S2: Automatización
 - **Template**: `icon` | **Recipe**: `energy-loud` | **Variant**: `default` | **Label**: `Automatización 2`
 
@@ -994,7 +1009,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 51: `automatizacion-ejemplos`
+## Slide 52: `automatizacion-ejemplos`
 - **Sección narrativa**: S: Solución -> S2: Automatización
 - **Template**: `big-list` | **Recipe**: `canvas-quiet` | **Variant**: `checklist` | **Label**: `Automatización ejemplos`
 
@@ -1016,7 +1031,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 52: `icon-80`
+## Slide 53: `icon-80`
 - **Sección narrativa**: S: Solución -> S2: Automatización
 - **Template**: `icon` | **Recipe**: `paper` | **Variant**: `default` | **Label**: `Pagar deuda`
 
@@ -1034,7 +1049,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 53: `recurring-quote-2-2-2`
+## Slide 54: `recurring-quote-2-2-2`
 - **Sección narrativa**: S: Solución -> S2: Automatización
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (II)`
 
@@ -1048,7 +1063,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 54: `heroe-gris`
+## Slide 55: `heroe-gris`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `default` | **Label**: `Héroe · capa gris`
 
@@ -1061,7 +1076,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 55: `heroe-gris-2`
+## Slide 56: `heroe-gris-2`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `default` | **Label**: `Héroe · capa gris`
 
@@ -1073,7 +1088,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 56: `capa-de-ozono`
+## Slide 57: `capa-de-ozono`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `divider` | **Label**: `Capa de ozono`
 
@@ -1088,7 +1103,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 57: `recurring-quote-3`
+## Slide 58: `recurring-quote-3`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (III)`
 
@@ -1101,7 +1116,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 58: `disclaimer-trabajar-menos`
+## Slide 59: `disclaimer-trabajar-menos`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `big-concept` | **Recipe**: `critical` | **Variant**: `disclaimer` | **Label**: `Disclaimer · no es trabajar menos`
 
@@ -1115,7 +1130,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 59: `cadena-1`
+## Slide 60: `cadena-1`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Visualización 1`
 
@@ -1128,7 +1143,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 60: `cadena-1-2`
+## Slide 61: `cadena-1-2`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Visualización 1`
 
@@ -1142,7 +1157,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 61: `cadena-1-2-2`
+## Slide 62: `cadena-1-2-2`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Visualización 1`
 
@@ -1154,10 +1169,11 @@ raf = requestAnimationFrame(frame);
 ### Notas del Orador:
 > Si nos sacamos la capa de superhéroe y empezamos a compartir y delegar, entonces construiremos un equipo robusto y escalable.
 > Dejaremos de ser cuellos de botella indispensables para convertirnos en facilitadores que multiplican el impacto de todos.
+> Esos ingenieros que todas las empresas quieren tener.
 
 ---
 
-## Slide 62: `cadena-1-2-2-2`
+## Slide 63: `cadena-1-2-2-2`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Visualización 1`
 
@@ -1167,226 +1183,24 @@ raf = requestAnimationFrame(frame);
 3. *(vacío)*
 
 ### Notas del Orador:
-> Si nos sacamos la capa de superhéroe y empezamos a compartir y delegar, entonces construiremos un equipo robusto y escalable.
-> Dejaremos de ser cuellos de botella indispensables para convertirnos en facilitadores que multiplican el impacto de todos.
+> O mueres como un héroe y vives lo suficiente como convertirte en un villano.
 
 ---
 
-## Slide 63: `cadena-2`
-- **Sección narrativa**: V: Visualización
-- **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cadena · paso 2 (+ análisis)`
-
-### Items de Lista:
-1. *(vacío)*
-2. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 64: `cadena-3`
-- **Sección narrativa**: V: Visualización
-- **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cadena · paso 3 (+ equipo)`
-
-### Items de Lista:
-1. *(vacío)*
-2. *(vacío)*
-3. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 65: `cadena-4`
-- **Sección narrativa**: V: Visualización
-- **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cadena · paso 4 (+ calidad)`
-
-### Items de Lista:
-1. *(vacío)*
-2. *(vacío)*
-3. *(vacío)*
-4. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 66: `cadena-5`
-- **Sección narrativa**: V: Visualización
-- **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cadena · paso 5 (+ deploy)`
-
-### Items de Lista:
-1. *(vacío)*
-2. *(vacío)*
-3. *(vacío)*
-4. *(vacío)*
-5. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 67: `cadena-6`
-- **Sección narrativa**: V: Visualización
-- **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cadena · paso 6 (+ persona)`
-
-### Items de Lista:
-1. *(vacío)*
-2. *(vacío)*
-3. *(vacío)*
-4. *(vacío)*
-5. *(vacío)*
-6. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 68: `ci-chain`
-- **Sección narrativa**: V: Visualización
-- **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `N/A` | **Label**: `CI chain · 4' → 1.5'`
-
-### Items de Lista:
-1. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 69: `ci-chain-25x`
-- **Sección narrativa**: V: Visualización
-- **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `N/A` | **Label**: `CI chain · → 25× por día`
-
-### Items de Lista:
-1. *(vacío)*
-2. *(vacío)*
-3. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 70: `ci-chain-x15`
-- **Sección narrativa**: V: Visualización
-- **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `N/A` | **Label**: `CI chain · → ×15 personas`
-
-### Items de Lista:
-1. *(vacío)*
-2. *(vacío)*
-3. *(vacío)*
-4. *(vacío)*
-5. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 71: `mas-15h`
-- **Sección narrativa**: V: Visualización
-- **Template**: `big-stat` | **Recipe**: `canvas-quiet` | **Variant**: `default` | **Label**: `+15h por día · cierre del cálculo`
-
-### Campos/Textos:
-- **stat_number**: +15
-- **stat_unit**: h
-- **explanation**: por día · el cálculo: pipeline 4' → 1.5' × 25 deploys × 15 personas.
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 72: `no-siempre-se-ve`
-- **Sección narrativa**: V: Visualización
-- **Template**: `big-concept` | **Recipe**: `critical` | **Variant**: `prompt` | **Label**: `No siempre se ve`
-
-### Campos/Textos:
-- **title**: NO SIEMPRE<br>SE <em>VE</em>
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 73: `practicas-compartir`
-- **Sección narrativa**: V: Visualización
-- **Template**: `big-list` | **Recipe**: `cool-fresh` | **Variant**: `numeric` | **Label**: `Prácticas · compartir conocimiento`
-
-### Items en Markdown:
-```markdown
-1. Documentar más
-2. Delegar más
-3. Compartir más
-4. Dejar de ser el único que sabe
-```
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 74: `recurring-quote-4`
+## Slide 64: `recurring-quote-4`
 - **Sección narrativa**: A2: Acción
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (IV)`
 
 ### Campos/Textos:
-- **quote**: Productividad <em>no es hacer más</em>.<br>Es generar el mayor impacto con el menor mantenimiento.
-- **who**: — Definición de trabajo
+- **quote**: Productividad no es <em>hacer más</em>.<br>Es generar el mayor impacto con el <em>menor mantenimiento</em>.
+- **who**: *(vacío)*
 
 ### Notas del Orador:
 *(Sin notas)*
 
 ---
 
-## Slide 75: `cohete-2-2`
-- **Sección narrativa**: A2: Acción
-- **Template**: `icon` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cohete · paso 1`
-
-### Items de Lista:
-1. *(vacío)*
-2. *(vacío)*
-3. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 76: `cohete-engranajes`
-- **Sección narrativa**: A2: Acción
-- **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `N/A` | **Label**: `Cohete + engranajes`
-
-### Items de Lista:
-1. *(vacío)*
-2. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 77: `cohete-engranajes-capa`
-- **Sección narrativa**: A2: Acción
-- **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `N/A` | **Label**: `Cohete + engranajes + capa`
-
-### Items de Lista:
-1. *(vacío)*
-2. *(vacío)*
-3. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 78: `pausa-rosa`
+## Slide 65: `pausa-rosa`
 - **Sección narrativa**: A2: Acción
 - **Template**: `big-concept` | **Recipe**: `critical` | **Variant**: `transition` | **Label**: `Pausa · plasma`
 
@@ -1394,11 +1208,11 @@ raf = requestAnimationFrame(frame);
 - **title**: &nbsp;
 
 ### Notas del Orador:
-*(Sin notas)*
+> Para que es
 
 ---
 
-## Slide 79: `radiacion`
+## Slide 66: `radiacion`
 - **Sección narrativa**: A2: Acción
 - **Template**: `icon` | **Recipe**: `critical` | **Variant**: `N/A` | **Label**: `Radiación del héroe`
 
@@ -1410,7 +1224,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 80: `cierre`
+## Slide 67: `cierre`
 - **Sección narrativa**: A2: Acción
 - **Template**: `closing-socials` | **Recipe**: `energy-loud` | **Variant**: `N/A` | **Label**: `¿Y ustedes qué opinan?`
 
