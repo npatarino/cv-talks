@@ -51,7 +51,7 @@
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
         "start": 35,
-        "end": 63,
+        "end": 58,
         "children": [
           {
             "id": "S1",
@@ -72,7 +72,7 @@
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
             "start": 53,
-            "end": 63
+            "end": 58
           }
         ]
       },
@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 64,
-        "end": 75
+        "start": 59,
+        "end": 70
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 76,
-        "end": 82
+        "start": 71,
+        "end": 77
       }
     ]
   },
@@ -147,13 +147,9 @@
     "recurring-quote-2-2-2.md",
     "heroe-gris.md",
     "heroe-gris-2.md",
-    "automatizacion.md",
-    "reducir-protagonismo.md",
+    "capa-de-ozono.md",
     "recurring-quote-3.md",
     "disclaimer-trabajar-menos.md",
-    "disclaimer-trabajar-inteligente.md",
-    "heroe-arquitecto.md",
-    "cargando-0.md",
     "insostenibles.md",
     "cadena-1.md",
     "cadena-2.md",
@@ -166,7 +162,6 @@
     "ci-chain-x15.md",
     "mas-15h.md",
     "no-siempre-se-ve.md",
-    "capa-de-ozono.md",
     "practicas-compartir.md",
     "recurring-quote-4.md",
     "cohete-2-2.md",
