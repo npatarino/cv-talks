@@ -1778,6 +1778,7 @@ function addItemRow(container, item, idx, template, variant, deckSlug) {
   const row = document.createElement('div');
   row.className = 'item-row';
   row.dataset.itemIndex = idx;
+  row._itemRef = item; // Store reference to preserve complex/unrendered properties
 
   const header = document.createElement('div');
   header.className = 'item-header';
@@ -1808,7 +1809,7 @@ function addItemRow(container, item, idx, template, variant, deckSlug) {
 
   const fields = document.createElement('div');
   fields.className = 'item-fields';
-  const keys = Object.keys(item).filter(k => !k.startsWith('_'));
+  const keys = Object.keys(item).filter(k => !k.startsWith('_') && k !== 'sub');
   (keys.length > 0 ? keys : ['text']).forEach(key => {
     const lbl = document.createElement('span');
     lbl.className = 'field-label';
@@ -1888,7 +1889,7 @@ function collectFormData() {
   if (container) {
     const rows = container.querySelectorAll('.item-row');
     newData.items = [...rows].map(row => {
-      const item = {};
+      const item = row._itemRef ? { ...row._itemRef } : {};
       row.querySelectorAll('[data-item-field]').forEach(el => {
         const key = el.dataset.itemField;
         if (el.dataset.glyphWrapper) {
