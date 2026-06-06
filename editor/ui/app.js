@@ -2403,11 +2403,15 @@ async function doDelete() {
   const fn = pendingDelete;
   pendingDelete = null;
   dom.modalConfirm.hidden = true;
+
+  const deletedIdx = state.slides.findIndex(s => s.filename === fn);
+
   try {
     await apiFetch(`/api/decks/${state.currentDeck}/slides/${fn}`, { method: 'DELETE' });
     await loadSlides();
     if (state.slides.length > 0) {
-      await selectSlide(state.slides[0].filename);
+      const nextIdx = deletedIdx > 0 ? deletedIdx - 1 : 0;
+      await selectSlide(state.slides[nextIdx].filename);
     } else {
       state.selectedFilename = null;
       state.slideData = null;
