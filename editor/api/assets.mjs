@@ -67,10 +67,14 @@ export async function uploadAsset(slug, opts, decksRoot) {
     // properly and re-checks the size before doing any work.
     const width = imageWidthFromHeader(finalBuffer);
     if (width === null || width > MAX_ICON_WIDTH) {
-      const resizedBuf = await maybeResize(finalBuffer, mimeType, MAX_ICON_WIDTH);
-      if (resizedBuf) {
-        finalBuffer = resizedBuf;
-        resized = true;
+      try {
+        const resizedBuf = await maybeResize(finalBuffer, mimeType, MAX_ICON_WIDTH);
+        if (resizedBuf) {
+          finalBuffer = resizedBuf;
+          resized = true;
+        }
+      } catch (err) {
+        console.warn(`[uploadAsset] Failed to resize image (Playwright/browser issues). Saving original. Error:`, err.message);
       }
     }
   }
