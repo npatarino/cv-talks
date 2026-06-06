@@ -51,7 +51,7 @@
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
         "start": 35,
-        "end": 58,
+        "end": 57,
         "children": [
           {
             "id": "S1",
@@ -72,7 +72,7 @@
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
             "start": 53,
-            "end": 58
+            "end": 57
           }
         ]
       },
@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 59,
-        "end": 70
+        "start": 58,
+        "end": 71
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 71,
-        "end": 77
+        "start": 72,
+        "end": 78
       }
     ]
   },
@@ -150,8 +150,9 @@
     "capa-de-ozono.md",
     "recurring-quote-3.md",
     "disclaimer-trabajar-menos.md",
-    "insostenibles.md",
     "cadena-1.md",
+    "cadena-1-2.md",
+    "cadena-1-2-2.md",
     "cadena-2.md",
     "cadena-3.md",
     "cadena-4.md",
