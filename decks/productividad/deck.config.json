@@ -14,7 +14,7 @@
         "label": "Necesidad",
         "description": "Los tres problemas principales que quiero mostrar.",
         "start": 7,
-        "end": 34,
+        "end": 35,
         "children": [
           {
             "id": "P1",
@@ -41,8 +41,8 @@
             "id": "PS",
             "label": "Problems summary",
             "description": "Resumen de los problemas.",
-            "start": 34,
-            "end": 34
+            "start": 35,
+            "end": 35
           }
         ]
       },
@@ -50,29 +50,29 @@
         "id": "S",
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
-        "start": 35,
-        "end": 57,
+        "start": 36,
+        "end": 58,
         "children": [
           {
             "id": "S1",
             "label": "Medir mejor",
             "description": "Medir mejor / DORA / SPACE.",
-            "start": 35,
-            "end": 47
+            "start": 36,
+            "end": 48
           },
           {
             "id": "S2",
             "label": "Automatización",
             "description": "Automatización y pago de deuda.",
-            "start": 48,
-            "end": 52
+            "start": 49,
+            "end": 53
           },
           {
             "id": "S3",
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
-            "start": 53,
-            "end": 57
+            "start": 54,
+            "end": 58
           }
         ]
       },
@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 58,
-        "end": 71
+        "start": 59,
+        "end": 73
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 72,
-        "end": 78
+        "start": 74,
+        "end": 80
       }
     ]
   },
@@ -126,6 +126,7 @@
     "bus-factor-icons-2.md",
     "heroe-capa.md",
     "bombero-piromano.md",
+    "quote-heroe-villano.md",
     "problemas-summary.md",
     "recurring-quote-2.md",
     "moneyball.md",
@@ -153,6 +154,7 @@
     "cadena-1.md",
     "cadena-1-2.md",
     "cadena-1-2-2.md",
+    "cadena-1-2-2-2.md",
     "cadena-2.md",
     "cadena-3.md",
     "cadena-4.md",
