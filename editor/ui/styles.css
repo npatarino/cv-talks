@@ -668,8 +668,9 @@ button { cursor: pointer; font-family: inherit; font-size: 13px; }
 .btn-secondary:hover:not(:disabled) { background: var(--bg-hover); }
 .btn-secondary:disabled { opacity: 0.4; cursor: default; }
 
-/* PDF export button — flex so icon+label sit side by side */
-#btn-export-pdf {
+/* PDF export and present buttons — flex so icon+label sit side by side */
+#btn-export-pdf,
+#btn-present {
   display: inline-flex;
   align-items: center;
   gap: 5px;

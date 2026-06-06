@@ -14,7 +14,7 @@
         "label": "Necesidad",
         "description": "Los tres problemas principales que quiero mostrar.",
         "start": 7,
-        "end": 30,
+        "end": 34,
         "children": [
           {
             "id": "P1",
@@ -35,7 +35,14 @@
             "label": "Sos un héroe",
             "description": "Sos un héroe.",
             "start": 24,
-            "end": 30
+            "end": 33
+          },
+          {
+            "id": "PS",
+            "label": "Problems summary",
+            "description": "Resumen de los problemas.",
+            "start": 34,
+            "end": 34
           }
         ]
       },
@@ -43,22 +50,22 @@
         "id": "S",
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
-        "start": 31,
-        "end": 57
+        "start": 35,
+        "end": 62
       },
       {
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 58,
-        "end": 69
+        "start": 63,
+        "end": 74
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 70,
-        "end": 76
+        "start": 75,
+        "end": 81
       }
     ]
   },
@@ -90,11 +97,22 @@
     "10m.md",
     "bus-factor.md",
     "bus-factor-icons.md",
+    "bus-factor-icons-3.md",
+    "bus-factor-icons-3-2.md",
+    "bus-factor-icons-3-2-2.md",
+    "bus-factor-icons-2.md",
     "heroe-capa.md",
-    "kudos-publicos.md",
     "bombero-piromano.md",
+    "problemas-summary.md",
     "recurring-quote-2.md",
     "moneyball.md",
+    "dx-core-4.md",
+    "dora-metrics.md",
+    "dx-core-4-detalle.md",
+    "speed.md",
+    "effectiveness.md",
+    "quality.md",
+    "impact.md",
     "concorde.md",
     "objetivos-automatizacion.md",
     "icon-sesgo-de-supervivencias.md",
@@ -107,12 +125,6 @@
     "pregunta-trabajo-extra.md",
     "pregunta-personas.md",
     "pregunta-ticket.md",
-    "dx-core-4.md",
-    "dx-core-4-detalle.md",
-    "speed.md",
-    "effectiveness.md",
-    "quality.md",
-    "impact.md",
     "recurring-quote-3.md",
     "disclaimer-trabajar-menos.md",
     "disclaimer-trabajar-inteligente.md",

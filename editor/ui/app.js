@@ -48,6 +48,7 @@ const dom = {
   btnMoveDown: $('btn-move-down'),
   btnDeleteSlide: $('btn-delete-slide'),
   btnExportPdf: $('btn-export-pdf'),
+  btnPresent: $('btn-present'),
   notesPanel: $('notes-panel'),
   notesTextarea: $('notes-textarea'),
   btnNotesToggle: $('btn-notes-toggle'),
@@ -132,6 +133,7 @@ async function selectDeck(slug, initialOrder) {
     state.dirtyFiles.clear();
     state.uncommittedFiles.clear();
     dom.btnExportPdf.disabled = true;
+    dom.btnPresent.disabled = true;
     pushUrlState(null);
     renderSidebar();
     clearPreview();
@@ -142,6 +144,7 @@ async function selectDeck(slug, initialOrder) {
   state.dirtyFiles.clear();
   state.uncommittedFiles.clear();
   dom.btnExportPdf.disabled = false;
+  dom.btnPresent.disabled = false;
   clearTimeout(state.livePreviewTimer);
   dom.deckSelector.value = slug;
   const deck = state.decks.find(d => d.slug === slug);
@@ -210,7 +213,7 @@ async function navigateSlides(delta) {
   if (nextIdx < 0 || nextIdx >= state.slides.length) return;
   await selectSlide(state.slides[nextIdx].filename);
   const el = dom.slideList.querySelector('.slide-item.selected');
-  if (el) el.scrollIntoView({ block: 'nearest' });
+  if (el) el.scrollIntoView({ block: 'center' });
 }
 
 function updatePreview(slide) {
@@ -242,7 +245,7 @@ function clearForm() {
 const SECTION_COLORS = {
   A1: '#e05252', N: '#e08c3a', S: '#3aaa6e', V: '#3a82d4', A2: '#9b59b6',
   // Sub-sections inside Necesidad share its orange family.
-  P1: '#d98023', P2: '#d98023', P3: '#d98023',
+  P1: '#d98023', P2: '#d98023', P3: '#d98023', PS: '#d98023',
   // fallback for unknown ids
   default: '#888',
 };
@@ -357,6 +360,11 @@ function renderSidebar() {
 
     dom.slideList.appendChild(item);
   });
+
+  const selectedEl = dom.slideList.querySelector('.slide-item.selected');
+  if (selectedEl) {
+    selectedEl.scrollIntoView({ block: 'center' });
+  }
 }
 
 /**
@@ -2409,6 +2417,17 @@ async function exportPdf() {
   }
 }
 
+async function presentDeck() {
+  if (!state.currentDeck || state.slides.length === 0) return;
+  const slide = state.slides.find(s => s.filename === state.selectedFilename) || state.slides[0];
+  let baseUrl = window.location.origin;
+  if (slide.previewUrl && slide.previewUrl.includes('/talks/')) {
+    baseUrl = slide.previewUrl.split('/talks/')[0];
+  }
+  const playerUrl = `${baseUrl}/talks/decks/${state.currentDeck}/deck/#/${slide.order}`;
+  window.open(playerUrl, '_blank');
+}
+
 // ---- Helpers ----
 
 function escHtml(s) {
@@ -2427,6 +2446,7 @@ function closeModals() {
 
 function wireEvents() {
   dom.deckSelector.addEventListener('change', e => selectDeck(e.target.value));
+  dom.btnPresent.addEventListener('click', presentDeck);
   dom.btnExportPdf.addEventListener('click', exportPdf);
   dom.btnSave.addEventListener('click', () => saveCurrentSlide());
   dom.btnRevert.addEventListener('click', revertSlide);
