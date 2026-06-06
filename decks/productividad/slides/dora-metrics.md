@@ -1,10 +1,17 @@
 ---
 template: big-concept
-recipe: canvas-quiet
+recipe: cool-fresh
 label: Dora metrics
 variant: divider
 fields:
   title: { content: Dora metrics, meta: Title_Text }
   sub: { content: "", meta: Subtitle_Text }
-  icon: { content: '<img src="/talks/decks/productividad/assets/baby.png" alt="" class="title-icon">', meta: Image_Src }
+  icon: { content: '<img src="/talks/decks/productividad/assets/icon-dora.png" alt="" class="title-icon">', meta: Image_Src }
+notes: |
+  Velocidad
+  Lead Time, 
+  Deploy Frequency
+  Estabilidad
+  Change Failure Rate
+  Mean Time to Repair
 ---
