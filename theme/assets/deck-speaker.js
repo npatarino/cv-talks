@@ -99,14 +99,14 @@
     hudEl.textContent = `${pad(cur.order)} / ${pad(total)} · ${cur.label}`;
 
     // Current thumbnail
-    const curParams = new URLSearchParams({ present: '1', embedded: '1', reveal: '0' });
+    const curParams = new URLSearchParams({ present: '1', embedded: '1', reveal: '1' });
     frameCurrentEl.src = cur.url + '?' + curParams.toString();
 
     // Next 4 thumbnails
     nextSlots.forEach((slot, i) => {
       const s = slides[idx + i + 1] ?? null;
       if (s) {
-        slot.frame.src = s.url + '?' + new URLSearchParams({ present: '1', embedded: '1', reveal: '0' });
+        slot.frame.src = s.url + '?' + new URLSearchParams({ present: '1', embedded: '1', reveal: '1' });
         slot.label.textContent = `${pad(s.order)} · ${s.label}`;
         slot.container.style.visibility = '';
         slot.label.style.visibility = '';

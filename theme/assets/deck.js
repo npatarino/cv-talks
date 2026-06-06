@@ -41,7 +41,7 @@
     } else if (s.revealStart != null) {
       reveal = String(s.revealStart);
     } else {
-      reveal = "0";
+      reveal = "1";
     }
     params.set("reveal", reveal);
     frame.src = s.url + "?" + params.toString();
