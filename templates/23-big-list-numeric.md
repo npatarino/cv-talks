@@ -6,13 +6,11 @@ label: "Big-list · numeric"
 variant: numeric
 fields:
   title: { content: "DORA · velocidad<br>y <em>estabilidad</em>.", meta: "Title_Text" }
-items:
-  - { text: "<b>Velocidad</b>", sub: [
-      { n: "a", text: "Lead Time" },
-      { n: "b", text: "Deploy Frequency" }
-    ] }
-  - { text: "<b>Estabilidad</b>", sub: [
-      { n: "a", text: "Change Failure Rate" },
-      { n: "b", text: "Mean Time to Repair" }
-    ] }
+itemsMarkdown: |
+  1. <b>Velocidad</b>
+      a. Lead Time
+      b. Deploy Frequency
+  2. <b>Estabilidad</b>
+      a. Change Failure Rate
+      b. Mean Time to Repair
 ---

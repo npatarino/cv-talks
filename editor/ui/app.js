@@ -656,7 +656,27 @@ function renderForm(slide) {
   }
 
   // Items-based content
-  if (Array.isArray(data.items)) {
+  if (data.template === 'big-list') {
+    addSection('Items (Markdown)');
+    if (!data.itemsMarkdown && Array.isArray(data.items)) {
+      data.itemsMarkdown = structuredItemsToMarkdown(data.items, data.variant ?? 'default');
+    }
+    const textarea = document.createElement('textarea');
+    textarea.className = 'form-control textarea-markdown-list';
+    textarea.style.fontFamily = 'monospace';
+    textarea.style.fontSize = '14px';
+    textarea.style.lineHeight = '1.5';
+    textarea.style.minHeight = '200px';
+    textarea.style.width = '100%';
+    textarea.style.padding = '10px';
+    textarea.style.boxSizing = 'border-box';
+    textarea.style.border = '1px solid var(--border-color, #ccc)';
+    textarea.style.borderRadius = '4px';
+    textarea.value = data.itemsMarkdown ?? '';
+    textarea.dataset.field = 'itemsMarkdown';
+    
+    addField('List Content', textarea);
+  } else if (Array.isArray(data.items)) {
     addSection('Items');
     renderItemsEditor(data.items, data.template, data.variant ?? 'default');
   }
@@ -733,6 +753,12 @@ async function onTemplateChange(newTemplate) {
     delete merged.items;
   }
 
+  if (scaffold.itemsMarkdown !== undefined) {
+    merged.itemsMarkdown = scaffold.itemsMarkdown;
+  } else {
+    delete merged.itemsMarkdown;
+  }
+
   // Mutate in-place so the re-render sees the new shape.
   state.slideData = { ...state.slideData, data: merged };
   renderForm(state.slideData);
@@ -759,6 +785,14 @@ async function onVariantChange(newVariant) {
   // For variants we keep existing items as-is — different variants of the same
   // template (e.g. big-list numeric/bullets/checklist) share the items shape
   // closely enough that wiping would surprise the user.
+
+  if (scaffold.itemsMarkdown !== undefined) {
+    if (merged.itemsMarkdown === undefined) {
+      merged.itemsMarkdown = scaffold.itemsMarkdown;
+    }
+  } else {
+    delete merged.itemsMarkdown;
+  }
 
   state.slideData = { ...state.slideData, data: merged };
   renderForm(state.slideData);
@@ -1912,6 +1946,10 @@ function collectFormData() {
     if (newData.fields && !String(content).trim()) delete newData.fields[k];
   }
 
+  if (newData.template === 'big-list') {
+    delete newData.items;
+  }
+
   return newData;
 }
 
@@ -2538,6 +2576,42 @@ async function init() {
       return;
     }
   }
+}
+
+function structuredItemsToMarkdown(items, variant) {
+  if (!Array.isArray(items)) return '';
+  let markdownLines = [];
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    let line = '';
+    if (variant === 'bullets') {
+      line = `* ${item.text || ''}`;
+    } else if (variant === 'checklist') {
+      let box = ' ';
+      if (item.state === 'done') box = 'x';
+      else if (item.state === 'fail') box = '-';
+      line = `- [${box}] ${item.text || ''}`;
+    } else if (variant === 'glossary') {
+      const term = item.term || '';
+      const desc = item.desc || '';
+      line = `* **${term}**: ${desc}`;
+    } else {
+      const n = item.n || `${i + 1}`;
+      const displayN = /^[a-zA-Z0-9]+$/.test(n) ? `${n}.` : n;
+      line = `${displayN} ${item.text || ''}`;
+    }
+    markdownLines.push(line);
+
+    if (Array.isArray(item.sub)) {
+      for (let j = 0; j < item.sub.length; j++) {
+        const sub = item.sub[j];
+        const subN = sub.n || 'a';
+        const displaySubN = /^[a-zA-Z0-9]+$/.test(subN) ? `${subN}.` : subN;
+        markdownLines.push(`    ${displaySubN} ${sub.text || ''}`);
+      }
+    }
+  }
+  return markdownLines.join('\n');
 }
 
 init().catch(e => console.error('Editor init failed:', e));

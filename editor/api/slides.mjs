@@ -73,6 +73,8 @@ export function createSlide(slug, opts, decksRoot) {
   else if (scaffold?.fields) data.fields = scaffold.fields;
   if (opts.items) data.items = opts.items;
   else if (scaffold?.items) data.items = scaffold.items;
+  if (opts.itemsMarkdown !== undefined) data.itemsMarkdown = opts.itemsMarkdown;
+  else if (scaffold?.itemsMarkdown !== undefined) data.itemsMarkdown = scaffold.itemsMarkdown;
 
   // Carry over optional top-level keys when provided (e.g. duplicating a slide
   // should preserve its speaker notes, mode override, and flags like iconTint).
@@ -184,6 +186,7 @@ export function loadTemplateScaffold(template, variant, templatesDir = TEMPLATES
   return {
     fields: data.fields ? blankFields(data.fields) : undefined,
     items:  Array.isArray(data.items) ? blankItems(data.items) : undefined,
+    itemsMarkdown: (data.template === 'big-list' || data.itemsMarkdown !== undefined) ? '' : undefined,
   };
 }
 
