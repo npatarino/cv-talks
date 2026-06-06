@@ -1,14 +1,14 @@
 ---
 template: big-list
-recipe: canvas-quiet
+recipe: energy-loud
 label: SPACE Framework
 variant: numeric
 fields:
   title: { content: "", meta: Title_Text }
 items:
-  - { text: "Satisfaction" }
-  - { text: "Performance" }
-  - { text: "Activity" }
-  - { text: "Communication" }
-  - { text: "Efficiency" }
+  - { text: Satisfaction }
+  - { text: Performance }
+  - { text: Activity }
+  - { text: Communication }
+  - { text: Efficiency }
 ---

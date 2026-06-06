@@ -51,21 +51,21 @@
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
         "start": 35,
-        "end": 65
+        "end": 66
       },
       {
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 66,
-        "end": 77
+        "start": 67,
+        "end": 78
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 78,
-        "end": 84
+        "start": 79,
+        "end": 85
       }
     ]
   },
@@ -112,6 +112,7 @@
     "dora-metrics-3.md",
     "dora-metrics-2-2.md",
     "speed.md",
+    "dx-core-4-2.md",
     "dx-core-4-detalle-2.md",
     "effectiveness.md",
     "quality.md",

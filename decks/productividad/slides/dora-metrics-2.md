@@ -1,6 +1,6 @@
 ---
 template: big-list
-recipe: canvas-quiet
+recipe: energy-loud
 label: Dora Metrics - 2
 variant: numeric
 fields:
