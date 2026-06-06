@@ -14,7 +14,7 @@
         "label": "Necesidad",
         "description": "Los tres problemas principales que quiero mostrar.",
         "start": 8,
-        "end": 36,
+        "end": 35,
         "children": [
           {
             "id": "P1",
@@ -35,14 +35,14 @@
             "label": "Sos un héroe",
             "description": "Sos un héroe.",
             "start": 25,
-            "end": 34
+            "end": 33
           },
           {
             "id": "PS",
             "label": "Problems summary",
             "description": "Resumen de los problemas.",
-            "start": 36,
-            "end": 36
+            "start": 35,
+            "end": 35
           }
         ]
       },
@@ -50,29 +50,29 @@
         "id": "S",
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
-        "start": 37,
-        "end": 59,
+        "start": 36,
+        "end": 58,
         "children": [
           {
             "id": "S1",
             "label": "Medir mejor",
             "description": "Medir mejor / DORA / SPACE.",
-            "start": 37,
-            "end": 49
+            "start": 36,
+            "end": 48
           },
           {
             "id": "S2",
             "label": "Automatización",
             "description": "Automatización y pago de deuda.",
-            "start": 50,
-            "end": 54
+            "start": 49,
+            "end": 53
           },
           {
             "id": "S3",
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
-            "start": 55,
-            "end": 59
+            "start": 54,
+            "end": 58
           }
         ]
       },
@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 60,
-        "end": 62
+        "start": 59,
+        "end": 61
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 63,
-        "end": 66
+        "start": 62,
+        "end": 65
       }
     ]
   },
@@ -126,11 +126,10 @@
     "bus-factor-icons-2.md",
     "heroe-capa.md",
     "bombero-piromano.md",
-    "quote-heroe-villano.md",
     "problemas-summary.md",
     "recurring-quote-2.md",
-    "moneyball.md",
     "dx-core-4.md",
+    "moneyball.md",
     "dora-metrics.md",
     "dora-metrics-2.md",
     "dora-metrics-3.md",
