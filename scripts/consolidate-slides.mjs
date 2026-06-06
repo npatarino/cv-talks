@@ -6,14 +6,14 @@ import { getStructure } from '../editor/api/structure.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
-const deckSlug = 'productividad';
+const deckSlug = 'el-mito-de-la-productividad-toxica';
 const deckDir = path.join(projectRoot, 'decks', deckSlug);
 const outputFilePath = '/Users/malvinas/.gemini/antigravity-ide/brain/91b36011-5ffb-49e3-942f-2b58de66be1d/consolidated_slides.md';
 
 const slides = readSlides(deckDir);
 const structure = getStructure(deckSlug, path.join(projectRoot, 'decks'));
 
-let md = `# Presentación: Productividad (Consolidada)\n\n`;
+let md = `# Presentación: El mito de la productividad tóxica (Consolidada)\n\n`;
 md += `Este documento contiene la estructura completa y el contenido de todas las slides de la presentación, incluyendo notas de orador y campos de datos. Diseñado para ser procesado por una IA para refinar, acortar, cerrar o dar retroalimentación a la presentación.\n\n`;
 
 // Add structural overview
