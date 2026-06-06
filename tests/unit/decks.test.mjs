@@ -48,10 +48,10 @@ describe('listDecks', () => {
     }
   });
 
-  it('includes the 2026-03-productividad-toxica deck', () => {
+  it('includes the productividad deck', () => {
     const decks = listDecks();
     const slugs = decks.map(d => d.slug);
-    expect(slugs).toContain('2026-03-productividad-toxica');
+    expect(slugs).toContain('productividad');
   });
 });
 

@@ -27,7 +27,7 @@ function collectMarkdownFiles(dir) {
 }
 
 const templateFiles = collectMarkdownFiles(TEMPLATES_DIR);
-const deckFiles = collectMarkdownFiles(DECKS_DIR).filter(f => /\/\d+-/.test(f));
+const deckFiles = collectMarkdownFiles(DECKS_DIR).filter(f => f.includes('/slides/'));
 
 describe('Template files — parse/serialize round-trip', () => {
   it('finds at least 40 template files', () => {
@@ -66,7 +66,6 @@ describe('Deck slide files — parse/serialize round-trip', () => {
       const { data, body } = parseMd(original);
 
       expect(data.template, `${rel}: missing template`).toBeDefined();
-      expect(typeof data.order, `${rel}: order must be a number`).toBe('number');
 
       const reserialized = serializeMd(data, body);
       const { data: data2, body: body2 } = parseMd(reserialized);

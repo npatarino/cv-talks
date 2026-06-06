@@ -40,9 +40,30 @@ function makeDeck(slug) {
 }
 
 function writeSlide(dir, filename, order, extra = {}) {
+  const body = extra.body || '';
   const fields = { template: 'big-concept', recipe: 'canvas-quiet', order, label: `Slide ${order}`, variant: 'default', ...extra };
+  delete fields.body;
   const yaml = Object.entries(fields).map(([k, v]) => `${k}: ${v}`).join('\n');
-  fs.writeFileSync(path.join(dir, filename), `---\n${yaml}\n---\n`, 'utf8');
+  fs.writeFileSync(path.join(dir, filename), `---\n${yaml}\n---\n${body}`, 'utf8');
+
+  // Sync to deck.config.json
+  const configPath = path.join(dir, 'deck.config.json');
+  let config = { slides: [] };
+  if (fs.existsSync(configPath)) {
+    config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  }
+  if (!config.slides.includes(filename)) {
+    config.slides.push(filename);
+  }
+  // Sort by order frontmatter
+  config.slides.sort((a, b) => {
+    const aContent = fs.readFileSync(path.join(dir, a), 'utf8');
+    const bContent = fs.readFileSync(path.join(dir, b), 'utf8');
+    const aOrder = parseInt(aContent.match(/order:\s*(\d+)/)?.[1] ?? '999', 10);
+    const bOrder = parseInt(bContent.match(/order:\s*(\d+)/)?.[1] ?? '999', 10);
+    return aOrder - bOrder;
+  });
+  fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
 }
 
 beforeEach(() => {
@@ -76,7 +97,7 @@ describe('GET /api/decks', () => {
   it('includes real decks from the project', async () => {
     const { data } = await call('GET', '/api/decks');
     const slugs = data.map(d => d.slug);
-    expect(slugs).toContain('2026-03-productividad-toxica');
+    expect(slugs).toContain('productividad');
   });
 });
 
@@ -281,13 +302,13 @@ describe('POST /api/decks/:slug/export-pdf', () => {
 describe('GET /api/decks/:slug/slides', () => {
   it('returns 200 with slide list', async () => {
     const dir = makeDeck('my-deck');
-    writeSlide(dir, '01-cover.md', 1);
-    writeSlide(dir, '02-concept.md', 2);
+    writeSlide(dir, 'cover.md', 1);
+    writeSlide(dir, 'concept.md', 2);
 
     const { status, data } = await call('GET', '/api/decks/my-deck/slides');
     expect(status).toBe(200);
     expect(data).toHaveLength(2);
-    expect(data[0].filename).toBe('01-cover.md');
+    expect(data[0].filename).toBe('cover.md');
   });
 
   it('returns empty array for deck with no slides', async () => {
@@ -369,9 +390,9 @@ describe('POST /api/decks/:slug/slides — insert at intermediate position', () 
   it('inserts after the currently-selected slide and renumbers the rest', async () => {
     // Setup: three slides already in the deck.
     const dir = makeDeck('my-deck');
-    writeSlide(dir, '01-a.md', 1, { label: 'A' });
-    writeSlide(dir, '02-b.md', 2, { label: 'B' });
-    writeSlide(dir, '03-c.md', 3, { label: 'C' });
+    writeSlide(dir, 'a.md', 1, { label: 'A' });
+    writeSlide(dir, 'b.md', 2, { label: 'B' });
+    writeSlide(dir, 'c.md', 3, { label: 'C' });
 
     // Simulating the new UI behavior: user has slide B (index 1) selected and clicks
     // "+ Add slide" — the modal pre-fills position with idx+2 = 3 (just after B).
@@ -389,12 +410,9 @@ describe('POST /api/decks/:slug/slides — insert at intermediate position', () 
     expect(list.map(s => s.order)).toEqual([1, 2, 3, 4]);
     expect(list.map(s => s.label)).toEqual(['A', 'B', 'Between B and C', 'C']);
 
-    // The existing slides should have been renamed (renumbered) on disk.
-    const files = fs.readdirSync(dir).filter(f => f.endsWith('.md')).sort();
-    // C was at 03-c.md, now should be 04-c.md.
-    expect(files).toContain('04-c.md');
-    // The original 03-c.md should no longer exist (renamed).
-    expect(files).not.toContain('03-c.md');
+    // The slides config should be updated in the new order
+    const config = JSON.parse(fs.readFileSync(path.join(dir, 'deck.config.json'), 'utf8'));
+    expect(config.slides).toEqual(['a.md', 'b.md', 'between-b-and-c.md', 'c.md']);
   });
 
   it('inserts at the start when position is 1', async () => {
@@ -447,14 +465,10 @@ describe('POST /api/decks/:slug/slides — insert at intermediate position', () 
 describe('GET /api/decks/:slug/slides/:filename', () => {
   it('returns 200 with slide data', async () => {
     const dir = makeDeck('my-deck');
-    fs.writeFileSync(
-      path.join(dir, '01-cover.md'),
-      '---\ntemplate: cover\norder: 1\nlabel: Cover\nrecipe: canvas-quiet\nvariant: default\n---\n# Body\n',
-      'utf8',
-    );
-    const { status, data } = await call('GET', '/api/decks/my-deck/slides/01-cover.md');
+    writeSlide(dir, 'cover.md', 1, { template: 'cover', label: 'Cover', body: '# Body\n' });
+    const { status, data } = await call('GET', '/api/decks/my-deck/slides/cover.md');
     expect(status).toBe(200);
-    expect(data.filename).toBe('01-cover.md');
+    expect(data.filename).toBe('cover.md');
     expect(data.data.template).toBe('cover');
     expect(data.body).toBe('# Body\n');
   });
@@ -471,15 +485,15 @@ describe('GET /api/decks/:slug/slides/:filename', () => {
 describe('PUT /api/decks/:slug/slides/:filename', () => {
   it('updates frontmatter and returns 200', async () => {
     const dir = makeDeck('my-deck');
-    writeSlide(dir, '01-cover.md', 1, { label: 'Original' });
+    writeSlide(dir, 'cover.md', 1, { label: 'Original' });
 
-    const { status, data } = await call('PUT', '/api/decks/my-deck/slides/01-cover.md', {
+    const { status, data } = await call('PUT', '/api/decks/my-deck/slides/cover.md', {
       data: { label: 'Updated' },
     });
     expect(status).toBe(200);
-    expect(data.filename).toBe('01-cover.md');
+    expect(data.filename).toBe('cover.md');
 
-    const { data: saved } = await call('GET', '/api/decks/my-deck/slides/01-cover.md');
+    const { data: saved } = await call('GET', '/api/decks/my-deck/slides/cover.md');
     expect(saved.data.label).toBe('Updated');
   });
 
@@ -495,14 +509,14 @@ describe('PUT /api/decks/:slug/slides/:filename', () => {
 describe('DELETE /api/decks/:slug/slides/:filename', () => {
   it('deletes slide and returns 200 with remaining list', async () => {
     const dir = makeDeck('my-deck');
-    writeSlide(dir, '01-a.md', 1);
-    writeSlide(dir, '02-b.md', 2);
+    writeSlide(dir, 'a.md', 1);
+    writeSlide(dir, 'b.md', 2);
 
-    const { status, data } = await call('DELETE', '/api/decks/my-deck/slides/01-a.md');
+    const { status, data } = await call('DELETE', '/api/decks/my-deck/slides/a.md');
     expect(status).toBe(200);
     expect(Array.isArray(data)).toBe(true);
     expect(data).toHaveLength(1);
-    expect(fs.existsSync(path.join(dir, '01-a.md'))).toBe(false);
+    expect(fs.existsSync(path.join(dir, 'a.md'))).toBe(false);
   });
 
   it('returns 404 for nonexistent slide', async () => {
@@ -517,12 +531,12 @@ describe('DELETE /api/decks/:slug/slides/:filename', () => {
 describe('POST /api/decks/:slug/slides/:filename/move', () => {
   it('moves slide to target position', async () => {
     const dir = makeDeck('my-deck');
-    writeSlide(dir, '01-a.md', 1, { label: 'A' });
-    writeSlide(dir, '02-b.md', 2, { label: 'B' });
-    writeSlide(dir, '03-c.md', 3, { label: 'C' });
+    writeSlide(dir, 'a.md', 1, { label: 'A' });
+    writeSlide(dir, 'b.md', 2, { label: 'B' });
+    writeSlide(dir, 'c.md', 3, { label: 'C' });
 
     const { status, data } = await call(
-      'POST', '/api/decks/my-deck/slides/01-a.md/move', { position: 3 },
+      'POST', '/api/decks/my-deck/slides/a.md/move', { position: 3 },
     );
     expect(status).toBe(200);
     expect(data.map(s => s.slug)).toEqual(['b', 'c', 'a']);
@@ -534,12 +548,12 @@ describe('POST /api/decks/:slug/slides/:filename/move', () => {
 describe('POST /api/decks/:slug/reorder', () => {
   it('reorders slides by provided filename array', async () => {
     const dir = makeDeck('my-deck');
-    writeSlide(dir, '01-a.md', 1, { label: 'A' });
-    writeSlide(dir, '02-b.md', 2, { label: 'B' });
-    writeSlide(dir, '03-c.md', 3, { label: 'C' });
+    writeSlide(dir, 'a.md', 1, { label: 'A' });
+    writeSlide(dir, 'b.md', 2, { label: 'B' });
+    writeSlide(dir, 'c.md', 3, { label: 'C' });
 
     const { status, data } = await call('POST', '/api/decks/my-deck/reorder', {
-      order: ['03-c.md', '01-a.md', '02-b.md'],
+      order: ['c.md', 'a.md', 'b.md'],
     });
     expect(status).toBe(200);
     expect(data.map(s => s.slug)).toEqual(['c', 'a', 'b']);
