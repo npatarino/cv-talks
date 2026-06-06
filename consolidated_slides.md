@@ -10,12 +10,12 @@ Este documento contiene la estructura completa y el contenido de todas las slide
   - **[Slide 17 - 23] P2: Código no es activo** (El código no es un activo.)
   - **[Slide 24 - 33] P3: Sos un héroe** (Sos un héroe.)
   - **[Slide 34 - 34] PS: Problems summary** (Resumen de los problemas.)
-- **[Slide 35 - 63] Solución** (Cómo solucionamos los problemas presentados.)
+- **[Slide 35 - 57] Solución** (Cómo solucionamos los problemas presentados.)
   - **[Slide 35 - 47] S1: Medir mejor** (Medir mejor / DORA / SPACE.)
   - **[Slide 48 - 52] S2: Automatización** (Automatización y pago de deuda.)
-  - **[Slide 53 - 63] S3: Reducir protagonismo** (Reducir protagonismo y delegar.)
-- **[Slide 64 - 75] Visualización** (Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.)
-- **[Slide 76 - 82] Acción** (Qué quiero accionar en la audiencia.)
+  - **[Slide 53 - 57] S3: Reducir protagonismo** (Reducir protagonismo y delegar.)
+- **[Slide 58 - 71] Visualización** (Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.)
+- **[Slide 72 - 78] Acción** (Qué quiero accionar en la audiencia.)
 
 ---
 
@@ -1043,7 +1043,7 @@ raf = requestAnimationFrame(frame);
 
 ### Notas del Orador:
 > Desheroicificarnos. Reducir nuestro protagonismo.
-> Tu nivel de impacto no se mide por las veces que salvás al mundo, sino por diseñar un sistema tan robusto que funciona perfectamente cuando no estás.
+> Tu nivel de impacto no se mide por las veces que salvás al mundo, sino por diseñar un sistema tan robusto, automatizado y autoexpicativo que funciona perfectamente cuando no estás.
 
 ---
 
@@ -1055,48 +1055,39 @@ raf = requestAnimationFrame(frame);
 1. *(vacío)*
 
 ### Notas del Orador:
-*(Sin notas)*
+> Y esto no significa trabajar menos, o desentenderse del equipo, sino en multiplicar a quienes te rodean y dejar de ser el cuello de botella.
 
 ---
 
-## Slide 55: `automatizacion`
+## Slide 55: `capa-de-ozono`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
-- **Template**: `big-concept` | **Recipe**: `canvas-quiet` | **Variant**: `divider` | **Label**: `Automatización · sección`
+- **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `divider` | **Label**: `Capa de ozono`
 
 ### Campos/Textos:
-- **title**: AUTO<br>MATI<br>ZA<br>CIÓN.
+- **icon**: <img src="/talks/decks/productividad/assets/ozone-earth.png" alt="" class="title-icon">
+- **title**: CAPA<br>DE <em>OZONO</em>.
 
 ### Notas del Orador:
-*(Sin notas)*
+> ¿Cuántos de los que están acá crecieron con el miedo de que nos estamos cargando la capa de ozono?
+> Bueno, ya con eso podemos sacar la media de la edad de los que están en la sala.
+> Para los jóvenes, en los 80 se descubrió el agujero de la capa de ozono. La cosa es que era un problema, como seres humanos no nos llevamos muy bien con los rayos ultravioletas. Y bueno, había que solucionarlo, qué pasó, sorprendentemente el mundo entero se puso de acuerdo y se firmó el Tratado de Montreal donde se decía que había que dejar de emitir gases CFC de los aerosoles. Hoy, en 2026, ya estamos casi con la capa de ozono recuperada, se dice que en unos 10-15 la capa de ozono ya estará recuperada en casi todo el mundo. Pero claro, fueron 50 años los que se necesitaron para solucionarlo.
 
 ---
 
-## Slide 56: `reducir-protagonismo`
-- **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
-- **Template**: `big-concept` | **Recipe**: `critical` | **Variant**: `prompt` | **Label**: `Reducir nuestro protagonismo`
-
-### Campos/Textos:
-- **title**: Reducir nuestro<br><em>PROTAGONISMO</em>
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 57: `recurring-quote-3`
+## Slide 56: `recurring-quote-3`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (III)`
 
 ### Campos/Textos:
-- **quote**: Productividad <em>no es hacer más</em>.<br>Es generar el mayor impacto con el menor mantenimiento.
-- **who**: — Definición de trabajo
+- **quote**: Nuestro trabajo como ingenieros debería ser <em>hacernos prescindibles</em>.
+- **who**: *(vacío)*
 
 ### Notas del Orador:
 *(Sin notas)*
 
 ---
 
-## Slide 58: `disclaimer-trabajar-menos`
+## Slide 57: `disclaimer-trabajar-menos`
 - **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
 - **Template**: `big-concept` | **Recipe**: `critical` | **Variant**: `disclaimer` | **Label**: `Disclaimer · no es trabajar menos`
 
@@ -1105,26 +1096,41 @@ raf = requestAnimationFrame(frame);
 - **note**: Disclaimer
 
 ### Notas del Orador:
-*(Sin notas)*
+> No es trabajar menos, pero claro, es tener menos visibilidad.
+> Pero ser un mejor ingeniero.
 
 ---
 
-## Slide 59: `disclaimer-trabajar-inteligente`
-- **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
-- **Template**: `big-concept` | **Recipe**: `energy-loud` | **Variant**: `default` | **Label**: `Disclaimer · trabajar de forma inteligente`
+## Slide 58: `cadena-1`
+- **Sección narrativa**: V: Visualización
+- **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Visualización 1`
 
-### Campos/Textos:
-- **title**: ES TRABAJAR<br>DE FORMA<br><em>INTELIGENTE</em>
-- **note**: Disclaimer
+### Items de Lista:
+1. *(vacío)*
 
 ### Notas del Orador:
-*(Sin notas)*
+> Si cambiamos nuestra perspectiva para dejar de perseguir el movimiento y empezar a perseguir el impacto, entonces multiplicaremos el valor que entregamos.
+> Dejaremos de ser profesionales fácilmente reemplazables por una IA para convertirnos en líderes que impulsan el cambio.
 
 ---
 
-## Slide 60: `heroe-arquitecto`
-- **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
-- **Template**: `icon` | **Recipe**: `critical` | **Variant**: `N/A` | **Label**: `Héroe → Arquitecto`
+## Slide 59: `cadena-1-2`
+- **Sección narrativa**: V: Visualización
+- **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Visualización 1`
+
+### Items de Lista:
+1. *(vacío)*
+2. *(vacío)*
+
+### Notas del Orador:
+> Si dejamos de hacer cosas solo porque podemos hacerlas, entonces reduciremos drásticamente el mantenimiento y la complejidad.
+> Dejaremos de ser fábricas de escribir código para convertirnos en ingenieros que resuelven problemas reales.
+
+---
+
+## Slide 60: `cadena-1-2-2`
+- **Sección narrativa**: V: Visualización
+- **Template**: `icon` | **Recipe**: `canvas-signal` | **Variant**: `default` | **Label**: `Visualización 1`
 
 ### Items de Lista:
 1. *(vacío)*
@@ -1132,49 +1138,12 @@ raf = requestAnimationFrame(frame);
 3. *(vacío)*
 
 ### Notas del Orador:
-*(Sin notas)*
+> Si nos sacamos la capa de superhéroe y empezamos a compartir y delegar, entonces construiremos un equipo robusto y escalable.
+> Dejaremos de ser cuellos de botella indispensables para convertirnos en facilitadores que multiplican el impacto de todos.
 
 ---
 
-## Slide 61: `cargando-0`
-- **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
-- **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cargando · paso 0`
-
-### Items de Lista:
-1. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 62: `insostenibles`
-- **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
-- **Template**: `big-concept` | **Recipe**: `critical` | **Variant**: `prompt` | **Label**: `Insostenibles`
-
-### Campos/Textos:
-- **title**: No imprescindibles.<br><em>Insostenibles</em>.
-
-### Notas del Orador:
-> Cuando en realidad no somos imprescindibles. Somos insostenibles.
-> 
-> Confundimos "que la empresa no pueda funcionar sin mí" con "ser valioso". Y no es lo mismo. Un equipo sano es uno que puede seguir adelante aunque cualquiera de nosotros falte. Ser el único que sabe algo no nos hace héroes: nos hace el riesgo.
-
----
-
-## Slide 63: `cadena-1`
-- **Sección narrativa**: S: Solución -> S3: Reducir protagonismo
-- **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cadena · paso 1 (flujo)`
-
-### Items de Lista:
-1. *(vacío)*
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 64: `cadena-2`
+## Slide 61: `cadena-2`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cadena · paso 2 (+ análisis)`
 
@@ -1187,7 +1156,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 65: `cadena-3`
+## Slide 62: `cadena-3`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cadena · paso 3 (+ equipo)`
 
@@ -1201,7 +1170,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 66: `cadena-4`
+## Slide 63: `cadena-4`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cadena · paso 4 (+ calidad)`
 
@@ -1216,7 +1185,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 67: `cadena-5`
+## Slide 64: `cadena-5`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cadena · paso 5 (+ deploy)`
 
@@ -1232,7 +1201,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 68: `cadena-6`
+## Slide 65: `cadena-6`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `paper` | **Variant**: `N/A` | **Label**: `Cadena · paso 6 (+ persona)`
 
@@ -1249,7 +1218,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 69: `ci-chain`
+## Slide 66: `ci-chain`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `N/A` | **Label**: `CI chain · 4' → 1.5'`
 
@@ -1261,7 +1230,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 70: `ci-chain-25x`
+## Slide 67: `ci-chain-25x`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `N/A` | **Label**: `CI chain · → 25× por día`
 
@@ -1275,7 +1244,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 71: `ci-chain-x15`
+## Slide 68: `ci-chain-x15`
 - **Sección narrativa**: V: Visualización
 - **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `N/A` | **Label**: `CI chain · → ×15 personas`
 
@@ -1291,7 +1260,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 72: `mas-15h`
+## Slide 69: `mas-15h`
 - **Sección narrativa**: V: Visualización
 - **Template**: `big-stat` | **Recipe**: `canvas-quiet` | **Variant**: `default` | **Label**: `+15h por día · cierre del cálculo`
 
@@ -1305,7 +1274,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 73: `no-siempre-se-ve`
+## Slide 70: `no-siempre-se-ve`
 - **Sección narrativa**: V: Visualización
 - **Template**: `big-concept` | **Recipe**: `critical` | **Variant**: `prompt` | **Label**: `No siempre se ve`
 
@@ -1317,20 +1286,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 74: `capa-de-ozono`
-- **Sección narrativa**: V: Visualización
-- **Template**: `big-concept` | **Recipe**: `cool-fresh` | **Variant**: `divider` | **Label**: `Capa de ozono`
-
-### Campos/Textos:
-- **icon**: <img src="/talks/decks/productividad/assets/ozone-earth.png" alt="" class="title-icon">
-- **title**: CAPA<br>DE <em>OZONO</em>.
-
-### Notas del Orador:
-*(Sin notas)*
-
----
-
-## Slide 75: `practicas-compartir`
+## Slide 71: `practicas-compartir`
 - **Sección narrativa**: V: Visualización
 - **Template**: `big-list` | **Recipe**: `cool-fresh` | **Variant**: `numeric` | **Label**: `Prácticas · compartir conocimiento`
 
@@ -1347,7 +1303,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 76: `recurring-quote-4`
+## Slide 72: `recurring-quote-4`
 - **Sección narrativa**: A2: Acción
 - **Template**: `quote` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cita recurrente · productividad no es hacer más (IV)`
 
@@ -1360,7 +1316,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 77: `cohete-2-2`
+## Slide 73: `cohete-2-2`
 - **Sección narrativa**: A2: Acción
 - **Template**: `icon` | **Recipe**: `critical` | **Variant**: `default` | **Label**: `Cohete · paso 1`
 
@@ -1374,7 +1330,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 78: `cohete-engranajes`
+## Slide 74: `cohete-engranajes`
 - **Sección narrativa**: A2: Acción
 - **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `N/A` | **Label**: `Cohete + engranajes`
 
@@ -1387,7 +1343,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 79: `cohete-engranajes-capa`
+## Slide 75: `cohete-engranajes-capa`
 - **Sección narrativa**: A2: Acción
 - **Template**: `icon` | **Recipe**: `canvas-quiet` | **Variant**: `N/A` | **Label**: `Cohete + engranajes + capa`
 
@@ -1401,7 +1357,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 80: `pausa-rosa`
+## Slide 76: `pausa-rosa`
 - **Sección narrativa**: A2: Acción
 - **Template**: `big-concept` | **Recipe**: `critical` | **Variant**: `transition` | **Label**: `Pausa · plasma`
 
@@ -1413,7 +1369,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 81: `radiacion`
+## Slide 77: `radiacion`
 - **Sección narrativa**: A2: Acción
 - **Template**: `icon` | **Recipe**: `critical` | **Variant**: `N/A` | **Label**: `Radiación del héroe`
 
@@ -1425,7 +1381,7 @@ raf = requestAnimationFrame(frame);
 
 ---
 
-## Slide 82: `cierre`
+## Slide 78: `cierre`
 - **Sección narrativa**: A2: Acción
 - **Template**: `closing-socials` | **Recipe**: `energy-loud` | **Variant**: `N/A` | **Label**: `¿Y ustedes qué opinan?`
 
