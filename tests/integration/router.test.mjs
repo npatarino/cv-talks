@@ -97,7 +97,7 @@ describe('GET /api/decks', () => {
   it('includes real decks from the project', async () => {
     const { data } = await call('GET', '/api/decks');
     const slugs = data.map(d => d.slug);
-    expect(slugs).toContain('productividad');
+    expect(slugs).toContain('el-mito-de-la-productividad-toxica');
   });
 });
 

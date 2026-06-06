@@ -1,0 +1,15 @@
+{
+  "tags": "el-mito-de-la-productividad-toxica-slide",
+  "permalink": "talks/decks/el-mito-de-la-productividad-toxica/{{ page.fileSlug }}/index.html",
+  "deck": {
+    "title": "El mito de la productividad tóxica",
+    "subtitle": "Por qué hacer menos, a veces, es el mejor commit del trimestre.",
+    "author": "Nicolás Patarino",
+    "date": "2026-05"
+  },
+  "eleventyComputed": {
+    "layout": "{% if template %}layouts/{{ template }}.njk{% else %}{{ layout }}{% endif %}",
+    "slideCss": "{% if template %}{{ template }}{% endif %}",
+    "effectiveMode": "{{ mode or site.mode }}"
+  }
+}

@@ -48,10 +48,10 @@ describe('listDecks', () => {
     }
   });
 
-  it('includes the productividad deck', () => {
+  it('includes the el-mito-de-la-productividad-toxica deck', () => {
     const decks = listDecks();
     const slugs = decks.map(d => d.slug);
-    expect(slugs).toContain('productividad');
+    expect(slugs).toContain('el-mito-de-la-productividad-toxica');
   });
 });
 
