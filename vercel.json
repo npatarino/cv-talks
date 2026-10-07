@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "bun run slides:build",
+  "outputDirectory": "_site",
+  "installCommand": "bun install"
+}
