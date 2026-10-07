@@ -23,7 +23,10 @@ export function listDecks(decksRoot = DECKS_DIR) {
     .filter(e => e.isDirectory())
     .map(e => {
       const slug = e.name;
-      const metaPath = path.join(decksRoot, slug, `${slug}.json`);
+      let metaPath = path.join(decksRoot, slug, `${slug}.json`);
+      if (!fs.existsSync(metaPath)) {
+        metaPath = path.join(decksRoot, slug, `${slug}.11tydata.json`);
+      }
       const meta = fs.existsSync(metaPath)
         ? JSON.parse(fs.readFileSync(metaPath, 'utf8'))
         : {};
