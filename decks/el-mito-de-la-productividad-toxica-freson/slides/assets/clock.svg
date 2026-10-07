@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Esfera: tres vueltas descuadradas, con solapes y rabillos al cerrar -->
+  <path stroke-width="20" d="M236 22C120 34 26 134 30 262C34 392 140 492 266 486C392 480 490 376 484 246C480 150 410 58 300 28C280 22 262 20 246 24"/>
+  <path stroke-width="11" opacity=".85" d="M300 16C410 44 494 150 490 268C486 392 380 496 250 492C130 488 28 384 36 254C42 150 120 52 232 30C262 24 292 28 318 42"/>
+  <path stroke-width="7" opacity=".6" d="M70 150C100 80 170 40 244 36"/>
+  <path stroke-width="7" opacity=".6" d="M446 360C420 420 360 460 290 470"/>
+  <!-- Marcas de hora: dobles y desiguales -->
+  <g stroke-width="17">
+    <path d="M258 62L254 108"/>
+    <path d="M262 66L259 98" stroke-width="7" opacity=".6"/>
+    <path d="M388 92L362 134"/>
+    <path d="M452 252L408 260"/>
+    <path d="M456 258L414 252" stroke-width="7" opacity=".6"/>
+    <path d="M410 400L374 370"/>
+    <path d="M252 456L260 410"/>
+    <path d="M122 404L146 368"/>
+    <path d="M118 400L142 374" stroke-width="7" opacity=".6"/>
+    <path d="M60 262L102 250"/>
+    <path d="M126 104L152 142"/>
+  </g>
+  <!-- Sombreado a rayitas (hatching) en la parte inferior derecha -->
+  <g stroke-width="7" opacity=".7">
+    <path d="M330 400L400 330"/>
+    <path d="M350 412L414 346"/>
+    <path d="M372 420L426 366"/>
+    <path d="M312 420L384 346"/>
+  </g>
+  <!-- Aguja corta: líneas repasadas varias veces -->
+  <path stroke-width="22" d="M256 260C249 240 246 212 253 172"/>
+  <path stroke-width="8" opacity=".75" d="M266 262C262 238 258 208 262 170"/>
+  <path stroke-width="7" opacity=".6" d="M247 258C242 236 240 214 246 180"/>
+  <!-- Aguja larga con rabillo que se pasa del centro -->
+  <path stroke-width="20" d="M238 240C262 272 302 306 346 344"/>
+  <path stroke-width="8" opacity=".75" d="M252 266C282 290 312 312 352 338"/>
+  <path stroke-width="7" opacity=".6" d="M262 252C290 280 320 316 342 350"/>
+  <!-- Centro garabateado -->
+  <path stroke-width="13" d="M244 254C244 242 270 240 270 256C270 272 246 274 242 258"/>
+  <path stroke-width="7" opacity=".7" d="M250 264C262 270 274 262 272 250"/>
+</svg>

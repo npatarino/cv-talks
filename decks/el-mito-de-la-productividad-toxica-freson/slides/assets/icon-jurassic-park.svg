@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Rellenos desplazados -->
+  <g stroke="none" transform="translate(8 9)">
+    <circle cx="250" cy="250" r="226" fill="#a64132"/>
+    <path fill="#1c1c1c" d="M236 92C260 76 300 84 318 108C350 120 400 126 430 160C432 185 405 200 372 198C340 192 316 184 292 178C312 216 345 254 376 262C378 272 360 278 340 272C310 252 282 222 262 192C250 214 230 240 222 262C240 280 214 300 212 330C226 360 240 392 244 436C218 440 190 424 166 436C120 430 80 350 38 276C80 246 100 220 124 190C160 150 214 122 236 92Z"/>
+    <path fill="#f9d71c" opacity=".9" d="M6 270C8 130 120 0 256 4C300 6 340 18 372 38C310 20 240 24 180 60C100 100 50 180 40 290Z"/>
+  </g>
+<!-- Aro exterior (dos pasadas) -->
+  <path stroke-width="18" d="M260 12C122 10 8 124 10 262C14 400 126 506 262 502C398 498 504 388 500 252C498 130 400 14 256 16"/>
+  <path stroke-width="7" opacity=".7" d="M300 24C420 40 494 150 488 270C482 396 380 494 250 490C130 484 26 386 30 256C34 160 100 70 200 36"/>
+  <!-- Aro interior -->
+  <path stroke-width="10" d="M254 38C140 38 40 140 42 258C46 380 146 476 262 474C376 470 470 378 468 256C466 140 372 42 260 40"/>
+  <!-- T-rex: cabeza, mandibula, nuca, costillas, patas -->
+  <path stroke-width="15" d="M234 94C256 74 302 82 320 108C352 118 404 126 432 162C434 190 404 204 370 200C340 194 318 186 292 178"/>
+  <path stroke-width="8" opacity=".8" transform="translate(4 3)" d="M240 100C262 82 300 90 318 114C350 124 400 132 424 164"/>
+  <path stroke-width="14" d="M290 176C312 218 346 256 378 262C380 274 358 280 338 272C308 252 280 222 260 192"/>
+  <path stroke-width="14" d="M236 92C214 122 158 152 124 190C100 218 78 246 36 276"/>
+  <path stroke-width="7" opacity=".7" transform="translate(-3 5)" d="M228 100C206 134 150 160 118 196C96 224 72 248 44 270"/>
+  <path stroke-width="13" d="M262 192C250 214 230 240 222 262C240 282 214 302 212 330C226 360 240 392 244 436C218 440 190 424 166 436C120 430 80 350 36 278"/>
+  <path stroke-width="10" d="M68 290L140 420M92 276L160 408M120 262L178 380"/>
+  <path stroke-width="12" d="M262 328L276 322L274 342L254 360L232 374M178 420L196 412L222 410M206 430L226 424"/>
+  <!-- ojo, dientes -->
+  <path stroke-width="10" d="M372 138C382 134 394 142 388 152C380 156 370 150 372 138"/>
+  <path stroke-width="9" d="M330 196L336 214M352 204L356 224M300 188L312 214M342 262L338 244M364 262L358 244"/>
+  <!-- Espinas dorsales -->
+  <g stroke-width="9">
+    <path d="M200 116L186 98"/><path d="M168 146L150 132"/><path d="M138 172L116 160"/><path d="M110 200L90 192"/><path d="M82 232L62 228"/>
+  </g>
+  <!-- Sombreado -->
+  <g stroke-width="6" opacity=".6">
+    <path d="M300 340L430 410"/><path d="M280 372L400 440"/><path d="M340 320L450 370"/><path d="M360 300L460 330"/>
+  </g>
+</svg>

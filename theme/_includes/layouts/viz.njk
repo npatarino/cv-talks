@@ -1,0 +1,23 @@
+{% extends "layouts/slide.njk" %}
+{% from "partials/field.njk" import field %}
+
+{# Viz · slide de visualización animada paso a paso.
+   El contenido del escenario (SVG/HTML + estilos + JS) va inline en `fields.stage`.
+   `steps: N` crea N marcadores `.revealable`: cada → avanza un paso y cada ←
+   retrocede uno (ver /talks/assets/viz.js: setea `data-step` en la slide y marca
+   `.is-on` en los elementos con `data-from="n"` cuando step >= n).
+   Se recomienda `revealStart: 0` para empezar en el escenario vacío.
+
+   Acepta: fields.eyebrow, fields.title, fields.stage, fields.note, steps. #}
+
+{% block slide %}
+<section class="slide s-viz" data-recipe="{{ recipe }}" data-label="{{ label }}" data-steps="{{ steps or 0 }}">
+  {% if fields.eyebrow %}<div class="eb">{{ field(fields, "eyebrow", effectiveMode) | safe }}</div>{% endif %}
+  {% if fields.title %}<h2>{{ field(fields, "title", effectiveMode) | safe }}</h2>{% endif %}
+  <div class="stage">{{ field(fields, "stage", effectiveMode) | safe }}</div>
+  {% if fields.note %}<p class="note">{{ field(fields, "note", effectiveMode) | safe }}</p>{% endif %}
+  {% for i in range(0, steps or 0) %}<i class="revealable viz-step" style="display:none"></i>{% endfor %}
+  <span class="sl-label">{{ order }} · {{ label }}</span>
+</section>
+<script src="{{ '/talks/assets/viz.js' | url }}"></script>
+{% endblock %}

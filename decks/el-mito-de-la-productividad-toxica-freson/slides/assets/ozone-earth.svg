@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Color marker desfasado -->
+  <g stroke="none" transform="translate(7 8)">
+    <path fill="#fafaf8" d="M352 20A246 246 0 1 0 490 156A100 100 0 0 1 352 20Z"/>
+    <path fill="#7dd8d2" d="M256 64A192 192 0 1 0 258 448A192 192 0 1 0 256 64Z"/>
+    <path fill="#017275" d="M256 128A128 128 0 1 0 258 384A128 128 0 1 0 256 128Z"/>
+    <path fill="#fafaf8" d="M146 318C190 330 236 322 256 316L258 384C210 382 168 356 146 318Z"/>
+    <path fill="#f9d71c" d="M256 190C270 190 366 190 368 192C390 236 384 310 350 350C320 376 288 384 258 384L256 190Z" opacity=".9"/>
+    <path fill="#fafaf8" d="M236 190C214 190 206 212 210 226C214 246 232 256 258 254L256 190Z"/>
+  </g>
+  <!-- Anillo exterior con mordisco -->
+  <path stroke-width="19" d="M354 14C300 -2 210 0 140 40C50 92 6 182 8 264C12 380 100 490 236 504C370 514 480 430 502 304C510 256 506 204 490 158C440 168 380 148 356 112C340 86 344 44 358 18"/>
+  <path stroke-width="8" opacity=".75" d="M346 22C290 4 214 12 150 52C70 100 18 196 22 282C28 390 110 484 244 494C360 500 462 420 490 310C500 262 496 210 484 168C436 178 372 156 348 120C334 94 336 54 350 26"/>
+  <!-- Anillo medio -->
+  <path stroke-width="15" d="M256 62C150 58 68 150 64 252C60 360 150 450 258 450C366 452 450 356 448 254C446 150 366 62 252 64"/>
+  <path stroke-width="7" opacity=".65" d="M262 72C168 70 78 150 76 256C74 350 156 440 260 438C354 436 438 360 436 260C434 164 360 76 266 74"/>
+  <!-- Tierra -->
+  <path stroke-width="17" d="M256 126C190 122 128 176 128 254C128 326 186 386 258 384C330 384 386 322 384 252C382 190 336 128 254 128"/>
+  <path stroke-width="7" opacity=".7" d="M262 136C204 136 142 184 140 252C140 316 190 372 256 372C322 372 374 316 372 252C370 200 330 140 258 138"/>
+  <!-- Linea vertical y continentes -->
+  <path stroke-width="12" d="M257 126C259 180 256 230 258 386"/>
+  <path stroke-width="6" opacity=".6" d="M247 130C249 190 246 250 248 380"/>
+  <path stroke-width="15" d="M258 190C236 188 208 200 208 224C208 246 230 256 258 254"/>
+  <path stroke-width="7" opacity=".7" d="M252 200C230 202 218 214 220 228"/>
+  <path stroke-width="14" d="M144 318C190 330 232 324 258 316"/>
+  <path stroke-width="14" d="M258 190L366 190C384 230 386 290 360 336"/>
+  <!-- Hatching -->
+  <g stroke-width="6" opacity=".6">
+    <path d="M430 340L470 300"/>
+    <path d="M410 372L452 334"/>
+    <path d="M380 398L424 362"/>
+    <path d="M70 120L100 88"/>
+    <path d="M52 150L84 114"/>
+  </g>
+</svg>

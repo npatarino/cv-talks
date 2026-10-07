@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Nubes de impacto -->
+  <g stroke="none" transform="translate(8 8)">
+    <path fill="#a64132" d="M130 280C102 270 96 220 112 190C112 160 150 142 182 156C196 136 226 128 244 150L240 190L170 270Z"/>
+    <path fill="#ff2079" opacity=".85" d="M440 150C478 150 488 190 478 214C492 244 470 280 436 278L410 262L402 210Z"/>
+    <path fill="#fafaf8" opacity=".12" d="M230 8C250 0 276 10 280 40L282 120L330 170L318 190L228 110C216 100 220 90 220 80Z"/>
+  </g>
+  <!-- Nubes contorno -->
+  <path stroke-width="14" d="M240 148C226 118 190 120 176 144C150 132 108 146 106 184C94 200 100 244 124 262C130 276 144 284 160 276"/>
+  <path stroke-width="6" opacity=".7" d="M236 156C222 124 184 130 170 150C146 140 112 154 112 190C104 206 108 240 128 256"/>
+  <path stroke-width="14" d="M446 148C478 144 492 180 482 208C494 238 472 282 438 276"/>
+  <path stroke-width="6" opacity=".7" d="M440 156C470 156 484 186 476 206"/>
+  <!-- Cabeza -->
+  <path stroke-width="20" d="M366 90C402 86 440 112 446 150C448 186 418 212 380 210C344 206 318 176 324 138C328 112 346 94 368 90"/>
+  <path stroke-width="8" opacity=".75" d="M386 82C422 94 450 126 440 168C430 200 392 218 354 202"/>
+  <path stroke-width="8" opacity=".7" d="M332 160C336 190 360 206 388 206"/>
+  <!-- Brazo arriba + torso + piernas (silueta continua) -->
+  <path stroke-width="20" d="M222 52C224 20 242 4 262 6C282 8 286 30 280 50L276 124C300 150 316 160 326 168M222 56C220 90 218 130 222 150L240 168C224 190 190 236 160 262C140 270 98 284 84 298C70 330 40 380 30 410C30 436 66 458 84 436C98 400 126 350 136 340C160 330 200 312 206 322"/>
+  <path stroke-width="20" d="M338 186C376 220 408 248 426 270C412 310 394 366 386 394C374 428 346 426 350 392C358 366 370 320 376 296M298 270C316 262 338 268 346 286L106 484C92 498 78 500 88 470L296 272"/>
+  <path stroke-width="7" opacity=".65" transform="translate(5 4)" d="M224 60C222 92 220 126 226 152L246 170M270 274L102 462"/>
+  <!-- Sombreado -->
+  <g stroke-width="6" opacity=".6">
+    <path d="M250 392L300 342"/><path d="M222 418L276 366"/><path d="M196 440L248 388"/><path d="M168 462L214 416"/>
+    <path d="M352 120L374 98"/><path d="M360 168L398 150"/>
+    <path d="M240 200L290 226"/>
+  </g>
+</svg>

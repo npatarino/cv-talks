@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="translate(14 -2) scale(.94)">
+  <!-- Color marker desfasado: tres tramos del arco -->
+  <g stroke="none" transform="translate(7 8)">
+    <path fill="#f9d71c" d="M8 330C10 250 48 170 112 124L170 190C140 214 128 246 130 330Z"/>
+    <path fill="#a64132" d="M116 118C150 90 200 72 256 68L258 190C220 190 188 204 172 192Z"/>
+    <path fill="#ff2079" d="M256 66C380 66 494 170 504 330L384 330C384 270 330 200 258 190Z"/>
+    <path fill="#7dd8d2" d="M438 140L224 346C214 358 218 372 226 380L270 426C284 436 296 432 304 424L504 200L506 140Z"/>
+    <circle cx="259" cy="395" r="60" fill="#017275"/>
+  </g>
+  <!-- Arco exterior -->
+  <path stroke-width="19" d="M6 336L128 332C128 250 188 184 258 186C330 188 386 252 384 330L506 334C506 160 390 66 256 62C120 60 8 170 4 328"/>
+  <path stroke-width="8" opacity=".75" d="M20 322L120 322C122 230 190 170 260 176C336 180 396 248 398 322L494 324C486 176 382 78 254 76C130 76 28 176 18 318"/>
+  <!-- Divisores de tramos -->
+  <path stroke-width="14" d="M112 122L168 190"/>
+  <path stroke-width="14" d="M258 66C256 110 258 150 256 186"/>
+  <path stroke-width="6" opacity=".6" d="M268 72C266 112 268 150 266 180"/>
+  <!-- Aguja -->
+  <path stroke-width="18" d="M450 134L218 346C206 358 210 374 220 382L268 430C280 442 296 436 306 426L508 202L506 136L446 136"/>
+  <path stroke-width="7" opacity=".7" d="M440 160L236 352C230 360 232 368 238 374"/>
+  <path stroke-width="6" opacity=".6" d="M488 152L488 200"/>
+  <path stroke-width="13" d="M230 346L290 420"/>
+  <!-- Eje de la aguja -->
+  <path stroke-width="16" d="M258 330C222 328 198 358 200 392C204 428 238 456 272 452C306 446 324 414 318 384C312 352 290 332 256 332"/>
+  <path stroke-width="7" opacity=".7" d="M266 342C298 350 312 376 308 398"/>
+  <!-- Hatching -->
+  <g stroke-width="6" opacity=".6">
+    <path d="M44 270L84 226"/>
+    <path d="M24 292L64 252"/>
+    <path d="M430 268L470 296"/>
+    <path d="M410 250L452 282"/>
+    <path d="M300 440L336 404"/>
+  </g>
+  </g>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Rellenos de rotulador desplazados -->
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#f9d71c" d="M20 130C20 108 40 98 70 98L360 100C395 100 414 118 418 150L425 218L488 230C500 236 500 250 500 270L498 342L24 340C16 300 20 200 20 130Z"/>
+    <path fill="#fafaf8" d="M20 150L56 152L56 228L20 230ZM76 152L130 152L130 228L76 228ZM158 152L222 152L222 228L158 228ZM378 152L416 152L416 206L378 206Z"/>
+    <path fill="#017275" opacity=".85" d="M270 158L292 158L292 340L270 340ZM310 158L330 158L330 340L310 340Z"/>
+    <circle cx="112" cy="352" r="50" fill="#1c1c1c"/><circle cx="426" cy="352" r="50" fill="#1c1c1c"/>
+    <circle cx="112" cy="352" r="22" fill="#fafaf8"/><circle cx="426" cy="352" r="22" fill="#fafaf8"/>
+  </g>
+  <g stroke="#1c1c1c">
+    <!-- carroceria -->
+    <path stroke-width="19" d="M16 336C10 270 12 190 14 132C16 102 38 92 74 92C170 90 290 98 360 94C396 94 414 114 416 146C418 176 418 200 424 214C450 222 470 226 490 232C502 240 502 258 500 280C498 306 500 326 498 346C440 342 160 346 70 342C50 344 30 340 14 340"/>
+    <path stroke-width="7" opacity=".75" transform="translate(5 -4)" d="M22 340C14 280 20 190 18 138C20 108 44 98 80 100C180 96 280 104 352 100C390 100 408 116 410 150C412 182 416 204 422 224C446 228 474 230 496 240C508 250 504 270 504 290C502 316 504 336 502 350"/>
+    <!-- ventanas -->
+    <path stroke-width="14" d="M12 152L58 150L56 232L10 234"/>
+    <path stroke-width="14" d="M72 150L134 152L132 232L74 230L72 148"/>
+    <path stroke-width="14" d="M156 150L226 152L224 234L154 232L156 148"/>
+    <path stroke-width="14" d="M374 150L420 152L418 210L376 206L374 150"/>
+    <!-- puerta -->
+    <path stroke-width="15" d="M254 156C256 148 332 146 346 152C350 200 350 290 352 350M254 156C252 220 256 290 254 350"/>
+    <path stroke-width="10" d="M300 158C302 220 298 290 302 348"/>
+    <path stroke-width="8" opacity=".75" d="M264 238L340 242"/>
+    <!-- parachoques -->
+    <path stroke-width="13" d="M10 302L2 306L4 350L26 352M498 306L508 306L508 350L484 352"/>
+    <!-- ruedas -->
+    <path stroke-width="18" d="M112 296C146 294 172 322 170 354C168 386 142 410 108 408C76 406 56 380 58 350C60 322 82 298 114 298"/>
+    <path stroke-width="7" opacity=".7" d="M120 304C150 312 164 336 160 362C154 388 128 400 104 398"/>
+    <path stroke-width="18" d="M426 296C460 296 484 324 482 354C480 386 454 410 420 408C388 406 370 380 372 350C374 322 396 298 428 298"/>
+    <path stroke-width="7" opacity=".7" d="M434 304C464 312 476 338 472 362C466 388 440 400 416 398"/>
+    <path stroke-width="12" d="M108 335C92 336 92 366 108 368C124 368 126 338 110 334"/>
+    <path stroke-width="12" d="M424 335C408 336 408 366 424 368C440 368 442 338 426 334"/>
+    <!-- sombreado -->
+    <g stroke-width="6" opacity=".6">
+      <path d="M30 236L46 214"/><path d="M84 236L106 212"/><path d="M168 236L190 212"/><path d="M386 210L404 190"/>
+      <path d="M190 300L240 296"/><path d="M200 316L244 312"/><path d="M370 296L412 292"/>
+    </g>
+  </g>
+  <!-- repaso en marfil para que se lea sobre carbon -->
+  <g stroke="#fafaf8" stroke-width="5" opacity=".7" transform="translate(-3 -3)">
+    <path d="M16 340C10 270 12 190 14 132C16 102 38 92 74 92C170 90 290 98 360 94"/>
+    <path d="M426 296C460 296 484 324 482 354"/>
+  </g>
+</svg>

@@ -1,0 +1,75 @@
+/* Viz · slide de visualización animada por pasos (ver layouts/viz.njk y assets/viz.js).
+   Usa los roles del recipe (surface · ink · em · accent · warn). El escenario
+   (`.stage`) ocupa todo el alto libre; los slides definen su SVG/HTML inline.
+   Utilidades:
+     [data-from="n"]  oculto hasta que step >= n (fade + leve subida).
+     path.draw[data-from]  se "dibuja" (pathLength=1) al activarse.
+     .is-off          (por [data-until]) se apaga al llegar a ese paso. */
+
+section.slide.s-viz {
+  background: var(--recipe-surface);
+  color: var(--recipe-ink);
+  display: flex; flex-direction: column;
+  padding: 80px 120px 70px;
+}
+.s-viz .eb {
+  font-family: var(--font-mono); font-size: 22px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--recipe-accent);
+}
+.s-viz h2 {
+  font-family: var(--font-display); font-size: 84px; line-height: 0.98;
+  margin: 12px 0 0; letter-spacing: -0.01em;
+}
+.s-viz h2 em { color: var(--recipe-em); font-style: normal; }
+.s-viz .stage {
+  flex: 1; position: relative; min-height: 0; margin-top: 24px;
+  display: flex; flex-direction: column;
+}
+.s-viz .stage > svg { flex: 1; min-height: 0; width: 100%; display: block; overflow: visible; }
+
+/* Leyenda minimalista · va abajo y chica; cada entrada puede llevar data-from. */
+.s-viz .legend {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 14px 56px;
+  padding-top: 28px;
+  font-family: var(--font-mono); font-size: 22px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--recipe-ink);
+}
+.s-viz .legend > span { opacity: .8; display: inline-flex; align-items: center; }
+.s-viz .legend > span::before {
+  content: ""; width: 30px; height: 6px; border-radius: 3px;
+  background: var(--c, var(--recipe-ink)); margin-right: 14px;
+}
+.s-viz .legend > span.dot::before { width: 16px; height: 16px; border-radius: 50%; }
+.s-viz .note {
+  font-family: var(--font-editorial); font-style: italic;
+  font-size: 20px; opacity: 0.45; margin: 10px 0 0; text-align: center;
+}
+
+.s-viz [data-from] {
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.s-viz [data-from]:not(.draw):not(.is-on) { opacity: 0; }
+.s-viz [data-from].is-on { opacity: 1; transform: none; }
+.s-viz [data-until].is-off { opacity: 0; }
+.s-viz svg [data-from] { transform-box: fill-box; transform-origin: center; }
+
+.s-viz path.draw[data-from] {
+  opacity: 1; transform: none;
+  stroke-dasharray: 1 2; stroke-dashoffset: 1.04;
+  transition: stroke-dashoffset 1.6s cubic-bezier(.45,.05,.2,1);
+}
+.s-viz path.draw[data-from].is-on { stroke-dashoffset: 0; }
+
+.s-viz .axis { stroke: var(--recipe-ink); opacity: .35; stroke-width: 3; fill: none; }
+.s-viz .grid { stroke: var(--recipe-ink); opacity: .08; stroke-width: 1.5; }
+.s-viz .tick, .s-viz .legend-t {
+  font-family: var(--font-mono); font-size: 22px; letter-spacing: .12em;
+  text-transform: uppercase; fill: var(--recipe-ink); opacity: .6;
+}
+.s-viz .lbl {
+  font-family: var(--font-display); font-size: 40px; fill: var(--recipe-ink);
+}
+.s-viz .lbl.em { fill: var(--recipe-em); }
+.s-viz .lbl.accent { fill: var(--recipe-accent); }
+.s-viz .lbl.warn { fill: var(--recipe-warn); }

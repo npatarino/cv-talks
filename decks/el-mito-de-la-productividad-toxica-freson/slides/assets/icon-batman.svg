@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Color marker desfasado -->
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#1c1c1c" d="M172 20L204 64C228 56 284 56 308 64L340 20C348 70 366 100 372 140L374 256C372 292 338 316 300 318L212 318C174 316 142 290 140 256L140 140C146 100 164 70 172 20Z"/>
+    <path fill="#017275" d="M214 310C130 330 70 372 60 430C56 470 80 490 130 500C240 520 380 518 440 490C468 474 458 430 440 410C410 366 340 330 300 310Z"/>
+    <path fill="#fafaf8" d="M164 222C200 214 316 214 350 222L350 252C346 288 308 312 256 312C204 312 168 288 164 252Z"/>
+    <path fill="#fafaf8" d="M184 160L238 176L232 190L186 176ZM330 160L276 176L282 190L328 176Z"/>
+    <ellipse cx="258" cy="408" rx="60" ry="36" fill="#f9d71c"/>
+  </g>
+  <!-- Cabeza / capucha -->
+  <path stroke-width="19" d="M176 24L210 66C230 58 282 56 304 64L336 22C346 70 366 98 370 138L372 252C370 292 336 316 296 318L214 318C172 316 138 290 138 250L136 136C142 98 162 70 174 24"/>
+  <path stroke-width="8" opacity=".75" d="M186 46L206 82C232 74 280 72 306 80M154 140C156 188 154 232 156 258C158 290 190 308 216 308"/>
+  <!-- Orejas internas -->
+  <path stroke-width="8" opacity=".7" d="M176 36C184 60 190 80 196 90M336 36C328 60 322 80 316 90"/>
+  <!-- Cara -->
+  <path stroke-width="12" d="M164 224C200 214 316 214 352 222M164 224L166 252C170 290 206 312 258 312C310 312 344 290 350 252L350 222"/>
+  <path stroke-width="7" opacity=".7" d="M176 236C200 228 320 230 340 238"/>
+  <!-- Ojos -->
+  <path stroke-width="14" d="M186 158L236 176"/>
+  <path stroke-width="14" d="M328 158L278 176"/>
+  <path stroke-width="7" opacity=".7" d="M190 168L232 182M324 168L282 182"/>
+  <!-- Nariz y boca -->
+  <path stroke-width="9" opacity=".8" d="M256 190C250 204 250 214 256 222"/>
+  <path stroke-width="6" opacity=".6" d="M170 120C200 110 230 112 244 124M342 120C312 110 282 112 268 124"/>
+  <path stroke-width="10" d="M222 276C244 284 276 284 298 274"/>
+  <!-- Cuerpo y capa -->
+  <path stroke-width="19" d="M208 314C130 328 72 366 58 426C52 468 78 490 128 500C240 522 380 520 442 490C470 476 460 430 442 410C412 366 346 330 302 312"/>
+  <path stroke-width="8" opacity=".75" d="M214 330C146 346 92 380 80 430C78 462 100 478 140 486C240 504 370 504 428 478"/>
+  <!-- Logo -->
+  <path stroke-width="14" d="M256 372C204 366 196 408 218 430C240 448 290 448 310 430C332 408 310 366 258 374"/>
+  <path stroke-width="12" d="M216 400C226 388 238 392 244 402C250 394 262 394 268 402C274 392 288 388 298 400C290 412 276 422 258 430C240 422 224 412 216 400"/>
+  <!-- Hatching -->
+  <g stroke-width="6" opacity=".6">
+    <path d="M96 450L134 424"/>
+    <path d="M116 470L156 440"/>
+    <path d="M400 456L430 430"/>
+    <path d="M378 474L414 446"/>
+    <path d="M346 100L356 130"/>
+  </g>
+</svg>
