@@ -11,6 +11,7 @@
 
     "// ----- SLIDES (ELEVENTY) -----": "Construcción y visualización estática de las presentaciones",
     "slides:build": "bun run fonts:sync && eleventy && bun scripts/build-seo.mjs",
+    "build": "bun run slides:build",
     "slides:serve": "bun run fonts:sync && eleventy --serve",
     "slides:serve-meta": "bun run fonts:sync && SLIDE_MODE=meta eleventy --serve",
 
