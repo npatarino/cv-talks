@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Color marker desfasado -->
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#a64132" d="M160 424C150 380 146 330 150 280L154 130C156 98 204 98 208 130L208 80C210 44 258 44 260 78L260 34C262 6 310 6 312 36L312 62C316 32 362 34 364 62L364 232C368 262 372 288 368 316L458 222C478 202 504 224 490 248L402 374L394 424Z"/>
+    <rect x="164" y="426" width="228" height="76" rx="6" fill="#017275"/>
+  </g>
+  <!-- Mano -->
+  <path stroke-width="19" d="M158 424C150 384 142 334 150 284L152 134C154 92 206 92 208 130L208 82C210 40 260 40 260 78L260 36C262 0 312 4 312 38L312 60C316 28 364 30 366 64L366 236C370 262 372 290 366 320L456 222C478 200 506 222 492 248L400 374L392 426"/>
+  <path stroke-width="8" opacity=".75" d="M170 414C162 380 158 330 162 290L164 140C166 110 196 110 196 140M222 130L222 90C224 56 248 56 248 90M274 80L274 48C276 24 298 28 298 52M328 62C334 44 352 44 354 66L354 240C358 270 358 296 354 326"/>
+  <!-- Dedos: lineas interiores -->
+  <path stroke-width="10" opacity=".8" d="M232 150L234 262"/>
+  <path stroke-width="10" opacity=".8" d="M284 120L286 262"/>
+  <path stroke-width="10" opacity=".8" d="M336 130L338 270"/>
+  <path stroke-width="10" opacity=".8" d="M290 340C318 330 344 336 366 326"/>
+  <!-- Puño / manga -->
+  <path stroke-width="19" d="M162 426L392 424C396 450 394 480 392 504L164 502C160 480 160 450 164 424"/>
+  <path stroke-width="7" opacity=".7" d="M176 440L380 438M176 470L380 466"/>
+  <!-- Insignia de aviso -->
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#7dd8d2" d="M130 160C78 162 28 214 30 270C34 330 84 372 140 370C200 366 236 320 232 262C228 208 182 156 130 160Z"/>
+    <path fill="#f9d71c" d="M128 202C118 206 70 290 66 304C70 312 190 312 196 304C190 290 140 208 130 202Z"/>
+  </g>
+  <path stroke-width="19" d="M128 156C74 160 26 212 28 268C32 330 82 372 140 370C200 366 238 320 234 262C230 206 184 152 130 158C120 158 112 160 106 162"/>
+  <path stroke-width="8" opacity=".75" d="M134 172C90 176 44 218 44 268C48 324 92 358 142 356C194 354 222 312 220 264C218 218 182 170 138 170"/>
+  <!-- Triangulo -->
+  <path stroke-width="15" d="M130 202C112 224 82 274 64 304C62 312 70 316 82 316L180 314C192 314 198 310 194 302C176 270 146 222 132 202"/>
+  <path stroke-width="12" d="M129 242C128 262 129 276 130 286"/>
+  <path stroke-width="14" d="M130 302L131 303"/>
+  <!-- Hatching -->
+  <g stroke-width="6" opacity=".6">
+    <path d="M410 340L440 300"/>
+    <path d="M398 368L428 332"/>
+    <path d="M178 330L204 360"/>
+    <path d="M90 350L116 372"/>
+  </g>
+</svg>

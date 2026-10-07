@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Sombra tipo rotulador desplazada (charcoal, el "em" de la receta critical) -->
+  <g stroke="#1c1c1c" stroke-width="64" opacity=".9" transform="translate(14 16)">
+    <path d="M96 92C170 170 250 262 424 424"/>
+    <path d="M422 88C340 170 250 266 90 428"/>
+  </g>
+  <!-- Trazos principales en ivory, repasados -->
+  <g stroke="#fafaf8">
+    <path stroke-width="58" d="M92 86C170 168 252 258 420 420"/>
+    <path stroke-width="58" d="M424 84C340 168 248 262 88 424"/>
+    <path stroke-width="14" opacity=".8" d="M106 70C190 160 270 248 436 410"/>
+    <path stroke-width="14" opacity=".8" d="M438 70C350 150 262 250 102 438"/>
+  </g>
+  <!-- Rayitas de rebote -->
+  <g stroke="#1c1c1c" stroke-width="10" opacity=".7">
+    <path d="M256 40L256 74"/>
+    <path d="M60 256L26 256"/>
+    <path d="M458 256L488 258"/>
+    <path d="M256 440L254 480"/>
+  </g>
+</svg>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Color tipo rotulador: ligeramente desplazado del trazo -->
+  <path fill="#fafaf8" stroke="none" transform="translate(8 8)" d="M84 36L350 30C372 32 384 46 384 68L386 440C384 468 366 480 344 480L90 484Z"/>
+  <path fill="#1c1c1c" stroke="none" d="M84 36C48 34 30 52 30 80L28 438C30 468 50 486 86 484Z"/>
+  <path fill="#a64132" stroke="none" transform="translate(6 6)" d="M248 30L330 28L328 176L290 144L252 180Z"/>
+  <path fill="#02b5b9" stroke="none" transform="translate(6 6)" d="M146 318L342 316C350 320 350 336 348 398C346 416 336 420 316 420L148 422C136 420 134 400 136 360C136 332 136 322 146 318Z"/>
+  <path fill="#02b5b9" stroke="none" transform="translate(5 5)" d="M386 62L412 60L414 126L388 128Z"/>
+  <path fill="#7dd8d2" stroke="none" transform="translate(5 5)" d="M386 152L412 150L414 218L388 220Z"/>
+  <path fill="#f9d71c" stroke="none" transform="translate(-6 6)" d="M424 270L480 266L482 430L452 488L422 432Z"/>
+  <path fill="#1c1c1c" stroke="none" d="M420 262C420 220 478 214 482 262L420 266Z"/>
+
+  <!-- Libreta: contorno con dos pasadas -->
+  <path stroke-width="17" d="M88 30C140 34 280 24 352 28C380 30 388 48 386 76C388 180 384 330 388 446C388 474 370 484 342 482C280 486 160 480 90 486C50 490 28 466 30 430C32 330 28 200 32 84C32 50 52 28 88 30Z"/>
+  <path stroke-width="7" opacity=".7" d="M96 40C60 36 44 58 40 90C38 200 42 330 40 430C40 460 66 482 100 478"/>
+  <path stroke-width="7" opacity=".7" d="M360 20C392 30 394 60 392 100C390 220 394 340 392 450"/>
+  <!-- Lomo -->
+  <path stroke-width="12" d="M92 34C86 150 90 330 90 484"/>
+  <!-- Marcapáginas -->
+  <path stroke-width="14" d="M248 28C246 90 250 140 248 182L290 144L330 182C332 130 328 80 330 28"/>
+  <path stroke-width="6" opacity=".7" d="M256 40C254 100 258 140 256 170"/>
+  <!-- Pestañas laterales -->
+  <path stroke-width="13" d="M388 58L414 60C418 80 416 106 414 128L388 128"/>
+  <path stroke-width="13" d="M388 150L414 152C418 176 416 202 414 222L388 222"/>
+  <!-- Etiqueta con renglones -->
+  <path stroke-width="14" d="M146 316C200 320 290 314 344 318C354 330 352 380 348 408C340 424 260 418 150 424C134 420 134 360 136 332C138 322 140 318 146 316Z"/>
+  <g stroke-width="11">
+    <path d="M160 346L252 344"/>
+    <path d="M276 346L330 348"/>
+    <path d="M160 372L226 374"/>
+    <path d="M246 372L330 370"/>
+    <path d="M160 398L208 400"/>
+    <path d="M232 398L322 396"/>
+  </g>
+  <g stroke-width="5" opacity=".6">
+    <path d="M164 352L250 351"/>
+    <path d="M250 378L326 377"/>
+  </g>
+  <!-- Lápiz -->
+  <path stroke-width="15" d="M422 270C420 220 478 214 482 264C484 330 484 400 482 432L452 488L420 434C424 380 420 320 422 270Z"/>
+  <path stroke-width="6" opacity=".7" d="M430 276C428 240 470 230 474 270C476 340 476 400 474 428"/>
+  <path stroke-width="11" d="M422 276L482 270"/>
+  <path stroke-width="9" d="M420 434L482 430"/>
+  <path stroke-width="5" opacity=".7" d="M452 276L452 436"/>
+  <!-- Sombreado a rayitas -->
+  <g stroke-width="6" opacity=".55">
+    <path d="M44 420L76 380"/>
+    <path d="M44 450L82 404"/>
+    <path d="M362 440L380 420"/>
+    <path d="M350 462L378 436"/>
+  </g>
+</svg>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Color marker desfasado -->
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#f9d71c" d="M256 8C120 4 6 120 6 258C6 394 120 510 258 506C396 508 508 394 506 256C508 120 394 6 256 8Z"/>
+    <path fill="#1c1c1c" d="M152 98C190 66 330 56 360 100L316 180C296 192 276 178 256 182C230 178 214 194 198 188Z"/>
+    <path fill="#1c1c1c" d="M62 248L172 246C188 250 182 270 184 286C190 306 214 316 224 336L176 420C110 404 62 336 62 248Z"/>
+    <path fill="#1c1c1c" d="M332 244L450 248C452 336 408 392 346 424L288 330C316 316 330 290 332 262Z"/>
+    <circle cx="256" cy="256" r="46" fill="#1c1c1c"/>
+  </g>
+  <!-- Disco exterior -->
+  <path stroke-width="19" d="M254 6C120 2 4 118 6 256C8 394 122 510 260 506C396 504 510 392 506 254C502 120 392 8 258 8C240 8 228 10 218 12"/>
+  <path stroke-width="8" opacity=".75" d="M270 18C140 10 22 124 20 258C18 388 130 494 256 494C388 496 496 386 494 256C494 130 400 24 280 20"/>
+  <!-- Aspa superior -->
+  <path stroke-width="17" d="M150 96C190 64 330 54 360 98L318 178C300 192 278 178 256 182C232 178 212 194 198 188L150 100"/>
+  <path stroke-width="7" opacity=".7" d="M166 100C200 76 316 68 344 102"/>
+  <!-- Aspa izquierda -->
+  <path stroke-width="17" d="M60 250L170 246C190 250 182 270 184 286C190 306 214 316 224 338L176 420C108 404 58 336 62 250"/>
+  <path stroke-width="7" opacity=".7" d="M74 266C80 330 112 376 152 400"/>
+  <!-- Aspa derecha -->
+  <path stroke-width="17" d="M334 242L452 246C454 336 408 394 346 426L288 330C316 316 330 292 332 262L334 240"/>
+  <path stroke-width="7" opacity=".7" d="M436 268C428 330 396 372 360 396"/>
+  <!-- Centro -->
+  <path stroke-width="16" d="M256 208C228 206 208 230 210 256C212 284 238 304 262 302C290 298 304 276 302 252C298 226 276 208 250 210"/>
+  <path stroke-width="7" opacity=".7" d="M266 218C288 224 296 244 292 262"/>
+  <!-- Hatching -->
+  <g stroke-width="6" opacity=".6">
+    <path d="M90 190L130 150"/>
+    <path d="M70 214L112 172"/>
+    <path d="M400 160L440 200"/>
+    <path d="M380 440L420 410"/>
+    <path d="M250 456L300 458"/>
+  </g>
+</svg>

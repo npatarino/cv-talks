@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- relleno marcador desplazado -->
+  <g transform="translate(8 9)" stroke="none">
+    <path fill="#fafaf8" d="M262 36C300 92 332 140 334 190C350 168 360 150 362 130C410 170 456 240 446 330C436 424 360 482 256 480C150 482 72 422 66 330C62 262 90 200 138 160C142 182 148 196 160 206C160 130 210 80 262 36Z"/>
+    <path fill="#f9d71c" d="M258 196C284 244 322 292 318 366C314 424 290 450 256 450C216 450 192 420 192 372C192 320 236 262 258 196Z"/>
+  </g>
+  <!-- contorno -->
+  <path stroke="#fafaf8" stroke-width="20" d="M256 28C296 84 330 134 330 184C346 162 358 144 358 122C410 166 462 240 452 332C442 428 362 488 254 486C146 488 66 424 60 332C56 262 86 196 134 154C138 176 144 192 156 204C156 126 206 76 262 22"/>
+  <path stroke="#fafaf8" stroke-width="7" opacity=".75" d="M270 44C304 92 340 146 338 196C354 176 364 156 366 138C416 182 460 248 450 334C440 426 366 478 262 480"/>
+  <!-- llama interior -->
+  <path stroke="#1c1c1c" stroke-width="16" d="M252 186C230 244 190 296 190 364C190 420 218 458 258 456C300 454 322 418 322 372C322 304 280 250 252 184"/>
+  <path stroke="#1c1c1c" stroke-width="6" opacity=".7" d="M262 202C292 252 330 300 326 374C322 430 292 466 252 462"/>
+  <g stroke="#1c1c1c" stroke-width="6" opacity=".5">
+    <path d="M96 330L84 396"/><path d="M114 346L104 408"/><path d="M408 330L424 396"/><path d="M392 350L404 410"/>
+    <path d="M110 224L96 262"/><path d="M400 214L416 252"/>
+  </g>
+</svg>

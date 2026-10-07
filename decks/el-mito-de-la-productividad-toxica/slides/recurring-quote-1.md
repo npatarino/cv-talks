@@ -1,6 +1,6 @@
 ---
 template: quote
-recipe: cool-fresh
+recipe: critical
 label: Cita recurrente · productividad no es hacer más (I)
 variant: default
 fields:

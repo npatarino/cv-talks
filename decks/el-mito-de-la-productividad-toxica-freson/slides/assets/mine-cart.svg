@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="translate(8 9)" stroke="none">
+    <path fill="#fafaf8" d="M46 190L466 190L426 390L100 390Z"/>
+    <path fill="#a64132" d="M46 190L100 190C120 280 190 350 290 362L426 364L418 392L100 392Z" opacity=".85"/>
+    <path fill="#1c1c1c" d="M58 150L72 100L136 66L180 92L252 46L304 94L338 58L386 72L418 100L458 150Z" opacity=".85"/>
+    <circle fill="#1c1c1c" cx="160" cy="430" r="40"/><circle fill="#1c1c1c" cx="350" cy="430" r="40"/>
+  </g>
+  <!-- carbon -->
+  <path stroke="#1c1c1c" stroke-width="18" d="M50 152L66 96L136 62L184 88L256 40L306 90L342 54L392 68L426 100L460 152"/>
+  <path stroke="#1c1c1c" stroke-width="7" opacity=".7" d="M60 140L82 92L140 74L190 100L262 54L304 104L348 66L386 80L416 108"/>
+  <path stroke="#fafaf8" stroke-width="7" opacity=".7" d="M96 110L130 84M214 120L256 76M330 100L372 86"/>
+  <path stroke="#1c1c1c" stroke-width="18" d="M180 96L216 150M310 94L290 150"/>
+  <!-- borde -->
+  <path stroke="#1c1c1c" stroke-width="22" d="M30 168C28 148 52 144 80 148L440 150C474 146 494 156 490 176C488 196 460 196 430 192L60 194C36 194 28 180 30 166"/>
+  <path stroke="#1c1c1c" stroke-width="7" opacity=".7" d="M44 182C120 176 300 182 470 176"/>
+  <!-- caja -->
+  <path stroke="#1c1c1c" stroke-width="20" d="M50 198L102 394L424 390L474 194"/>
+  <path stroke="#1c1c1c" stroke-width="7" opacity=".7" d="M60 204L112 386L414 398L464 204"/>
+  <!-- base -->
+  <path stroke="#1c1c1c" stroke-width="18" d="M76 390L74 424L440 428L438 388"/>
+  <!-- ruedas -->
+  <path stroke="#1c1c1c" stroke-width="18" d="M120 430C120 384 196 378 206 426C212 474 130 482 118 432"/>
+  <path stroke="#1c1c1c" stroke-width="7" opacity=".7" d="M128 450C150 480 200 468 202 436"/>
+  <path stroke="#1c1c1c" stroke-width="18" d="M312 430C312 384 388 378 398 426C404 474 322 482 310 432"/>
+  <path stroke="#1c1c1c" stroke-width="7" opacity=".7" d="M320 450C342 480 392 468 394 436"/>
+  <circle cx="160" cy="428" r="9" fill="#1c1c1c" stroke="none"/><circle cx="352" cy="428" r="9" fill="#1c1c1c" stroke="none"/>
+  <g stroke="#1c1c1c" stroke-width="6" opacity=".6"><path d="M130 250L170 300"/><path d="M150 236L196 296"/><path d="M110 270L140 316"/><path d="M370 240L350 290"/><path d="M394 246L372 300"/></g>
+</svg>

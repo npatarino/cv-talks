@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Color marker desfasado -->
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#fafaf8" d="M92 168C150 156 340 152 418 164C436 190 434 350 424 440C340 456 160 454 88 442C80 380 84 230 92 168Z"/>
+    <path fill="#7dd8d2" d="M96 300C150 322 300 330 420 306L424 440C340 456 160 454 88 442Z"/>
+    <path fill="#7dd8d2" d="M40 236C62 226 86 228 90 236L88 372C70 380 48 378 38 368Z"/>
+    <path fill="#7dd8d2" d="M424 236C446 226 470 226 476 236L474 372C458 382 436 380 426 370Z"/>
+    <path fill="#a64132" d="M256 22C284 20 300 42 298 64C296 90 270 100 250 96C230 90 214 70 224 44C230 30 242 24 256 22Z"/>
+  </g>
+  <!-- Antena -->
+  <path stroke-width="18" d="M258 102C255 122 258 138 256 160"/>
+  <path stroke-width="6" opacity=".65" d="M268 104C265 126 268 140 265 158"/>
+  <!-- Bola de antena -->
+  <path stroke-width="18" d="M256 20C286 16 308 42 302 68C296 94 266 104 242 94C218 84 208 52 226 34C234 26 248 22 262 24"/>
+  <path stroke-width="7" opacity=".7" d="M270 14C300 30 306 74 280 96C262 108 232 100 220 80"/>
+  <!-- Cabeza -->
+  <path stroke-width="20" d="M118 152C190 144 330 142 396 152C426 156 436 178 436 210C438 270 436 360 432 420C430 446 408 456 380 458C300 464 190 462 126 456C100 452 86 438 86 412C82 340 84 250 88 190C90 164 102 154 128 150"/>
+  <path stroke-width="8" opacity=".75" d="M130 162C200 154 320 156 408 160C428 164 428 184 428 206C432 280 428 360 422 430C410 446 390 448 366 450C290 454 190 454 118 446C98 440 98 428 96 408C94 330 96 250 98 196"/>
+  <!-- Orejas -->
+  <path stroke-width="17" d="M88 246C62 236 40 240 36 262C32 300 34 340 42 366C54 380 76 378 90 366"/>
+  <path stroke-width="6" opacity=".65" d="M80 252C56 250 46 262 46 280C46 316 50 346 62 362"/>
+  <path stroke-width="17" d="M434 246C460 236 480 242 484 264C488 300 484 340 476 366C464 380 442 378 430 366"/>
+  <path stroke-width="6" opacity=".65" d="M440 254C462 252 474 266 474 284C474 316 468 346 458 360"/>
+  <!-- Ojos -->
+  <path stroke-width="17" d="M170 246C146 248 138 276 154 296C170 312 202 306 208 280C212 256 192 240 170 248"/>
+  <path stroke-width="7" opacity=".7" d="M176 262C168 268 168 284 180 288"/>
+  <path stroke-width="17" d="M342 244C318 248 312 276 326 296C342 312 372 304 378 278C382 256 364 240 342 246"/>
+  <path stroke-width="7" opacity=".7" d="M348 260C340 268 342 282 352 288"/>
+  <path stroke-width="13" d="M170 272L172 274"/>
+  <path stroke-width="13" d="M344 272L346 274"/>
+  <!-- Sonrisa -->
+  <path stroke-width="19" d="M168 366C206 396 304 400 352 360"/>
+  <path stroke-width="7" opacity=".7" d="M176 380C220 406 300 408 346 374"/>
+  <!-- Hatching -->
+  <g stroke-width="6" opacity=".6">
+    <path d="M346 410L392 380"/>
+    <path d="M366 424L406 398"/>
+    <path d="M322 422L376 388"/>
+    <path d="M118 190L146 176"/>
+  </g>
+</svg>

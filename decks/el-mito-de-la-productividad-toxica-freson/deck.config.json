@@ -1,0 +1,165 @@
+{
+  "structure": {
+    "type": "ANSVA",
+    "sections": [
+      {
+        "id": "A1",
+        "label": "Atención",
+        "description": "Mi historia que refleja mi mala perspectiva.",
+        "start": 1,
+        "end": 7
+      },
+      {
+        "id": "N",
+        "label": "Necesidad",
+        "description": "Los tres problemas principales que quiero mostrar.",
+        "start": 8,
+        "end": 37,
+        "children": [
+          {
+            "id": "P1",
+            "label": "Malas métricas",
+            "description": "Perseguimos malas métricas.",
+            "start": 15,
+            "end": 19
+          },
+          {
+            "id": "P2",
+            "label": "Código no es activo",
+            "description": "El código no es un activo.",
+            "start": 20,
+            "end": 30
+          },
+          {
+            "id": "P3",
+            "label": "Sos un héroe",
+            "description": "Sos un héroe.",
+            "start": 31,
+            "end": 35
+          },
+          {
+            "id": "PS",
+            "label": "Problems summary",
+            "description": "Resumen de los problemas.",
+            "start": 37,
+            "end": 37
+          }
+        ]
+      },
+      {
+        "id": "S",
+        "label": "Solución",
+        "description": "Cómo solucionamos los problemas presentados.",
+        "start": 38,
+        "end": 61,
+        "children": [
+          {
+            "id": "S1",
+            "label": "Medir mejor",
+            "description": "Medir mejor / DORA / SPACE.",
+            "start": 38,
+            "end": 51
+          },
+          {
+            "id": "S2",
+            "label": "Automatización",
+            "description": "Automatización y pago de deuda.",
+            "start": 52,
+            "end": 56
+          },
+          {
+            "id": "S3",
+            "label": "Reducir protagonismo",
+            "description": "Reducir protagonismo y delegar.",
+            "start": 57,
+            "end": 61
+          }
+        ]
+      },
+      {
+        "id": "V",
+        "label": "Visualización",
+        "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
+        "start": 62,
+        "end": 64
+      },
+      {
+        "id": "A2",
+        "label": "Acción",
+        "description": "Qué quiero accionar en la audiencia.",
+        "start": 65,
+        "end": 68
+      }
+    ]
+  },
+  "slides": [
+    "cover.md",
+    "viernes-1530.md",
+    "feedback-alegre.md",
+    "cuaderno.md",
+    "error.md",
+    "cube.md",
+    "mas-productividad.md",
+    "burnout.md",
+    "recurring-quote-1.md",
+    "esfuerzo-valor.md",
+    "movimiento-impacto.md",
+    "actividad-productividad.md",
+    "esfuerzo-impacto-matriz.md",
+    "correr-detras-de-metricas.md",
+    "ley-de-goodhart-2.md",
+    "ley-de-goodhart.md",
+    "ley-de-goodhart-grafica.md",
+    "ley-de-goodhart-quote.md",
+    "activo-pasivo.md",
+    "codigo-activo.md",
+    "codigo-pasivo.md",
+    "codigo-pasivo-grafica.md",
+    "paradoja-jevons.md",
+    "paradoja-jevons-pictograma.md",
+    "paradoja-copilot.md",
+    "paradoja-claude-pictograma.md",
+    "metricas-vanidad-vs-proyecto.md",
+    "productividad-no-codigo.md",
+    "scientificos-jurassic-park.md",
+    "terry-childs.md",
+    "10m.md",
+    "bus-factor.md",
+    "bus-factor-animacion.md",
+    "heroe-capa.md",
+    "bombero-piromano.md",
+    "problemas-summary.md",
+    "recurring-quote-2.md",
+    "dx-core-4.md",
+    "moneyball.md",
+    "dora-metrics.md",
+    "dora-metrics-2.md",
+    "dora-metrics-3.md",
+    "dora-metrics-2-2.md",
+    "dx-core-4-2.md",
+    "speed.md",
+    "effectiveness.md",
+    "quality.md",
+    "impact.md",
+    "space-radar.md",
+    "recurring-quote-2-2.md",
+    "icon-sesgo-de-supervivencias.md",
+    "automatizacion-2.md",
+    "automatizacion-ejemplos.md",
+    "icon-80.md",
+    "recurring-quote-2-2-2.md",
+    "heroe-gris.md",
+    "heroe-gris-2.md",
+    "capa-de-ozono.md",
+    "recurring-quote-3.md",
+    "disclaimer-trabajar-menos.md",
+    "cadena-1.md",
+    "cadena-1-2.md",
+    "cadena-1-2-2.md",
+    "cadena-1-2-2-2.md",
+    "recurring-quote-4.md",
+    "viernes-1530-2.md",
+    "radiacion.md",
+    "cierre.md"
+  ]
+}
