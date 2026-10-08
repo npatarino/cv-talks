@@ -51,3 +51,25 @@ section.slide.s-concept-shift {
   opacity: 1;
   color: var(--recipe-accent);
 }
+
+/* Animación por defecto (variantes old → new) · se reproduce sola al entrar:
+   el "old" aparece grande y centrado, luego encoge y sube a su sitio mientras
+   se le dibuja el tachado, y el "new" emerge debajo. */
+.s-concept-shift:not(.list) .old {
+  position: relative; display: inline-block;
+  text-decoration: none; opacity: 1;
+  font-size: 180px; transform: translateY(110px);
+  animation: cs-old-shrink .9s cubic-bezier(.6,0,.2,1) 1.2s forwards;
+}
+.s-concept-shift:not(.list) .old::after {
+  content: ""; position: absolute; left: -0.04em; top: 52%; height: 0.08em;
+  width: 0; background: var(--recipe-warn); border-radius: 0.04em;
+  animation: cs-strike .45s cubic-bezier(.5,0,.2,1) 2.05s forwards;
+}
+.s-concept-shift:not(.list) .new {
+  opacity: 0; transform: translateY(40px);
+  animation: cs-new-in .7s cubic-bezier(.3,1.2,.4,1) 2.2s forwards;
+}
+@keyframes cs-old-shrink { to { font-size: 88px; transform: translateY(0); opacity: .75; } }
+@keyframes cs-strike { to { width: calc(100% + 0.08em); } }
+@keyframes cs-new-in { to { opacity: 1; transform: translateY(0); } }
