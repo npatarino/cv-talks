@@ -35,13 +35,14 @@ section.slide.s-cover {
 }
 
 /* Ensure content stays above the background image */
-.s-cover > :not(.bg-image):not(.bg-anim):not(.sl-label) {
+.s-cover > :not(.bg-image):not(.bg-anim):not(.sl-label):not(.conf-logo) {
   position: relative;
   z-index: 1;
 }
 
 section.slide.s-cover > .conf-logo {
   position: absolute;
+  z-index: 1;
   top: 96px;
   left: 0;
   width: 100%;
