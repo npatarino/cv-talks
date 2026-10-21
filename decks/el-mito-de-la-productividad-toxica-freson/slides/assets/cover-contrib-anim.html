@@ -67,9 +67,9 @@
   // que caen dentro se atenúan, con un umbral distinto por casilla para que el
   // borde no dibuje una elipse limpia sino un "claro" irregular en la cuadrícula.
   var QUIET = [
-    { x: 0.5, y: 0.145, rx: 0.16, ry: 0.11 },   // logo
-    { x: 0.5, y: 0.60,  rx: 0.44, ry: 0.185 },  // título
-    { x: 0.5, y: 0.775, rx: 0.21, ry: 0.065 }   // with ♥ by …
+    { x: 0.5, y: 0.145, rx: 0.13, ry: 0.085 },  // logo
+    { x: 0.5, y: 0.60,  rx: 0.40, ry: 0.15 },   // título
+    { x: 0.5, y: 0.775, rx: 0.18, ry: 0.05 }    // with ♥ by …
   ];
   function quietAt(x, y, seed) {
     var m = 0;
@@ -80,7 +80,7 @@
     }
     if (!m) return 0;
     m = m * m * (3 - 2 * m);                        // suavizado
-    return Math.max(0, Math.min(1, m * 1.25 + (seed - 0.5) * 0.35));
+    return Math.max(0, Math.min(1, m * 1.1 + (seed - 0.5) * 0.4));
   }
 
   var state, phaseStart, startTime;
@@ -128,7 +128,7 @@
       hotAvg += c2.heat;
       if (state === 'fill' || state === 'hold') {
         var qm = quietAt(x + cellPx / 2, y + cellPx / 2, c2.seed);
-        if (qm) { col = mix3(col, BG, qm * 0.9); }
+        if (qm) { col = mix3(col, BG, qm * 0.65); }
         // Vibración y parpadeo proporcionales al calor de cada casilla.
         if (c2.heat > 0.4) {
           var h = (c2.heat - 0.4) / 0.6 * (state === 'hold' ? 1.6 : 1);
