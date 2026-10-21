@@ -227,7 +227,7 @@ fields:
       raf = requestAnimationFrame(frame);
       })();
       </script>
-  logo: { content: '<img src="assets/logo-freson-fest.svg" alt="FresON fest" style="height:90px;width:auto;display:block" data-inline>', meta: Image_Logo }
+  logo: { content: '<img src="assets/logo-freson-fest.svg" alt="FresON fest">', meta: Image_Logo }
   title: { content: El mito de la productividad tóxica, meta: Title_Hero }
   deck: { content: "", meta: Subtitle_Text }
 ---

@@ -49,18 +49,22 @@ module.exports = async function (eleventyConfig) {
     const slug = m[1];
     const base = `/talks/decks/${slug}/assets/`;
     let html = String(content).replace(/\b(src|href|data-inline)="assets\//g, `$1="${base}`);
-    if (html.indexOf("data-inline") === -1) return html;
     html = html.replace(/<div\s+data-inline="\/talks\/decks\/([^/"]+)\/assets\/([^"?#]+\.html)"\s*>\s*<\/div>/g, (tag, s, file) => {
       const frag = readDeckAsset(s, file);
       return frag ? frag.trim() : tag;
     });
-    return html.replace(/<img\b([^>]*?)\bdata-inline\b([^>]*)>/g, (tag, a, b) => {
-      const attrs = a + " " + b;
+    // SVGs del deck: se incrustan si llevan `data-inline` o si son animados
+    // (contienen <style>, <script> o <animate…>), ya que como <img> perderían
+    // la animación. Así no depende de que el editor conserve el atributo.
+    return html.replace(/<img\b([^>]*)>/g, (tag, attrs) => {
       const src = (attrs.match(/\bsrc="([^"]+)"/) || [])[1];
       const mm = src && src.match(/^\/talks\/decks\/([^/]+)\/assets\/([^"?#]+\.svg)$/);
       if (!mm) return tag;
       let svg = readDeckAsset(mm[1], mm[2]);
       if (!svg) return tag;
+      const explicit = /\bdata-inline\b/.test(attrs);
+      const animated = /<style\b|<script\b|<animate/i.test(svg);
+      if (!explicit && !animated) return tag;
       svg = svg.replace(/<\?xml[^>]*>\s*/, "").trim();
       const cls = (attrs.match(/\bclass="([^"]*)"/) || [])[1];
       const style = (attrs.match(/\bstyle="([^"]*)"/) || [])[1];
