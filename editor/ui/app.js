@@ -887,7 +887,7 @@ function mkTextarea(field, value) {
  * style/script). These fields are edited as plain code in a textarea.
  */
 function isRawHtmlField(content, meta) {
-  return meta === 'Image_Background' || meta === 'Animation_HTML'
+  return meta === 'Image_Background' || meta === 'Animation_HTML' || meta === 'Stage_HTML'
     || /<script\b|<style\b|<iframe\b|position\s*:\s*(absolute|fixed)/i.test(content || '');
 }
 

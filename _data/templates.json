@@ -348,5 +348,16 @@
         "usage": "Cita visual elegante · cuando la gracia está en el subtítulo sobre el plano."
       }
     ]
+  },
+  "viz": {
+    "description": "Slide de visualización animada paso a paso: SVG/HTML inline en `fields.stage`, con `steps: N` marcadores que cada → activa (`data-from=\"n\"`, `path.draw`, `.legend`). Muy minimalista: sin ejes ni títulos, solo las formas y una leyenda pequeña.",
+    "when": "Mostrar una gráfica o pictograma que se construye delante del público (Goodhart, Jevons, bus factor, radar SPACE…).",
+    "variants": [
+      {
+        "name": "default",
+        "note": "Escenario centrado; `revealStart: 0` para arrancar vacío. El contenido de `stage` se edita como código (raw HTML).",
+        "usage": "Gráficas y animaciones de datos ilustrativas."
+      }
+    ]
   }
 }
