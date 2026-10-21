@@ -14,11 +14,12 @@
   var EMPTY = [22, 27, 34];
   var GREENS = [[14, 68, 41], [0, 109, 50], [38, 166, 65], [57, 211, 83]];
   var RED_MAX = [255, 32, 121];                 // plasma: rojo máximo
-  var RED_MID = [166, 65, 50];
+  // Misma escala de 4 niveles, pero en rojo: la cuadrícula entera vira de una
+  // a otra según un calor global, así todas las casillas cambian a la vez.
+  var REDS = [[70, 22, 40], [120, 30, 60], [200, 32, 95], [255, 32, 121]];
   var CELL = 20, GAP = 5;                       // px del lienzo 1920×1080
   var RAMP_MS = 24000;                          // tiempo hasta la lluvia máxima
   var HOLD_MS = 1300, BOOM_MS = 1800, DARK_MS = 1600;
-  var HEAT_STEP = 0.2;                          // calor que añade cada commit a una casilla ya verde máximo
 
   MOUNT.style.background = 'rgb(' + BG.join(',') + ')';
   if (getComputedStyle(MOUNT).position === 'static') MOUNT.style.position = 'relative';
@@ -44,29 +45,25 @@
     var old = cells; cells = [];
     for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
       var prev = old[y * cols + x];
-      cells.push({ lvl: prev ? prev.lvl : 0, heat: prev ? prev.heat : 0, hit: -1e9, seed: Math.random(), dx: 0, dy: 0, vx: 0, vy: 0 });
+      cells.push({ lvl: prev ? prev.lvl : 0, hit: -1e9, seed: Math.random(), dx: 0, dy: 0, vx: 0, vy: 0 });
     }
   }
+  var heat = 0;                                 // calor global 0 (verde) → 1 (rojo)
   function cellColor(c, now) {
-    var base = c.lvl === 0 ? EMPTY : GREENS[c.lvl - 1];
-    var col = base;
-    if (c.heat > 0) {
-      // Verde → rojo medio → rojo máximo, en función del calor propio de la casilla.
-      col = c.heat < 0.5 ? mix3(base, RED_MID, c.heat / 0.5) : mix3(RED_MID, RED_MAX, (c.heat - 0.5) / 0.5);
-    }
+    var col = c.lvl === 0 ? EMPTY : mix3(GREENS[c.lvl - 1], REDS[c.lvl - 1], heat);
     var age = now - c.hit;
     if (age < 220 && c.lvl) col = mix3(col, [255, 255, 255], (1 - age / 220) * 0.3);
     return col;
   }
   function hitCell(c, now) {
-    if (c.lvl < 3) c.lvl += 1; else c.heat = Math.min(1, c.heat + HEAT_STEP);
+    if (c.lvl < 4) c.lvl += 1;
     c.hit = now;
   }
-  function isDone(c) { return c.heat >= 1; }
+  function isDone(c) { return c.lvl >= 4; }
 
   var state, phaseStart, startTime;
   function reset(now) {
-    for (var i = 0; i < cells.length; i++) { var c = cells[i]; c.lvl = 0; c.heat = 0; c.hit = -1e9; c.dx = c.dy = c.vx = c.vy = 0; }
+    for (var i = 0; i < cells.length; i++) { var c = cells[i]; c.lvl = 0; c.hit = -1e9; c.dx = c.dy = c.vx = c.vy = 0; }
     state = 'fill'; phaseStart = now; startTime = now;
   }
 
@@ -76,6 +73,9 @@
     var p = (now - phaseStart);
     if (state === 'fill') {
       var ramp = Math.min(1, (now - startTime) / RAMP_MS);
+      // El color acompaña al relleno: todo verde al principio, todo rojo al final.
+      heat = Math.max(0, Math.min(1, (ramp - 0.25) / 0.75));
+      heat = heat * heat * (3 - 2 * heat);
       var rate = lerp(0.4, 90, easeIn(ramp)) * dt / 16;       // commits por frame
       var n = Math.floor(rate) + (Math.random() < (rate % 1) ? 1 : 0);
       var pending = null;
@@ -101,16 +101,14 @@
     else if (state === 'dark' && p > DARK_MS) { reset(now); }
 
     var cx = W / 2, cy = H / 2;
-    var hotAvg = 0;
     for (var j = 0; j < cells.length; j++) {
       var c2 = cells[j];
       var x = (j % cols) * pitch, y = Math.floor(j / cols) * pitch, alpha = 1;
       var col = cellColor(c2, now);
-      hotAvg += c2.heat;
       if (state === 'fill' || state === 'hold') {
-        // Vibración y parpadeo proporcionales al calor de cada casilla.
-        if (c2.heat > 0.4) {
-          var h = (c2.heat - 0.4) / 0.6 * (state === 'hold' ? 1.6 : 1);
+        // Vibración y parpadeo proporcionales al calor global, solo en casillas llenas.
+        if (heat > 0.6 && c2.lvl >= 3) {
+          var h = (heat - 0.6) / 0.4 * (state === 'hold' ? 1.6 : 1);
           var fl = (Math.sin(now / (40 + c2.seed * 60) + c2.seed * 9) * 0.5 + 0.5) * h * 0.35;
           col = mix3(col, RED_MAX, fl);
           var jit = h * h * 3;
@@ -144,7 +142,7 @@
   var inEditorPreview = (window.self !== window.top) && !/[?&](present|embedded)=/.test(location.search);
   if (inEditorPreview) {
     // Fotograma fijo para la miniatura del editor: a medio camino, sin rAF.
-    var seed = function () { for (var q = 0; q < cells.length; q++) { var c = cells[q]; c.lvl = Math.random() < 0.6 ? 1 + ((Math.random() * 3) | 0) : 0; c.heat = c.lvl === 3 && Math.random() < 0.4 ? Math.random() * 0.6 : 0; } };
+    var seed = function () { for (var q = 0; q < cells.length; q++) { var c = cells[q]; c.lvl = Math.random() < 0.6 ? 1 + ((Math.random() * 4) | 0) : 0; } heat = 0.25; };
     seed(); state = 'fill'; phaseStart = startTime = performance.now() - RAMP_MS * 0.5;
     render(performance.now(), 0);
     var ro = new ResizeObserver(function () { layout(); seed(); render(performance.now(), 0); });
