@@ -60,8 +60,11 @@ section.slide.s-cover > .conf-logo {
   margin: 0;
 }
 
-.s-cover .conf-logo img {
+/* Logo de la conferencia: imagen o SVG incrustado, misma altura. */
+.s-cover .conf-logo img,
+.s-cover .conf-logo svg {
   max-height: 90px;
+  height: 90px;
   width: auto;
   display: block;
 }
