@@ -134,6 +134,16 @@
       ctx.fillRect(x, y, cellPx, cellPx);
     }
     ctx.globalAlpha = 1;
+    // Foco oscuro en el centro para que logo, título y firma se lean siempre:
+    // atenúa las casillas de la zona central y deja los bordes a plena intensidad.
+    if (state !== 'dark') {
+      var rad = Math.max(W, H) * 0.62;
+      var grd = ctx.createRadialGradient(cx, cy * 1.02, 0, cx, cy * 1.02, rad);
+      grd.addColorStop(0, 'rgba(13,17,23,0.78)');
+      grd.addColorStop(0.45, 'rgba(13,17,23,0.55)');
+      grd.addColorStop(1, 'rgba(13,17,23,0)');
+      ctx.fillStyle = grd; ctx.fillRect(0, 0, W, H);
+    }
     if (state === 'boom' && p < 450) {
       ctx.fillStyle = 'rgba(255,32,121,' + (0.45 * (1 - p / 450)) + ')';
       ctx.fillRect(0, 0, W, H);
