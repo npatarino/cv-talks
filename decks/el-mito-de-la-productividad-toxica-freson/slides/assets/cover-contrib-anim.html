@@ -63,6 +63,25 @@
     c.hit = now;
   }
   function isDone(c) { return c.heat >= 1; }
+  // Zonas de texto (logo, título, firma) en fracciones del lienzo. Las casillas
+  // que caen dentro se atenúan, con un umbral distinto por casilla para que el
+  // borde no dibuje una elipse limpia sino un "claro" irregular en la cuadrícula.
+  var QUIET = [
+    { x: 0.5, y: 0.145, rx: 0.16, ry: 0.11 },   // logo
+    { x: 0.5, y: 0.60,  rx: 0.44, ry: 0.185 },  // título
+    { x: 0.5, y: 0.775, rx: 0.21, ry: 0.065 }   // with ♥ by …
+  ];
+  function quietAt(x, y, seed) {
+    var m = 0;
+    for (var i = 0; i < QUIET.length; i++) {
+      var q = QUIET[i], dx = (x - q.x * W) / (q.rx * W), dy = (y - q.y * H) / (q.ry * H);
+      var d = dx * dx + dy * dy;                   // 0 en el centro, 1 en el borde
+      if (d < 1.4) m = Math.max(m, 1 - d / 1.4);
+    }
+    if (!m) return 0;
+    m = m * m * (3 - 2 * m);                        // suavizado
+    return Math.max(0, Math.min(1, m * 1.25 + (seed - 0.5) * 0.35));
+  }
 
   var state, phaseStart, startTime;
   function reset(now) {
@@ -108,6 +127,8 @@
       var col = cellColor(c2, now);
       hotAvg += c2.heat;
       if (state === 'fill' || state === 'hold') {
+        var qm = quietAt(x + cellPx / 2, y + cellPx / 2, c2.seed);
+        if (qm) { col = mix3(col, BG, qm * 0.9); }
         // Vibración y parpadeo proporcionales al calor de cada casilla.
         if (c2.heat > 0.4) {
           var h = (c2.heat - 0.4) / 0.6 * (state === 'hold' ? 1.6 : 1);
@@ -134,28 +155,6 @@
       ctx.fillRect(x, y, cellPx, cellPx);
     }
     ctx.globalAlpha = 1;
-    // Halos oscuros detrás de cada bloque de texto (logo, título, firma) para
-    // que se lean siempre. Elipses suaves: posición y tamaño en fracciones del
-    // lienzo, siguiendo el layout de la plantilla cover.
-    if (state !== 'dark') {
-      var halos = [
-        { x: 0.5, y: 0.145, rx: 0.17, ry: 0.11, a: 0.8 },   // logo
-        { x: 0.5, y: 0.60,  rx: 0.46, ry: 0.19, a: 0.85 },  // título (2 líneas)
-        { x: 0.5, y: 0.775, rx: 0.22, ry: 0.07, a: 0.8 }    // with ♥ by …
-      ];
-      for (var hI = 0; hI < halos.length; hI++) {
-        var ho = halos[hI], hx = ho.x * W, hy = ho.y * H, hrx = ho.rx * W, hry = ho.ry * H;
-        ctx.save();
-        ctx.translate(hx, hy); ctx.scale(hrx / hry, 1);
-        var grd = ctx.createRadialGradient(0, 0, 0, 0, 0, hry);
-        grd.addColorStop(0, 'rgba(13,17,23,' + ho.a + ')');
-        grd.addColorStop(0.55, 'rgba(13,17,23,' + (ho.a * 0.7) + ')');
-        grd.addColorStop(1, 'rgba(13,17,23,0)');
-        ctx.fillStyle = grd;
-        ctx.fillRect(-hry, -hry, hry * 2, hry * 2);
-        ctx.restore();
-      }
-    }
     if (state === 'boom' && p < 450) {
       ctx.fillStyle = 'rgba(255,32,121,' + (0.45 * (1 - p / 450)) + ')';
       ctx.fillRect(0, 0, W, H);
