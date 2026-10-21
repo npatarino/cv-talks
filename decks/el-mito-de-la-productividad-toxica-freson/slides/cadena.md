@@ -3,7 +3,7 @@ template: viz
 recipe: canvas-signal
 label: Visualización · tres ideas
 revealStart: 0
-steps: 5
+steps: 4
 variant: default
 fields:
   stage:
@@ -13,9 +13,8 @@ fields:
         <div class="cell" data-from="1"><img src="assets/icon-impact-2.svg" alt=""></div>
         <div class="cell" data-from="2"><img src="assets/icon-avoid.svg" alt=""></div>
         <div class="cell stack" data-from="3">
-          <img class="layer" src="assets/icon-cape-dark.svg" alt="" data-from="3" data-until="4">
-          <img class="layer" src="assets/icon-batman.svg" alt="" data-from="4" data-until="5">
-          <img class="layer" src="assets/icon-joker.svg" alt="" data-from="5">
+          <img class="layer" src="assets/icon-batman.svg" alt="" data-from="3" data-until="4">
+          <img class="layer" src="assets/icon-joker.svg" alt="" data-from="4">
         </div>
       </div>
       <style>
@@ -29,7 +28,7 @@ notes: |
   Tres ideas para llevarse. (→)
   1. Parar. Pensar. Cambiar la perspectiva. Dejar de perseguir el movimiento para perseguir el impacto. No escribimos código, resolvemos problemas. Si hacemos eso, multiplicamos el valor que entregamos y dejamos de ser profesionales fácilmente reemplazables por una IA. (→)
   2. Reducir deuda técnica. Dejar de hacer cosas solo porque ahora, con IA, podemos hacerlas. Reducir complejidad. Dejamos de ser fábricas de escribir código para convertirnos en ingenieros que resuelven problemas reales. (→)
-  3. Que otros no controlen tu carrera. Si dejás que otros lo hagan, te van a convertir en un héroe. (→ se quita la capa, queda Batman)
+  3. Que otros no controlen tu carrera. Si dejás que otros lo hagan, te van a convertir en un héroe. (→ aparece Batman)
   Y los héroes están muy bien... (→ Batman se convierte en el Joker)
   ... pero no te olvides: o morís como héroe, o vivís lo suficiente para convertirte en villano.
 ---
