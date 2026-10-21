@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 66,
-        "end": 68
+        "start": 65,
+        "end": 65
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 69,
-        "end": 72
+        "start": 66,
+        "end": 69
       }
     ]
   },
@@ -157,10 +157,7 @@
     "recurring-quote-3.md",
     "disclaimer-trabajar-menos.md",
     "urgente-importante.md",
-    "cadena-1.md",
-    "cadena-1-2.md",
-    "cadena-1-2-2.md",
-    "cadena-1-2-2-2.md",
+    "cadena.md",
     "recurring-quote-4.md",
     "viernes-1530-2.md",
     "radiacion.md",
