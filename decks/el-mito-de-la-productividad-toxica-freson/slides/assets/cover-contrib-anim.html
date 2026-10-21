@@ -1,0 +1,146 @@
+<!-- ───────── Contribution graph background ─────────
+     El fondo es una cuadrícula tipo "actividad de GitHub". Se va llenando de
+     verde cada vez más rápido e intenso (productividad), vira a rojo
+     (tóxica) y explota. Luego se vacía y vuelve a empezar. -->
+<div id="contrib-bg" style="position:absolute;inset:0;width:100%;height:100%;overflow:hidden"></div>
+<script>
+(function () {
+  var MOUNT = document.getElementById('contrib-bg');
+  if (!MOUNT) return;
+  if (MOUNT.__contribCleanup) MOUNT.__contribCleanup();
+
+  var BG = [13, 17, 23];
+  var EMPTY = [22, 27, 34];
+  var GREENS = [[14, 68, 41], [0, 109, 50], [38, 166, 65], [57, 211, 83]];
+  var REDS   = [[90, 24, 26], [140, 30, 34], [166, 65, 50], [255, 32, 121]];
+  var CELL = 20, GAP = 5;                      // en px del lienzo 1920×1080
+  var FILL_MS = 20000, HEAT_MS = 3500, BOOM_MS = 1800, DARK_MS = 1600;
+  var CYCLE = FILL_MS + HEAT_MS + BOOM_MS + DARK_MS;
+
+  MOUNT.style.background = 'rgb(' + BG.join(',') + ')';
+  if (getComputedStyle(MOUNT).position === 'static') MOUNT.style.position = 'relative';
+  var canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block';
+  MOUNT.appendChild(canvas);
+  var ctx = canvas.getContext('2d', { alpha: false });
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function mix(c1, c2, t) { return 'rgb(' + Math.round(lerp(c1[0], c2[0], t)) + ',' + Math.round(lerp(c1[1], c2[1], t)) + ',' + Math.round(lerp(c1[2], c2[2], t)) + ')'; }
+  function easeIn(t) { return t * t * t; }
+
+  var W = 0, H = 0, dpr = 1, cols = 0, rows = 0, cells = [];
+  function layout() {
+    var r = MOUNT.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.max(1, Math.floor(r.width)); H = Math.max(1, Math.floor(r.height));
+    canvas.width = Math.floor(W * dpr); canvas.height = Math.floor(H * dpr);
+    var scale = W / 1920;
+    var pitch = (CELL + GAP) * scale;
+    cols = Math.ceil(W / pitch) + 1; rows = Math.ceil(H / pitch) + 1;
+    cells = [];
+    for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
+      cells.push({ x: x * pitch, y: y * pitch, s: CELL * scale, lvl: 0, hit: -1e9, seed: Math.random(), vx: 0, vy: 0 });
+    }
+  }
+
+  // Preview del editor / miniaturas: fotograma estático, sin rAF.
+  var inEditorPreview = (window.self !== window.top) && !/[?&](present|embedded)=/.test(location.search);
+  function drawFrame(now, startTime) {
+    var t = ((now - startTime) % CYCLE);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = 'rgb(' + BG.join(',') + ')';
+    ctx.fillRect(0, 0, W, H);
+    var phase, p;
+    if (t < FILL_MS) { phase = 'fill'; p = t / FILL_MS; }
+    else if (t < FILL_MS + HEAT_MS) { phase = 'heat'; p = (t - FILL_MS) / HEAT_MS; }
+    else if (t < FILL_MS + HEAT_MS + BOOM_MS) { phase = 'boom'; p = (t - FILL_MS - HEAT_MS) / BOOM_MS; }
+    else { phase = 'dark'; p = (t - FILL_MS - HEAT_MS - BOOM_MS) / DARK_MS; }
+    return { phase: phase, p: p, t: t };
+  }
+
+  var cx = 0, cy = 0;
+  function render(now, startTime, lastNow) {
+    var f = drawFrame(now, startTime);
+    var dt = Math.min(50, now - lastNow);
+    cx = W / 2; cy = H / 2;
+    if (f.phase === 'fill') {
+      // Ritmo de "commits" creciente: pocos al principio, una lluvia al final.
+      var rate = lerp(0.4, 60, easeIn(f.p));          // celdas por frame (×dt/16)
+      var n = rate * dt / 16;
+      var hits = Math.floor(n) + (Math.random() < (n % 1) ? 1 : 0);
+      for (var i = 0; i < hits; i++) {
+        var c = cells[(Math.random() * cells.length) | 0];
+        if (c.lvl < 3) c.lvl += 1; else if (Math.random() < 0.5) c.lvl = 3;
+        c.hit = now;
+      }
+    }
+    for (var k = 0; k < cells.length; k++) {
+      var c2 = cells[k], col, x = c2.x, y = c2.y, s = c2.s, alpha = 1;
+      if (f.phase === 'fill') {
+        col = c2.lvl === 0 ? mix(EMPTY, EMPTY, 0) : mix(GREENS[c2.lvl - 1], [255, 255, 255], Math.max(0, 1 - (now - c2.hit) / 220) * 0.35);
+      } else if (f.phase === 'heat') {
+        // Verde → rojo, con un parpadeo nervioso que crece.
+        var tr = f.p, g = c2.lvl === 0 ? EMPTY : GREENS[c2.lvl - 1], r = c2.lvl === 0 ? [40, 18, 20] : REDS[c2.lvl - 1];
+        var flick = c2.lvl ? (Math.sin(now / (40 + c2.seed * 60) + c2.seed * 9) * 0.5 + 0.5) * tr * 0.45 : 0;
+        col = mix(g, r, Math.min(1, tr + flick));
+        var jit = tr * tr * 3;
+        x += (Math.random() - 0.5) * jit; y += (Math.random() - 0.5) * jit;
+      } else if (f.phase === 'boom') {
+        if (c2.vx === 0 && c2.vy === 0) {
+          var dx = c2.x - cx, dy = c2.y - cy, d = Math.max(40, Math.hypot(dx, dy));
+          // Velocidad en px/ms: las del centro salen más rápido; todas visibles ~2 s.
+          var sp = (0.35 + c2.seed * 0.45) * (W / 1920) * Math.min(3, 1 + 160 / d);
+          c2.vx = dx / d * sp + (c2.seed - 0.5) * 0.15; c2.vy = dy / d * sp + (c2.seed - 0.5) * 0.15;
+        }
+        c2.x += c2.vx * dt; c2.y += c2.vy * dt; c2.vy += 0.0004 * dt * (W / 1920);
+        x = c2.x; y = c2.y;
+        col = c2.lvl === 0 ? mix([40, 18, 20], BG, f.p) : mix(REDS[c2.lvl - 1], [255, 32, 121], Math.min(1, f.p * 1.5));
+        alpha = c2.lvl === 0 ? Math.max(0, 1 - f.p * 2) : Math.max(0, 1 - f.p * f.p);
+      } else {
+        col = mix(EMPTY, BG, f.p * 0.6); alpha = 1 - f.p;
+      }
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = col;
+      ctx.fillRect(x, y, s, s);
+    }
+    ctx.globalAlpha = 1;
+    if (f.phase === 'boom' && f.p < 0.25) {
+      // Fogonazo rojo al explotar.
+      ctx.fillStyle = 'rgba(255,32,121,' + (0.45 * (1 - f.p / 0.25)) + ')';
+      ctx.fillRect(0, 0, W, H);
+    }
+    if (f.phase === 'dark' && f.p > 0.95) {
+      // Reinicio limpio para el siguiente ciclo.
+      for (var j = 0; j < cells.length; j++) { cells[j].lvl = 0; cells[j].vx = cells[j].vy = 0; layoutPos(cells[j], j); }
+    }
+  }
+  function layoutPos(c, idx) {
+    var scale = W / 1920, pitch = (CELL + GAP) * scale;
+    c.x = (idx % cols) * pitch; c.y = Math.floor(idx / cols) * pitch;
+  }
+
+  layout();
+  if (inEditorPreview) {
+    // Fotograma fijo: cuadrícula a medio llenar.
+    for (var q = 0; q < cells.length; q++) cells[q].lvl = Math.random() < 0.45 ? 1 + ((Math.random() * 3) | 0) : 0;
+    var t0 = performance.now();
+    render(t0 + FILL_MS * 0.5, t0, t0 + FILL_MS * 0.5 - 16);
+    var ro = new ResizeObserver(function () { layout(); for (var q2 = 0; q2 < cells.length; q2++) cells[q2].lvl = Math.random() < 0.45 ? 1 + ((Math.random() * 3) | 0) : 0; render(t0 + FILL_MS * 0.5, t0, t0 + FILL_MS * 0.5 - 16); });
+    ro.observe(MOUNT);
+    MOUNT.__contribCleanup = function () { ro.disconnect(); canvas.remove(); MOUNT.__contribCleanup = null; };
+    return;
+  }
+
+  var startTime = performance.now(), last = startTime, raf = 0, stopped = false;
+  function frame(now) {
+    if (stopped) return;
+    render(now, startTime, last); last = now;
+    raf = requestAnimationFrame(frame);
+  }
+  var ro2 = new ResizeObserver(function () { var keep = cells.map(function (c) { return c.lvl; }); layout(); for (var i2 = 0; i2 < cells.length && i2 < keep.length; i2++) cells[i2].lvl = keep[i2]; });
+  ro2.observe(MOUNT);
+  canvas.addEventListener('click', function () { startTime = performance.now(); for (var j2 = 0; j2 < cells.length; j2++) { cells[j2].lvl = 0; cells[j2].vx = cells[j2].vy = 0; layoutPos(cells[j2], j2); } });
+  MOUNT.__contribCleanup = function () { stopped = true; cancelAnimationFrame(raf); ro2.disconnect(); canvas.remove(); MOUNT.__contribCleanup = null; };
+  raf = requestAnimationFrame(frame);
+})();
+</script>
