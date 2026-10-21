@@ -1,7 +1,8 @@
 <!-- ───────── Contribution graph background ─────────
-     El fondo es una cuadrícula tipo "actividad de GitHub". Se va llenando de
-     verde cada vez más rápido e intenso (productividad), vira a rojo
-     (tóxica) y explota. Luego se vacía y vuelve a empezar. -->
+     Cuadrícula tipo "actividad de GitHub". Cada casilla sube de verde con sus
+     primeros commits y, si la actividad no para, se va calentando hacia el rojo
+     por su cuenta. La lluvia de commits se acelera hasta que NINGUNA casilla
+     queda libre ni por debajo del rojo máximo; entonces vibra y explota. -->
 <div id="contrib-bg" style="position:absolute;inset:0;width:100%;height:100%;overflow:hidden"></div>
 <script>
 (function () {
@@ -12,11 +13,12 @@
   var BG = [13, 17, 23];
   var EMPTY = [22, 27, 34];
   var GREENS = [[14, 68, 41], [0, 109, 50], [38, 166, 65], [57, 211, 83]];
-  var REDS   = [[90, 24, 26], [140, 30, 34], [166, 65, 50], [255, 32, 121]];
-  var CELL = 20, GAP = 5;                      // en px del lienzo 1920×1080
-  var FILL_MS = 20000, HEAT_MS = 2600, BOOM_MS = 1800, DARK_MS = 1600;
-  var HEAT_START = 0.55;                       // % del llenado a partir del cual el verde vira a rojo
-  var CYCLE = FILL_MS + HEAT_MS + BOOM_MS + DARK_MS;
+  var RED_MAX = [255, 32, 121];                 // plasma: rojo máximo
+  var RED_MID = [166, 65, 50];
+  var CELL = 20, GAP = 5;                       // px del lienzo 1920×1080
+  var RAMP_MS = 24000;                          // tiempo hasta la lluvia máxima
+  var HOLD_MS = 1300, BOOM_MS = 1800, DARK_MS = 1600;
+  var HEAT_STEP = 0.2;                          // calor que añade cada commit a una casilla ya verde máximo
 
   MOUNT.style.background = 'rgb(' + BG.join(',') + ')';
   if (getComputedStyle(MOUNT).position === 'static') MOUNT.style.position = 'relative';
@@ -26,131 +28,141 @@
   var ctx = canvas.getContext('2d', { alpha: false });
 
   function lerp(a, b, t) { return a + (b - a) * t; }
-  function mix(c1, c2, t) { return 'rgb(' + Math.round(lerp(c1[0], c2[0], t)) + ',' + Math.round(lerp(c1[1], c2[1], t)) + ',' + Math.round(lerp(c1[2], c2[2], t)) + ')'; }
-  function parseRgb(str) { var m = str.match(/\d+/g); return [+m[0], +m[1], +m[2]]; }
-  function mixStr(str, c2, t) { return mix(parseRgb(str), c2, t); }
+  function mix3(c1, c2, t) { return [lerp(c1[0], c2[0], t), lerp(c1[1], c2[1], t), lerp(c1[2], c2[2], t)]; }
+  function rgb(c) { return 'rgb(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ')'; }
   function easeIn(t) { return t * t * t; }
-  function smooth(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
-  // "Temperatura" global: 0 hasta HEAT_START del llenado, ~0.8 al acabar de llenar, 1 al final del sobrecalentamiento.
-  function hotness(f) {
-    if (f.phase === 'fill') return 0.8 * smooth((f.p - HEAT_START) / (1 - HEAT_START));
-    if (f.phase === 'heat') return 0.8 + 0.2 * f.p;
-    return 1;
-  }
 
-  var W = 0, H = 0, dpr = 1, cols = 0, rows = 0, cells = [];
+  var W = 0, H = 0, dpr = 1, cols = 0, rows = 0, cells = [], pitch = 0, cellPx = 0;
   function layout() {
     var r = MOUNT.getBoundingClientRect();
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = Math.max(1, Math.floor(r.width)); H = Math.max(1, Math.floor(r.height));
     canvas.width = Math.floor(W * dpr); canvas.height = Math.floor(H * dpr);
     var scale = W / 1920;
-    var pitch = (CELL + GAP) * scale;
+    pitch = (CELL + GAP) * scale; cellPx = CELL * scale;
     cols = Math.ceil(W / pitch) + 1; rows = Math.ceil(H / pitch) + 1;
-    cells = [];
+    var old = cells; cells = [];
     for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
-      cells.push({ x: x * pitch, y: y * pitch, s: CELL * scale, lvl: 0, hit: -1e9, seed: Math.random(), vx: 0, vy: 0 });
+      var prev = old[y * cols + x];
+      cells.push({ lvl: prev ? prev.lvl : 0, heat: prev ? prev.heat : 0, hit: -1e9, seed: Math.random(), dx: 0, dy: 0, vx: 0, vy: 0 });
     }
   }
+  function cellColor(c, now) {
+    var base = c.lvl === 0 ? EMPTY : GREENS[c.lvl - 1];
+    var col = base;
+    if (c.heat > 0) {
+      // Verde → rojo medio → rojo máximo, en función del calor propio de la casilla.
+      col = c.heat < 0.5 ? mix3(base, RED_MID, c.heat / 0.5) : mix3(RED_MID, RED_MAX, (c.heat - 0.5) / 0.5);
+    }
+    var age = now - c.hit;
+    if (age < 220 && c.lvl) col = mix3(col, [255, 255, 255], (1 - age / 220) * 0.3);
+    return col;
+  }
+  function hitCell(c, now) {
+    if (c.lvl < 3) c.lvl += 1; else c.heat = Math.min(1, c.heat + HEAT_STEP);
+    c.hit = now;
+  }
+  function isDone(c) { return c.heat >= 1; }
 
-  // Preview del editor / miniaturas: fotograma estático, sin rAF.
-  var inEditorPreview = (window.self !== window.top) && !/[?&](present|embedded)=/.test(location.search);
-  function drawFrame(now, startTime) {
-    var t = ((now - startTime) % CYCLE);
+  var state, phaseStart, startTime;
+  function reset(now) {
+    for (var i = 0; i < cells.length; i++) { var c = cells[i]; c.lvl = 0; c.heat = 0; c.hit = -1e9; c.dx = c.dy = c.vx = c.vy = 0; }
+    state = 'fill'; phaseStart = now; startTime = now;
+  }
+
+  function render(now, dt) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = 'rgb(' + BG.join(',') + ')';
-    ctx.fillRect(0, 0, W, H);
-    var phase, p;
-    if (t < FILL_MS) { phase = 'fill'; p = t / FILL_MS; }
-    else if (t < FILL_MS + HEAT_MS) { phase = 'heat'; p = (t - FILL_MS) / HEAT_MS; }
-    else if (t < FILL_MS + HEAT_MS + BOOM_MS) { phase = 'boom'; p = (t - FILL_MS - HEAT_MS) / BOOM_MS; }
-    else { phase = 'dark'; p = (t - FILL_MS - HEAT_MS - BOOM_MS) / DARK_MS; }
-    return { phase: phase, p: p, t: t };
-  }
-
-  var cx = 0, cy = 0;
-  function render(now, startTime, lastNow) {
-    var f = drawFrame(now, startTime);
-    var dt = Math.min(50, now - lastNow);
-    cx = W / 2; cy = H / 2;
-    if (f.phase === 'fill') {
-      // Ritmo de "commits" creciente: pocos al principio, una lluvia al final.
-      var rate = lerp(0.4, 60, easeIn(f.p));          // celdas por frame (×dt/16)
-      var n = rate * dt / 16;
-      var hits = Math.floor(n) + (Math.random() < (n % 1) ? 1 : 0);
-      for (var i = 0; i < hits; i++) {
-        var c = cells[(Math.random() * cells.length) | 0];
-        if (c.lvl < 3) c.lvl += 1; else if (Math.random() < 0.5) c.lvl = 3;
-        c.hit = now;
-      }
-    }
-    for (var k = 0; k < cells.length; k++) {
-      var c2 = cells[k], col, x = c2.x, y = c2.y, s = c2.s, alpha = 1;
-      if (f.phase === 'fill' || f.phase === 'heat') {
-        // Verde → rojo de forma continua según la "temperatura"; el parpadeo
-        // nervioso y la vibración crecen con ella.
-        var hot = hotness(f);
-        var g = c2.lvl === 0 ? EMPTY : GREENS[c2.lvl - 1], r = c2.lvl === 0 ? [40, 18, 20] : REDS[c2.lvl - 1];
-        var flick = (c2.lvl && hot > 0.2) ? (Math.sin(now / (40 + c2.seed * 60) + c2.seed * 9) * 0.5 + 0.5) * (hot - 0.2) * 0.5 : 0;
-        col = mix(g, r, Math.min(1, hot + flick));
-        if (c2.lvl && now - c2.hit < 220) col = mixStr(col, hot < 0.4 ? [255, 255, 255] : [255, 32, 121], Math.max(0, 1 - (now - c2.hit) / 220) * 0.35);
-        var jit = hot > 0.6 ? Math.pow((hot - 0.6) / 0.4, 2) * 3 : 0;
-        if (jit) { x += (Math.random() - 0.5) * jit; y += (Math.random() - 0.5) * jit; }
-      } else if (f.phase === 'boom') {
-        if (c2.vx === 0 && c2.vy === 0) {
-          var dx = c2.x - cx, dy = c2.y - cy, d = Math.max(40, Math.hypot(dx, dy));
-          // Velocidad en px/ms: las del centro salen más rápido; todas visibles ~2 s.
-          var sp = (0.35 + c2.seed * 0.45) * (W / 1920) * Math.min(3, 1 + 160 / d);
-          c2.vx = dx / d * sp + (c2.seed - 0.5) * 0.15; c2.vy = dy / d * sp + (c2.seed - 0.5) * 0.15;
+    ctx.fillStyle = rgb(BG); ctx.fillRect(0, 0, W, H);
+    var p = (now - phaseStart);
+    if (state === 'fill') {
+      var ramp = Math.min(1, (now - startTime) / RAMP_MS);
+      var rate = lerp(0.4, 90, easeIn(ramp)) * dt / 16;       // commits por frame
+      var n = Math.floor(rate) + (Math.random() < (rate % 1) ? 1 : 0);
+      var pending = null;
+      for (var i = 0; i < n; i++) {
+        var c;
+        if (ramp > 0.8) {
+          // Final: la lluvia se ceba con lo que falta hasta que todo esté al rojo.
+          if (!pending) { pending = []; for (var k = 0; k < cells.length; k++) if (!isDone(cells[k])) pending.push(cells[k]); }
+          if (!pending.length) break;
+          c = pending[(Math.random() * pending.length) | 0];
+        } else {
+          c = cells[(Math.random() * cells.length) | 0];
         }
-        c2.x += c2.vx * dt; c2.y += c2.vy * dt; c2.vy += 0.0004 * dt * (W / 1920);
-        x = c2.x; y = c2.y;
-        col = c2.lvl === 0 ? mix([40, 18, 20], BG, f.p) : mix(REDS[c2.lvl - 1], [255, 32, 121], Math.min(1, f.p * 1.5));
-        alpha = c2.lvl === 0 ? Math.max(0, 1 - f.p * 2) : Math.max(0, 1 - f.p * f.p);
-      } else {
-        col = mix(EMPTY, BG, f.p * 0.6); alpha = 1 - f.p;
+        hitCell(c, now);
       }
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = col;
-      ctx.fillRect(x, y, s, s);
+      if (ramp >= 1) {
+        var allDone = true;
+        for (var q = 0; q < cells.length; q++) if (!isDone(cells[q])) { allDone = false; break; }
+        if (allDone) { state = 'hold'; phaseStart = now; }
+      }
+    } else if (state === 'hold' && p > HOLD_MS) { state = 'boom'; phaseStart = now; }
+    else if (state === 'boom' && p > BOOM_MS) { state = 'dark'; phaseStart = now; }
+    else if (state === 'dark' && p > DARK_MS) { reset(now); }
+
+    var cx = W / 2, cy = H / 2;
+    var hotAvg = 0;
+    for (var j = 0; j < cells.length; j++) {
+      var c2 = cells[j];
+      var x = (j % cols) * pitch, y = Math.floor(j / cols) * pitch, alpha = 1;
+      var col = cellColor(c2, now);
+      hotAvg += c2.heat;
+      if (state === 'fill' || state === 'hold') {
+        // Vibración y parpadeo proporcionales al calor de cada casilla.
+        if (c2.heat > 0.4) {
+          var h = (c2.heat - 0.4) / 0.6 * (state === 'hold' ? 1.6 : 1);
+          var fl = (Math.sin(now / (40 + c2.seed * 60) + c2.seed * 9) * 0.5 + 0.5) * h * 0.35;
+          col = mix3(col, RED_MAX, fl);
+          var jit = h * h * 3;
+          x += (Math.random() - 0.5) * jit; y += (Math.random() - 0.5) * jit;
+        }
+      } else if (state === 'boom') {
+        if (c2.vx === 0 && c2.vy === 0) {
+          var ddx = x - cx, ddy = y - cy, d = Math.max(40, Math.hypot(ddx, ddy));
+          var sp = (0.35 + c2.seed * 0.45) * (W / 1920) * Math.min(3, 1 + 160 / d);
+          c2.vx = ddx / d * sp + (c2.seed - 0.5) * 0.15; c2.vy = ddy / d * sp + (c2.seed - 0.5) * 0.15;
+        }
+        c2.dx += c2.vx * dt; c2.dy += c2.vy * dt; c2.vy += 0.0004 * dt * (W / 1920);
+        x += c2.dx; y += c2.dy;
+        var bp = p / BOOM_MS;
+        col = mix3(RED_MAX, [255, 120, 160], Math.min(1, bp * 1.5));
+        alpha = Math.max(0, 1 - bp * bp);
+      } else if (state === 'dark') {
+        col = mix3(EMPTY, BG, p / DARK_MS * 0.6); alpha = 1 - p / DARK_MS;
+      }
+      ctx.globalAlpha = alpha; ctx.fillStyle = rgb(col);
+      ctx.fillRect(x, y, cellPx, cellPx);
     }
     ctx.globalAlpha = 1;
-    if (f.phase === 'boom' && f.p < 0.25) {
-      // Fogonazo rojo al explotar.
-      ctx.fillStyle = 'rgba(255,32,121,' + (0.45 * (1 - f.p / 0.25)) + ')';
+    if (state === 'boom' && p < 450) {
+      ctx.fillStyle = 'rgba(255,32,121,' + (0.45 * (1 - p / 450)) + ')';
       ctx.fillRect(0, 0, W, H);
     }
-    if (f.phase === 'dark' && f.p > 0.95) {
-      // Reinicio limpio para el siguiente ciclo.
-      for (var j = 0; j < cells.length; j++) { cells[j].lvl = 0; cells[j].vx = cells[j].vy = 0; layoutPos(cells[j], j); }
-    }
-  }
-  function layoutPos(c, idx) {
-    var scale = W / 1920, pitch = (CELL + GAP) * scale;
-    c.x = (idx % cols) * pitch; c.y = Math.floor(idx / cols) * pitch;
   }
 
   layout();
+  var inEditorPreview = (window.self !== window.top) && !/[?&](present|embedded)=/.test(location.search);
   if (inEditorPreview) {
-    // Fotograma fijo: cuadrícula a medio llenar.
-    for (var q = 0; q < cells.length; q++) cells[q].lvl = Math.random() < 0.45 ? 1 + ((Math.random() * 3) | 0) : 0;
-    var t0 = performance.now();
-    render(t0 + FILL_MS * 0.5, t0, t0 + FILL_MS * 0.5 - 16);
-    var ro = new ResizeObserver(function () { layout(); for (var q2 = 0; q2 < cells.length; q2++) cells[q2].lvl = Math.random() < 0.45 ? 1 + ((Math.random() * 3) | 0) : 0; render(t0 + FILL_MS * 0.5, t0, t0 + FILL_MS * 0.5 - 16); });
+    // Fotograma fijo para la miniatura del editor: a medio camino, sin rAF.
+    var seed = function () { for (var q = 0; q < cells.length; q++) { var c = cells[q]; c.lvl = Math.random() < 0.6 ? 1 + ((Math.random() * 3) | 0) : 0; c.heat = c.lvl === 3 && Math.random() < 0.4 ? Math.random() * 0.6 : 0; } };
+    seed(); state = 'fill'; phaseStart = startTime = performance.now() - RAMP_MS * 0.5;
+    render(performance.now(), 0);
+    var ro = new ResizeObserver(function () { layout(); seed(); render(performance.now(), 0); });
     ro.observe(MOUNT);
     MOUNT.__contribCleanup = function () { ro.disconnect(); canvas.remove(); MOUNT.__contribCleanup = null; };
     return;
   }
 
-  var startTime = performance.now(), last = startTime, raf = 0, stopped = false;
+  reset(performance.now());
+  var last = performance.now(), raf = 0, stopped = false;
   function frame(now) {
     if (stopped) return;
-    render(now, startTime, last); last = now;
+    render(now, Math.min(50, now - last)); last = now;
     raf = requestAnimationFrame(frame);
   }
-  var ro2 = new ResizeObserver(function () { var keep = cells.map(function (c) { return c.lvl; }); layout(); for (var i2 = 0; i2 < cells.length && i2 < keep.length; i2++) cells[i2].lvl = keep[i2]; });
+  var ro2 = new ResizeObserver(function () { layout(); });
   ro2.observe(MOUNT);
-  canvas.addEventListener('click', function () { startTime = performance.now(); for (var j2 = 0; j2 < cells.length; j2++) { cells[j2].lvl = 0; cells[j2].vx = cells[j2].vy = 0; layoutPos(cells[j2], j2); } });
+  canvas.addEventListener('click', function () { reset(performance.now()); });
   MOUNT.__contribCleanup = function () { stopped = true; cancelAnimationFrame(raf); ro2.disconnect(); canvas.remove(); MOUNT.__contribCleanup = null; };
   raf = requestAnimationFrame(frame);
 })();
