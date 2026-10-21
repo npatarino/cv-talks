@@ -31,30 +31,8 @@
   function mix3(c1, c2, t) { return [lerp(c1[0], c2[0], t), lerp(c1[1], c2[1], t), lerp(c1[2], c2[2], t)]; }
   function rgb(c) { return 'rgb(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ')'; }
   function easeIn(t) { return t * t * t; }
-  function clamp(t) { return t < 0 ? 0 : t > 1 ? 1 : t; }
 
   var W = 0, H = 0, dpr = 1, cols = 0, rows = 0, cells = [], pitch = 0, cellPx = 0;
-  // Zonas de texto (logo, título, firma) en fracciones del lienzo. Las casillas
-  // que caen dentro no existen, con un umbral distinto por casilla para que el
-  // borde no dibuje una elipse limpia sino un "claro" irregular en la cuadrícula.
-  var QUIET = [
-    { x: 0.5, y: 0.145, rx: 0.13, ry: 0.085 },  // logo
-    { x: 0.5, y: 0.60,  rx: 0.40, ry: 0.15 },   // título
-    { x: 0.5, y: 0.775, rx: 0.18, ry: 0.05 }    // with ♥ by …
-  ];
-  function quietAt(x, y, seed) {
-    var m = 0;
-    for (var i = 0; i < QUIET.length; i++) {
-      var q = QUIET[i], dx = (x - q.x * W) / (q.rx * W), dy = (y - q.y * H) / (q.ry * H);
-      var d = dx * dx + dy * dy;                   // 0 en el centro, 1 en el borde
-      if (d < 1.4) m = Math.max(m, 1 - d / 1.4);
-    }
-    if (!m) return 0;
-    m = m * m * (3 - 2 * m);                        // suavizado
-    // Umbral por casilla: borde dentado en lugar de una elipse limpia.
-    return clamp(m * 1.1 + (seed - 0.5) * 0.45);
-  }
-
   function layout() {
     var r = MOUNT.getBoundingClientRect();
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -66,11 +44,7 @@
     var old = cells; cells = [];
     for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
       var prev = old[y * cols + x];
-      var seed = prev ? prev.seed : Math.random();
-      var c = { lvl: prev ? prev.lvl : 0, heat: prev ? prev.heat : 0, hit: -1e9, seed: seed, dx: 0, dy: 0, vx: 0, vy: 0, skip: false };
-      // Las casillas bajo los textos no existen: hueco con borde irregular.
-      c.skip = quietAt(x * pitch + cellPx / 2, y * pitch + cellPx / 2, seed) > 0.5;
-      cells.push(c);
+      cells.push({ lvl: prev ? prev.lvl : 0, heat: prev ? prev.heat : 0, hit: -1e9, seed: Math.random(), dx: 0, dy: 0, vx: 0, vy: 0 });
     }
   }
   function cellColor(c, now) {
@@ -88,7 +62,7 @@
     if (c.lvl < 3) c.lvl += 1; else c.heat = Math.min(1, c.heat + HEAT_STEP);
     c.hit = now;
   }
-  function isDone(c) { return c.skip || c.heat >= 1; }
+  function isDone(c) { return c.heat >= 1; }
 
   var state, phaseStart, startTime;
   function reset(now) {
@@ -115,7 +89,7 @@
         } else {
           c = cells[(Math.random() * cells.length) | 0];
         }
-        if (!c.skip) hitCell(c, now);
+        hitCell(c, now);
       }
       if (ramp >= 1) {
         var allDone = true;
@@ -130,7 +104,6 @@
     var hotAvg = 0;
     for (var j = 0; j < cells.length; j++) {
       var c2 = cells[j];
-      if (c2.skip) continue;
       var x = (j % cols) * pitch, y = Math.floor(j / cols) * pitch, alpha = 1;
       var col = cellColor(c2, now);
       hotAvg += c2.heat;
