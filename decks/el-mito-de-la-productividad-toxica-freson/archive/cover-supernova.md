@@ -1,4 +1,6 @@
 ---
+permalink: false
+eleventyExcludeFromCollections: true
 template: cover
 recipe: canvas-quiet
 label: cover
