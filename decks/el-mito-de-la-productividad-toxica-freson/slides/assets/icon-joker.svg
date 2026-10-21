@@ -1,49 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
-  <!-- Relleno de rotulador, desplazado del contorno. Colores propios del personaje. -->
+  <!-- Relleno de rotulador, desplazado del contorno -->
   <g stroke="none" transform="translate(8 9)">
-    <!-- pelo verde peinado hacia atrás, con volumen por detrás de la cabeza -->
-    <path fill="#2f9e44" d="M176 150C196 108 224 90 256 88C290 90 318 108 336 150C364 120 374 64 332 42C298 20 214 20 180 42C138 64 148 120 176 150Z"/>
-    <!-- cara blanca -->
-    <path fill="#fafaf8" d="M176 150C166 230 192 300 256 320C320 300 346 230 336 150C318 118 290 106 256 106C222 106 194 118 176 150Z"/>
-    <!-- maquillaje oscuro: triángulos caídos bajo los ojos -->
-    <path fill="#1c1c1c" d="M200 186C212 176 236 176 246 188C244 206 236 220 224 230C210 220 200 204 200 186Z"/>
-    <path fill="#1c1c1c" d="M266 188C276 176 300 176 312 186C312 204 302 220 288 230C276 220 268 206 266 188Z"/>
-    <!-- chaqueta morada, chaleco y pajarita -->
-    <path fill="#6f2da8" d="M206 312C120 332 66 380 56 440C52 480 88 498 138 504L374 504C426 498 460 480 456 440C446 380 394 332 306 312C296 352 216 352 206 312Z"/>
-    <path fill="#f9d71c" d="M224 330L256 440L288 330C278 350 234 350 224 330Z"/>
-    <path fill="#2f9e44" d="M232 326L256 338L280 326L280 352L256 340L232 352Z"/>
+    <path fill="#2f9e44" d="M146 170C130 100 180 40 256 36C334 40 384 100 366 170C352 134 320 108 300 118C284 100 236 100 220 118C196 108 160 134 146 170Z"/>
+    <path fill="#2f9e44" d="M146 170C122 196 110 240 122 290C132 300 146 296 150 284C160 250 156 212 164 182ZM366 170C390 196 402 240 390 290C380 300 366 296 362 284C352 250 356 212 348 182Z"/>
+    <path fill="#fafaf8" d="M160 160C150 240 178 300 256 310C334 300 362 240 352 160C324 136 292 130 256 132C220 130 188 136 160 160Z"/>
+    <path fill="#6f2da8" d="M206 306C120 326 68 376 58 438C54 478 88 496 138 502L372 502C424 496 458 478 454 438C444 376 392 326 306 306C296 342 216 342 206 306Z"/>
+    <path fill="#f9d71c" d="M226 312L256 426L286 312C276 332 236 332 226 312Z"/>
+    <ellipse fill="#1c1c1c" cx="212" cy="208" rx="26" ry="18"/>
+    <ellipse fill="#1c1c1c" cx="300" cy="208" rx="26" ry="18"/>
   </g>
-  <!-- Pelo: contorno y ondas hacia atrás -->
-  <path stroke-width="17" d="M178 146C198 104 226 86 256 84C290 86 318 104 338 146C366 116 376 60 334 38C300 16 216 16 182 38C140 60 150 116 178 146"/>
-  <path stroke-width="7" opacity=".7" d="M206 72C226 58 242 54 256 54M232 56C262 46 300 50 322 66M170 92C190 76 214 70 236 66M312 90C330 100 342 118 346 138"/>
+  <!-- Pelo -->
+  <path stroke-width="18" d="M148 166C132 98 184 36 256 32C336 36 386 98 368 166C352 130 320 104 298 114C282 96 234 96 218 114C196 104 162 130 148 166"/>
+  <path stroke-width="8" opacity=".75" d="M172 120C196 92 226 80 256 80C290 80 318 92 342 120"/>
+  <!-- Mechones laterales, despeinados -->
+  <path stroke-width="14" d="M150 168C124 196 110 240 120 288C130 298 144 296 150 282C160 250 156 212 164 184"/>
+  <path stroke-width="14" d="M362 168C388 196 402 240 392 288C382 298 368 296 362 282C352 250 356 212 348 184"/>
+  <path stroke-width="7" opacity=".7" d="M138 206C132 230 130 252 134 276M374 206C380 230 382 252 378 276M196 70C210 54 230 46 250 46M262 44C286 44 310 52 328 66"/>
   <!-- Cara -->
-  <path stroke-width="16" d="M178 146C168 230 192 302 256 322C322 302 346 230 338 146"/>
-  <path stroke-width="7" opacity=".7" d="M190 164C182 232 204 290 252 310"/>
-  <!-- Cejas finas y altas -->
-  <path stroke-width="8" d="M198 160C210 142 236 140 250 154M314 160C302 142 276 140 262 154"/>
-  <!-- Ojos abiertos -->
-  <circle stroke-width="7" cx="222" cy="194" r="12"/>
-  <circle stroke-width="7" cx="290" cy="194" r="12"/>
-  <circle fill="#fafaf8" stroke="none" cx="222" cy="194" r="5"/>
-  <circle fill="#fafaf8" stroke="none" cx="290" cy="194" r="5"/>
+  <path stroke-width="16" d="M160 160C150 240 178 300 256 310C334 300 362 240 352 160"/>
+  <path stroke-width="7" opacity=".7" d="M172 176C166 240 190 288 250 298"/>
+  <!-- Ojos (sombra oscura y pupila) -->
+  <path stroke-width="10" d="M186 206C196 190 230 190 240 206C230 222 196 222 186 206ZM272 206C282 190 316 190 326 206C316 222 282 222 272 206Z"/>
+  <circle fill="#fafaf8" stroke="none" cx="214" cy="206" r="7"/>
+  <circle fill="#fafaf8" stroke="none" cx="298" cy="206" r="7"/>
   <!-- Nariz -->
-  <path stroke-width="7" opacity=".8" d="M256 212C250 228 250 238 258 244"/>
-  <!-- Sonrisa: labios rojos finos y anchos, puntas hacia arriba -->
-  <path stroke="#d7263d" stroke-width="16" d="M170 236C200 272 228 286 256 286C284 286 312 272 342 236"/>
-  <path stroke="#d7263d" stroke-width="14" d="M170 236C164 226 162 214 168 202M342 236C348 226 350 214 344 202"/>
-  <path stroke="#d7263d" stroke-width="9" d="M186 240C210 262 232 270 256 270C280 270 302 262 326 240"/>
-  <path stroke-width="7" d="M196 248C216 262 236 268 256 268C276 268 296 262 316 248"/>
-  <path stroke-width="4" opacity=".8" d="M214 256L213 266M234 263L234 274M256 268L256 278M278 263L278 274M298 256L299 266"/>
+  <path stroke-width="8" opacity=".8" d="M256 212C250 230 248 242 256 250"/>
+  <!-- Sonrisa pintada -->
+  <path stroke="#d7263d" stroke-width="20" d="M176 232C196 290 316 290 336 232"/>
+  <path stroke="#d7263d" stroke-width="10" opacity=".8" d="M176 232C168 238 164 246 166 254M336 232C344 238 348 246 346 254"/>
+  <path stroke-width="9" d="M196 262C230 276 282 276 316 262"/>
+  <path stroke-width="6" opacity=".7" d="M216 264L218 276M256 268L256 282M296 264L294 276"/>
   <!-- Chaqueta -->
-  <path stroke-width="18" d="M206 308C120 328 66 376 56 438C52 478 86 498 136 504L374 504C428 498 462 478 458 438C448 376 396 328 310 308"/>
-  <path stroke-width="8" opacity=".75" d="M214 328C150 346 100 384 86 432C84 462 104 478 140 486M300 328C364 346 414 384 428 432"/>
-  <!-- Solapas, chaleco y pajarita -->
-  <path stroke-width="12" d="M206 308C216 360 234 396 256 440C278 396 296 360 306 308"/>
-  <path stroke-width="10" d="M224 326L256 436L288 326"/>
-  <path stroke-width="10" d="M232 324L256 336L280 324L280 350L256 338L232 350Z"/>
-  <!-- Flor de solapa -->
-  <g transform="translate(366 372)">
-    <circle fill="#f9d71c" stroke="none" cx="4" cy="4" r="13"/>
+  <path stroke-width="18" d="M204 302C120 322 66 372 56 436C52 478 86 498 136 504L372 504C426 498 460 478 456 436C446 372 394 322 308 302"/>
+  <path stroke-width="8" opacity=".75" d="M214 322C150 340 100 380 86 430C84 460 104 476 140 484M298 322C362 340 412 380 426 430"/>
+  <!-- Solapas y chaleco -->
+  <path stroke-width="12" d="M204 302C214 352 232 384 256 428C280 384 298 352 308 302"/>
+  <path stroke-width="10" d="M224 310L256 420L288 310"/>
+  <!-- Flor -->
+  <g transform="translate(362 362)">
+    <circle fill="#f9d71c" stroke="none" cx="4" cy="4" r="14"/>
     <path stroke-width="8" d="M0 -18C10 -22 16 -14 12 -6C22 -6 24 6 16 10C20 20 10 26 2 20C-4 28 -16 22 -14 12C-24 8 -20 -6 -10 -6C-14 -16 -8 -22 0 -18Z"/>
   </g>
   <!-- Hatching -->
