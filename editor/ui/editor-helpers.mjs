@@ -29,12 +29,14 @@ export function buildAssetInsertHTML(src) {
 }
 
 /**
- * Build the absolute asset path used by the editor and the live preview.
- * Centralized here so any change to the URL shape (e.g. moving assets
- * under a different prefix) is a one-line change.
+ * Asset path as stored in the slide markdown: short and deck-relative
+ * (`assets/<file>`). The Eleventy `deckAssets` transform expands it to
+ * `/talks/decks/<slug>/assets/<file>` at build time, and the editor
+ * absolutizes it only for in-editor rendering (see toEditorHTML/cleanHTML).
+ * `deckSlug` is kept for API stability; the stored path no longer needs it.
  */
 export function buildAssetSrc(deckSlug, filename) {
-  return `/talks/decks/${deckSlug}/assets/${filename}`;
+  return `assets/${filename}`;
 }
 
 /**

@@ -4,7 +4,7 @@ recipe: critical
 label: burnout
 variant: default
 items:
-  - { glyph: '<img src="/talks/decks/el-mito-de-la-productividad-toxica/assets/icon-fire.png" alt="">' }
+  - { glyph: '<img src="assets/icon-fire.png" alt="">' }
 notes: |
   Burnout.
   Nos cuesta admitirlo, pero muchos de los que estamos acá, estoy casi seguro que estamos al borde del burnout y no lo sabemos, o no lo queremos ver porque nos dejamos llevar.

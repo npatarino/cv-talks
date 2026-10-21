@@ -3,7 +3,7 @@ template: icon
 recipe: energy-loud
 label: Cuaderno · notas
 items:
-  - { glyph: '<img src="/talks/decks/el-mito-de-la-productividad-toxica/assets/notebook.png" alt="">' }
+  - { glyph: '<img src="assets/notebook.png" alt="">' }
 variant: default
 notes: |
   Igual una cosa que yo suelo hacer siempre, es más lo hago todos los días, y lo súper recomiendo es tener una bitácora, un diario personal en el que antes de irme cada día, hago un mini resumen de lo que hice, y después los viernes hago un resumen de cómo fue mi semana. Somos malos, o por lo menos yo soy malo, a la hora de acordarme de todas las cosas que hago.

@@ -6,6 +6,6 @@ variant: divider
 fields:
   title: { content: Dora metrics, meta: Title_Text }
   sub: { content: "", meta: Subtitle_Text }
-  icon: { content: '<img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/icon-dora.svg" alt="" class="title-icon">', meta: Image_Src }
+  icon: { content: '<img src="assets/icon-dora.svg" alt="" class="title-icon">', meta: Image_Src }
 notes: 'Velocidad. '
 ---

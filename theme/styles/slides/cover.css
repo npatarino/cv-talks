@@ -19,6 +19,14 @@ section.slide.s-cover {
   z-index: 0;
 }
 
+.s-cover .bg-anim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
 .s-cover .bg-image img {
   width: 100%;
   height: 100%;
@@ -27,7 +35,7 @@ section.slide.s-cover {
 }
 
 /* Ensure content stays above the background image */
-.s-cover > :not(.bg-image):not(.sl-label) {
+.s-cover > :not(.bg-image):not(.bg-anim):not(.sl-label) {
   position: relative;
   z-index: 1;
 }

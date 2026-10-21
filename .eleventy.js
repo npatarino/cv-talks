@@ -26,6 +26,55 @@ module.exports = async function (eleventyConfig) {
     return buildJsonLd({ kind, siteId: siteId || "talks", data });
   });
 
+
+  // Assets de deck con path corto. En los .md basta con `assets/x.svg` (en src,
+  // href o data-inline); este transform lo expande a /talks/decks/<slug>/assets/
+  // según el deck al que pertenece la página. Después resuelve `data-inline`:
+  //   <img src="assets/x.svg" data-inline …>   → SVG incrustado (hereda fuentes y
+  //                                              sus animaciones CSS funcionan)
+  //   <div data-inline="assets/x.html"></div>  → fragmento HTML incrustado
+  // Los atributos class/style/alt del <img> pasan al <svg>.
+  function readDeckAsset(slug, file) {
+    const candidates = [
+      path.join(DECKS_DIR, slug, "slides", "assets", file),
+      path.join(DECKS_DIR, slug, "assets", file),
+    ];
+    const found = candidates.find((f) => fs.existsSync(f));
+    return found ? fs.readFileSync(found, "utf8") : null;
+  }
+  eleventyConfig.addTransform("deckAssets", function (content) {
+    const ip = (this.page && this.page.inputPath) || "";
+    const m = ip.match(/decks\/([^/]+)\//);
+    if (!m || !/\.html$/.test((this.page && this.page.outputPath) || "")) return content;
+    const slug = m[1];
+    const base = `/talks/decks/${slug}/assets/`;
+    let html = String(content).replace(/\b(src|href|data-inline)="assets\//g, `$1="${base}`);
+    if (html.indexOf("data-inline") === -1) return html;
+    html = html.replace(/<div\s+data-inline="\/talks\/decks\/([^/"]+)\/assets\/([^"?#]+\.html)"\s*>\s*<\/div>/g, (tag, s, file) => {
+      const frag = readDeckAsset(s, file);
+      return frag ? frag.trim() : tag;
+    });
+    return html.replace(/<img\b([^>]*?)\bdata-inline\b([^>]*)>/g, (tag, a, b) => {
+      const attrs = a + " " + b;
+      const src = (attrs.match(/\bsrc="([^"]+)"/) || [])[1];
+      const mm = src && src.match(/^\/talks\/decks\/([^/]+)\/assets\/([^"?#]+\.svg)$/);
+      if (!mm) return tag;
+      let svg = readDeckAsset(mm[1], mm[2]);
+      if (!svg) return tag;
+      svg = svg.replace(/<\?xml[^>]*>\s*/, "").trim();
+      const cls = (attrs.match(/\bclass="([^"]*)"/) || [])[1];
+      const style = (attrs.match(/\bstyle="([^"]*)"/) || [])[1];
+      const alt = (attrs.match(/\balt="([^"]*)"/) || [])[1];
+      return svg.replace(/<svg\b([^>]*)>/, (open, sa) => {
+        let s = sa;
+        if (cls) s = /\bclass="/.test(s) ? s.replace(/\bclass="([^"]*)"/, `class="$1 ${cls}"`) : s + ` class="${cls}"`;
+        if (style) s = /\bstyle="/.test(s) ? s.replace(/\bstyle="([^"]*)"/, `style="$1;${style}"`) : s + ` style="${style}"`;
+        if (alt) s += ` role="img" aria-label="${alt}"`;
+        return `<svg${s}>`;
+      });
+    });
+  });
+
   eleventyConfig.addFilter("parseBigList", function (markdown) {
     if (!markdown) return [];
     const lines = markdown.split(/\r?\n/);

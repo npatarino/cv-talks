@@ -4,8 +4,8 @@ recipe: canvas-signal
 label: Bus factor · iconos
 variant: default
 items:
-  - { glyph: '<img src="/talks/decks/el-mito-de-la-productividad-toxica/assets/bus.png" alt="">' }
-  - { glyph: '<img src="/talks/decks/el-mito-de-la-productividad-toxica/assets/dead.png" alt="">' }
+  - { glyph: '<img src="assets/bus.png" alt="">' }
+  - { glyph: '<img src="assets/dead.png" alt="">' }
 notes: |
   Cuanto más bajo es el número, más frágil es el equipo. Y lo peor es que muchas veces, sin darnos cuenta, trabajamos para que ese número sea uno. Y ese uno seamos nosotros.
   Las propias empresas, y sobre todo nuestro propio ego, nos empujan a esa situación.

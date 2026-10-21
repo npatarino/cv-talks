@@ -4,8 +4,9 @@ recipe: canvas-quiet
 label: cover
 variant: default
 fields:
-  bg_image:
-    meta: Image_Background
+  bg_image: { content: "", meta: Image_Background }
+  animation:
+    meta: Animation_HTML
     content: |
       <!-- ───────── Supernova background ───────── -->
       <div id="supernova-bg" style="position:absolute;inset:0;width:100%;height:100%;overflow:hidden"></div>
@@ -226,7 +227,7 @@ fields:
       raf = requestAnimationFrame(frame);
       })();
       </script>
-  logo: { content: '<img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/logo-commit-26.png" alt="Commit 26">', meta: Image_Logo }
+  logo: { content: '<img src="assets/logo-freson-fest.svg" alt="FresON fest" style="height:90px;width:auto;display:block" data-inline>', meta: Image_Logo }
   title: { content: El mito de la productividad tóxica, meta: Title_Hero }
   deck: { content: "", meta: Subtitle_Text }
 ---

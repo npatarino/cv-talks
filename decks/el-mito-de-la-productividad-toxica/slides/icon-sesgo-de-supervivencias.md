@@ -5,7 +5,7 @@ label: Sesgo de supervivencias
 variant: prompt
 items: ""
 fields:
-  icon: { content: '<img src="/talks/decks/el-mito-de-la-productividad-toxica/assets/icon-war-plane.png" alt="" class="title-icon">', meta: Image_Src }
+  icon: { content: '<img src="assets/icon-war-plane.png" alt="" class="title-icon">', meta: Image_Src }
   title: { content: Abraham Wald, meta: Title_Text }
 notes: |
   En la Segunda Guerra Mundial, el ejército estaba trabajando para mejorar los bombarderos B-17, hacian lo obvio, reforzaban las alas y el fuselaje de los aviones que era donde habían recibido más disparos los aviones que volvían. Pero este señor Abraham Wald, un matemático que trabajaba en la Universidad de Columbia, hizo un apunte muy interesante.

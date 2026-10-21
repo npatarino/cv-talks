@@ -4,7 +4,7 @@ recipe: cool-fresh
 label: La paradoja del Copilot
 variant: default
 fields:
-  icon: { content: '<span class="title-icons"><img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/ai-anthropic.svg" alt="" class="title-icon"><img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/ai-gemini.svg" alt="" class="title-icon"></span>', meta: Image_Src }
+  icon: { content: '<span class="title-icons"><img src="assets/ai-anthropic.svg" alt="" class="title-icon"><img src="assets/ai-gemini.svg" alt="" class="title-icon"></span>', meta: Image_Src }
   title: { content: 'LA PARADOJA<br>DE&nbsp;<em>Claude</em>', meta: Title_Text }
 notes: |
   ¿Les suena?

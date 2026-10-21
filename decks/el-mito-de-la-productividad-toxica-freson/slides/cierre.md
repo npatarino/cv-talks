@@ -4,7 +4,13 @@ recipe: energy-loud
 label: '¿Y ustedes qué opinan?'
 fields:
   title: { content: '¿Y ustedes...<br>... qué&nbsp;<em>opinan</em>?', meta: Title_Text }
-  socials: { content: '<img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/social-youtube.png" alt="YouTube"><img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/social-twitter.png" alt="X"><img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/social-spotify.png" alt="Spotify"><img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/social-instagram.png" alt="Instagram"><img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/social-twitch.png" alt="Twitch"><img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/social-github.png" alt="GitHub">', meta: Socials_Row }
+  socials: { content: '<img src="assets/social-youtube.png" alt="YouTube"><img src="assets/social-twitter.png" alt="X"><img src="assets/social-spotify.png" alt="Spotify"><img src="assets/social-instagram.png" alt="Instagram"><img src="assets/social-twitch.png" alt="Twitch"><img src="assets/social-github.png" alt="GitHub">', meta: Socials_Row }
   credits: { content: 'Nicolás Patarino · @npatarino · @ChimichurriCode', meta: Credits_Line }
 variant: default
+notes: |
+  Nada de lo que les conté hoy es magia. Es sentido común. El problema es que es exactamente lo primero que abandonamos cuando vamos corriendo.
+  Así que no les pido que cambien nada hoy. Les pido una cosa el lunes: antes de abrir Jira, antes de contestar el primer Slack, paren un minuto y pregúntense: ¿esto genera impacto, o solo me mantiene ocupado?
+  (silencio: mil uno, mil dos)
+  Yo trabajo con mucha gente que quiere crecer en su carrera. Y esto es lo que más veo: no les falta talento ni ganas. Les falta parar.
+  Si de esta charla se llevan solo eso, que sean ustedes quienes deciden dónde va su carrera, y no la cola de tickets, para mí, [chiste pendiente].
 ---

@@ -8,6 +8,11 @@
     {{ field(fields, "bg_image", effectiveMode) | safe }}
   </div>
   {% endif %}
+  {% if fields.animation %}
+  <div class="bg-anim">
+    {{ field(fields, "animation", effectiveMode) | safe }}
+  </div>
+  {% endif %}
   
   {% if fields.logo %}
   <div class="conf-logo">

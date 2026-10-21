@@ -4,7 +4,7 @@ recipe: cool-fresh
 label: Moneyball
 variant: default
 fields:
-  icon: { content: '<img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/baseball.svg" alt="" class="title-icon">', meta: Image_Src }
+  icon: { content: '<img src="assets/baseball.svg" alt="" class="title-icon">', meta: Image_Src }
   title: { content: MONEYBALL, meta: Title_Text }
 notes: |
   ¿Quiénes vieron la película de Moneyball?

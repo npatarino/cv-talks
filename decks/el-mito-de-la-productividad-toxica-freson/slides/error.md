@@ -3,7 +3,7 @@ template: icon
 recipe: critical
 label: Error · plasma
 items:
-  - { glyph: '<img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/icon-x-mark-white.svg" alt="">' }
+  - { glyph: '<img src="assets/icon-x-mark-white.svg" alt="">' }
 variant: default
 notes: |
   No había sido una buena semana.

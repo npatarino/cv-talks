@@ -14,7 +14,7 @@ import { uploadAsset } from './assets.mjs';
 import { getSlideDir } from './renumber.mjs';
 import {
   listSlides,
-  getSlide,
+  getSlide, getSlideRaw,
   createSlide,
   updateSlide,
   removeSlide,
@@ -219,6 +219,17 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
       }
       return json(reorderSlides(slug, order, decksRoot));
     } catch (e) { return err(e.message); }
+  }
+
+  // GET /api/decks/:slug/slides/:filename/raw — markdown sin procesar
+  const rawMatch = pathname.match(/^\/api\/decks\/([^/]+)\/slides\/([^/]+)\/raw$/);
+  if (method === 'GET' && rawMatch) {
+    const [, rawSlug, filename] = rawMatch;
+    const slug = validSlug(rawSlug);
+    if (!slug) return err('Invalid deck slug', 400);
+    try {
+      return new Response(getSlideRaw(slug, filename, decksRoot), { headers: { 'content-type': 'text/plain; charset=utf-8' } });
+    } catch (e) { return err(e.message, 404); }
   }
 
   if (method === 'GET' && slideMatch) {

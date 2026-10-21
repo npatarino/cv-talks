@@ -4,7 +4,7 @@ recipe: critical
 label: El bombero pirómano
 variant: divider
 fields:
-  icon: { content: '<img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/icon-fire.svg" alt="" class="title-icon">', meta: Image_Src }
+  icon: { content: '<img src="assets/icon-fire.svg" alt="" class="title-icon">', meta: Image_Src }
   title: { content: 'EL BOMBERO<br><em>PIRÓMANO</em>.', meta: Title_Text }
   sub: { content: "", meta: Subtitle_Text }
 notes: |

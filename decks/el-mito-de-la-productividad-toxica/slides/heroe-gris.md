@@ -3,7 +3,7 @@ template: icon
 recipe: canvas-quiet
 label: Héroe · capa gris
 items:
-  - { glyph: '<img src="/talks/decks/el-mito-de-la-productividad-toxica/assets/cape-blue.png" alt="">' }
+  - { glyph: '<img src="assets/cape-blue.png" alt="">' }
 variant: default
 notes: |
   Desheroicificarnos. Reducir nuestro protagonismo.

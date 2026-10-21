@@ -4,7 +4,7 @@ recipe: energy-loud
 label: La paradoja de Jevons
 variant: default
 fields:
-  icon: { content: '<img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/mine-cart.svg" alt="" class="title-icon">', meta: Image_Src }
+  icon: { content: '<img src="assets/mine-cart.svg" alt="" class="title-icon">', meta: Image_Src }
   title: { content: 'LA PARADOJA<br>DE <em>JEVONS</em>', meta: Title_Text }
 notes: |
   Acá es donde entra la Paradoja de Jevons. 
