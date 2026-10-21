@@ -7,42 +7,42 @@
         "label": "Atención",
         "description": "Mi historia que refleja mi mala perspectiva.",
         "start": 1,
-        "end": 8
+        "end": 9
       },
       {
         "id": "N",
         "label": "Necesidad",
         "description": "Los tres problemas principales que quiero mostrar.",
-        "start": 9,
-        "end": 40,
+        "start": 10,
+        "end": 41,
         "children": [
           {
             "id": "P1",
             "label": "Malas métricas",
             "description": "Perseguimos malas métricas.",
-            "start": 16,
-            "end": 20
+            "start": 17,
+            "end": 21
           },
           {
             "id": "P2",
             "label": "Código no es activo",
             "description": "El código no es un activo.",
-            "start": 21,
-            "end": 33
+            "start": 22,
+            "end": 34
           },
           {
             "id": "P3",
             "label": "Sos un héroe",
             "description": "Sos un héroe.",
-            "start": 34,
-            "end": 38
+            "start": 35,
+            "end": 39
           },
           {
             "id": "PS",
             "label": "Problems summary",
             "description": "Resumen de los problemas.",
-            "start": 40,
-            "end": 40
+            "start": 41,
+            "end": 41
           }
         ]
       },
@@ -50,29 +50,29 @@
         "id": "S",
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
-        "start": 41,
-        "end": 65,
+        "start": 42,
+        "end": 66,
         "children": [
           {
             "id": "S1",
             "label": "Medir mejor",
             "description": "Medir mejor / DORA / SPACE.",
-            "start": 41,
-            "end": 54
+            "start": 42,
+            "end": 55
           },
           {
             "id": "S2",
             "label": "Automatización",
             "description": "Automatización y pago de deuda.",
-            "start": 55,
-            "end": 59
+            "start": 56,
+            "end": 60
           },
           {
             "id": "S3",
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
-            "start": 60,
-            "end": 65
+            "start": 61,
+            "end": 66
           }
         ]
       },
@@ -80,20 +80,21 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 66,
-        "end": 68
+        "start": 67,
+        "end": 69
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 69,
-        "end": 72
+        "start": 70,
+        "end": 73
       }
     ]
   },
   "slides": [
     "cover.md",
+    "cover-contrib.md",
     "viernes-1530.md",
     "feedback-alegre.md",
     "cuaderno.md",

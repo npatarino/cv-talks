@@ -249,8 +249,11 @@
       e.preventDefault();
     }
   }
+  // Un único listener. Los eventos reales burbujean hasta window y los que
+  // deck.js despacha al iframe van directamente a window, así que escuchar
+  // también en document hacía que, con el foco dentro de la slide, cada tecla
+  // se procesara dos veces (→ avanzaba dos pasos).
   window.addEventListener("keydown", onKey);
-  document.addEventListener("keydown", onKey);
 
   // Touch navigation · tap halves + horizontal swipe.
   // En embedded, lo reenviamos al parent para que deck.js cambie el iframe src.
