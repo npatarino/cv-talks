@@ -51,6 +51,7 @@ const dom = {
   btnPresent: $('btn-present'),
   notesPanel: $('notes-panel'),
   notesTextarea: $('notes-textarea'),
+  btnViewMd: $('btn-view-md'),
   btnNotesToggle: $('btn-notes-toggle'),
   notesResizeHandle: $('notes-resize-handle'),
   modalAdd: $('modal-add'),
@@ -217,13 +218,49 @@ async function navigateSlides(delta) {
 }
 
 function updatePreview(slide) {
-  dom.previewLabel.textContent = `${slide.data.order}. ${slide.data.label}`;
+  // El orden viene de deck.config.json (no del frontmatter), así que usamos la
+  // posición real en la lista en vez de `data.order`, que suele ser undefined.
+  const pos = state.slides.findIndex(s => s.filename === slide.filename);
+  dom.previewLabel.textContent = (pos >= 0 ? `${pos + 1} · ` : '') + (slide.data.label ?? '');
   dom.previewPlaceholder.style.display = 'none';
   dom.previewScaler.style.display = 'block';
   dom.previewFrame.src = slide.previewUrl;
   // Scale after content loads (and on every subsequent live-reload)
   dom.previewFrame.onload = scalePreview;
   scalePreview();
+}
+
+/** Abre un modal con el markdown crudo de la slide seleccionada. */
+async function openMarkdownViewer() {
+  if (!state.currentDeck || !state.selectedFilename) return;
+  const res = await fetch(`/api/decks/${state.currentDeck}/slides/${state.selectedFilename}/raw`);
+  const text = await res.text();
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+  const modal = document.createElement('div');
+  modal.className = 'icon-browser-modal md-viewer';
+  const header = document.createElement('div');
+  header.className = 'icon-browser-header';
+  const title = document.createElement('span');
+  title.className = 'form-label';
+  title.textContent = state.selectedFilename;
+  const copyBtn = document.createElement('button');
+  copyBtn.type = 'button'; copyBtn.className = 'btn-secondary'; copyBtn.textContent = 'Copy';
+  copyBtn.onclick = () => navigator.clipboard?.writeText(text);
+  const closeBtn = document.createElement('button');
+  closeBtn.type = 'button'; closeBtn.className = 'icon-browser-close'; closeBtn.textContent = '✕';
+  function close() { backdrop.remove(); document.removeEventListener('keydown', onKey); }
+  function onKey(e) { if (e.key === 'Escape') { e.preventDefault(); close(); } }
+  closeBtn.onclick = close;
+  backdrop.addEventListener('mousedown', e => { if (e.target === backdrop) close(); });
+  document.addEventListener('keydown', onKey);
+  header.append(title, copyBtn, closeBtn);
+  const pre = document.createElement('pre');
+  pre.className = 'md-viewer-pre';
+  pre.textContent = text;
+  modal.append(header, pre);
+  backdrop.appendChild(modal);
+  document.body.appendChild(backdrop);
 }
 
 function clearPreview() {
@@ -604,6 +641,8 @@ async function revertSlide() {
 // clean for slides that don't use them.
 const TEMPLATE_OPTIONAL_FIELDS = {
   'big-concept': { icon: { content: '', meta: 'Image_Src' } },
+  // Animaciones de fondo (HTML/JS) separadas de la imagen de fondo.
+  'cover': { animation: { content: '', meta: 'Animation_HTML' } },
 };
 
 function renderForm(slide) {
@@ -848,7 +887,7 @@ function mkTextarea(field, value) {
  * style/script). These fields are edited as plain code in a textarea.
  */
 function isRawHtmlField(content, meta) {
-  return meta === 'Image_Background'
+  return meta === 'Image_Background' || meta === 'Animation_HTML'
     || /<script\b|<style\b|<iframe\b|position\s*:\s*(absolute|fixed)/i.test(content || '');
 }
 
@@ -1328,7 +1367,12 @@ const PREVIEW_ORIGIN = 'http://localhost:8080';
 
 /** Stored slide HTML → editor-renderable HTML (absolutize asset URLs). */
 function toEditorHTML(html) {
-  return (html ?? '').replace(/(<img\b[^>]*\bsrc=")\/talks\//gi, `$1${PREVIEW_ORIGIN}/talks/`);
+  // Los .md guardan paths cortos (`assets/x.svg`); para mostrarlos en el editor
+  // los absolutizamos contra el preview. cleanHTML() hace el camino inverso.
+  const deckBase = `${PREVIEW_ORIGIN}/talks/decks/${state.currentDeck}/assets/`;
+  return (html ?? '')
+    .replace(/(<img\b[^>]*\bsrc=")assets\//gi, `$1${deckBase}`)
+    .replace(/(<img\b[^>]*\bsrc=")\/talks\//gi, `$1${PREVIEW_ORIGIN}/talks/`);
 }
 
 function mkRichTextEditor(field, htmlValue, deckSlug, meta) {
@@ -1638,13 +1682,15 @@ function cleanHTML(html) {
     .replace(/ style="[^"]*"/gi, '')
     // Re-relativize asset URLs that were absolutized for in-editor rendering
     .replace(/(<img\b[^>]*\bsrc=")https?:\/\/localhost:8080\//gi, '$1/')
+    // Assets del propio deck → path corto `assets/x` (lo expande el build)
+    .replace(/(<img\b[^>]*\bsrc=")\/talks\/decks\/[^/"]+\/assets\//gi, '$1assets/')
     .trim();
 }
 
 // ---- Glyph field helpers ----
 
 const IMAGE_EXT_RE = /\.(png|jpg|jpeg|svg|gif|webp|avif)$/i;
-const IMG_ASSETS_RE = /^<img\s[^>]*src="[^"]*\/assets\/([^"]+)"[^>]*>$/i;
+const IMG_ASSETS_RE = /^<img\s[^>]*src="(?:[^"]*\/)?assets\/([^"]+)"[^>]*>$/i;
 
 /** Extract display value from a glyph — filename or emoji/symbol */
 function glyphToDisplay(raw) {
@@ -1657,7 +1703,7 @@ function displayToGlyph(display, deckSlug) {
   if (!display) return '';
   if (display.startsWith('<')) return display; // already HTML
   if (IMAGE_EXT_RE.test(display)) {
-    return `<img src="/talks/decks/${deckSlug}/assets/${display}" alt="">`;
+    return `<img src="assets/${display}" alt="">`;
   }
   return display; // emoji or plain text
 }
@@ -2489,6 +2535,7 @@ function closeModals() {
 
 function wireEvents() {
   dom.deckSelector.addEventListener('change', e => selectDeck(e.target.value));
+  dom.btnViewMd?.addEventListener('click', openMarkdownViewer);
   dom.btnPresent.addEventListener('click', presentDeck);
   dom.btnExportPdf.addEventListener('click', exportPdf);
   dom.btnSave.addEventListener('click', () => saveCurrentSlide());

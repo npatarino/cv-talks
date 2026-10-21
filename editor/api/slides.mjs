@@ -29,6 +29,12 @@ export function listSlides(slug, decksRoot) {
   }));
 }
 
+export function getSlideRaw(slug, filename, decksRoot) {
+  const filepath = path.join(getSlideDir(deckDir(slug, decksRoot)), filename);
+  if (!fs.existsSync(filepath)) throw new Error(`Slide not found: ${filename}`);
+  return fs.readFileSync(filepath, 'utf8');
+}
+
 export function getSlide(slug, filename, decksRoot) {
   const filepath = path.join(getSlideDir(deckDir(slug, decksRoot)), filename);
   if (!fs.existsSync(filepath)) throw new Error(`Slide not found: ${filename}`);

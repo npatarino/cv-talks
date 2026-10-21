@@ -51,12 +51,12 @@ describe('buildAssetInsertHTML', () => {
 // ─── buildAssetSrc ──────────────────────────────────────────────────────────
 
 describe('buildAssetSrc', () => {
-  it('builds the canonical /talks/decks/<slug>/assets/<file> path', () => {
-    expect(buildAssetSrc('my-deck', 'icon.png')).toBe('/talks/decks/my-deck/assets/icon.png');
+  it('builds the short deck-relative assets/<file> path (expanded at build time)', () => {
+    expect(buildAssetSrc('my-deck', 'icon.png')).toBe('assets/icon.png');
   });
 
   it('does not URL-encode (the editor handles asset names that are already slugified)', () => {
-    expect(buildAssetSrc('deck', 'my_icon-2.png')).toBe('/talks/decks/deck/assets/my_icon-2.png');
+    expect(buildAssetSrc('deck', 'my_icon-2.png')).toBe('assets/my_icon-2.png');
   });
 });
 

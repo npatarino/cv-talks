@@ -4,9 +4,9 @@ recipe: critical
 label: Problemas - Summary
 variant: default
 items:
-  - { glyph: '<img src="/talks/decks/el-mito-de-la-productividad-toxica/assets/icon-target-2.svg" alt="">' }
-  - { glyph: '<img src="/talks/decks/el-mito-de-la-productividad-toxica/assets/icon-liability-2.svg" alt="">' }
-  - { glyph: '<img src="/talks/decks/el-mito-de-la-productividad-toxica/assets/cape-blue.png" alt="">' }
+  - { glyph: '<img src="assets/icon-target-2.svg" alt="">' }
+  - { glyph: '<img src="assets/icon-liability-2.svg" alt="">' }
+  - { glyph: '<img src="assets/cape-blue.png" alt="">' }
 notes: |
   Y acá está la toxicidad. 
   Perseguimos métricas de vanidad que no generan impacto, sólo muestran el movimiento, el esfuerzo y la actividad.

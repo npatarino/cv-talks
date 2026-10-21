@@ -4,7 +4,7 @@ recipe: paper
 label: Pagar deuda
 variant: default
 items:
-  - { glyph: '<img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/icon-debt.svg" alt="">' }
+  - { glyph: '<img src="assets/icon-debt.svg" alt="">' }
 notes: |
   Antes hablamos de que el código es un pasivo.
   Vamos a pagar la deuda.

@@ -3,7 +3,7 @@ template: icon
 recipe: energy-loud
 label: Héroe · capa
 items:
-  - { glyph: '<img src="/talks/decks/el-mito-de-la-productividad-toxica/assets/cape-blue.png" alt="">' }
+  - { glyph: '<img src="assets/cape-blue.png" alt="">' }
 variant: default
 notes: |
   Sos el centro de todos los elogios y eso es exactamente lo que nos hace creer que somos los héroes.

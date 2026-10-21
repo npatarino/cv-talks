@@ -4,7 +4,7 @@ recipe: cool-fresh
 label: Capa de ozono
 variant: divider
 fields:
-  icon: { content: '<img src="/talks/decks/el-mito-de-la-productividad-toxica-freson/assets/ozone-earth.svg" alt="" class="title-icon">', meta: Image_Src }
+  icon: { content: '<img src="assets/ozone-earth.svg" alt="" class="title-icon">', meta: Image_Src }
   title: { content: 'CAPA<br>DE <em>OZONO</em>.', meta: Title_Text }
 notes: |
   ¿Cuántos de los que están acá crecieron con el miedo de que nos estamos cargando la capa de ozono?
