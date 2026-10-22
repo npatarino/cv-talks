@@ -26,5 +26,7 @@ fields:
 notes: |
   Cada línea que escribimos es, desde el segundo uno, código legacy. Es una superficie nueva para que aparezcan bugs, una dependencia que hay que actualizar y una carga cognitiva para el que venga después.
   Las líneas acumuladas suben, pero el coste de mantenerlas sube más rápido y acaba por superarlas, mientras el valor que entregamos se aplana.
+  Y claro, cuantas más líneas hay en el código, menos valor entregamos por cada línea nueva. Porque una parte creciente de esas líneas ya no es producto: es burocracia. Código para no romper lo que ya hay: adaptadores, flags, casos especiales, compatibilidad hacia atrás. Código para sostener decisiones viejas que nadie se anima a revertir. Tests que validan ese pegamento en vez de validar funcionalidad. Y capas de abstracción que un día resolvieron un problema y hoy solo hay que atravesar.
+  Cada feature nueva tiene que abrirse paso entre todo eso. Así que el mismo esfuerzo entrega cada vez menos.
   El código no es el oro, el código es la hipoteca que pagamos para poder entregar valor.
 ---
