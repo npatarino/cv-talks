@@ -21,13 +21,13 @@
             "label": "Malas métricas",
             "description": "Perseguimos malas métricas.",
             "start": 13,
-            "end": 19
+            "end": 18
           },
           {
             "id": "P2",
             "label": "Código no es activo",
             "description": "El código no es un activo.",
-            "start": 20,
+            "start": 19,
             "end": 32
           },
           {
