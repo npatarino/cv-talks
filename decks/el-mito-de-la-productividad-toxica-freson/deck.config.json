@@ -14,7 +14,7 @@
         "label": "Necesidad",
         "description": "Los tres problemas principales que quiero mostrar.",
         "start": 9,
-        "end": 40,
+        "end": 38,
         "children": [
           {
             "id": "P1",
@@ -28,21 +28,21 @@
             "label": "Código no es activo",
             "description": "El código no es un activo.",
             "start": 19,
-            "end": 31
+            "end": 29
           },
           {
             "id": "P3",
             "label": "Sos un héroe",
             "description": "Sos un héroe.",
-            "start": 32,
-            "end": 38
+            "start": 30,
+            "end": 36
           },
           {
             "id": "PS",
             "label": "Problems summary",
             "description": "Resumen de los problemas.",
-            "start": 40,
-            "end": 40
+            "start": 38,
+            "end": 38
           }
         ]
       },
@@ -50,28 +50,28 @@
         "id": "S",
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
-        "start": 41,
+        "start": 39,
         "end": 65,
         "children": [
           {
             "id": "S1",
             "label": "Medir mejor",
             "description": "Medir mejor / DORA / SPACE.",
-            "start": 41,
-            "end": 54
+            "start": 39,
+            "end": 52
           },
           {
             "id": "S2",
             "label": "Automatización",
             "description": "Automatización y pago de deuda.",
-            "start": 55,
-            "end": 59
+            "start": 53,
+            "end": 57
           },
           {
             "id": "S3",
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
-            "start": 60,
+            "start": 58,
             "end": 65
           }
         ]
@@ -120,8 +120,6 @@
     "paradoja-copilot.md",
     "paradoja-claude-pictograma.md",
     "metricas-vanidad-vs-proyecto.md",
-    "confianza-fe.md",
-    "que-significa-correcto.md",
     "productividad-no-codigo.md",
     "scientificos-jurassic-park.md",
     "stradivarius.md",
@@ -156,6 +154,8 @@
     "capa-de-ozono.md",
     "recurring-quote-3.md",
     "disclaimer-trabajar-menos.md",
+    "confianza-fe.md",
+    "que-significa-correcto.md",
     "urgente-importante.md",
     "cadena.md",
     "recurring-quote-4.md",
