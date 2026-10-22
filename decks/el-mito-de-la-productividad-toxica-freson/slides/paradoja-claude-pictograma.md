@@ -12,15 +12,15 @@ fields:
       <svg viewBox="0 0 1680 560" preserveAspectRatio="xMidYMid meet">
       <g data-from="1">
       <rect x="170" y="20" width="220" height="480" rx="18" fill="none" stroke="var(--recipe-ink)" stroke-width="3.5"/>
-      <text class="tick" x="280" y="545" text-anchor="middle" style="opacity:1;fill:var(--recipe-ink)">L</text>
+      <text class="tick" x="280" y="545" text-anchor="middle" style="opacity:1;fill:var(--recipe-ink)">M</text>
       <rect x="450" y="20" width="220" height="480" rx="18" fill="none" stroke="var(--recipe-ink)" stroke-width="3.5"/>
-      <text class="tick" x="560" y="545" text-anchor="middle" style="opacity:1;fill:var(--recipe-ink)">M</text>
+      <text class="tick" x="560" y="545" text-anchor="middle" style="opacity:1;fill:var(--recipe-ink)">T</text>
       <rect x="730" y="20" width="220" height="480" rx="18" fill="none" stroke="var(--recipe-ink)" stroke-width="3.5"/>
-      <text class="tick" x="840" y="545" text-anchor="middle" style="opacity:1;fill:var(--recipe-ink)">X</text>
+      <text class="tick" x="840" y="545" text-anchor="middle" style="opacity:1;fill:var(--recipe-ink)">W</text>
       <rect x="1010" y="20" width="220" height="480" rx="18" fill="none" stroke="var(--recipe-ink)" stroke-width="3.5"/>
-      <text class="tick" x="1120" y="545" text-anchor="middle" style="opacity:1;fill:var(--recipe-ink)">J</text>
+      <text class="tick" x="1120" y="545" text-anchor="middle" style="opacity:1;fill:var(--recipe-ink)">T</text>
       <rect x="1290" y="20" width="220" height="480" rx="18" fill="none" stroke="var(--recipe-ink)" stroke-width="3.5"/>
-      <text class="tick" x="1400" y="545" text-anchor="middle" style="opacity:1;fill:var(--recipe-ink)">V</text>
+      <text class="tick" x="1400" y="545" text-anchor="middle" style="opacity:1;fill:var(--recipe-ink)">F</text>
       </g>
       <g data-from="1"><rect class="mv" x="196" y="44" width="168" height="20" rx="10" fill="var(--recipe-em)" style="--ax:0px;--ay:0px;transition-delay:0.00s"/></g>
       <g data-from="1"><rect class="mv" x="196" y="88" width="168" height="20" rx="10" fill="var(--recipe-em)" style="--ax:0px;--ay:0px;transition-delay:0.04s"/></g>
