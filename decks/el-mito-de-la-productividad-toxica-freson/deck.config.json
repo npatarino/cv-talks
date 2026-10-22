@@ -14,35 +14,35 @@
         "label": "Necesidad",
         "description": "Los tres problemas principales que quiero mostrar.",
         "start": 9,
-        "end": 40,
+        "end": 39,
         "children": [
           {
             "id": "P1",
             "label": "Malas métricas",
             "description": "Perseguimos malas métricas.",
-            "start": 16,
-            "end": 20
+            "start": 15,
+            "end": 19
           },
           {
             "id": "P2",
             "label": "Código no es activo",
             "description": "El código no es un activo.",
-            "start": 21,
-            "end": 33
+            "start": 20,
+            "end": 32
           },
           {
             "id": "P3",
             "label": "Sos un héroe",
             "description": "Sos un héroe.",
-            "start": 34,
-            "end": 38
+            "start": 33,
+            "end": 37
           },
           {
             "id": "PS",
             "label": "Problems summary",
             "description": "Resumen de los problemas.",
-            "start": 40,
-            "end": 40
+            "start": 39,
+            "end": 39
           }
         ]
       },
@@ -50,29 +50,29 @@
         "id": "S",
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
-        "start": 41,
-        "end": 65,
+        "start": 40,
+        "end": 64,
         "children": [
           {
             "id": "S1",
             "label": "Medir mejor",
             "description": "Medir mejor / DORA / SPACE.",
-            "start": 41,
-            "end": 54
+            "start": 40,
+            "end": 53
           },
           {
             "id": "S2",
             "label": "Automatización",
             "description": "Automatización y pago de deuda.",
-            "start": 55,
-            "end": 59
+            "start": 54,
+            "end": 58
           },
           {
             "id": "S3",
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
-            "start": 60,
-            "end": 65
+            "start": 59,
+            "end": 64
           }
         ]
       },
@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 65,
-        "end": 65
+        "start": 64,
+        "end": 64
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 66,
-        "end": 69
+        "start": 65,
+        "end": 68
       }
     ]
   },
@@ -106,7 +106,6 @@
     "esfuerzo-valor.md",
     "movimiento-impacto.md",
     "actividad-productividad.md",
-    "esfuerzo-impacto-matriz.md",
     "correr-detras-de-metricas.md",
     "ley-de-goodhart-2.md",
     "ley-de-goodhart.md",
