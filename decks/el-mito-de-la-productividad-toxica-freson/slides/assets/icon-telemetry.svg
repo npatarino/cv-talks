@@ -1,18 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Torre de emisión con ondas (broadcast tower) -->
   <g stroke="none" transform="translate(8 9)">
-    <path fill="#02b5b9" d="M256 196L216 452L296 452Z"/>
-    <circle fill="#fafaf8" cx="256" cy="186" r="26"/>
-    <circle fill="#f9d71c" cx="404" cy="104" r="48"/>
+    <path fill="#02b5b9" d="M256 170L190 470L322 470Z"/>
+    <circle fill="#f9d71c" cx="256" cy="150" r="30"/>
   </g>
-  <!-- antena -->
-  <path stroke-width="18" d="M256 194L214 450L298 450Z"/>
-  <path stroke-width="10" d="M232 340L280 340M224 392L288 392"/>
-  <circle stroke-width="14" cx="256" cy="184" r="28"/>
-  <!-- ondas -->
-  <path stroke-width="12" d="M196 128C228 96 284 96 316 128M166 92C214 44 298 44 346 92"/>
-  <path stroke-width="12" d="M198 240C228 272 284 272 316 240M168 276C214 324 298 324 346 276"/>
-  <!-- moneda -->
-  <circle stroke-width="14" cx="402" cy="102" r="50"/>
-  <path stroke-width="11" d="M402 70L402 134M420 84C416 76 388 74 384 88C380 102 420 102 416 118C412 130 386 128 382 120"/>
-  <g stroke-width="6" opacity=".55"><path d="M236 420L250 406"/><path d="M160 320L176 304"/></g>
+  <path stroke-width="18" d="M256 168L188 468L324 468"/>
+  <path stroke-width="12" d="M224 300L288 300M206 380L306 380M232 300L300 380M280 300L212 380"/>
+  <circle stroke-width="14" cx="256" cy="148" r="32"/>
+  <path stroke-width="14" d="M184 100C222 62 290 62 328 100M140 56C204 -6 308 -6 372 56" transform="translate(0 12)"/>
+  <path stroke-width="14" d="M184 196C222 234 290 234 328 196M140 240C204 302 308 302 372 240"/>
+  <path stroke-width="7" opacity=".7" d="M240 200L204 420"/>
+  <g stroke-width="6" opacity=".55"><path d="M292 440L308 424"/></g>
 </svg>

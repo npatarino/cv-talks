@@ -1,16 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Calavera con tibias, silueta clásica -->
   <g stroke="none" transform="translate(8 9)">
-    <path fill="#fafaf8" d="M256 48C156 48 92 118 92 214C92 266 112 302 148 330L148 386C148 404 160 416 178 416L334 416C352 416 364 404 364 386L364 330C400 302 420 266 420 214C420 118 356 48 256 48Z"/>
-    <ellipse fill="#1c1c1c" cx="198" cy="216" rx="40" ry="44"/>
-    <ellipse fill="#1c1c1c" cx="314" cy="216" rx="40" ry="44"/>
-    <path fill="#1c1c1c" d="M256 262L232 310L280 310Z"/>
+    <path fill="#fafaf8" d="M256 36C166 36 108 96 108 180C108 226 126 258 156 282L156 320C156 336 168 348 184 348L328 348C344 348 356 336 356 320L356 282C386 258 404 226 404 180C404 96 346 36 256 36Z"/>
+    <circle fill="#1c1c1c" cx="206" cy="196" r="36"/><circle fill="#1c1c1c" cx="306" cy="196" r="36"/>
+    <path fill="#1c1c1c" d="M256 236L238 274L274 274Z"/>
+    <path fill="#fafaf8" d="M120 400L150 372L256 452L362 372L392 400L286 480L362 540L330 568L256 508L182 568L150 540L226 480Z" transform="translate(0 -100) scale(1 .7)"/>
   </g>
-  <path stroke-width="18" d="M256 46C156 46 90 116 90 212C90 264 110 300 146 328L146 384C146 402 158 414 176 414L336 414C354 414 366 402 366 384L366 328C402 300 422 264 422 212C422 116 356 46 256 46"/>
-  <path stroke-width="7" opacity=".7" d="M126 196C132 140 170 92 230 76"/>
-  <ellipse stroke-width="14" cx="198" cy="214" rx="42" ry="46"/>
-  <ellipse stroke-width="14" cx="314" cy="214" rx="42" ry="46"/>
-  <path stroke-width="12" d="M256 258L230 308L282 308Z"/>
-  <!-- dientes -->
-  <path stroke-width="12" d="M206 414L206 460L306 460L306 414M240 414L240 460M272 414L272 460"/>
-  <g stroke-width="6" opacity=".55"><path d="M346 120L362 104"/><path d="M360 140L380 120"/></g>
+  <path stroke-width="18" d="M256 34C166 34 106 94 106 178C106 224 124 256 154 280L154 318C154 334 166 346 182 346L330 346C346 346 358 334 358 318L358 280C388 256 406 224 406 178C406 94 346 34 256 34"/>
+  <circle stroke-width="13" cx="206" cy="194" r="38"/><circle stroke-width="13" cx="306" cy="194" r="38"/>
+  <path stroke-width="12" d="M256 232L236 274L276 274Z"/>
+  <path stroke-width="11" d="M210 346L210 380M233 346L233 384M256 346L256 386M279 346L279 384M302 346L302 380M196 384L316 384"/>
+  <!-- tibias cruzadas -->
+  <path stroke-width="16" d="M132 412L380 468M380 412L132 468"/>
+  <circle stroke-width="12" cx="124" cy="402" r="14"/><circle stroke-width="12" cx="124" cy="478" r="14"/><circle stroke-width="12" cx="388" cy="402" r="14"/><circle stroke-width="12" cx="388" cy="478" r="14"/>
+  <path stroke-width="7" opacity=".7" d="M140 176C144 126 182 80 236 62"/>
 </svg>
