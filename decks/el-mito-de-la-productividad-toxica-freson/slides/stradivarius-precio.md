@@ -11,8 +11,6 @@ fields:
     content: |
       <div class="one-violin">por <strong>un</strong> violín · subasta de 2011</div>
       <style>
-        .s-big-stat .big { font-size: 460px; }
-        .s-big-stat .big .pct { font-size: 180px; top: 70px; }
         .s-big-stat .one-violin { font-family: var(--font-mono); font-size: 30px; letter-spacing: .15em; text-transform: uppercase; margin-top: 40px; opacity: 0; transition: opacity .8s ease; }
         .s-big-stat .one-violin.on { opacity: .85; }
       </style>
