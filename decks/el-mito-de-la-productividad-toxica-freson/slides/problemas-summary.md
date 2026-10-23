@@ -4,7 +4,7 @@ recipe: critical
 label: Problemas - Summary
 variant: default
 fields:
-  title: { content: 'Y acá está<br>la <em>toxicidad</em>.', meta: Title_Text }
+  title: { content: '', meta: Title_Text }
 items:
   - { title: 'Métricas de vanidad', desc: 'Medimos movimiento, esfuerzo y actividad. No impacto.' }
   - { title: 'El código es un pasivo', desc: 'Cada línea nueva es mantenimiento que no contamos.' }
