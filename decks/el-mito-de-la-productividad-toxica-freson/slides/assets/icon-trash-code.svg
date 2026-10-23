@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Prototipar para tirar: papelera con </> -->
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#02b5b9" d="M120 150L392 150L368 462L144 462Z"/>
+    <rect fill="#fafaf8" x="200" y="60" width="112" height="46" rx="12"/>
+  </g>
+  <path stroke-width="18" d="M96 148L416 148M144 148L166 460L346 460L368 148"/>
+  <rect stroke-width="14" x="198" y="58" width="116" height="50" rx="14"/>
+  <path stroke-width="12" d="M118 148L118 108L394 108L394 148"/>
+  <!-- </> -->
+  <path stroke="#fafaf8" stroke-width="16" d="M212 250L172 300L212 350M300 250L340 300L300 350M276 232L236 368"/>
+  <path stroke-width="7" opacity=".7" d="M166 180L180 430"/>
+</svg>

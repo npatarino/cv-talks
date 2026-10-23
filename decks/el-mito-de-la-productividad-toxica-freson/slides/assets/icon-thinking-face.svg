@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Carita pensativa: ceja levantada, boca torcida, mano en la barbilla -->
+  <g stroke="none" transform="translate(8 9)">
+    <circle fill="#fafaf8" cx="256" cy="236" r="190"/>
+    <path fill="#f9d71c" d="M200 390C230 400 290 404 330 380L356 434C320 460 240 456 190 436Z"/>
+  </g>
+  <circle stroke-width="18" cx="256" cy="234" r="192"/>
+  <path stroke-width="7" opacity=".7" d="M100 210C106 140 160 80 236 60"/>
+  <!-- cejas: una levantada -->
+  <path stroke-width="14" d="M160 176C180 160 206 158 226 170M290 150C312 134 342 138 360 158"/>
+  <!-- ojos -->
+  <circle fill="#1c1c1c" stroke="none" cx="196" cy="222" r="14"/><circle fill="#1c1c1c" stroke="none" cx="322" cy="210" r="14"/>
+  <!-- boca torcida -->
+  <path stroke-width="14" d="M196 318C230 306 270 310 300 296"/>
+  <!-- mano en la barbilla -->
+  <path stroke-width="14" d="M200 388C232 398 292 402 332 378M332 378L356 432M300 396L318 440M268 404L280 446M236 404L244 444"/>
+  <path stroke-width="7" opacity=".7" d="M216 404L222 436"/>
+</svg>
