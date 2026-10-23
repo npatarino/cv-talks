@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Runbook: portapapeles con pasos numerados -->
+  <g stroke="none" transform="translate(8 9)">
+    <rect fill="#02b5b9" x="96" y="70" width="320" height="400" rx="22"/>
+    <rect fill="#fafaf8" x="126" y="120" width="260" height="320" rx="10"/>
+    <rect fill="#1c1c1c" x="196" y="40" width="120" height="56" rx="14"/>
+  </g>
+  <rect stroke-width="18" x="94" y="68" width="324" height="404" rx="24"/>
+  <rect stroke-width="14" x="194" y="38" width="124" height="60" rx="16"/>
+  <path stroke-width="7" opacity=".7" d="M112 110L112 440"/>
+  <!-- pasos -->
+  <circle stroke-width="10" cx="166" cy="190" r="16"/><path stroke-width="11" d="M206 190L350 190"/>
+  <circle stroke-width="10" cx="166" cy="270" r="16"/><path stroke-width="11" d="M206 270L330 270"/>
+  <circle stroke-width="10" cx="166" cy="350" r="16"/><path stroke-width="11" d="M206 350L360 350"/>
+  <path stroke-width="8" d="M158 190L164 196L176 184M158 270L164 276L176 264"/>
+</svg>
