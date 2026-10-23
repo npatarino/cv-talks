@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Camino sin cubrir: ruta con tramos de puntos y un check -->
+  <g stroke="none" transform="translate(8 9)">
+    <circle fill="#fafaf8" cx="90" cy="400" r="34"/>
+    <circle fill="#fafaf8" cx="422" cy="110" r="34"/>
+    <circle fill="#f9d71c" cx="350" cy="330" r="62"/>
+  </g>
+  <circle stroke-width="14" cx="88" cy="398" r="36"/>
+  <circle stroke-width="14" cx="420" cy="108" r="36"/>
+  <path stroke-width="16" d="M118 376C170 340 160 250 230 230C290 212 300 160 388 130"/>
+  <path stroke-width="16" stroke-dasharray="2 30" d="M150 430C220 430 260 400 290 370"/>
+  <!-- check -->
+  <circle stroke-width="14" cx="348" cy="328" r="64"/>
+  <path stroke-width="16" d="M314 330L340 356L386 300"/>
+  <path stroke-width="7" opacity=".7" d="M300 340C300 300 330 280 352 282"/>
+</svg>

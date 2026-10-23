@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Bocadillo de comentario con flecha circular (se repite) -->
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#fafaf8" d="M80 90L432 90C450 90 462 102 462 120L462 300C462 318 450 330 432 330L220 330L150 400L150 330L80 330C62 330 50 318 50 300L50 120C50 102 62 90 80 90Z"/>
+  </g>
+  <path stroke-width="18" d="M78 88L434 88C452 88 464 100 464 118L464 298C464 316 452 328 434 328L222 328L148 400L148 328L78 328C60 328 48 316 48 298L48 118C48 100 60 88 78 88Z"/>
+  <path stroke-width="7" opacity=".7" d="M72 112L72 290"/>
+  <!-- flecha circular -->
+  <path stroke="#a64132" stroke-width="16" d="M314 178C300 150 262 138 230 152C196 166 182 206 196 240C210 274 250 288 282 274C300 266 312 254 318 238"/>
+  <path stroke="#a64132" stroke-width="16" d="M292 166L320 176L324 146"/>
+  <g stroke-width="6" opacity=".55"><path d="M396 112L412 96"/><path d="M410 130L430 110"/></g>
+</svg>

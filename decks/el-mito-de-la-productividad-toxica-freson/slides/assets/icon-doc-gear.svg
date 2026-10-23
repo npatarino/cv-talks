@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Documento generado: hoja con engranaje -->
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#fafaf8" d="M118 40L300 40L394 134L394 472L118 472Z"/>
+    <path fill="#f9d71c" d="M300 40L300 134L394 134Z"/>
+    <circle fill="#02b5b9" cx="330" cy="400" r="56"/>
+  </g>
+  <path stroke-width="18" d="M116 38L300 38L396 134L396 470L116 470Z"/>
+  <path stroke-width="14" d="M300 38L300 134L396 134"/>
+  <path stroke-width="10" d="M160 200L300 200M160 250L340 250M160 300L250 300"/>
+  <path stroke-width="7" opacity=".7" d="M136 60L136 450"/>
+  <!-- engranaje -->
+  <g transform="translate(330 400)">
+    <circle stroke-width="13" r="40"/><circle stroke-width="10" r="14"/>
+    <path stroke-width="13" d="M0 -62L0 -46M0 46L0 62M-62 0L-46 0M46 0L62 0M-44 -44L-32 -32M32 32L44 44M44 -44L32 -32M-32 32L-44 44"/>
+  </g>
+</svg>

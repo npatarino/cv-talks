@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Reutilizar: dos flechas curvas en círculo (sync) -->
+  <g stroke="none" transform="translate(8 9)">
+    <circle fill="#fafaf8" cx="256" cy="256" r="150"/>
+  </g>
+  <path stroke-width="20" d="M372 196C350 150 306 120 256 120C190 120 136 170 130 234"/>
+  <path stroke-width="20" d="M100 206L130 240L166 212"/>
+  <path stroke-width="20" d="M140 316C162 362 206 392 256 392C322 392 376 342 382 278"/>
+  <path stroke-width="20" d="M412 306L382 272L346 300"/>
+  <path stroke-width="7" opacity=".7" d="M160 214C176 172 212 146 256 146"/>
+  <g stroke-width="6" opacity=".55"><path d="M330 370L346 354"/><path d="M160 150L176 134"/></g>
+</svg>

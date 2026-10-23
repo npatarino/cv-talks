@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Chaos engineering: servidor con un rayo encima -->
+  <g stroke="none" transform="translate(8 9)">
+    <rect fill="#fafaf8" x="110" y="250" width="292" height="90" rx="14"/>
+    <rect fill="#fafaf8" x="110" y="360" width="292" height="90" rx="14"/>
+    <path fill="#f9d71c" d="M286 40L190 210L262 210L220 330L336 150L264 150Z"/>
+  </g>
+  <rect stroke-width="16" x="108" y="248" width="296" height="94" rx="16"/>
+  <rect stroke-width="16" x="108" y="358" width="296" height="94" rx="16"/>
+  <circle fill="#a64132" stroke="none" cx="150" cy="295" r="12"/><circle fill="#a64132" stroke="none" cx="150" cy="405" r="12"/>
+  <path stroke-width="10" d="M190 295L300 295M190 405L300 405"/>
+  <path stroke-width="16" d="M284 38L188 208L260 208L218 328L338 148L266 148Z"/>
+  <path stroke-width="7" opacity=".7" d="M126 270L126 320M126 380L126 430"/>
+  <g stroke-width="6" opacity=".55"><path d="M360 60L380 40"/><path d="M372 90L396 66"/><path d="M160 120L140 100"/></g>
+</svg>
