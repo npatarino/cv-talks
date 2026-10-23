@@ -91,4 +91,5 @@ notes: |
   Antes, escribir este código nos llevaba toda la semana.
   Con Claude o Copilot, ese mismo código lo escribimos en un día. Nos vendieron que íbamos a tener el resto de la semana libre, los viernes libres.
   Pero no: en lugar de escribir menos, llenamos la semana con muchísimo más código. Más eficiencia, más código, y más código es más pasivo.
+  Y fíjense lo que pasa con todo ese código: parece que somos súper productivos. Suben las líneas, los commits, las PRs. Las métricas de vanidad por las nubes. Pero cuantas más líneas, más mantenimiento, más recursos, más superficie para bugs. Mientras las métricas suben, la calidad del proyecto, su escalabilidad y su mantenibilidad se hunden. Y a veces ni siquiera es culpa nuestra del todo: Claude genera más código del necesario, o simplemente no limpiamos lo que sobra.
 ---
