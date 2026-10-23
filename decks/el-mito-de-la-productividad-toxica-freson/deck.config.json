@@ -50,29 +50,29 @@
         "id": "S",
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
-        "start": 43,
-        "end": 67,
+        "start": 44,
+        "end": 70,
         "children": [
           {
             "id": "S1",
             "label": "Medir mejor",
             "description": "Medir mejor / DORA / SPACE.",
             "start": 43,
-            "end": 53
+            "end": 54
           },
           {
             "id": "S2",
             "label": "Automatización",
             "description": "Automatización y pago de deuda.",
-            "start": 54,
-            "end": 58
+            "start": 55,
+            "end": 60
           },
           {
             "id": "S3",
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
-            "start": 59,
-            "end": 67
+            "start": 61,
+            "end": 70
           }
         ]
       },
@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 68,
-        "end": 68
+        "start": 71,
+        "end": 71
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 69,
-        "end": 74
+        "start": 72,
+        "end": 77
       }
     ]
   },
@@ -135,6 +135,7 @@
     "bombero-piromano.md",
     "problemas-summary.md",
     "recurring-quote-2.md",
+    "s1-metricas.md",
     "dora-metrics.md",
     "dora-metrics-2.md",
     "dora-metrics-3.md",
@@ -146,11 +147,13 @@
     "impact.md",
     "space-radar.md",
     "recurring-quote-2-2.md",
+    "s2-codigo.md",
     "icon-sesgo-de-supervivencias.md",
     "automatizacion-2.md",
     "automatizacion-ejemplos.md",
     "icon-80.md",
     "recurring-quote-2-2-2.md",
+    "s3-heroes.md",
     "heroe-gris.md",
     "mal-delegador.md",
     "productividad-mentira.md",
