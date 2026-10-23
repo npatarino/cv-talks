@@ -10,15 +10,22 @@ fields:
     meta: Stage_HTML
     content: |
       <svg viewBox="0 0 1680 560" preserveAspectRatio="xMidYMid meet">
+        <!-- Referencia: ejes y dos niveles (50 % y 100 %). Aparece con el primer paso. -->
+        <g data-from="1" fill="none" stroke="var(--recipe-ink)" stroke-linecap="round">
+          <path d="M840 25 L840 535 M585 280 L1095 280" stroke-width="2" opacity=".35"/>
+          <polygon points="840,152.5 967.5,280 840,407.5 712.5,280" stroke-width="2" stroke-dasharray="6 10" opacity=".35"/>
+          <polygon points="840,25 1095,280 840,535 585,280" stroke-width="3" opacity=".5"/>
+        </g>
+        <g class="rd-lbl" fill="var(--recipe-ink)" font-family="var(--font-mono)" font-size="22" letter-spacing=".14em" text-anchor="middle">
+          <text data-from="1" x="840" y="2">SPEED</text>
+          <text data-from="2" x="1120" y="288" text-anchor="start">EFFECTIVENESS</text>
+          <text data-from="3" x="840" y="582">QUALITY</text>
+          <text data-from="4" x="560" y="288" text-anchor="end">IMPACT</text>
+        </g>
         <polygon id="rd-poly" style="opacity:0" points="840,280 840,280 840,280 840,280" fill="var(--recipe-em)" fill-opacity=".4" stroke="var(--recipe-em)" stroke-width="8" stroke-linejoin="round"/>
         <g id="rd-dots" fill="var(--recipe-em)" style="opacity:0"><circle r="14"/><circle r="14"/><circle r="14"/><circle r="14"/></g>
       </svg>
-      <div class="legend">
-        <span data-from="1" class="dot" style="--c:var(--recipe-em)">Speed</span>
-        <span data-from="2" class="dot" style="--c:var(--recipe-em)">Effectiveness</span>
-        <span data-from="3" class="dot" style="--c:var(--recipe-em)">Quality</span>
-        <span data-from="4" class="dot" style="--c:var(--recipe-em)">Impact</span>
-      </div>
+      <style>.s-viz .rd-lbl text { opacity: 0; transition: opacity .6s ease; } .s-viz .rd-lbl text.is-on { opacity: .8; }</style>
       <script>
       (function () {
         var section = document.querySelector('section.s-viz');
