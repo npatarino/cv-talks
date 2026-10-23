@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Prototipo: wireframe con borde discontinuo y lápiz -->
+  <g stroke="none" transform="translate(8 9)">
+    <rect fill="#fafaf8" x="70" y="80" width="330" height="330" rx="16"/>
+    <rect fill="#02b5b9" x="106" y="118" width="258" height="130" rx="10"/>
+    <path fill="#f9d71c" d="M392 336L452 396L398 450L338 390Z"/>
+  </g>
+  <rect stroke-width="14" stroke-dasharray="26 18" x="68" y="78" width="334" height="334" rx="18"/>
+  <!-- imagen placeholder -->
+  <rect stroke-width="12" x="104" y="116" width="262" height="134" rx="12"/>
+  <path stroke-width="10" d="M124 236L190 170L236 216L270 184L346 236"/>
+  <circle stroke-width="9" cx="314" cy="152" r="14"/>
+  <!-- líneas de texto -->
+  <path stroke-width="11" d="M110 290L300 290M110 330L360 330M110 370L230 370"/>
+  <!-- lápiz -->
+  <path stroke-width="14" d="M336 388L420 304L470 354L386 438L326 450Z"/>
+  <path stroke-width="10" d="M402 322L452 372M336 450L348 408L376 436"/>
+  <path stroke-width="7" opacity=".7" d="M90 110L90 380"/>
+</svg>
