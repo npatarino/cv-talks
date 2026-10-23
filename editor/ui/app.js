@@ -647,6 +647,8 @@ const TEMPLATE_OPTIONAL_FIELDS = {
 
 function renderForm(slide) {
   const { data } = slide;
+  if (state.fieldStashFor !== state.selectedFilename) { state.fieldStash = {}; state.fieldStashFor = state.selectedFilename; }
+  stashFields(data.fields);
   dom.formBody.innerHTML = '';
 
   addSection('Slide Meta');
@@ -752,9 +754,23 @@ function renderForm(slide) {
  * the user can still switch back without losing data (form state is held in
  * `state.slideData`).
  */
+/** Fields seen for the open slide, so switching template/variant and back never
+ *  loses content that the intermediate template didn't have a field for. */
+function stashFields(fields) {
+  if (!state.fieldStash) state.fieldStash = {};
+  if (fields && typeof fields === 'object') {
+    for (const [k, v] of Object.entries(fields)) {
+      const content = typeof v === 'object' ? (v?.content ?? '') : String(v ?? '');
+      if (content !== '') state.fieldStash[k] = v;
+    }
+  }
+  return state.fieldStash;
+}
+
 async function onTemplateChange(newTemplate) {
   const current = collectFormData();
   if (!current) return;
+  const remembered = { ...stashFields(current.fields), ...(current.fields ?? {}) };
 
   // Variant always resets to "default" — the previous variant only makes sense
   // within the previous template's variant set.
@@ -778,7 +794,7 @@ async function onTemplateChange(newTemplate) {
   // from the previous slide (preserves content where the new template
   // expects the same field name, e.g. `title`).
   if (scaffold.fields) {
-    merged.fields = mergeFields(scaffold.fields, current.fields);
+    merged.fields = mergeFields(scaffold.fields, remembered);
   } else {
     delete merged.fields;
   }
@@ -809,6 +825,7 @@ async function onVariantChange(newVariant) {
   const current = collectFormData();
   if (!current) return;
   const template = current.template;
+  const remembered = { ...stashFields(current.fields), ...(current.fields ?? {}) };
 
   let scaffold;
   try {
@@ -820,7 +837,7 @@ async function onVariantChange(newVariant) {
   }
 
   const merged = { ...current, variant: newVariant };
-  if (scaffold.fields) merged.fields = mergeFields(scaffold.fields, current.fields);
+  if (scaffold.fields) merged.fields = mergeFields(scaffold.fields, remembered);
   // For variants we keep existing items as-is — different variants of the same
   // template (e.g. big-list numeric/bullets/checklist) share the items shape
   // closely enough that wiping would surprise the user.
