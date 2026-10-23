@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#a64132" d="M166 400C150 440 170 464 206 464L306 464C342 464 362 440 346 400L300 300L212 300Z"/>
+    <path fill="#02b5b9" d="M212 300L300 300L326 356L186 356Z"/>
+  </g>
+  <path stroke-width="18" d="M212 60L212 298L164 398C148 438 170 462 206 462L306 462C342 462 364 438 348 398L300 298L300 60"/>
+  <path stroke-width="14" d="M186 58L326 58"/>
+  <path stroke-width="10" d="M186 354L326 354"/>
+  <path stroke-width="7" opacity=".7" d="M196 410C194 428 200 440 212 444"/>
+  <!-- burbujas y grieta -->
+  <circle stroke-width="8" cx="236" cy="404" r="10"/><circle stroke-width="8" cx="282" cy="420" r="7"/><circle stroke-width="8" cx="262" cy="384" r="6"/>
+  <path stroke-width="8" d="M330 300L350 330L336 356L358 386"/>
+  <g stroke-width="6" opacity=".55"><path d="M176 440L196 422"/><path d="M312 450L334 428"/></g>
+</svg>
