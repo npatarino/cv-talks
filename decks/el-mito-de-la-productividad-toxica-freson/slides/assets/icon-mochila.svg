@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Relleno de rotulador, desplazado del contorno -->
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#02b5b9" d="M120 180C120 120 180 92 256 92C332 92 392 120 392 180L392 420C392 448 372 464 344 464L168 464C140 464 120 448 120 420Z"/>
+    <path fill="#f9d71c" d="M166 300L346 300L346 420C346 440 334 452 314 452L198 452C178 452 166 440 166 420Z"/>
+    <path fill="#a64132" d="M208 92C216 60 240 44 256 44C272 44 296 60 304 92L278 100C272 80 264 72 256 72C248 72 240 80 234 100Z"/>
+  </g>
+  <!-- Cuerpo -->
+  <path stroke-width="18" d="M118 178C118 116 180 88 256 88C332 88 394 116 394 178L394 418C394 448 372 464 344 464L168 464C138 464 118 448 118 418Z"/>
+  <path stroke-width="7" opacity=".7" d="M134 190C134 140 186 112 256 112M134 240L134 400"/>
+  <!-- Bolsillo -->
+  <path stroke-width="16" d="M164 298L348 298L348 420C348 442 336 454 314 454L198 454C176 454 164 442 164 420Z"/>
+  <path stroke-width="7" opacity=".7" d="M180 310L332 310M180 330L332 330"/>
+  <path stroke-width="12" d="M234 360L278 360"/>
+  <!-- Asa -->
+  <path stroke-width="16" d="M206 90C214 56 238 40 256 40C274 40 298 56 306 90"/>
+  <path stroke-width="7" opacity=".7" d="M226 90C232 72 244 64 256 64C268 64 280 72 286 90"/>
+  <!-- Tirantes -->
+  <path stroke-width="14" d="M168 180C150 230 146 300 160 380M344 180C362 230 366 300 352 380"/>
+  <!-- Cremallera superior -->
+  <path stroke-width="10" d="M150 236C190 222 322 222 362 236"/>
+  <path stroke-width="6" opacity=".7" d="M190 230L190 244M230 226L230 240M282 226L282 240M322 230L322 244"/>
+  <!-- Hatching -->
+  <g stroke-width="6" opacity=".55"><path d="M134 430L150 416"/><path d="M146 446L166 426"/><path d="M360 440L378 422"/></g>
+</svg>

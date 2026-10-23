@@ -51,7 +51,7 @@
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
         "start": 42,
-        "end": 63,
+        "end": 66,
         "children": [
           {
             "id": "S1",
@@ -72,7 +72,7 @@
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
             "start": 58,
-            "end": 63
+            "end": 66
           }
         ]
       },
@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 64,
-        "end": 64
+        "start": 67,
+        "end": 67
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 65,
-        "end": 70
+        "start": 68,
+        "end": 73
       }
     ]
   },
@@ -151,9 +151,12 @@
     "icon-80.md",
     "recurring-quote-2-2-2.md",
     "heroe-gris.md",
+    "mal-delegador.md",
+    "productividad-mentira.md",
+    "primer-dia-de-cole.md",
     "heroe-gris-2.md",
     "capa-de-ozono.md",
-    "recurring-quote-3.md",
+    "equipo-disfruta.md",
     "disclaimer-trabajar-menos.md",
     "urgente-importante.md",
     "cadena.md",
