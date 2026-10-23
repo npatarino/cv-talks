@@ -65,13 +65,13 @@
             "label": "Automatización",
             "description": "Automatización y pago de deuda.",
             "start": 50,
-            "end": 55
+            "end": 54
           },
           {
             "id": "S3",
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
-            "start": 56,
+            "start": 55,
             "end": 61
           }
         ]
