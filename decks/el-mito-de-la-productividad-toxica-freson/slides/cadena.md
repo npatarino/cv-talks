@@ -10,8 +10,8 @@ fields:
     meta: Stage_HTML
     content: |
       <div class="chain">
-        <div class="cell" data-from="1"><img src="assets/icon-impact-2.svg" alt=""></div>
-        <div class="cell" data-from="2"><img src="assets/icon-avoid.svg" alt=""></div>
+        <div class="cell" data-from="1"><img src="assets/icon-target-flat.svg" alt=""></div>
+        <div class="cell" data-from="2"><img src="assets/icon-hand-flat.svg" alt=""></div>
         <div class="cell stack" data-from="3">
           <img class="layer" src="assets/icon-batman.svg" alt="" data-from="3" data-until="4">
           <img class="layer" src="assets/icon-joker.svg" alt="" data-from="4">

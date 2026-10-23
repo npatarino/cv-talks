@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Dejar de hacer por poder · mano abierta plana (stop), dedos separados -->
+  <circle fill="#a64132" cx="256" cy="256" r="210"/>
+  <!-- palma -->
+  <path fill="#fafaf8" d="M176 262L384 262L384 310C384 376 334 426 268 426L250 426C206 426 170 400 152 364L108 288C100 274 104 258 118 250C130 244 146 248 154 260L176 290Z"/>
+  <!-- dedos -->
+  <rect fill="#fafaf8" x="176" y="124" width="46" height="150" rx="23"/>
+  <rect fill="#fafaf8" x="232" y="86" width="46" height="188" rx="23"/>
+  <rect fill="#fafaf8" x="288" y="102" width="46" height="172" rx="23"/>
+  <rect fill="#fafaf8" x="344" y="138" width="40" height="136" rx="20"/>
+</svg>
