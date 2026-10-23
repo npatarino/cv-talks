@@ -7,6 +7,7 @@ fields:
   quote: { content: 'Todo lo que no es <em>confianza</em> es fe.<br>Y la fe, en el software, suele salir <em>cara</em>.', meta: Quote_Text }
   who: { content: "", meta: Quote_Attribution }
 notes: |
+  Todo lo que no es confianza es fe. Y la fe, en el software, suele salir cara. La confianza viene de evidencia: lo leíste, lo probaste, sabés por qué funciona. La fe viene de que la demo salió bien. Y en software la demo siempre sale bien.
   Les confieso algo: nunca me había sentido tan incómodo haciendo mi trabajo como últimamente. Escribo código con IA y todo se siente como una caja negra.
   Esto avanza tan rápido que, si fuera a revisar cada línea que genera, tardaría una eternidad. Y entonces acabás con sistemas que creaste vos sin entender del todo cómo funciona el código. Entendés la idea general, pero no cada detalle. Y sospecho que eso se está convirtiendo en la nueva norma.
   Va en contra de todos mis instintos como ingeniero: estoy acostumbrado a entender lo que construyo. Ahora lo que intento averiguar es cuánto necesito entender para sentirme cómodo siguiendo adelante.
