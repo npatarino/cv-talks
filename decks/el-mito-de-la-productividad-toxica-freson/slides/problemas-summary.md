@@ -6,9 +6,9 @@ variant: default
 fields:
   title: { content: '', meta: Title_Text }
 items:
-  - { title: 'Métricas de vanidad', desc: 'Medimos movimiento, esfuerzo y actividad. No impacto.' }
-  - { title: 'El código es un pasivo', desc: 'Cada línea nueva es mantenimiento que no contamos.' }
-  - { title: 'Héroes indispensables', desc: 'El sistema, y nuestro ego, nos empujan a ser el salvador.' }
+  - { title: 'Métricas de vanidad' }
+  - { title: 'El código es un pasivo' }
+  - { title: 'Héroes indispensables' }
 notes: |
   Y acá está la toxicidad. 
   Perseguimos métricas de vanidad que no generan impacto, sólo muestran el movimiento, el esfuerzo y la actividad.
