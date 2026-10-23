@@ -1,14 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
-  <!-- Torre de emisión con ondas (broadcast tower) -->
+  <!-- Telemetría: tarjeta de monitorización con línea de pulso -->
   <g stroke="none" transform="translate(8 9)">
-    <path fill="#02b5b9" d="M256 170L190 470L322 470Z"/>
-    <circle fill="#f9d71c" cx="256" cy="150" r="30"/>
+    <rect fill="#1c1c1c" x="56" y="116" width="400" height="280" rx="26"/>
+    <path fill="#02b5b9" d="M56 300L140 300L176 236L220 356L262 196L300 300L456 300L456 370C456 384 444 396 430 396L82 396C68 396 56 384 56 370Z" opacity=".55"/>
   </g>
-  <path stroke-width="18" d="M256 168L188 468L324 468"/>
-  <path stroke-width="12" d="M224 300L288 300M206 380L306 380M232 300L300 380M280 300L212 380"/>
-  <circle stroke-width="14" cx="256" cy="148" r="32"/>
-  <path stroke-width="14" d="M184 100C222 62 290 62 328 100M140 56C204 -6 308 -6 372 56" transform="translate(0 12)"/>
-  <path stroke-width="14" d="M184 196C222 234 290 234 328 196M140 240C204 302 308 302 372 240"/>
-  <path stroke-width="7" opacity=".7" d="M240 200L204 420"/>
-  <g stroke-width="6" opacity=".55"><path d="M292 440L308 424"/></g>
+  <rect stroke-width="18" x="54" y="114" width="404" height="284" rx="28"/>
+  <path stroke-width="7" opacity=".7" d="M80 150L80 360"/>
+  <!-- pulso -->
+  <path stroke="#f9d71c" stroke-width="16" d="M90 298L140 298L176 234L220 354L262 194L300 298L420 298"/>
+  <circle fill="#f9d71c" stroke="none" cx="420" cy="298" r="14"/>
+  <!-- patas -->
+  <path stroke-width="12" d="M196 398L196 440L316 440L316 398M156 446L356 446"/>
+  <g stroke-width="6" opacity=".55"><path d="M372 170L390 152"/><path d="M386 188L408 166"/></g>
 </svg>
