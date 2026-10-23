@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <g stroke="none" transform="translate(8 9)">
+    <rect fill="#1c1c1c" x="72" y="92" width="368" height="300" rx="18"/>
+    <rect fill="#02b5b9" x="72" y="92" width="368" height="56" rx="18"/>
+    <circle fill="#fafaf8" cx="110" cy="120" r="10"/><circle fill="#fafaf8" cx="144" cy="120" r="10"/>
+    <rect fill="#f9d71c" x="120" y="200" width="120" height="24" rx="6"/>
+  </g>
+  <rect stroke-width="18" x="70" y="90" width="372" height="304" rx="20"/>
+  <path stroke-width="12" d="M70 148L442 148"/>
+  <path stroke-width="7" opacity=".7" d="M88 170L88 370"/>
+  <path stroke-width="10" d="M120 212L240 212M120 262L300 262M120 312L200 312"/>
+  <!-- telaraña en la esquina -->
+  <path stroke-width="6" opacity=".65" d="M442 148L372 148M442 148L442 218M442 148L386 204M442 148L400 168M442 148L424 192M396 160C410 168 420 176 424 192M382 176C398 186 412 198 420 214"/>
+  <path stroke-width="12" d="M196 394L196 434L316 434L316 394M156 440L356 440"/>
+  <g stroke-width="6" opacity=".55"><path d="M96 380L116 360"/><path d="M400 380L420 360"/></g>
+</svg>
