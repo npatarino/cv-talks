@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Linter: lupa sobre código -->
+  <g stroke="none" transform="translate(8 9)">
+    <rect fill="#fafaf8" x="60" y="80" width="300" height="300" rx="24"/>
+    <circle fill="#f9d71c" cx="340" cy="330" r="86"/>
+  </g>
+  <rect stroke-width="16" x="58" y="78" width="304" height="304" rx="26"/>
+  <path stroke-width="7" opacity=".7" d="M80 110L80 350"/>
+  <!-- </> -->
+  <path stroke-width="14" d="M150 170L110 220L150 270M240 170L280 220L240 270M212 156L178 284"/>
+  <!-- lupa -->
+  <circle stroke-width="18" cx="340" cy="328" r="88"/>
+  <path stroke-width="24" d="M402 390L470 458"/>
+  <path stroke="#fafaf8" stroke-width="16" d="M300 330L330 360L386 296"/>
+</svg>

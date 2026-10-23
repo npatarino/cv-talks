@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Cronómetro con check: tests más rápidos -->
+  <g stroke="none" transform="translate(8 9)">
+    <circle fill="#fafaf8" cx="256" cy="290" r="170"/>
+    <circle fill="#02b5b9" cx="256" cy="290" r="120"/>
+    <rect fill="#f9d71c" x="222" y="40" width="68" height="40" rx="10"/>
+  </g>
+  <circle stroke-width="18" cx="256" cy="288" r="172"/>
+  <circle stroke-width="10" cx="256" cy="288" r="122"/>
+  <path stroke-width="14" d="M220 38L292 38M256 38L256 116"/>
+  <path stroke-width="14" d="M380 120L410 150M396 134L368 162"/>
+  <path stroke-width="7" opacity=".7" d="M110 300C106 230 150 160 220 130"/>
+  <!-- check -->
+  <path stroke="#fafaf8" stroke-width="22" d="M200 292L240 332L318 246"/>
+</svg>
