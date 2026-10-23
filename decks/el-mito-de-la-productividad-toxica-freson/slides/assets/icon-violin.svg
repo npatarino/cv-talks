@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Relleno de rotulador, desplazado del contorno -->
+  <g stroke="none" transform="translate(8 9)">
+    <!-- caja del violín -->
+    <path fill="#a64132" d="M256 190C290 150 352 150 366 196C378 232 352 254 352 272C352 290 380 310 376 352C370 410 318 450 256 450C194 450 142 410 136 352C132 310 160 290 160 272C160 254 134 232 146 196C160 150 222 150 256 190Z"/>
+    <!-- mástil -->
+    <path fill="#f9d71c" d="M240 60L272 60L270 200L242 200Z"/>
+    <!-- cordal -->
+    <path fill="#1c1c1c" d="M244 360L268 360L276 440L236 440Z"/>
+  </g>
+  <!-- Caja -->
+  <path stroke-width="18" d="M256 188C290 148 352 148 366 194C378 230 352 252 352 270C352 288 380 308 376 350C370 408 318 448 256 448C194 448 142 408 136 350C132 308 160 288 160 270C160 252 134 230 146 194C160 148 222 148 256 188"/>
+  <path stroke-width="7" opacity=".7" d="M170 300C168 340 190 380 220 410M342 300C344 340 322 380 292 410"/>
+  <!-- Efes -->
+  <path stroke-width="9" d="M212 262C200 290 204 330 220 354M300 262C312 290 308 330 292 354"/>
+  <!-- Mástil y clavijero -->
+  <path stroke-width="16" d="M242 198L242 58L270 58L270 198"/>
+  <path stroke-width="12" d="M236 52C230 36 242 22 256 22C270 22 282 36 276 52"/>
+  <path stroke-width="10" d="M222 76L242 80M222 104L242 108M270 80L290 76M270 108L290 104"/>
+  <!-- Cuerdas -->
+  <path stroke-width="4" opacity=".8" d="M248 70L246 420M253 70L253 420M259 70L259 420M264 70L266 420"/>
+  <!-- Puente y cordal -->
+  <path stroke-width="10" d="M226 322L286 322"/>
+  <path stroke-width="12" d="M244 358L268 358L276 438L236 438Z"/>
+  <!-- Hatching -->
+  <g stroke-width="6" opacity=".55"><path d="M160 396L176 380"/><path d="M174 414L194 394"/><path d="M336 400L352 384"/></g>
+</svg>
