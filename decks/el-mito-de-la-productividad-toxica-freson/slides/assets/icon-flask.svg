@@ -1,14 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Matraz Erlenmeyer, silueta canónica -->
   <g stroke="none" transform="translate(8 9)">
-    <path fill="#02b5b9" d="M212 62L300 62L300 230L404 412C420 440 404 466 372 466L140 466C108 466 92 440 108 412L212 230Z"/>
-    <path fill="#a64132" d="M156 330L356 330L404 412C420 440 404 466 372 466L140 466C108 466 92 440 108 412Z"/>
+    <path fill="#02b5b9" d="M200 48L312 48L312 214L434 414C452 444 432 470 398 470L114 470C80 470 60 444 78 414L200 214Z"/>
+    <path fill="#a64132" d="M150 320L362 320L434 414C452 444 432 470 398 470L114 470C80 470 60 444 78 414Z"/>
   </g>
-  <path stroke-width="18" d="M212 60L212 228L106 410C90 438 106 464 138 464L374 464C406 464 422 438 406 410L300 228L300 60"/>
-  <path stroke-width="16" d="M180 58L332 58"/>
-  <path stroke-width="12" d="M156 328L356 328"/>
-  <path stroke-width="7" opacity=".7" d="M226 80L226 220M130 420C128 436 136 448 150 450"/>
-  <!-- burbujas -->
-  <circle stroke-width="9" cx="208" cy="400" r="14"/><circle stroke-width="9" cx="296" cy="420" r="10"/><circle stroke-width="9" cx="262" cy="372" r="8"/>
-  <circle stroke-width="8" cx="256" cy="286" r="8"/><circle stroke-width="7" cx="238" cy="256" r="5"/>
-  <g stroke-width="6" opacity=".55"><path d="M344 430L364 410"/><path d="M160 440L180 420"/></g>
+  <path stroke-width="18" d="M200 46L200 212L76 412C58 442 78 468 112 468L400 468C434 468 454 442 436 412L312 212L312 46"/>
+  <path stroke-width="18" d="M172 46L340 46"/>
+  <path stroke-width="12" d="M150 318L362 318"/>
+  <path stroke-width="7" opacity=".7" d="M216 70L216 206M100 428C98 444 108 454 122 456"/>
+  <circle stroke-width="9" cx="196" cy="396" r="16"/><circle stroke-width="9" cx="306" cy="418" r="11"/><circle stroke-width="9" cx="262" cy="364" r="9"/>
+  <g stroke-width="6" opacity=".55"><path d="M360 440L380 420"/></g>
 </svg>

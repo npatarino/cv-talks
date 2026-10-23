@@ -1,18 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Móvil con una feature nueva (destello) en pantalla -->
   <g stroke="none" transform="translate(8 9)">
-    <rect fill="#1c1c1c" x="150" y="40" width="212" height="432" rx="34"/>
-    <rect fill="#fafaf8" x="170" y="92" width="172" height="330" rx="10"/>
-    <rect fill="#02b5b9" x="190" y="130" width="132" height="90" rx="12"/>
-    <circle fill="#f9d71c" cx="256" cy="300" r="34"/>
+    <rect fill="#1c1c1c" x="140" y="32" width="232" height="448" rx="40"/>
+    <rect fill="#fafaf8" x="162" y="86" width="188" height="340" rx="12"/>
+    <path fill="#f9d71c" d="M256 170L278 236L348 236L292 278L312 346L256 304L200 346L220 278L164 236L234 236Z"/>
   </g>
-  <rect stroke-width="18" x="148" y="38" width="216" height="436" rx="36"/>
-  <rect stroke-width="10" x="168" y="90" width="176" height="334" rx="12"/>
-  <path stroke-width="10" d="M226 64L286 64"/>
-  <path stroke-width="7" opacity=".7" d="M160 120L160 400"/>
-  <!-- feature en pantalla: tarjeta, botón estrella y texto -->
-  <rect stroke-width="10" x="188" y="128" width="136" height="94" rx="14"/>
-  <circle stroke-width="10" cx="256" cy="300" r="36"/>
-  <path stroke-width="8" d="M256 278L262 294L278 296L266 306L270 322L256 314L242 322L246 306L234 296L250 294Z"/>
-  <path stroke-width="8" d="M196 362L316 362M196 388L286 388"/>
-  <g stroke-width="6" opacity=".55"><path d="M176 440L192 424"/><path d="M322 448L340 430"/></g>
+  <rect stroke-width="18" x="138" y="30" width="236" height="452" rx="42"/>
+  <rect stroke-width="10" x="160" y="84" width="192" height="344" rx="14"/>
+  <path stroke-width="12" d="M224 58L288 58"/>
+  <path stroke-width="12" d="M256 168L278 234L348 234L292 276L312 344L256 302L200 344L220 276L164 234L234 234Z"/>
+  <path stroke-width="7" opacity=".7" d="M150 120L150 400"/>
+  <path stroke-width="8" d="M200 380L312 380"/>
+  <g stroke-width="6" opacity=".55"><path d="M170 450L186 434"/><path d="M330 456L348 438"/></g>
 </svg>
