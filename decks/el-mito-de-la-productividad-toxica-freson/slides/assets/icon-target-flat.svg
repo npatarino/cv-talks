@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Impacto · diana plana con flecha -->
+  <circle fill="#fafaf8" cx="236" cy="276" r="190"/>
+  <circle fill="#a64132" cx="236" cy="276" r="146"/>
+  <circle fill="#fafaf8" cx="236" cy="276" r="100"/>
+  <circle fill="#a64132" cx="236" cy="276" r="54"/>
+  <!-- flecha -->
+  <path fill="#2b2f36" d="M236 276L420 92L436 108L252 292Z"/>
+  <path fill="#2b2f36" d="M236 276L250 262L264 276L250 290Z"/>
+  <path fill="#f9d71c" d="M400 72L470 42L440 112L420 92Z"/>
+  <path fill="#f9d71c" d="M440 112L470 42L500 72L458 130Z" opacity=".85"/>
+</svg>
