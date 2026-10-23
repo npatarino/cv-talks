@@ -1,18 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
-  <!-- Carita pensativa: ceja levantada, boca torcida, mano en la barbilla -->
+  <!-- Carita pensativa con interrogación -->
   <g stroke="none" transform="translate(8 9)">
-    <circle fill="#fafaf8" cx="256" cy="236" r="190"/>
-    <path fill="#f9d71c" d="M200 390C230 400 290 404 330 380L356 434C320 460 240 456 190 436Z"/>
+    <circle fill="#fafaf8" cx="236" cy="276" r="170"/>
+    <path fill="#f9d71c" d="M184 414C212 424 266 428 302 406L326 454C294 478 222 474 176 456Z"/>
+    <circle fill="#f9d71c" cx="410" cy="96" r="70"/>
   </g>
-  <circle stroke-width="18" cx="256" cy="234" r="192"/>
-  <path stroke-width="7" opacity=".7" d="M100 210C106 140 160 80 236 60"/>
+  <circle stroke-width="18" cx="236" cy="274" r="172"/>
+  <path stroke-width="7" opacity=".7" d="M96 252C102 196 148 142 214 122"/>
   <!-- cejas: una levantada -->
-  <path stroke-width="14" d="M160 176C180 160 206 158 226 170M290 150C312 134 342 138 360 158"/>
+  <path stroke-width="13" d="M150 222C168 208 192 206 210 216M266 200C286 186 312 190 328 208"/>
   <!-- ojos -->
-  <circle fill="#1c1c1c" stroke="none" cx="196" cy="222" r="14"/><circle fill="#1c1c1c" stroke="none" cx="322" cy="210" r="14"/>
+  <circle fill="#1c1c1c" stroke="none" cx="182" cy="264" r="13"/><circle fill="#1c1c1c" stroke="none" cx="296" cy="254" r="13"/>
   <!-- boca torcida -->
-  <path stroke-width="14" d="M196 318C230 306 270 310 300 296"/>
+  <path stroke-width="13" d="M182 346C212 336 248 340 274 328"/>
   <!-- mano en la barbilla -->
-  <path stroke-width="14" d="M200 388C232 398 292 402 332 378M332 378L356 432M300 396L318 440M268 404L280 446M236 404L244 444"/>
-  <path stroke-width="7" opacity=".7" d="M216 404L222 436"/>
+  <path stroke-width="13" d="M184 412C212 422 266 426 302 404M302 404L326 452M272 420L288 462M242 428L252 466M212 428L220 466"/>
+  <!-- interrogación -->
+  <circle stroke-width="14" cx="410" cy="94" r="72"/>
+  <path stroke-width="15" d="M382 66C382 44 400 32 414 34C432 36 444 50 440 68C434 88 408 92 408 116"/>
+  <circle fill="#1c1c1c" stroke="none" cx="408" cy="146" r="11"/>
 </svg>

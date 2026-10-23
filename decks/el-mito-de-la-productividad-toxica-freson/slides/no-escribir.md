@@ -6,7 +6,7 @@ variant: default
 items:
   - { glyph: '<img src="assets/icon-thinking-face.svg" alt="">' }
   - { glyph: '<img src="assets/icon-reuse.svg" alt="">' }
-  - { glyph: '<img src="assets/icon-trash-code.svg" alt="">' }
+  - { glyph: '<img src="assets/icon-prototype.svg" alt="">' }
   - { glyph: '<img src="assets/icon-eye.svg" alt="">' }
 notes: |
   Y tercero, el más difícil: no escribir. La línea más barata de mantener es la que no existe. Antes de abrir el editor, preguntarse si la feature hace falta. Acordate de Jurassic Park. Reutilizar lo que ya hay antes de añadir una capa nueva. Prototipar con la IA para tirar, no para mergear: tres alternativas en diez minutos y quedarse con la más pequeña.
