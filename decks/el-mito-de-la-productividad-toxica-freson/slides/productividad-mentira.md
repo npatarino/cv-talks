@@ -9,10 +9,13 @@ fields:
   stage:
     meta: Stage_HTML
     content: |
-      <div class="frac">
-        <div class="num">X</div>
-        <div class="bar"></div>
-        <div class="den"><span>Y</span><span class="plus" data-from="1">+ Z</span></div>
+      <div class="eq">
+        <div class="frac">
+          <div class="num">X</div>
+          <div class="bar"></div>
+          <div class="den"><span>Y</span><span class="plus" data-from="1">+ Z</span></div>
+        </div>
+        <div class="res"><span data-from="0" data-until="1">= 1</span><span data-from="1">&lt; 1</span></div>
       </div>
       <div class="legend">
         <span data-from="0" class="dot" style="--c:var(--recipe-ink)">X · lo que prometiste</span>
@@ -20,7 +23,11 @@ fields:
         <span data-from="1" class="dot" style="--c:var(--recipe-em)">Z · las horas que nadie vio</span>
       </div>
       <style>
-      .s-viz .frac { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--font-display); line-height: 1; }
+      .s-viz .eq { flex: 1; display: flex; align-items: center; justify-content: center; gap: 70px; font-family: var(--font-display); line-height: 1; }
+      .s-viz .frac { display: flex; flex-direction: column; align-items: center; }
+      .s-viz .res { position: relative; width: 300px; height: 220px; font-size: 220px; }
+      .s-viz .res span { position: absolute; left: 0; top: 0; white-space: nowrap; transition: opacity .6s; }
+      .s-viz .res span:last-child { color: var(--recipe-em); }
       .s-viz .frac .num, .s-viz .frac .den { font-size: 220px; display: flex; gap: 40px; align-items: baseline; }
       .s-viz .frac .bar { width: 360px; height: 14px; background: var(--recipe-ink); border-radius: 7px; margin: 34px 0; transition: width .8s cubic-bezier(.45,.05,.2,1); }
       .s-viz[data-step="1"] .frac .bar { width: 620px; }
