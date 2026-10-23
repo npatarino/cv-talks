@@ -4,8 +4,8 @@
 .fm-fresh { animation: fm-consume 2.6s linear .9s forwards; }
 .fm-head { animation: fm-headout .5s ease-in .9s forwards; }
 .fm-travel { animation: fm-travel 2.6s linear .9s forwards; }
-.fm-burnt { animation: fm-burn 1.73s linear 1.77s forwards; }
-@keyframes fm-burn { to { height: 165px; } }
+.fm-burnt { opacity: 0; animation: fm-burn 1.73s linear 1.77s forwards; }
+@keyframes fm-burn { 0% { opacity: 0; height: 0; } 4% { opacity: 1; } 100% { opacity: 1; height: 165px; } }
 .fm-char { opacity: 0; animation: fm-in .3s ease-out .8s forwards; }
 .fm-ignite { transform-box: fill-box; transform-origin: 50% 100%; opacity: 0; transform: scale(.2); animation: fm-pop .3s cubic-bezier(.3,1.6,.5,1) .8s forwards, fm-out .45s ease-in 3.35s forwards; }
 .fm-flicker { transform-box: fill-box; transform-origin: 50% 100%; animation: fm-flick .16s ease-in-out .8s infinite alternate; }
