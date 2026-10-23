@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Procesos: diagrama de flujo con engranaje -->
+  <g stroke="none" transform="translate(8 9)">
+    <rect fill="#fafaf8" x="60" y="80" width="150" height="90" rx="18"/>
+    <rect fill="#fafaf8" x="302" y="80" width="150" height="90" rx="18"/>
+    <rect fill="#fafaf8" x="60" y="342" width="150" height="90" rx="18"/>
+    <path fill="#f9d71c" d="M377 300L452 387L377 474L302 387Z"/>
+  </g>
+  <rect stroke-width="16" x="58" y="78" width="154" height="94" rx="20"/>
+  <rect stroke-width="16" x="300" y="78" width="154" height="94" rx="20"/>
+  <rect stroke-width="16" x="58" y="340" width="154" height="94" rx="20"/>
+  <path stroke-width="16" d="M377 298L454 387L377 476L300 387Z"/>
+  <!-- flechas -->
+  <path stroke-width="12" d="M212 125L300 125M276 104L300 125L276 146"/>
+  <path stroke-width="12" d="M377 172L377 298M356 274L377 298L398 274"/>
+  <path stroke-width="12" d="M300 387L212 387M236 366L212 387L236 408"/>
+  <path stroke-width="12" d="M135 340L135 172M114 196L135 172L156 196"/>
+  <path stroke-width="7" opacity=".7" d="M76 100L76 150M318 100L318 150M76 362L76 412"/>
+</svg>
