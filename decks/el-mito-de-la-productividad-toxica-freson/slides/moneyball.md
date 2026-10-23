@@ -7,6 +7,7 @@ fields:
   icon: { content: '<img src="assets/baseball.svg" alt="" class="title-icon">', meta: Image_Src }
   title: { content: MONEYBALL, meta: Title_Text }
 notes: |
+  Para entender DX Core 4 necesitamos ver un poco de historia.
   ¿Quiénes vieron la película de Moneyball?
   Es una peli del año 2011 que recomiendo ver, no sólo porque sale Brad Pitt y hay que ver todo lo que haga Brad Pitt siempre, sino porque es un peliculón.
   Igual yo ahora les voy a hacer un mini spoiler, que tampoco debería considerarse spoiler, porque es una película de hace 15 años y que cuenta la historia real de un equipo de béisbol de hace 25 años.

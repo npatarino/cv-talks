@@ -51,28 +51,28 @@
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
         "start": 39,
-        "end": 63,
+        "end": 62,
         "children": [
           {
             "id": "S1",
             "label": "Medir mejor",
             "description": "Medir mejor / DORA / SPACE.",
             "start": 39,
-            "end": 52
+            "end": 51
           },
           {
             "id": "S2",
             "label": "Automatización",
             "description": "Automatización y pago de deuda.",
-            "start": 53,
-            "end": 57
+            "start": 52,
+            "end": 56
           },
           {
             "id": "S3",
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
-            "start": 58,
-            "end": 63
+            "start": 57,
+            "end": 62
           }
         ]
       },
@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 63,
-        "end": 63
+        "start": 62,
+        "end": 62
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 64,
-        "end": 67
+        "start": 63,
+        "end": 66
       }
     ]
   },
@@ -131,7 +131,6 @@
     "bombero-piromano.md",
     "problemas-summary.md",
     "recurring-quote-2.md",
-    "dx-core-4.md",
     "moneyball.md",
     "dora-metrics.md",
     "dora-metrics-2.md",
