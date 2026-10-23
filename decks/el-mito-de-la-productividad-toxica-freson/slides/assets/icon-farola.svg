@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
   <!-- Relleno de rotulador, desplazado del contorno -->
   <g stroke="none" transform="translate(8 9)">
     <!-- cono de luz -->
-    <path fill="#f9d71c" opacity=".9" d="M214 128L298 128L430 470L82 470Z"/>
+    <path fill="#fafaf8" d="M214 128L298 128L430 470L82 470Z"/>
     <!-- cabeza de la farola -->
     <path fill="#02b5b9" d="M196 84L316 84L300 128L212 128Z"/>
     <path fill="#02b5b9" d="M244 42L268 42L272 84L240 84Z"/>
@@ -24,7 +24,7 @@
   <path stroke-width="18" d="M204 438L308 438L320 470L192 470Z"/>
   <path stroke-width="7" opacity=".7" d="M216 448L296 448"/>
   <!-- Rayos de luz -->
-  <g stroke="#f9d71c" stroke-width="14"><path d="M160 108L132 92"/><path d="M352 108L380 92"/><path d="M150 150L116 154"/><path d="M362 150L396 154"/></g>
+  <g stroke="#a64132" stroke-width="14"><path d="M160 108L132 92"/><path d="M352 108L380 92"/><path d="M150 150L116 154"/><path d="M362 150L396 154"/></g>
   <!-- Hatching -->
   <g stroke-width="6" opacity=".55"><path d="M230 60L250 52"/><path d="M300 100L312 94"/><path d="M226 460L240 448"/></g>
 </svg>

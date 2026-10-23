@@ -1,6 +1,6 @@
 ---
 template: big-concept
-recipe: canvas-quiet
+recipe: energy-loud
 label: Medimos lo fácil
 variant: divider
 fields:
