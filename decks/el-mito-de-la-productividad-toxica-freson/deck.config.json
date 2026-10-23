@@ -14,7 +14,7 @@
         "label": "Necesidad",
         "description": "Los tres problemas principales que quiero mostrar.",
         "start": 9,
-        "end": 41,
+        "end": 42,
         "children": [
           {
             "id": "P1",
@@ -35,14 +35,14 @@
             "label": "Sos un héroe",
             "description": "Sos un héroe.",
             "start": 33,
-            "end": 39
+            "end": 40
           },
           {
             "id": "PS",
             "label": "Problems summary",
             "description": "Resumen de los problemas.",
-            "start": 40,
-            "end": 41
+            "start": 41,
+            "end": 42
           }
         ]
       },
@@ -50,29 +50,29 @@
         "id": "S",
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
-        "start": 42,
-        "end": 66,
+        "start": 43,
+        "end": 67,
         "children": [
           {
             "id": "S1",
             "label": "Medir mejor",
             "description": "Medir mejor / DORA / SPACE.",
-            "start": 42,
-            "end": 52
+            "start": 43,
+            "end": 53
           },
           {
             "id": "S2",
             "label": "Automatización",
             "description": "Automatización y pago de deuda.",
-            "start": 53,
-            "end": 57
+            "start": 54,
+            "end": 58
           },
           {
             "id": "S3",
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
-            "start": 58,
-            "end": 66
+            "start": 59,
+            "end": 67
           }
         ]
       },
@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 67,
-        "end": 67
+        "start": 68,
+        "end": 68
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 68,
-        "end": 73
+        "start": 69,
+        "end": 74
       }
     ]
   },
@@ -125,6 +125,7 @@
     "metricas-vanidad-vs-proyecto.md",
     "productividad-no-codigo.md",
     "scientificos-jurassic-park.md",
+    "p3-heroes.md",
     "stradivarius.md",
     "stradivarius-precio.md",
     "bus-factor.md",

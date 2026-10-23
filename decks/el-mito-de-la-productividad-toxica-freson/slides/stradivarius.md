@@ -1,11 +1,11 @@
 ---
 template: big-concept
 recipe: critical
-label: Stradivari · 1737
+label: Stradivarius
 variant: divider
 fields:
-  title: { content: 'ANTONIO<br><em>STRADIVARI</em>', meta: Title_Text }
-  sub: { content: '1737 · Cremona, Italia.', meta: Subtitle_Text }
+  icon: { content: '<img src="assets/icon-violin.svg" alt="" class="title-icon">', meta: Image_Src }
+  title: { content: '<em>Stradivarius</em>', meta: Title_Text }
 notes: |
   Levanten la mano los que saben lo que es un Stradivarius. (pausa) Claro, todos. El mejor violín del mundo, el que vale millones, el que sale en las películas. Ahora, ¿alguien sabe por qué vale millones? (pausa) Porque no se puede hacer otro.
   Antonio Stradivari tenía un taller en Cremona, en el norte de Italia, a finales del 1600. Un taller chico, en una plaza, con sus dos hijos de ayudantes. Y en ese taller, durante setenta años, construyó más de mil instrumentos. Trabajó hasta los 93 años. Los violines que salían de ahí sonaban como no sonaba ningún otro, y todavía hoy nadie sabe exactamente por qué.
