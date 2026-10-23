@@ -48,7 +48,7 @@ node scripts/sync-fonts.mjs
 
 # ---- start both servers ----
 echo -e "${GREEN}→ Starting Eleventy on :8080…${RESET}"
-bunx eleventy --serve --quiet &
+bunx eleventy --serve --quiet --incremental &
 ELEVENTY_PID=$!
 
 echo -e "${GREEN}→ Starting Editor on :3001…${RESET}"
