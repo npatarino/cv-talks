@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#1c1c1c" stroke-linecap="round" stroke-linejoin="round">
+  <!-- ¿Hace falta? Bombilla con interrogación -->
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#fafaf8" d="M256 40C166 40 112 104 112 182C112 236 140 270 170 300C186 316 194 336 196 362L316 362C318 336 326 316 342 300C372 270 400 236 400 182C400 104 346 40 256 40Z"/>
+    <rect fill="#02b5b9" x="196" y="380" width="120" height="70" rx="14"/>
+  </g>
+  <path stroke-width="18" d="M256 38C166 38 110 102 110 180C110 234 138 268 168 298C184 314 192 334 194 360L318 360C320 334 328 314 344 298C374 268 402 234 402 180C402 102 346 38 256 38"/>
+  <path stroke-width="14" d="M194 400L318 400M204 448L308 448M224 470L288 470"/>
+  <path stroke-width="7" opacity=".7" d="M150 200C146 150 178 94 236 72"/>
+  <!-- interrogación -->
+  <path stroke-width="16" d="M212 170C212 134 240 116 262 118C290 120 308 140 302 166C296 194 258 200 258 236"/>
+  <circle fill="#1c1c1c" stroke="none" cx="258" cy="290" r="13"/>
+</svg>
