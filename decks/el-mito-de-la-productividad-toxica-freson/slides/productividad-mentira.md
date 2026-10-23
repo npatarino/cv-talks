@@ -23,16 +23,16 @@ fields:
         <span data-from="1" class="dot" style="--c:var(--recipe-em)">Z · las horas que nadie vio</span>
       </div>
       <style>
-      .s-viz .eq { flex: 1; display: flex; align-items: center; justify-content: center; gap: 70px; font-family: var(--font-display); line-height: 1; }
+      .s-viz .eq { flex: 1; display: flex; align-items: center; justify-content: center; gap: 50px; font-family: var(--font-display); line-height: 1; }
       .s-viz .frac { display: flex; flex-direction: column; align-items: center; }
-      .s-viz .res { position: relative; width: 300px; height: 220px; font-size: 220px; }
+      .s-viz .res { position: relative; width: 210px; height: 150px; font-size: 150px; }
       .s-viz .res span { position: absolute; left: 0; top: 0; white-space: nowrap; transition: opacity .6s; }
       .s-viz .res span:last-child { color: var(--recipe-em); }
-      .s-viz .frac .num, .s-viz .frac .den { font-size: 220px; display: flex; align-items: baseline; }
-      .s-viz .frac .bar { width: 360px; height: 14px; background: var(--recipe-ink); border-radius: 7px; margin: 34px 0; transition: width .8s cubic-bezier(.45,.05,.2,1); }
-      .s-viz[data-step="1"] .frac .bar { width: 620px; }
+      .s-viz .frac .num, .s-viz .frac .den { font-size: 150px; display: flex; align-items: baseline; }
+      .s-viz .frac .bar { width: 250px; height: 10px; background: var(--recipe-ink); border-radius: 7px; margin: 24px 0; transition: width .8s cubic-bezier(.45,.05,.2,1); }
+      .s-viz[data-step="1"] .frac .bar { width: 430px; }
       .s-viz .frac .plus { color: var(--recipe-em); display: inline-block; max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width .8s cubic-bezier(.45,.05,.2,1), opacity .6s; }
-      .s-viz .frac .plus.is-on { max-width: 400px; margin-left: 40px; }
+      .s-viz .frac .plus.is-on { max-width: 400px; margin-left: 28px; }
       .s-viz .frac .plus { transition: max-width .8s cubic-bezier(.45,.05,.2,1), margin-left .8s cubic-bezier(.45,.05,.2,1), opacity .6s; }
       </style>
   note: { content: 'Si prometiste X en Y y te llevó Y+Z, tu productividad no es X/Y.', meta: Note_Text }
