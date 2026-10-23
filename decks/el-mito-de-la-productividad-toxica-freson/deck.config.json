@@ -81,14 +81,14 @@
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
         "start": 73,
-        "end": 74
+        "end": 75
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 75,
-        "end": 79
+        "start": 76,
+        "end": 78
       }
     ]
   },
@@ -165,12 +165,11 @@
     "disenar-ausencia.md",
     "capa-de-ozono.md",
     "equipo-disfruta.md",
-    "urgente-importante.md",
     "cadena.md",
     "viernes-1530-2.md",
+    "bitacora-tres.md",
+    "media-hora.md",
     "radiacion.md",
-    "recurring-quote-4.md",
-    "cierre.md",
-    "que-significa-correcto.md"
+    "cierre.md"
   ]
 }

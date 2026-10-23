@@ -25,10 +25,9 @@ fields:
       .s-viz .cell .layer.is-off { opacity: 0; transform: scale(.85); }
       </style>
 notes: |
-  Tres ideas para llevarse. (→)
-  1. Parar. Pensar. Cambiar la perspectiva. Dejar de perseguir el movimiento para perseguir el impacto. No escribimos código, resolvemos problemas. Si hacemos eso, multiplicamos el valor que entregamos y dejamos de ser profesionales fácilmente reemplazables por una IA. (→)
-  2. Reducir deuda técnica. Dejar de hacer cosas solo porque ahora, con IA, podemos hacerlas. Reducir complejidad. Dejamos de ser fábricas de escribir código para convertirnos en ingenieros que resuelven problemas reales. (→)
-  3. Que otros no controlen tu carrera. Si dejás que otros lo hagan, te van a convertir en un héroe. (→ aparece Batman)
-  Y los héroes están muy bien... (→ Batman se convierte en el Joker)
-  ... pero no te olvides: o morís como héroe, o vivís lo suficiente para convertirte en villano.
+  Imaginen por un momento que hacen las tres cosas. (→)
+  Si paran, piensan y cambian la perspectiva, si dejan de perseguir el movimiento para perseguir el impacto, entonces dejan de ser un perfil fácil de reemplazar por una IA y pasan a ser la persona que decide qué hay que construir. Eso no se reemplaza. (→)
+  Si dejan de hacer cosas solo porque ahora, con IA, pueden hacerlas, si reducen deuda y complejidad, entonces dejan de ser una fábrica de código y pasan a ser ingenieros que resuelven problemas. Con menos código, menos mantenimiento y más tiempo para lo que importa. (→)
+  Y si se sacan la capa, si sueltan, comparten y diseñan para su ausencia, entonces dejan de ser el cuello de botella indispensable y pasan a ser quien multiplica al equipo. Esos ingenieros que todas las empresas quieren tener, y que además pueden ascender, porque no son insustituibles. (→)
+  Y si no sueltan la capa... bueno. O morís como héroe, o vivís lo suficiente para convertirte en villano.
 ---

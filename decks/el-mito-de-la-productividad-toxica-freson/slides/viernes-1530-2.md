@@ -8,5 +8,5 @@ fields:
   title: { content: '<strong>VIERNES</strong> <em>15:30</em>', meta: Title_Text }
   note: { content: "", meta: Note_Text }
 notes: |
-  Y volvemos al viernes a las 15:30. El próximo viernes, cuando escriban su bitácora y vean todo lo que hicieron, miren si de verdad fueron productivos. Si hubo impacto. O si todo lo que hicieron, los tickets, las PRs, las reuniones, las horas... en realidad solo fue...
+  Y entonces llega el próximo viernes, a las 15:30. Y están cansados igual, eh, porque esto no era trabajar menos. Abren la bitácora para escribir el resumen de la semana. Y en vez de cuarenta tickets movidos, treinta reuniones y doce PRs...
 ---

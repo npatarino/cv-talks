@@ -6,5 +6,5 @@ items:
   - { glyph: '<div data-inline="assets/radiation-anim.html"></div>' }
 variant: default
 notes: |
-  ...productividad tóxica.
+  ...más tóxica.
 ---
