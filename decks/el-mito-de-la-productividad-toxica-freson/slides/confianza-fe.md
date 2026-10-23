@@ -17,4 +17,5 @@ notes: |
   Esa es la fe que sale cara: la pagás después, en bugs que nadie entiende, en incidentes a las tres de la mañana y en mantenimiento de cosas que nadie sabe por qué están ahí.
   Así que sí, usemos Claude, Copilot, lo que sea. Pero lo que generan hay que revisarlo igual que si lo hubiera escrito el junior nuevo del equipo.
   Mientras tanto, lo razonable me parece graduar: mirar menos donde equivocarse sale barato y tiene arreglo, mirar más donde no lo tiene, y en todos los casos tener claro qué esperamos ver antes de abrir el diff.
+  PRs más pequeñas, cuanto más pequeño, más fácil de mirar, menos rompe...
 ---

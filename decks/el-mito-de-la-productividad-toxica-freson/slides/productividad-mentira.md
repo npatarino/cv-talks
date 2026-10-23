@@ -37,8 +37,8 @@ fields:
       </style>
   note: { content: 'Si prometiste X en Y y te llevó Y+Z, tu productividad no es X/Y.', meta: Note_Text }
 notes: |
-  Te quedás para terminar lo tuyo. Para hacer más. Para quedar bien con el jefe. O simplemente porque te comprometiste a algo y no llegaste.
+  ¿Y saben quién es siempre el primero en llegar y el último en irse? El héroe. Y no se queda para controlar a los demás: se queda para terminar lo suyo. Para hacer más. Para quedar bien con el jefe. O simplemente porque te comprometiste a algo y no llegaste.
   Y acá está la trampa: las horas extra no suman productividad. La esconden. Si te comprometiste a hacer X en un tiempo Y, y en realidad te llevó Y más Z, tu productividad no es X sobre Y. Es X sobre Y más Z. (→) Y esa Z nadie la ve, porque la pagaste vos, de noche, con tu tiempo.
   El dashboard dice que cumpliste. La verdad es que estimaste mal, o que había demasiado trabajo para el tiempo que había. Y las horas extra taparon justo el dato que la empresa necesitaba ver para arreglarlo. Es la cobra de Delhi, pero amañando la métrica con tu propio cuerpo. A base de cansancio.
-  Cristiano Ronaldo es el primero que llega a entrenar y el último que se va, y nadie lo llama mal delegador ni productividad falsa. Porque Cristiano se queda para sumar sobre un trabajo que ya hizo: cien faltas más, sus abdominales. Vos te quedás para compensar lo que no llegó. Cristiano se queda para ser mejor. Vos te quedás para que no se note.
+  Cristiano Ronaldo es el primero que llega a entrenar y el último que se va, y nadie dice que su productividad sea falsa. Porque Cristiano se queda para sumar sobre un trabajo que ya hizo: cien faltas más, sus abdominales. Vos te quedás para compensar lo que no llegó. Cristiano se queda para ser mejor. Vos te quedás para que no se note.
 ---

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <g stroke="none" transform="translate(8 9)">
+    <circle fill="#f9d71c" cx="196" cy="236" r="70"/>
+  </g>
+  <!-- llave -->
+  <circle stroke-width="16" cx="196" cy="234" r="72"/>
+  <circle stroke-width="12" cx="196" cy="234" r="22"/>
+  <path stroke-width="16" d="M258 272L410 424M376 390L350 416M406 420L380 446"/>
+  <!-- flechas de rotación -->
+  <path stroke-width="14" d="M330 120C300 86 250 70 204 78M118 100C80 130 62 180 70 226"/>
+  <path stroke-width="14" d="M200 56L206 80L182 90M50 210L72 230L92 206"/>
+  <path stroke-width="7" opacity=".7" d="M150 250C148 220 164 196 190 190"/>
+</svg>
