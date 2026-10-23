@@ -4,9 +4,9 @@ recipe: critical
 label: Problemas - Summary
 variant: default
 items:
-  - { glyph: '<img src="assets/icon-target-2.svg" alt="">' }
-  - { glyph: '<img src="assets/icon-liability-2.svg" alt="">' }
-  - { glyph: '<img src="assets/cape-blue.svg" alt="">' }
+  - { glyph: '<img src="assets/icon-target-2.svg" alt="">', caption: 'Métricas de vanidad' }
+  - { glyph: '<img src="assets/icon-liability-2.svg" alt="">', caption: 'El código es un pasivo' }
+  - { glyph: '<img src="assets/cape-blue.svg" alt="">', caption: 'Héroes indispensables' }
 notes: |
   Y acá está la toxicidad. 
   Perseguimos métricas de vanidad que no generan impacto, sólo muestran el movimiento, el esfuerzo y la actividad.
