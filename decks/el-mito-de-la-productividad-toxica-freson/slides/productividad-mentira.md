@@ -28,11 +28,12 @@ fields:
       .s-viz .res { position: relative; width: 300px; height: 220px; font-size: 220px; }
       .s-viz .res span { position: absolute; left: 0; top: 0; white-space: nowrap; transition: opacity .6s; }
       .s-viz .res span:last-child { color: var(--recipe-em); }
-      .s-viz .frac .num, .s-viz .frac .den { font-size: 220px; display: flex; gap: 40px; align-items: baseline; }
+      .s-viz .frac .num, .s-viz .frac .den { font-size: 220px; display: flex; align-items: baseline; }
       .s-viz .frac .bar { width: 360px; height: 14px; background: var(--recipe-ink); border-radius: 7px; margin: 34px 0; transition: width .8s cubic-bezier(.45,.05,.2,1); }
       .s-viz[data-step="1"] .frac .bar { width: 620px; }
       .s-viz .frac .plus { color: var(--recipe-em); display: inline-block; max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width .8s cubic-bezier(.45,.05,.2,1), opacity .6s; }
-      .s-viz .frac .plus.is-on { max-width: 400px; }
+      .s-viz .frac .plus.is-on { max-width: 400px; margin-left: 40px; }
+      .s-viz .frac .plus { transition: max-width .8s cubic-bezier(.45,.05,.2,1), margin-left .8s cubic-bezier(.45,.05,.2,1), opacity .6s; }
       </style>
   note: { content: 'Si prometiste X en Y y te llevó Y+Z, tu productividad no es X/Y.', meta: Note_Text }
 notes: |
