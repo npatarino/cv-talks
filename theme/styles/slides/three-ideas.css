@@ -36,3 +36,13 @@ section.slide.s-three-ideas {
   font-family: var(--font-editorial); font-style: italic;
   font-size: 28px; opacity: 0.7; margin-top: 10px;
 }
+
+/* Filas solo con título (sin desc): el título crece y se centra con el numeral,
+   para que no quede perdido junto a un número de 130px. */
+.s-three-ideas .row:not(:has(.d)) { align-items: baseline; }
+.s-three-ideas .row:not(:has(.d)) .c { padding-bottom: 0; }
+.s-three-ideas .row:not(:has(.d)) .c .t { font-size: 52px; letter-spacing: 0.06em; line-height: 1; }
+
+/* Recipe critical: sus tres roles de acento son charcoal; sobre plasma los
+   numerales negros chocan con el texto ivory, así que toman el ink. */
+.s-three-ideas[data-recipe="critical"] .row:nth-child(n of .row) .n { color: var(--recipe-ink); }
