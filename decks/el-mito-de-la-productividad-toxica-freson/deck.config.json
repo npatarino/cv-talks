@@ -51,7 +51,7 @@
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
         "start": 43,
-        "end": 70,
+        "end": 72,
         "children": [
           {
             "id": "S1",
@@ -65,14 +65,14 @@
             "label": "Automatización",
             "description": "Automatización y pago de deuda.",
             "start": 55,
-            "end": 60
+            "end": 62
           },
           {
             "id": "S3",
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
-            "start": 61,
-            "end": 70
+            "start": 63,
+            "end": 72
           }
         ]
       },
@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 71,
-        "end": 71
+        "start": 73,
+        "end": 73
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 72,
-        "end": 77
+        "start": 74,
+        "end": 78
       }
     ]
   },
@@ -149,9 +149,11 @@
     "recurring-quote-2-2.md",
     "s2-codigo.md",
     "icon-sesgo-de-supervivencias.md",
-    "automatizacion-2.md",
-    "automatizacion-ejemplos.md",
-    "icon-80.md",
+    "reducir-pasivo.md",
+    "borrar.md",
+    "automatizar.md",
+    "no-escribir.md",
+    "confianza-fe.md",
     "recurring-quote-2-2-2.md",
     "s3-heroes.md",
     "heroe-gris.md",
@@ -168,7 +170,6 @@
     "viernes-1530-2.md",
     "radiacion.md",
     "cierre.md",
-    "confianza-fe.md",
     "que-significa-correcto.md"
   ]
 }
