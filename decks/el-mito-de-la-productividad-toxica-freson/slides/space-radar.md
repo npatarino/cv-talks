@@ -65,4 +65,5 @@ notes: |
   Quality: change failure rate, failed deployment recovery time, perceived software quality, operational health & security.
   Impact: % del tiempo en nuevas capacidades, progreso de iniciativas y ROI, revenue por ingeniero, I+D como % del revenue.
   Ninguna dimensión se mira sola, y el objetivo es que el conjunto crezca de forma equilibrada. Medimos para mejorar, no para vigilar.
+  Y acá viene lo importante: al final, da igual qué metodología usés. DORA, SPACE, DX Core 4 o la que salga el año que viene. Lo que importa es que mires qué estás midiendo y te preguntes si tiene sentido. Si está alineado con la misión y los valores de la empresa, con lo que la empresa necesita de verdad. Eso es lo que te va a hacer productivo para la empresa. Y, de paso, es lo que te va a permitir crecer en ella, porque vas a estar trabajando en lo que importa, no en lo que se cuenta.
 ---
