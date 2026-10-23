@@ -4,11 +4,11 @@ recipe: critical
 label: Borrar
 variant: default
 items:
-  - { glyph: '<img src="assets/icon-flag-off.svg" alt="">', caption: 'Código muerto y flags' }
-  - { glyph: '<img src="assets/icon-package.svg" alt="">', caption: 'Dependencias sin uso' }
-  - { glyph: '<img src="assets/icon-flask.svg" alt="">', caption: 'Tests inútiles o flaky' }
-  - { glyph: '<img src="assets/icon-telemetry.svg" alt="">', caption: 'Telemetría que cuesta' }
-  - { glyph: '<img src="assets/icon-window-dust.svg" alt="">', caption: 'Features que usa el <span class="no-alt">0,3 %</span>' }
+  - { glyph: '<img src="assets/icon-skull.svg" alt="">' }
+  - { glyph: '<img src="assets/icon-dependency.svg" alt="">' }
+  - { glyph: '<img src="assets/icon-flask.svg" alt="">' }
+  - { glyph: '<img src="assets/icon-telemetry.svg" alt="">' }
+  - { glyph: '<img src="assets/icon-phone-feature.svg" alt="">' }
 notes: |
   Primero, borrar. Vamos a pagar la deuda. El código muerto de esa feature flag que se cerró hace dos años. Las dependencias que nadie usa pero que hay que actualizar igual. Los tests que ralentizan la pipeline y no validan funcionalidad, o los flaky que se reintentan un par de veces hasta que pasan. La telemetría que cuesta dinero en Datadog: nos encanta loguear un "Success" en una llamada que se ejecuta millones de veces al día y que no aporta nada.
   Y lo más grande de todo: features. El pasivo más caro no es código, es producto. Esa pantalla que usa el 0,3 % de los usuarios, la integración que nadie pidió desde 2021, la opción de configuración que un cliente pidió una vez. Borrar una feature elimina de golpe el código, los tests, la documentación y el soporte. Y es una conversación con negocio que ustedes pueden abrir con los datos de uso en la mano.

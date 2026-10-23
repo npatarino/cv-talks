@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" stroke="#fafaf8" stroke-linecap="round" stroke-linejoin="round">
+  <g stroke="none" transform="translate(8 9)">
+    <path fill="#fafaf8" d="M256 48C156 48 92 118 92 214C92 266 112 302 148 330L148 386C148 404 160 416 178 416L334 416C352 416 364 404 364 386L364 330C400 302 420 266 420 214C420 118 356 48 256 48Z"/>
+    <ellipse fill="#1c1c1c" cx="198" cy="216" rx="40" ry="44"/>
+    <ellipse fill="#1c1c1c" cx="314" cy="216" rx="40" ry="44"/>
+    <path fill="#1c1c1c" d="M256 262L232 310L280 310Z"/>
+  </g>
+  <path stroke-width="18" d="M256 46C156 46 90 116 90 212C90 264 110 300 146 328L146 384C146 402 158 414 176 414L336 414C354 414 366 402 366 384L366 328C402 300 422 264 422 212C422 116 356 46 256 46"/>
+  <path stroke-width="7" opacity=".7" d="M126 196C132 140 170 92 230 76"/>
+  <ellipse stroke-width="14" cx="198" cy="214" rx="42" ry="46"/>
+  <ellipse stroke-width="14" cx="314" cy="214" rx="42" ry="46"/>
+  <path stroke-width="12" d="M256 258L230 308L282 308Z"/>
+  <!-- dientes -->
+  <path stroke-width="12" d="M206 414L206 460L306 460L306 414M240 414L240 460M272 414L272 460"/>
+  <g stroke-width="6" opacity=".55"><path d="M346 120L362 104"/><path d="M360 140L380 120"/></g>
+</svg>
