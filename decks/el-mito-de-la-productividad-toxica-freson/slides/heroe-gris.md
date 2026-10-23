@@ -10,7 +10,7 @@ fields:
     meta: Stage_HTML
     content: |
       <div class="cape-stack">
-        <img class="layer" src="assets/cape-blue.svg" alt="" data-from="0" data-until="1">
+        <img class="layer" src="assets/cape-blue.svg" alt="" data-until="1">
         <img class="layer" src="assets/icon-cape-dark.svg" alt="" data-from="1">
       </div>
       <style>
