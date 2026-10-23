@@ -2032,7 +2032,7 @@ function markUnsaved() {
   // This is NOT a "save" — badge stays yellow, Save button required to confirm.
   clearTimeout(state.livePreviewTimer);
   if ($('toggle-live-preview')?.checked) {
-    state.livePreviewTimer = setTimeout(() => previewWrite(), 600);
+    state.livePreviewTimer = setTimeout(() => previewWrite(), 150);
   }
 }
 
