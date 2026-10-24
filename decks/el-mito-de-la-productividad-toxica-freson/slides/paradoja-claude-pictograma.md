@@ -85,7 +85,7 @@ fields:
       .s-viz .mv { transition: transform 1s cubic-bezier(.6,0,.2,1); }
       section.s-viz[data-step="0"] .mv, section.s-viz[data-step="1"] .mv { transform: translate(var(--ax), var(--ay)); }
       </style>
-  note: { content: 'Ilustrativo: cada barra es una línea de código.', meta: Note_Text }
+  note: { content: "", meta: Note_Text }
 notes: |
   ¿Les suena? Con el código pasa exactamente lo mismo.
   Antes, escribir este código nos llevaba toda la semana.
