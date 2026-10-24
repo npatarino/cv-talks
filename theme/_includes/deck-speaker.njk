@@ -254,9 +254,12 @@
   }
   /* ── Modo móvil (?phone=1): notas a pantalla completa + dos botones grandes ── */
   body.phone { overflow: hidden; }
-  body.phone #spk-main { height: calc(100dvh - 48px - 120px); }
-  body.phone #spk-left, body.phone #spk-btn-open, body.phone .spk-notes-title { display: none; }
-  body.phone #spk-notes-panel { padding: 20px 18px; }
+  body.phone #spk-main { height: calc(100dvh - 48px - 120px); flex-direction: column; }
+  body.phone #spk-btn-open, body.phone .spk-notes-title, body.phone #spk-next-wrap, body.phone #spk-nav { display: none; }
+  body.phone #spk-left { flex: 0 0 auto; border-right: 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  body.phone #spk-slides-col { padding: 10px 12px; gap: 0; }
+  body.phone #spk-current-wrap .spk-slide-label { display: none; }
+  body.phone #spk-notes-panel { padding: 16px 18px; }
   body.phone #spk-notes { font-size: 22px; line-height: 1.5; }
   body.phone #spk-timer { font-size: 18px; }
   body.phone #spk-hud { font-size: 11px; }
