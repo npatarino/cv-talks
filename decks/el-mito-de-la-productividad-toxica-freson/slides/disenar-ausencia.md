@@ -2,6 +2,7 @@
 template: icon
 recipe: canvas-quiet
 label: Diseñar para tu ausencia
+title: 'Diseñar para tu <em>ausencia</em>.'
 variant: default
 items:
   - { glyph: '<img src="assets/icon-runbook.svg" alt="">' }

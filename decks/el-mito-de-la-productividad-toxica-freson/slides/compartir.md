@@ -2,6 +2,7 @@
 template: icon
 recipe: canvas-quiet
 label: Compartir
+title: '<em>Compartir</em>.'
 variant: default
 items:
   - { glyph: '<img src="assets/icon-doc-decision.svg" alt="">' }
