@@ -2,6 +2,7 @@
 template: icon
 recipe: energy-loud
 label: No escribir
+title: 'No <em>escribir</em>.'
 variant: default
 items:
   - { glyph: '<img src="assets/icon-thinking-face.svg" alt="">' }
