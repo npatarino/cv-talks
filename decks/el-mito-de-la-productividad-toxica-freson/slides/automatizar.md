@@ -2,6 +2,7 @@
 template: icon
 recipe: cool-fresh
 label: Automatizar
+title: '<em>Automatizar</em>.'
 variant: default
 items:
   - { glyph: '<img src="assets/icon-comment-repeat.svg" alt="">' }

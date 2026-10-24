@@ -2,6 +2,7 @@
 template: icon
 recipe: critical
 label: Borrar
+title: '<em>Borrar</em>.'
 variant: default
 items:
   - { glyph: '<img src="assets/icon-skull.svg" alt="">' }
