@@ -49,6 +49,7 @@ const dom = {
   btnDeleteSlide: $('btn-delete-slide'),
   btnExportPdf: $('btn-export-pdf'),
   btnPresent: $('btn-present'),
+  btnPresentPhone: $('btn-present-phone'),
   notesPanel: $('notes-panel'),
   notesTextarea: $('notes-textarea'),
   btnViewMd: $('btn-view-md'),
@@ -135,6 +136,7 @@ async function selectDeck(slug, initialOrder) {
     state.uncommittedFiles.clear();
     dom.btnExportPdf.disabled = true;
     dom.btnPresent.disabled = true;
+    dom.btnPresentPhone.disabled = true;
     pushUrlState(null);
     renderSidebar();
     clearPreview();
@@ -146,6 +148,7 @@ async function selectDeck(slug, initialOrder) {
   state.uncommittedFiles.clear();
   dom.btnExportPdf.disabled = false;
   dom.btnPresent.disabled = false;
+  dom.btnPresentPhone.disabled = false;
   clearTimeout(state.livePreviewTimer);
   dom.deckSelector.value = slug;
   const deck = state.decks.find(d => d.slug === slug);
@@ -2534,6 +2537,17 @@ async function presentDeck() {
   window.open(playerUrl, '_blank');
 }
 
+/** Present online (talks.chimi.pro) with the phone remote enabled: opens the
+ *  player with ?remote=1, which shows the phone URL + QR when you press R. */
+const PUBLIC_SITE = 'https://talks.chimi.pro';
+function presentDeckWithPhone() {
+  if (!state.currentDeck || state.slides.length === 0) return;
+  const slide = state.slides.find(s => s.filename === state.selectedFilename) || state.slides[0];
+  const playerUrl = `${PUBLIC_SITE}/talks/decks/${state.currentDeck}/deck/?remote=1#/${slide.order}`;
+  window.open(playerUrl, '_blank');
+  toast('Player abierto con mando. Pulsa R en el player para ver el QR del móvil.', 'success');
+}
+
 // ---- Helpers ----
 
 function escHtml(s) {
@@ -2554,6 +2568,7 @@ function wireEvents() {
   dom.deckSelector.addEventListener('change', e => selectDeck(e.target.value));
   dom.btnViewMd?.addEventListener('click', openMarkdownViewer);
   dom.btnPresent.addEventListener('click', presentDeck);
+  dom.btnPresentPhone.addEventListener('click', presentDeckWithPhone);
   dom.btnExportPdf.addEventListener('click', exportPdf);
   dom.btnSave.addEventListener('click', () => saveCurrentSlide());
   dom.btnRevert.addEventListener('click', revertSlide);

@@ -2,5 +2,10 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "bun run slides:build",
   "outputDirectory": "_site",
-  "installCommand": "bun install"
+  "installCommand": "bun install",
+  "functions": {
+    "api/remote.mjs": {
+      "maxDuration": 10
+    }
+  }
 }

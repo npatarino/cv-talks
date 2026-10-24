@@ -252,6 +252,20 @@
     font-size: 16px;
     font-family: var(--font-ui), sans-serif;
   }
+  /* ── Modo móvil (?phone=1): notas a pantalla completa + dos botones grandes ── */
+  body.phone { overflow: hidden; }
+  body.phone #spk-main { height: calc(100dvh - 48px - 120px); }
+  body.phone #spk-left, body.phone #spk-btn-open, body.phone .spk-notes-title { display: none; }
+  body.phone #spk-notes-panel { padding: 20px 18px; }
+  body.phone #spk-notes { font-size: 22px; line-height: 1.5; }
+  body.phone #spk-timer { font-size: 18px; }
+  body.phone #spk-hud { font-size: 11px; }
+  body.phone #spk-hud.remote-ko::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ff2079; margin-right: 8px; vertical-align: middle; }
+  #spk-phone-nav { display: none; }
+  body.phone #spk-phone-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; height: 120px; padding: 10px; background: #111; border-top: 1px solid rgba(255,255,255,0.08); }
+  body.phone #spk-phone-nav button { background: none; border: 1px solid rgba(255,255,255,0.25); color: var(--ivory); font-family: var(--font-mono); font-size: 18px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  body.phone #spk-phone-nav button:active { background: var(--lemon); color: #111; }
+  body.phone #spk-phone-nav button:disabled { opacity: .2; }
 </style>
 </head>
 <body>
@@ -327,6 +341,12 @@
     <div id="spk-notes" class="empty"></div>
   </div>
 
+</div>
+
+<!-- Móvil: botones grandes (solo con ?phone=1) -->
+<div id="spk-phone-nav">
+  <button id="spk-phone-prev">← Anterior</button>
+  <button id="spk-phone-next">Siguiente →</button>
 </div>
 
 <script>

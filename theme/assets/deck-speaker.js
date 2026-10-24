@@ -192,6 +192,42 @@
   nextSlots.forEach(slot => ro.observe(slot.container));
   scaleAll();
 
+  // ── Modo móvil (?phone=1): mando a distancia vía /api/remote ─────────────
+  // El player (deck/?remote=1) publica dónde está; aquí seguimos ese estado y
+  // publicamos next/prev. Sala fija KJ7M, sin seguridad, a propósito.
+  const qs = new URLSearchParams(location.search);
+  if (qs.get('phone') === '1') {
+    document.body.classList.add('phone');
+    const api = qs.get('api') || '/api/remote';
+    const phonePrev = document.getElementById('spk-phone-prev');
+    const phoneNext = document.getElementById('spk-phone-next');
+    let lastV = -1;
+
+    function send(action) {
+      fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'nav', action }) }).catch(() => {});
+    }
+    phonePrev.addEventListener('click', () => send('prev'));
+    phoneNext.addEventListener('click', () => send('next'));
+
+    (async function follow() {
+      while (true) {
+        try {
+          const r = await fetch(`${api}?v=${lastV}`, { cache: 'no-store' });
+          const st = await r.json();
+          lastV = st.v;
+          if (typeof st.order === 'number' && st.order !== currentOrder) {
+            const idx = slides.findIndex(s => s.order === st.order);
+            if (idx !== -1) loadSlide(st.order);
+          }
+          hudEl.classList.remove('remote-ko');
+        } catch (_) {
+          hudEl.classList.add('remote-ko');
+          await new Promise(res => setTimeout(res, 2000));
+        }
+      }
+    })();
+  }
+
   // ── Init ─────────────────────────────────────────────────────────────────
   loadSlide(currentOrder);
 })();

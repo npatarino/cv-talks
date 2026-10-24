@@ -65,6 +65,12 @@
     z-index: 100;
   }
   body.fullscreen .deck-hud { display: none; }
+  .deck-hud.remote-ok::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #02b5b9; margin-right: 10px; vertical-align: middle; }
+  .deck-hud.remote-ko::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ff2079; margin-right: 10px; vertical-align: middle; }
+  .remote-panel { position: fixed; inset: 0; z-index: 50; background: rgba(28,28,28,.96); color: #fafaf8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; font-family: var(--font-mono, monospace); }
+  .remote-panel .remote-qr { background: #fafaf8; padding: 20px; }
+  .remote-panel .remote-url { font-size: 22px; letter-spacing: .04em; user-select: all; }
+  .remote-panel .remote-hint { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; opacity: .6; }
 
   /* ─── Mobile viewer ─────────────────────────────────────────────── *
    *  Replaces the single-iframe + key-nav presentation with a
