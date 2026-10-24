@@ -7,8 +7,8 @@ fields:
   title: { content: "", meta: Title_Text }
 items:
   - { title: Nos medimos mal }
-  - { title: El código es un pasivo }
-  - { title: Creamos héroes }
+  - { title: El código no es un activo }
+  - { title: Nos convertimos en héroes }
 notes: |
   Y acá está la toxicidad.
   Perseguimos métricas de vanidad que no generan impacto, sólo muestran el movimiento, el esfuerzo y la actividad.
