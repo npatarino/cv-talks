@@ -12,7 +12,8 @@
            de renderizar un icon-cell. #}
 
 {% block slide %}
-<section class="slide s-icon" data-recipe="{{ recipe }}" data-label="{{ label }}">
+<section class="slide s-icon" data-recipe="{{ recipe }}" data-label="{{ label }}"{% if title %} data-has-title{% endif %}>
+  {% if title %}<h2 class="icons-title">{{ title | safe }}</h2>{% endif %}
   <div class="icons">
     {% for it in items %}
       {% if it.connector %}

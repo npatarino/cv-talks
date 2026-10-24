@@ -51,7 +51,7 @@
         "label": "Solución",
         "description": "Cómo solucionamos los problemas presentados.",
         "start": 42,
-        "end": 70,
+        "end": 69,
         "children": [
           {
             "id": "S1",
@@ -72,7 +72,7 @@
             "label": "Reducir protagonismo",
             "description": "Reducir protagonismo y delegar.",
             "start": 62,
-            "end": 70
+            "end": 69
           }
         ]
       },
@@ -80,15 +80,15 @@
         "id": "V",
         "label": "Visualización",
         "description": "Cómo sería la vida si no aplico la solución y cómo sería si sí lo aplico.",
-        "start": 71,
-        "end": 73
+        "start": 70,
+        "end": 72
       },
       {
         "id": "A2",
         "label": "Acción",
         "description": "Qué quiero accionar en la audiencia.",
-        "start": 74,
-        "end": 76
+        "start": 73,
+        "end": 75
       }
     ]
   },
@@ -161,7 +161,6 @@
     "primer-dia-de-cole.md",
     "compartir.md",
     "disenar-ausencia.md",
-    "capa-de-ozono.md",
     "equipo-disfruta.md",
     "cadena.md",
     "viernes-1530-2.md",
