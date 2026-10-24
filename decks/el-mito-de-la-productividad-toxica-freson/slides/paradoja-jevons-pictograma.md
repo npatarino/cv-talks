@@ -1,5 +1,5 @@
 ---
-template: cover
+template: viz
 recipe: energy-loud
 label: Paradoja de Jevons · pictograma
 revealStart: 0

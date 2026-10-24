@@ -1,5 +1,5 @@
 ---
-template: cover
+template: viz
 recipe: critical
 label: Código pasivo · gráfica
 revealStart: 0
