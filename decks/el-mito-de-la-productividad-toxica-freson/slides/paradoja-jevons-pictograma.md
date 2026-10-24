@@ -1,5 +1,5 @@
 ---
-template: viz
+template: cover
 recipe: energy-loud
 label: Paradoja de Jevons · pictograma
 revealStart: 0
@@ -117,10 +117,10 @@ fields:
       <g data-from="4" style="transition-delay:0.45s"><rect x="1317.0" y="469.0" width="54" height="54" rx="13" fill="none" stroke="var(--recipe-ink)" stroke-width="3.5" vector-effect="non-scaling-stroke"/><circle cx="1337.5" cy="496.0" r="4.2" fill="var(--recipe-em)"/><circle cx="1350.5" cy="496.0" r="4.2" fill="var(--recipe-em)"/></g>
       </svg>
       <div class="legend swap">
-      <span data-from="1" data-until="2" class="dot" style="--c:var(--recipe-em)">9 por máquina</span>
-      <span data-from="2" data-until="3" class="dot" style="--c:var(--recipe-em)">2 por máquina</span>
-      <span data-from="3" data-until="4" class="dot" style="--c:var(--recipe-em)">18 en total</span>
-      <span data-from="4" class="dot" style="--c:var(--recipe-em)">210 en total</span>
+      <span data-from="1" data-until="2" class="dot" style="--c:var(--recipe-em)">9</span>
+      <span data-from="2" data-until="3" class="dot" style="--c:var(--recipe-em)">2</span>
+      <span data-from="3" data-until="4" class="dot" style="--c:var(--recipe-em)">18</span>
+      <span data-from="4" class="dot" style="--c:var(--recipe-em)">210</span>
       </div>
       <style>
       .s-viz .legend.swap { height: 36px; position: relative; }
@@ -135,7 +135,7 @@ fields:
       section.s-viz:not([data-step="0"]):not([data-step="1"]) .pl { transform: translateX(6.5px); }
       section.s-viz:not([data-step="0"]):not([data-step="1"]) .pr { transform: translateX(-6.5px); }
       </style>
-  note: { content: 'Ilustrativo: cada punto es una unidad de carbón.', meta: Note_Text }
+  note: { content: "", meta: Note_Text }
 notes: |
   Acá es donde entra la Paradoja de Jevons.
   En 1865, después de la revolución industrial, un economista, Jevons, se dió cuenta de algo raro. Cuando las máquinas de vapor se hicieron más eficientes y consumían menos carbón, el consumo total de carbón no bajó... Al contrario, ¡explotó!

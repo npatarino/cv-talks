@@ -1,5 +1,5 @@
 ---
-template: viz
+template: cover
 recipe: critical
 label: Código pasivo · gráfica
 revealStart: 0
@@ -18,11 +18,11 @@ fields:
           d="M60 490 C 170 320, 340 240, 600 214 C 900 188, 1280 214, 1620 290"/>
       </svg>
       <div class="legend">
-        <span data-from="1" style="--c:var(--recipe-ink)">Líneas de código acumuladas</span>
-        <span data-from="2" style="--c:var(--recipe-em)">Coste de mantenerlas (la hipoteca)</span>
-        <span data-from="3" style="--c:var(--recipe-ink)">Valor entregado</span>
+        <span data-from="1" style="--c:var(--recipe-ink)">LoC</span>
+        <span data-from="2" style="--c:var(--recipe-em)">Coste</span>
+        <span data-from="3" style="--c:var(--recipe-ink)">Valor</span>
       </div>
-  note: { content: 'Datos ilustrativos.', meta: Note_Text }
+  note: { content: '', meta: Note_Text }
 notes: |
   Cada línea que escribimos es, desde el segundo uno, código legacy. Es una superficie nueva para que aparezcan bugs, una dependencia que hay que actualizar y una carga cognitiva para el que venga después.
   Las líneas acumuladas suben, pero el coste de mantenerlas sube más rápido y acaba por superarlas, mientras el valor que entregamos se aplana.
