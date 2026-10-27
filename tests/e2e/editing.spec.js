@@ -292,3 +292,94 @@ test('no JS errors while editing', async ({ page, request }) => {
   await expect(page.locator('#btn-save')).toBeDisabled();
   expect(errors).toEqual([]);
 });
+
+// ─── assets: selector compartido, glyph e iconos ─────────────────────────────
+
+const PNG_1x1 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+
+async function uploadPng(request, name) {
+  const r = await request.post(`/api/decks/${DECK}/assets`, { data: { basename: name, mimeType: 'image/png', dataBase64: PNG_1x1 } });
+  expect(r.ok()).toBe(true);
+  return (await r.json()).filename;
+}
+
+test('the rich-text image button inserts an existing deck asset', async ({ page, request }) => {
+  const label = uniq('Img');
+  const file = await uploadPng(request, uniq('pic').replace(/\s/g, '-'));
+  const { filename } = await api.add(request, { template: 'big-concept', label });
+  await openDeck(page);
+  await livePreview(page, false);
+  await select(page, label);
+
+  const title = page.locator('.rte-wrapper', { has: page.locator('[data-field="fields.title"]') });
+  await title.locator('[data-cmd="img"]').click();
+  await expect(page.locator('.asset-picker')).toBeVisible();
+  await expect(page.locator('.asset-picker .asset-action')).toHaveCount(3);   // Upload, Paste, Icons
+  await page.locator('.asset-picker .asset-item:not(.asset-action)', { hasText: file }).click();
+
+  await expect(page.locator('.asset-picker')).toHaveCount(0);
+  await expect(page.locator('.rte-editor[data-field="fields.title"] img')).toHaveCount(1);
+  await page.locator('#btn-save').click();
+  await expect.poll(async () => (await api.get(request, filename)).data.fields.title.content).toContain(`assets/${file}`);
+});
+
+test('the asset picker filters by name and closes on outside click', async ({ page, request }) => {
+  const label = uniq('Filter');
+  const a = await uploadPng(request, uniq('alpha').replace(/\s/g, '-'));
+  const b = await uploadPng(request, uniq('bravo').replace(/\s/g, '-'));
+  await api.add(request, { template: 'big-concept', label });
+  await openDeck(page);
+  await select(page, label);
+
+  const title = page.locator('.rte-wrapper', { has: page.locator('[data-field="fields.title"]') });
+  await title.locator('[data-cmd="img"]').click();
+  const items = page.locator('.asset-picker .asset-item:not(.asset-action)');
+  await expect(items.filter({ hasText: a })).toHaveCount(1);
+  await expect(items.filter({ hasText: b })).toHaveCount(1);
+
+  await page.locator('.asset-picker-search').fill('alpha');
+  await expect(items.filter({ hasText: a })).toHaveCount(1);
+  await expect(items.filter({ hasText: b })).toHaveCount(0);
+
+  await page.locator('#preview-label').click();   // fuera del selector
+  await expect(page.locator('.asset-picker')).toHaveCount(0);
+});
+
+test('a glyph field can pick a deck asset and saves it as an <img>', async ({ page, request }) => {
+  const label = uniq('Glyph');
+  const file = await uploadPng(request, uniq('glyph').replace(/\s/g, '-'));
+  const { filename } = await api.add(request, { template: 'icon', label });
+  const items = (await api.get(request, filename)).data.items ?? [];
+  test.skip(!items.length || !('glyph' in items[0]), 'el template icon no siembra items con glyph');
+  await openDeck(page);
+  await livePreview(page, false);
+  await select(page, label);
+
+  await page.locator('.glyph-input-wrap').first().locator('button.rte-btn').click();
+  await expect(page.locator('.asset-picker')).toBeVisible();
+  await expect(page.locator('.asset-picker-search')).toBeFocused();
+  await page.locator('.asset-picker .asset-item:not(.asset-action)', { hasText: file }).click();
+
+  await expect(page.locator('.glyph-text-input').first()).toHaveValue(file);
+  await expect(page.locator('.glyph-preview img').first()).toHaveAttribute('src', new RegExp(`/talks/decks/${DECK}/assets/${file}$`));   // Eleventy no corre en e2e: solo comprobamos la URL
+  await page.locator('#btn-save').click();
+  await expect.poll(async () => (await api.get(request, filename)).data.items[0].glyph).toBe(`<img src="assets/${file}" alt="">`);
+});
+
+test('the icon browser opens from the picker and closes with Escape', async ({ page, request }) => {
+  const label = uniq('Icons');
+  await api.add(request, { template: 'big-concept', label });
+  await openDeck(page);
+  await select(page, label);
+
+  const title = page.locator('.rte-wrapper', { has: page.locator('[data-field="fields.title"]') });
+  await title.locator('[data-cmd="img"]').click();
+  await page.locator('.asset-picker .asset-action', { hasText: 'Icons' }).dispatchEvent('mousedown');
+  await expect(page.locator('.icon-browser-modal')).toBeVisible();
+  await expect.poll(async () => page.locator('.icon-browser-item').count()).toBeGreaterThan(10);
+
+  await page.locator('.icon-search-input').fill('zzzz-no-existe');
+  await expect(page.locator('.icon-browser-container .empty-state')).toContainText('No icons found');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.icon-browser-modal')).toHaveCount(0);
+});
