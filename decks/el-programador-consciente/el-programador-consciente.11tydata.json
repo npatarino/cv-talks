@@ -1,0 +1,15 @@
+{
+  "tags": "el-programador-consciente-slide",
+  "permalink": "talks/decks/el-programador-consciente/{{ page.fileSlug }}/index.html",
+  "deck": {
+    "title": "El programador consciente",
+    "subtitle": "Qué soy y dónde estoy · qué hago y cómo lo hago · cómo me ven.",
+    "author": "Nicolás Patarino",
+    "date": "2024-09"
+  },
+  "eleventyComputed": {
+    "layout": "{% if template %}layouts/{{ template }}.njk{% else %}{{ layout }}{% endif %}",
+    "slideCss": "{% if template %}{{ template }}{% endif %}",
+    "effectiveMode": "{{ mode or site.mode }}"
+  }
+}

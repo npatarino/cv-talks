@@ -1,0 +1,25 @@
+---
+template: viz
+recipe: canvas-quiet
+label: 'Qué podés ser · escalera'
+variant: default
+fields:
+  stage:
+    meta: Stage_HTML
+    content: |
+      <style>
+      .s-viz .stage > .wrap { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+      .s-viz .mk { display: inline-block; -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; }
+      .s-viz .center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; text-align: center; }
+      .s-viz .big { font-family: var(--font-display); font-size: 84px; line-height: 1; letter-spacing: -0.01em; }
+      .s-viz .mid { font-family: var(--font-display); font-size: 48px; line-height: 1.05; }
+      .s-viz .small { font-family: var(--font-mono); font-size: 24px; letter-spacing: .1em; text-transform: uppercase; opacity: .85; }
+      .s-viz .row { display: flex; gap: 90px; justify-content: center; align-items: flex-start; }
+      .s-viz .cell { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+      </style>
+      <style>section.slide.s-viz{background:#1F4D5C !important;color:#F4F1EA !important;}</style><div class="wrap"><svg viewBox="0 0 1920 1080" style="width:100%;height:100%" fill="none"><line x1="470" y1="945" x2="500" y2="410" stroke="#9FB5BC" stroke-width="8" stroke-linecap="round" data-from="2"/><line x1="500" y1="410" x2="1030" y2="945" stroke="#9FB5BC" stroke-width="8" stroke-linecap="round" data-from="3"/><line x1="1030" y1="945" x2="945" y2="530" stroke="#9FB5BC" stroke-width="8" stroke-linecap="round" data-from="4"/><line x1="945" y1="530" x2="1270" y2="355" stroke="#9FB5BC" stroke-width="8" stroke-linecap="round" data-from="5"/><line x1="1270" y1="355" x2="975" y2="180" stroke="#9FB5BC" stroke-width="8" stroke-linecap="round" data-from="6"/><line x1="1030" y1="945" x2="1390" y2="975" stroke="#E64BA8" stroke-width="8" stroke-linecap="round" data-from="7"/><line x1="1390" y1="975" x2="1505" y2="710" stroke="#E64BA8" stroke-width="8" stroke-linecap="round" data-from="8"/><line x1="1505" y1="710" x2="1565" y2="445" stroke="#E64BA8" stroke-width="8" stroke-linecap="round" data-from="9"/><g data-from="1"><circle cx="470" cy="945" r="18" fill="#9FB5BC"/></g><g data-from="2"><circle cx="500" cy="410" r="18" fill="#9FB5BC"/></g><g data-from="3"><circle cx="1030" cy="945" r="18" fill="#9FB5BC"/></g><g data-from="4"><circle cx="945" cy="530" r="18" fill="#9FB5BC"/></g><g data-from="5"><circle cx="1270" cy="355" r="18" fill="#9FB5BC"/></g><g data-from="6"><circle cx="975" cy="180" r="18" fill="#9FB5BC"/></g><g data-from="7"><circle cx="1390" cy="975" r="34" fill="#E64BA8" opacity=".35"/><circle cx="1390" cy="975" r="18" fill="#E64BA8"/></g><g data-from="8"><circle cx="1505" cy="710" r="34" fill="#E64BA8" opacity=".35"/><circle cx="1505" cy="710" r="18" fill="#E64BA8"/></g><g data-from="9"><circle cx="1565" cy="445" r="34" fill="#E64BA8" opacity=".35"/><circle cx="1565" cy="445" r="18" fill="#E64BA8"/></g><text data-from="1" x="436" y="1001" text-anchor="end" fill="#9FB5BC" font-family="var(--font-display)" font-size="30"><tspan x="436" dy="0">Entry</tspan><tspan x="436" dy="34">Level</tspan></text><text data-from="2" x="466" y="348" text-anchor="end" fill="#9FB5BC" font-family="var(--font-display)" font-size="30"><tspan x="466" dy="0">Software</tspan><tspan x="466" dy="34">Engineer</tspan></text><text data-from="3" x="996" y="1001" text-anchor="end" fill="#9FB5BC" font-family="var(--font-display)" font-size="30"><tspan x="996" dy="0">Senior</tspan></text><text data-from="4" x="911" y="468" text-anchor="end" fill="#9FB5BC" font-family="var(--font-display)" font-size="30"><tspan x="911" dy="0">Engineering</tspan><tspan x="911" dy="34">Manager</tspan></text><text data-from="5" x="1310" y="293" text-anchor="start" fill="#9FB5BC" font-family="var(--font-display)" font-size="30"><tspan x="1310" dy="0">Director of</tspan><tspan x="1310" dy="34">Engineering</tspan></text><text data-from="6" x="941" y="118" text-anchor="end" fill="#9FB5BC" font-family="var(--font-display)" font-size="30"><tspan x="941" dy="0">VP of</tspan><tspan x="941" dy="34">Engineering</tspan></text><text data-from="7" x="1390" y="1031" text-anchor="middle" fill="#F4F1EA" font-family="var(--font-display)" font-size="30"><tspan x="1390" dy="0">Staff</tspan><tspan x="1390" dy="34">Engineer</tspan></text><text data-from="8" x="1545" y="700" text-anchor="start" fill="#F4F1EA" font-family="var(--font-display)" font-size="30"><tspan x="1545" dy="0">Principal</tspan><tspan x="1545" dy="34">Engineer</tspan></text><text data-from="9" x="1605" y="435" text-anchor="start" fill="#F4F1EA" font-family="var(--font-display)" font-size="30"><tspan x="1605" dy="0">Technical</tspan><tspan x="1605" dy="34">Fellow</tspan></text></svg></div>
+steps: 9
+revealStart: 1
+notes: |
+  Cada → suma un escalón: Entry Level, Software Engineer, Senior; y desde Senior dos ramas: management (EM, Director, VP) en gris y contribución individual (Staff, Principal, Technical Fellow) en rosa.
+---
