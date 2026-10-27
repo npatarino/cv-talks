@@ -6,7 +6,7 @@
  * handle when the user pastes an SVG from a design tool.
  */
 import { describe, it, expect } from 'vitest';
-import { extractSvgFromText } from '../../editor/ui/clipboard-svg.mjs';
+import { extractSvgFromText } from '../../editor/ui/lib/clipboard-svg.mjs';
 
 describe('extractSvgFromText — bare SVG markup', () => {
   it('returns the SVG verbatim when input is bare SVG with namespace', () => {

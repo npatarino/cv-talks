@@ -9,7 +9,7 @@ import { state } from '../state.js';
 import { emit } from '../events.js';
 import { toast } from '../toast.js';
 import { getTemplateScaffold } from '../api-client.js';
-import { mergeFields } from '../editor-helpers.mjs';
+import { mergeFields } from '../lib/editor-helpers.mjs';
 import { displayToGlyph } from '../lib/glyph.mjs';
 import { TEMPLATE_OPTIONAL_FIELDS, isRawHtmlField, structuredItemsToMarkdown } from '../lib/template-rules.mjs';
 import { addSection, addField, mkInput, mkTextarea, mkSelect, mkCheckbox, mkTemplateSelect, mkVariantSelect, mkRecipeSelect } from './controls.js';
