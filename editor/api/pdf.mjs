@@ -11,19 +11,16 @@
  */
 
 import { chromium } from 'playwright';
-import { listSlides } from './slides.mjs';
 
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
 
 /**
- * Export all slides of a deck to a merged PDF buffer.
- * @param {string} slug
- * @param {string} [decksRoot]
+ * Export slides to a merged PDF buffer.
+ * @param {{previewUrl: string, label?: string}[]} slides - ordered slides to render
  * @returns {Promise<Buffer>}
  */
-export async function exportDeckPdf(slug, decksRoot) {
-  const slides = listSlides(slug, decksRoot);
+export async function exportDeckPdf(slides) {
   if (!slides.length) throw new Error('No slides found in deck');
 
   const browser = await chromium.launch({
