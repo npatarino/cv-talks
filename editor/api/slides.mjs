@@ -68,7 +68,7 @@ export function createSlide(slug, opts, decksRoot) {
   const data = {
     template: opts.template ?? 'big-concept',
     recipe: opts.recipe ?? 'canvas-quiet',
-        label: opts.label ?? `Slide ${position}`,
+    label: opts.label ?? `Slide ${position}`,
     variant: opts.variant ?? 'default',
   };
 
@@ -90,26 +90,19 @@ export function createSlide(slug, opts, decksRoot) {
   if (opts.mode != null) data.mode = opts.mode;
   if (opts.iconTint != null) data.iconTint = opts.iconTint;
 
-  // Write the new file temporarily with a high order number, then renumber all
-  const tempOrder = slides.length + 99;
-  const tempFilename = buildFilename(tempOrder, slideSlug);
-  const tempPath = path.join(getSlideDir(dir), tempFilename);
-  fs.writeFileSync(tempPath, serializeMd(data, ''), 'utf8');
+  // The filename no longer encodes the order (that lives in deck.config.json),
+  // so write the file once and insert it at `position` in the config order.
+  const finalFilename = buildFilename(position, slideSlug);
+  fs.writeFileSync(path.join(getSlideDir(dir), finalFilename), serializeMd(data, ''), 'utf8');
 
-  // Reorder: insert the new slide at the desired position
-  const allSlides = readSlides(dir);
-  const newIdx = allSlides.findIndex(s => s.filename === tempFilename);
-  const reordered = [...allSlides];
-  const [inserted] = reordered.splice(newIdx, 1);
-  reordered.splice(position - 1, 0, inserted);
-
-  renumberSlides(dir, reordered.map(s => s.filename));
+  const order = slides.map(s => s.filename);
+  order.splice(position - 1, 0, finalFilename);
+  renumberSlides(dir, order);
 
   // Keep the narrative structure (e.g. ANSVA) tiling the deck: the new slide
   // joins the section it was inserted into; later sections shift down by one.
   syncStructureOnInsert(dir, position);
 
-  const finalFilename = buildFilename(position, slideSlug);
   return {
     filename: finalFilename,
     order: position,
