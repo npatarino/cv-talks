@@ -5,11 +5,11 @@ import os from 'node:os';
 import {
   slugFromFilename,
   buildFilename,
-  readSlides,
   renumberSlides,
   deleteSlide,
   moveSlide,
-} from '../../editor/api/renumber.mjs';
+} from '../../editor/api/domain/slide-order.mjs';
+import { readSlides } from '../../editor/api/store/deck-store.mjs';
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 

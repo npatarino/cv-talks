@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getTemplatesMeta } from '../../editor/api/templates.mjs';
+import { getTemplatesMeta } from '../../editor/api/domain/templates.mjs';
 
 describe('getTemplatesMeta', () => {
   it('returns a non-empty object', () => {

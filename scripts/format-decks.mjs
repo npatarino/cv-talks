@@ -13,7 +13,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { parseMd, serializeMd } from '../editor/api/frontmatter.mjs';
+import { parseMd, serializeMd } from '../editor/api/lib/frontmatter.mjs';
 import { DECKS_DIR } from '../editor/config.mjs';
 import { deckDir, listDeckSlugs, readSlides } from '../editor/api/store/deck-store.mjs';
 

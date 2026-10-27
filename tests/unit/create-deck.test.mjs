@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { createDeck } from '../../editor/api/domain/decks.mjs';
-import { createSlide, listSlides } from '../../editor/api/slides.mjs';
+import { createSlide, listSlides } from '../../editor/api/domain/slides.mjs';
 import { listDecks, readSlides } from '../../editor/api/store/deck-store.mjs';
 import { TALKS_ROOT } from '../../editor/config.mjs';
 

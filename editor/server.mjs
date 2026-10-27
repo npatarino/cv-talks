@@ -14,7 +14,7 @@
 
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { route, err } from './api/router.mjs';
+import { route, err } from './api/http/router.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const UI_DIR = path.join(__dirname, 'ui');

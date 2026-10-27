@@ -7,16 +7,14 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { parseMd, serializeMd } from './frontmatter.mjs';
-import { renumberSlides, deleteSlide, moveSlide, buildFilename } from './renumber.mjs';
-import { deckDir, getSlideDir, readSlides } from './store/deck-store.mjs';
+import { parseMd, serializeMd } from '../lib/frontmatter.mjs';
+import { renumberSlides, deleteSlide, moveSlide, buildFilename } from './slide-order.mjs';
+import { deckDir, getSlideDir, readSlides } from '../store/deck-store.mjs';
 import { syncStructureOnInsert, syncStructureOnDelete } from './structure.mjs';
-import { NotFoundError } from './domain/errors.mjs';
-import { loadTemplateScaffold } from './domain/scaffold.mjs';
-import { slidePreviewUrl as buildPreviewUrl, TEMPLATES_DIR } from '../config.mjs';
+import { NotFoundError } from './errors.mjs';
+import { loadTemplateScaffold } from './scaffold.mjs';
+import { slidePreviewUrl as buildPreviewUrl, TEMPLATES_DIR } from '../../config.mjs';
 
-// Compatibilidad: vivía aquí antes de domain/scaffold.mjs.
-export { loadTemplateScaffold };
 
 export function listSlides(slug, decksRoot) {
   const dir = deckDir(slug, decksRoot);

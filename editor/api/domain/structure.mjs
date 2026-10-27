@@ -22,12 +22,8 @@
  * The deckDir-level helpers wrap them with config read/write.
  */
 
-import { readSlides } from './renumber.mjs';
-import { deckDir, readDeckConfig, writeDeckConfig, configPath } from './store/deck-store.mjs';
-import { NotFoundError } from './domain/errors.mjs';
-
-// Compatibilidad: estos símbolos vivían aquí antes de existir el store.
-export { configPath, readDeckConfig, writeDeckConfig };
+import { deckDir, readDeckConfig, writeDeckConfig, readSlides } from '../store/deck-store.mjs';
+import { NotFoundError } from './errors.mjs';
 
 function slideCount(dir) {
   return readSlides(dir).length;

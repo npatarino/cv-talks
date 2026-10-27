@@ -13,8 +13,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { deckDir, assetsDir } from './store/deck-store.mjs';
-import { ValidationError, ConflictError } from './domain/errors.mjs';
+import { deckDir, assetsDir } from '../store/deck-store.mjs';
+import { ValidationError, ConflictError } from '../domain/errors.mjs';
 
 const MAX_ICON_WIDTH = 512;
 

@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
-import { parseMd } from '../frontmatter.mjs';
+import { parseMd } from '../lib/frontmatter.mjs';
 import { TEMPLATES_DIR, TEMPLATES_META_PATH, templatePreviewUrl } from '../../config.mjs';
 
 const require = createRequire(import.meta.url);

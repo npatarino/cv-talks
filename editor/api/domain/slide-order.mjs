@@ -5,11 +5,8 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { NotFoundError } from './domain/errors.mjs';
-import { getSlideDir, readDeckConfig, writeDeckConfig, readSlides } from './store/deck-store.mjs';
-
-// Compatibilidad: estos símbolos vivían aquí antes de existir el store.
-export { getSlideDir, readSlides };
+import { NotFoundError } from './errors.mjs';
+import { getSlideDir, readDeckConfig, writeDeckConfig, readSlides } from '../store/deck-store.mjs';
 
 function readConfig(deckDir) {
   return readDeckConfig(deckDir) ?? { slides: [] };
