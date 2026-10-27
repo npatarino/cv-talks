@@ -44,14 +44,20 @@
 })();
 </script>
 </head>
-<body class="slide-page{% if effectiveMode == 'meta' %} mode-meta{% endif %}" data-slide-order="{{ order }}">
+{# Slides del deck al que pertenece esta página (decks/<slug>/…); vacío fuera de un deck. #}
+{%- set deckSlug = page.filePathStem.split('/')[2] if page.filePathStem.startsWith('/decks/') else '' -%}
+{%- set deckSlides = collections['deck:' + deckSlug] if deckSlug else [] -%}
+{# El orden vive en deck.config.json, no en el frontmatter: lo sacamos de la posición en el deck. #}
+{%- set pageOrder = order | default('') -%}
+{%- for s in deckSlides -%}{%- if s.url == page.url -%}{%- set pageOrder = s.data.order | default(loop.index0) -%}{%- endif -%}{%- endfor -%}
+<body class="slide-page{% if effectiveMode == 'meta' %} mode-meta{% endif %}" data-slide-order="{{ pageOrder }}">
 {% block slide %}{% endblock %}
 
 <div id="variant-hud" class="variant-hud"></div>
 
 <script>
 window.__SLIDES__ = [
-{%- for s in collections.slides %}
+{%- for s in deckSlides %}
   { order: {{ s.data.order | default(loop.index0) }}, url: "{{ s.url | url }}", label: {{ s.data.label | dump | safe }}{% if s.data.revealStart != undefined %}, revealStart: {{ s.data.revealStart }}{% endif %} }{% if not loop.last %},{% endif %}
 {%- endfor %}
 ];

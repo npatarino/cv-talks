@@ -105,26 +105,24 @@
   // Navigation · reads manifest injected by the layout.
   const order = Number(document.body.dataset.slideOrder || 0);
   const allOrders = (window.__SLIDES__ || []).map((s) => s.order);
-  function goto(delta) {
-    const idx = allOrders.indexOf(order);
-    if (idx === -1) return;
-    const next = allOrders[idx + delta];
-    if (next == null) return;
-    const target = window.__SLIDES__.find((s) => s.order === next);
-    if (!target) return;
-    // Forward → arranca el próximo slide con 1 item visible.
-    // Backward → arranca con todos visibles (← luego oculta desde el final).
+  // Forward → arranca la slide con 1 item visible.
+  // Backward → arranca con todos visibles (← luego oculta desde el final).
+  function openSlide(target, delta) {
     const params = new URLSearchParams();
     params.set("reveal", delta < 0 ? "full" : "1");
     window.location.href = target.url + "?" + params.toString();
   }
 
+  function goto(delta) {
+    const idx = allOrders.indexOf(order);
+    if (idx === -1) return;
+    const target = window.__SLIDES__[idx + delta];
+    if (target) openSlide(target, delta);
+  }
+
   function gotoIndex(idx, delta) {
-    if (!window.__SLIDES__ || !window.__SLIDES__[idx]) return;
-    const target = window.__SLIDES__[idx];
-    const params = new URLSearchParams();
-    params.set("reveal", delta < 0 ? "full" : "1");
-    window.location.href = target.url + "?" + params.toString();
+    const target = window.__SLIDES__ && window.__SLIDES__[idx];
+    if (target) openSlide(target, delta);
   }
 
   function navigateToFirst() {
