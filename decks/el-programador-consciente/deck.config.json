@@ -1,0 +1,254 @@
+{
+  "structure": {
+    "type": "Tres preguntas",
+    "sections": [
+      {
+        "id": "I",
+        "label": "Intro",
+        "description": "Portada e historia personal: 2012, 2014, 2017.",
+        "start": 1,
+        "end": 7
+      },
+      {
+        "id": "P1",
+        "label": "¿Qué soy y dónde estoy?",
+        "description": "Roles, feedback que recibís, matriz de competencias y objetivos.",
+        "start": 8,
+        "end": 38,
+        "children": [
+          {
+            "id": "P1a",
+            "label": "Qué podés ser",
+            "description": "Escalera, Staff+, responsabilidades, motivación.",
+            "start": 10,
+            "end": 16
+          },
+          {
+            "id": "P1b",
+            "label": "Feedback",
+            "description": "Ciclo de performance, 90/180/360, cinco pasos.",
+            "start": 17,
+            "end": 23
+          },
+          {
+            "id": "P1c",
+            "label": "Matriz de competencias",
+            "description": "Dimensiones, ejemplo, por qué no llega la promoción.",
+            "start": 24,
+            "end": 33
+          },
+          {
+            "id": "P1d",
+            "label": "Objetivos",
+            "description": "Objetivos y SMART.",
+            "start": 34,
+            "end": 38
+          }
+        ]
+      },
+      {
+        "id": "P2",
+        "label": "¿Qué hago y cómo lo hago?",
+        "description": "Impacto, valores de empresa, dogmas, ownership y gestión del tiempo.",
+        "start": 39,
+        "end": 69,
+        "children": [
+          {
+            "id": "P2a",
+            "label": "Impacto",
+            "description": "Qué no es impacto, métricas, negocio/producto/proceso/op-ex.",
+            "start": 42,
+            "end": 53
+          },
+          {
+            "id": "P2b",
+            "label": "Company values y dogmas",
+            "description": "Go big or go home, los libros no son dogmas.",
+            "start": 54,
+            "end": 58
+          },
+          {
+            "id": "P2c",
+            "label": "Ownership",
+            "description": "Hacelo vos, push → pull, mejor hecho que perfecto.",
+            "start": 59,
+            "end": 63
+          },
+          {
+            "id": "P2d",
+            "label": "Gestión del tiempo",
+            "description": "Multitasking, do less, sistemas, tablero GTD.",
+            "start": 64,
+            "end": 69
+          }
+        ]
+      },
+      {
+        "id": "P3",
+        "label": "¿Cómo me ven?",
+        "description": "Comunicación, technical writing, dar feedback, mentoring, sponsorship.",
+        "start": 70,
+        "end": 107,
+        "children": [
+          {
+            "id": "P3a",
+            "label": "Comunicación",
+            "description": "Power skills, comunicar es, comunicar bien.",
+            "start": 71,
+            "end": 74
+          },
+          {
+            "id": "P3b",
+            "label": "Technical writing",
+            "description": "Utilidad, documentos de decisión y dirección, ego e inseguridad.",
+            "start": 75,
+            "end": 88
+          },
+          {
+            "id": "P3c",
+            "label": "Feedback",
+            "description": "Seguridad psicológica, STAR & SBI, sesgos.",
+            "start": 89,
+            "end": 98
+          },
+          {
+            "id": "P3d",
+            "label": "Mentoring y sponsorship",
+            "description": "Tipos de mentoring, sponsorship, sé parte de la empresa.",
+            "start": 99,
+            "end": 107
+          }
+        ]
+      },
+      {
+        "id": "C",
+        "label": "Cierre",
+        "description": "¿Y ustedes qué opinan?",
+        "start": 108,
+        "end": 108
+      },
+      {
+        "id": "B",
+        "label": "Bonus track",
+        "description": "Valores: brújula, Groucho, mis valores.",
+        "start": 109,
+        "end": 113
+      }
+    ]
+  },
+  "slides": [
+    "cover.md",
+    "anio-2012.md",
+    "casino-2012.md",
+    "anio-2014.md",
+    "casino-2014.md",
+    "anio-2017.md",
+    "casino-2017.md",
+    "seccion-01.md",
+    "disclaimer-trabajo.md",
+    "que-podes-ser.md",
+    "escalera.md",
+    "staff-plus.md",
+    "staff-engineer-libro.md",
+    "responsabilidades.md",
+    "que-te-motiva.md",
+    "promocionar-no-es-obligatorio.md",
+    "feedback-recibir.md",
+    "quien-recibe-feedback.md",
+    "ciclo-de-performance.md",
+    "feedback-grados.md",
+    "buen-trabajo-fracasar.md",
+    "hackea-el-sistema.md",
+    "cinco-pasos-feedback.md",
+    "matriz-de-competencias.md",
+    "skills-por-nivel.md",
+    "cinco-dimensiones.md",
+    "ejemplo-scores.md",
+    "skills-de-tu-empresa.md",
+    "no-te-promocionen.md",
+    "motivo-1.md",
+    "motivo-2.md",
+    "motivo-3.md",
+    "comodo-en-el-rol.md",
+    "objetivos.md",
+    "objetivos-mapa.md",
+    "objetivos-convenciones.md",
+    "smart.md",
+    "ya-se-que-soy.md",
+    "seccion-02.md",
+    "no-es-programar.md",
+    "es-resolver-problemas.md",
+    "impacto.md",
+    "impacto-no-es.md",
+    "metricas.md",
+    "impacto-en-negocio.md",
+    "negocio-push.md",
+    "impacto-en-producto.md",
+    "impacto-en-proceso.md",
+    "proceso-build.md",
+    "proceso-build-1x.md",
+    "impacto-en-opex.md",
+    "impacto-en-todo.md",
+    "bonus-euro.md",
+    "company-values.md",
+    "eventbrite-values.md",
+    "go-big.md",
+    "dogmas.md",
+    "dogmas-libros.md",
+    "ownership.md",
+    "alguien-deberia.md",
+    "hacelo-vos.md",
+    "push-pull.md",
+    "mejor-hecho-que-perfecto.md",
+    "gestion-del-tiempo.md",
+    "multitasking.md",
+    "do-less.md",
+    "sistemas-de-tiempo.md",
+    "tablero-gtd.md",
+    "ya-se-que-hacer.md",
+    "seccion-03.md",
+    "comunicacion.md",
+    "soft-power-skills.md",
+    "comunicar-es.md",
+    "comunicar-como.md",
+    "technical-writing.md",
+    "doc-extension.md",
+    "doc-detallado.md",
+    "doc-diagramas.md",
+    "doc-simplificado.md",
+    "utilidad.md",
+    "doc-rfd.md",
+    "doc-rfc.md",
+    "doc-tech-spec.md",
+    "doc-adr.md",
+    "documentos-de-direccion.md",
+    "buen-documento.md",
+    "ego-inseguridad.md",
+    "later-is-too-late.md",
+    "feedback-dar.md",
+    "pedi-feedback-mejor.md",
+    "star-sbi.md",
+    "sesgos.md",
+    "sesgo-actualidad.md",
+    "sesgo-ancla.md",
+    "sesgo-confirmacion.md",
+    "sesgo-afinidad.md",
+    "sesgo-genero.md",
+    "reflexiona.md",
+    "mentoring.md",
+    "mentoring-onboarding.md",
+    "mentoring-informal.md",
+    "mentoring-formal-detalle.md",
+    "mentoring-formal.md",
+    "sponsorship.md",
+    "se-parte-de-la-empresa.md",
+    "analizate.md",
+    "anio-2024.md",
+    "cierre.md",
+    "bonus-track.md",
+    "valores.md",
+    "brujula.md",
+    "groucho.md",
+    "mis-valores.md"
+  ]
+}
