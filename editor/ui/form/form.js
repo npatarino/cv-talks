@@ -13,7 +13,7 @@ import { mergeFields } from '../editor-helpers.mjs';
 import { displayToGlyph } from '../lib/glyph.mjs';
 import { TEMPLATE_OPTIONAL_FIELDS, isRawHtmlField, structuredItemsToMarkdown } from '../lib/template-rules.mjs';
 import { addSection, addField, mkInput, mkTextarea, mkSelect, mkCheckbox, mkTemplateSelect, mkVariantSelect, mkRecipeSelect } from './controls.js';
-import { mkRichTextEditor, toEditorHTML, cleanHTML } from './rich-text.js';
+import { mkRichTextEditor, cleanHTML } from './rich-text.js';
 import { renderItemsEditor } from './items-editor.js';
 
 export function renderForm(slide) {

@@ -78,3 +78,26 @@ export function findUndefinedNames(code, { sourceType = 'module' } = {}) {
   });
   return missing;
 }
+
+/**
+ * Imports declarados y no usados en el resto del fichero.
+ * @returns {string[]} nombres locales sin uso
+ */
+export function findUnusedImports(code, { sourceType = 'module' } = {}) {
+  const ast = parse(code, { ecmaVersion: 'latest', sourceType, locations: true });
+  const locals = [];
+  walk(ast, null, null, (n) => {
+    if (n.type === 'ImportSpecifier' || n.type === 'ImportDefaultSpecifier' || n.type === 'ImportNamespaceSpecifier') locals.push(n.local);
+  });
+  const used = new Set();
+  walk(ast, null, null, (n, parent, key) => {
+    if (n.type !== 'Identifier') return;
+    if (parent && /^Import(Default|Namespace)?Specifier$/.test(parent.type)) return;
+    if (parent) {
+      if (parent.type === 'MemberExpression' && key === 'property' && !parent.computed) return;
+      if ((parent.type === 'Property' || parent.type === 'PropertyDefinition' || parent.type === 'MethodDefinition') && key === 'key' && !parent.computed) return;
+    }
+    used.add(n.name);
+  });
+  return locals.map(l => l.name).filter(name => !used.has(name));
+}

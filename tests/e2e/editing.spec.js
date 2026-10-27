@@ -414,3 +414,79 @@ test('the icon browser opens from the picker and closes with Escape', async ({ p
   await page.keyboard.press('Escape');
   await expect(page.locator('.icon-browser-modal')).toHaveCount(0);
 });
+
+// ─── secciones narrativas (estructura) ───────────────────────────────────────
+
+test('section headers show their label, count and a hover tooltip', async ({ page }) => {
+  await openDeck(page);
+  const headers = page.locator('#slide-list .section-header:not(.sub)');
+  await expect(headers).toHaveCount(2);
+  await expect(headers.nth(0).locator('.section-name')).toHaveText('Atención');
+  await expect(headers.nth(1).locator('.section-name')).toHaveText('Necesidad');
+  await expect(headers.nth(0).locator('.section-badge')).toHaveText('A');
+
+  await headers.nth(1).hover();
+  await expect(page.locator('.section-tooltip')).toContainText('El problema.');
+  await page.locator('#topbar').hover();
+  await expect(page.locator('.section-tooltip')).toHaveCount(0);
+});
+
+test('dragging a section header onto a slide moves where that section starts', async ({ page, request }) => {
+  await openDeck(page);
+  const structure = async () => (await (await request.get(`/api/decks/${DECK}/structure`)).json());
+  const before = await structure();
+  const header = page.locator('#slide-list .section-header:not(.sub)').nth(1);
+  const target = page.locator('#slide-list .slide-item').nth(3);   // la 4.ª slide
+  const from = await header.boundingBox();
+  const to = await target.boundingBox();
+  await page.mouse.move(from.x + 40, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(from.x + 40, from.y + from.height / 2 - 6);
+  await page.mouse.move(to.x + 40, to.y + to.height / 2, { steps: 8 });
+  await page.mouse.up();
+
+  await expect.poll(async () => (await structure()).sections[1].start).toBe(4);
+  expect(before.sections[1].start).toBe(3);
+  // la cabecera se vuelve a pintar justo antes de la 4.ª slide
+  await expect(page.locator('#slide-list > *').nth(4)).toHaveClass(/section-header/);   // A, s1, s2, s3, [N], s4
+
+  // deja el fixture como estaba
+  await request.post(`/api/decks/${DECK}/structure/boundary`, { data: { index: 1, start: 3 } });
+});
+
+// ─── menú contextual y revert ─────────────────────────────────────────────────
+
+test('deleting from the context menu asks for confirmation first', async ({ page, request }) => {
+  const label = uniq('CtxDel');
+  await api.add(request, { template: 'big-concept', label });
+  await openDeck(page);
+  await select(page, label);
+  await item(page, label).click({ button: 'right' });
+  await page.locator('.context-menu-item.danger').click();
+  await expect(page.locator('#confirm-message')).toContainText(label);
+  await page.locator('#btn-confirm-ok').click();
+  await expect(item(page, label)).toHaveCount(0);
+});
+
+test('Escape closes an open context menu', async ({ page }) => {
+  await openDeck(page);
+  await item(page, 'E2E Cover').click({ button: 'right' });
+  await expect(page.locator('.context-menu')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.context-menu')).toHaveCount(0);
+});
+
+test('Revert restores the committed version of the slide in the form', async ({ page, request }) => {
+  await openDeck(page);
+  await livePreview(page, true);
+  await select(page, 'E2E Stat');
+  const filename = (await api.list(request)).find(s => s.label === 'E2E Stat').filename;
+
+  await page.locator('[data-field="label"]').fill('E2E Stat modificada');
+  await expect.poll(async () => (await api.get(request, filename)).data.label).toBe('E2E Stat modificada');
+
+  await page.locator('#btn-revert').click();
+  await expect(page.locator('[data-field="label"]')).toHaveValue('E2E Stat');
+  expect((await api.get(request, filename)).data.label).toBe('E2E Stat');
+  await expect(page.locator('#save-status')).toHaveText('All saved');
+});

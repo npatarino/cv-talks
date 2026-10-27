@@ -11,7 +11,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { TALKS_ROOT } from '../../editor/config.mjs';
-import { findUndefinedNames } from '../helpers/undefined-names.mjs';
+import { findUndefinedNames, findUnusedImports } from '../helpers/undefined-names.mjs';
 
 function files(dir, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -64,6 +64,10 @@ describe('browser modules', () => {
         const classic = /theme\/assets\/(present|viz)\.js$/.test(file);
         const missing = findUndefinedNames(code, { sourceType: classic ? 'script' : 'module' });
         expect(missing.map(m => `${m.name} (line ${m.line})`)).toEqual([]);
+      });
+
+      it.skipIf(classicScript)('has no unused imports', () => {
+        expect(findUnusedImports(code)).toEqual([]);
       });
 
       it('imports only files and names that exist', () => {
