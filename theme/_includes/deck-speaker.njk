@@ -383,6 +383,6 @@ window.__SLIDES__ = [
 ];
 window.__DECK_URL__ = {{ ('/talks/decks/' + slug + '/deck/') | url | dump | safe }};
 </script>
-<script src="{{ '/talks/assets/deck-speaker.js' | url }}"></script>
+<script type="module" src="{{ '/talks/assets/deck-speaker.js' | url }}"></script>
 </body>
 </html>
