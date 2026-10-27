@@ -1,15 +1,18 @@
 import { defineConfig } from '@playwright/test';
 
+const PORT = Number(process.env.EDITOR_PORT) || 3001;
+const BASE_URL = `http://localhost:${PORT}`;
+
 export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 30_000,
   use: {
-    baseURL: 'http://localhost:3001',
+    baseURL: BASE_URL,
     headless: true,
   },
   webServer: {
     command: 'bun editor/server.mjs',
-    url: 'http://localhost:3001',
+    url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 10_000,
   },
