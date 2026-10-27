@@ -1,326 +1,278 @@
-# Architecture
+# Arquitectura
 
-## Overview
+`cv-talks` es un sistema de slides local-first: las slides son ficheros Markdown con frontmatter YAML, versionados con Git. No hay base de datos; el sistema de ficheros es la fuente de verdad.
 
-`cv-talks` is a local-first presentation authoring tool. Slides are plain Markdown files with YAML frontmatter stored on disk, versioned by Git. Two processes run during development:
-
-- **Eleventy** (`:8080`) — static site generator that renders every slide to HTML.
-- **Editor server** (`:3001`) — Bun HTTP server that provides a REST API for CRUD operations on slide files and serves the editor UI.
-
-There is no database. The filesystem is the source of truth; Git is the revision history.
+Este documento describe la estructura **actual** del código. El análisis que llevó hasta aquí (problemas encontrados, decisiones y plan) está en [architecture-review.md](architecture-review.md).
 
 ---
 
-## Directory Structure
+## 1. Procesos
+
+| Proceso | Puerto | Qué hace |
+|---|---|---|
+| **Eleventy** (`eleventy --serve`) | `:8080` | Renderiza cada slide a HTML (preview y build). |
+| **Editor** (`bun editor/server.mjs`) | `:3001` | API REST + UI del editor. También sirve `/api/remote` en memoria para probar el mando. |
+| **Relay del mando** (`api/remote.mjs`) | Vercel | Long polling sobre Redis (Upstash). Mismo handler que el editor usa en memoria. |
+
+En producción solo existe el build estático de Eleventy (`_site/`) y la función `api/remote.mjs`.
+
+```
+slides (.md) ──▶ Eleventy ──▶ _site/            player, speaker, TOC, slides
+     ▲                                          │
+     │ lee/escribe                              ▼ ?remote=1  /  ?phone=1
+  Editor (API + UI)                          api/remote.mjs  ◀── Redis
+```
+
+---
+
+## 2. Mapa del repositorio
 
 ```
 cv-talks/
-├── .eleventy.js              # Eleventy config (collections, passthrough, filters)
+├── eleventy.config.mjs        Config de Eleventy (ESM). Lee decks vía el store del editor.
+├── api/remote.mjs             Relay del mando (Vercel + Redis, mini-Redis en memoria).
 ├── editor/
-│   ├── server.mjs            # Bun HTTP server entry point (port 3001)
-│   ├── api/
-│   │   ├── router.mjs        # HTTP routing (pure function: Request → Response)
-│   │   ├── decks.mjs         # Deck listing and path helpers
-│   │   ├── slides.mjs        # Slide CRUD + template scaffold loading
-│   │   ├── renumber.mjs      # Slide ordering, rename, delete
-│   │   ├── frontmatter.mjs   # Custom YAML parser + serializer
-│   │   ├── pdf.mjs           # PDF export via Playwright
-│   │   ├── assets.mjs        # Image upload + resize via Playwright/canvas
-│   │   └── templates.mjs     # Template metadata loader (reads _data/templates.json)
-│   └── ui/
-│       ├── index.html        # Editor SPA shell
-│       ├── app.js            # Vanilla JS editor application
-│       ├── clipboard-svg.mjs # SVG clipboard helper
-│       └── editor-helpers.mjs # Form utilities
+│   ├── config.mjs             Rutas absolutas y origen del preview (único sitio).
+│   ├── server.mjs             Bun.serve: ficheros estáticos + route().
+│   ├── api/                   Backend, por capas (ver §3).
+│   └── ui/                    Frontend, módulos ES sin build (ver §5).
 ├── theme/
-│   ├── _includes/
-│   │   ├── layouts/          # 27+ Nunjucks slide layouts (one per template type)
-│   │   └── partials/         # Shared partials: field macro, analytics, SEO head
-│   ├── assets/               # Presentation JS (present.js, deck.js, speaker notes)
-│   └── styles/               # Plain CSS: base canvas, design tokens, per-template styles
-├── templates/                # 44 canonical slide template files (*.md)
-├── decks/                    # Authored presentation decks
-│   └── {slug}/
-│       ├── {N}-{slug}.md     # Slide files, ordered by numeric prefix
-│       ├── {slug}.json       # Deck metadata (title, description, SEO)
-│       └── assets/           # Deck-local images
-├── _data/
-│   └── templates.json        # Template gallery metadata (fields, variants, descriptions)
-├── scripts/                  # Build and scaffolding scripts (sync-fonts, new-deck, etc.)
-└── tests/
-    ├── unit/                 # Vitest — pure functions (frontmatter, renumber)
-    ├── integration/          # Vitest — HTTP router, template loading
-    └── e2e/                  # Playwright — editor UI workflows
+│   ├── _includes/             Layouts Nunjucks (uno por template), player, speaker, TOC.
+│   ├── assets/                Código del navegador: present.js, deck.js, deck-speaker.js
+│   │                          y los módulos compartidos del mando (ver §6).
+│   ├── lib/                   Lógica pura de Eleventy: big-list.mjs, deck-assets.mjs.
+│   └── styles/                CSS.
+├── templates/                 Slides de ejemplo (una por template/variante) y galería.
+├── decks/<slug>/              Un deck: <slug>.11tydata.json, deck.config.json, slides/, assets, *.njk.
+├── _data/                     Datos globales de Eleventy (templates.json, site.js, typeRecipes.js).
+├── scripts/                   CLI: new-deck, new-slide, format-decks, build-seo, sync-fonts…
+└── tests/                     unit/, integration/, e2e/, helpers/.
 ```
 
 ---
 
-## Technology Choices
+## 3. Backend del editor (`editor/api`)
 
-| Layer | Technology | Rationale |
+Cuatro capas con las dependencias en una sola dirección. Está comprobado por `tests/unit/architecture.test.mjs`.
+
+```
+        http ──────────────┐
+         │                 ▼
+         │              services ──┐
+         ▼                         ▼
+       domain ──────────────────▶ store
+         │                         │
+         └────────▶ lib ◀──────────┘          (config lo puede usar cualquiera)
+```
+
+| Capa | Responsabilidad | Puede importar |
 |---|---|---|
-| Static site | Eleventy 3 | Zero-JS-by-default, full Nunjucks templating, file-based collections |
-| Runtime / package manager | Bun | Fast startup, no extra server dependency for the editor |
-| Editor server | `Bun.serve` | Built into Bun; no Express/Fastify needed |
-| Templating | Nunjucks (`.njk`) | Eleventy native; supports macros and filters |
-| Frontend | Vanilla JS | No framework, no build step, instant reload |
-| CSS | Plain CSS + CSS variables | Design tokens via `--recipe-*` custom properties; no preprocessor |
-| YAML parsing | Custom (`frontmatter.mjs`) | Full round-trip control; avoids an external dependency |
-| PDF export | Playwright + Chromium | Screenshot-to-PDF avoids iframe cross-origin constraints |
-| Image resize | Playwright canvas | No native binaries; reuses the already-present Playwright dep |
-| Design system | `@chimichurricode/design-system` | Shared tokens, recipes, fonts, SEO utilities, analytics |
-| Testing | Vitest + Playwright | Unit/integration for pure functions; E2E for the full editor UI |
+| `lib/` | Código puro sin I/O: `frontmatter.mjs` (parser/serializador YAML propio). | nada del editor |
+| `store/` | Único acceso a disco y a git. | `lib`, `config` |
+| `domain/` | Reglas de negocio: slides, orden, estructura narrativa, scaffolds, templates, decks, errores tipados. | `lib`, `store`, `config` |
+| `services/` | Trabajo pesado con datos ya recibidos: PDF y resize de imágenes (Playwright), iconos del design system. | `lib`, `store`, `domain`, `config` |
+| `http/` | Transporte: router, validación de entrada, formato de respuestas. | todo lo anterior |
 
----
+### Módulos
 
-## Data Flow
-
-### Development environment
-
-```
-npm run servers:start
-  ├─ scripts/start-servers.sh
-  │   ├─ bun editor/server.mjs     → :3001 (editor + API)
-  │   └─ eleventy --serve          → :8080 (slide preview)
-  │
-  └─ Both watch the decks/ directory.
-     Editing a slide via the API triggers Eleventy to rebuild.
-```
-
-### Slide lifecycle
-
-```
-1. User opens http://localhost:3001
-2. Editor UI loads → GET /api/decks → GET /api/decks/{slug}/slides
-3. User selects a slide → GET /api/decks/{slug}/slides/{file}
-4. User edits form fields
-5. Editor UI → PUT /api/decks/{slug}/slides/{file}
-6. API writes updated .md file to disk
-7. Eleventy detects change → rebuilds _site/{slug}/{slide}/index.html
-8. Editor iframe reloads slide preview from http://localhost:8080
-```
-
-### PDF export
-
-```
-POST /api/decks/{slug}/export-pdf
-  │
-  ├─ listSlides(slug)               — get ordered slide list
-  ├─ chromium.launch()              — one Chromium instance
-  ├─ for each slide:
-  │   ├─ page.goto(previewUrl?present=1&reveal=full)
-  │   ├─ page.waitForFonts()
-  │   └─ page.screenshot() → PNG buffer
-  ├─ buildWrapperHtml(pngBuffers)   — single HTML with all PNGs + @page CSS
-  ├─ printPage.pdf()                — Chromium print → multi-page PDF
-  └─ return PDF buffer as response
-```
-
----
-
-## Editor API Module Responsibilities
-
-| Module | Responsibility |
+| Módulo | Contenido |
 |---|---|
-| `server.mjs` | Bun server bootstrap; injects `serveFile` into the router |
-| `router.mjs` | HTTP routing; validates slugs; delegates to domain modules |
-| `decks.mjs` | List decks from filesystem; resolve deck directory paths |
-| `slides.mjs` | Slide CRUD; template scaffold seeding; preview URL generation |
-| `renumber.mjs` | Slide ordering, two-pass file rename, frontmatter order sync |
-| `frontmatter.mjs` | Custom YAML parse + serialize for `.md` files |
-| `templates.mjs` | Load `_data/templates.json` metadata |
-| `pdf.mjs` | Export a deck to PDF via Playwright screenshots |
-| `assets.mjs` | Validate, optionally resize, and save uploaded images |
+| `store/deck-store.mjs` | Dónde vive un deck (`deckDir`, `getSlideDir`), lectura/escritura de `deck.config.json`, `readSlides`, `listDecks`, `listAssets`. **Una sola implementación**, compartida con Eleventy. |
+| `store/git.mjs` | `modifiedFiles()` y `revertFile()`. El revert se ejecuta desde el directorio del propio fichero, así que funciona contra cualquier repo (y se prueba con uno temporal). |
+| `domain/slides.mjs` | CRUD de slides (`listSlides`, `getSlide`, `createSlide`, `updateSlide`, `removeSlide`, `reorderSlides`, `moveSlideTo`). |
+| `domain/slide-order.mjs` | Orden de las slides en `deck.config.json`: `renumberSlides`, `deleteSlide`, `moveSlide`. |
+| `domain/structure.mjs` | Secciones narrativas (ANSVA…). La aritmética de límites son funciones puras (`normalizeSections`, `shiftOnInsert`, `shiftOnDelete`, `setBoundary`). |
+| `domain/scaffold.mjs` | Esqueleto vacío (`fields`/`items`) de un template. |
+| `domain/templates.mjs` | Metadatos de `_data/templates.json` y listado de las slides de ejemplo. |
+| `domain/decks.mjs` | `createDeck`: estructura completa de un deck nuevo. |
+| `domain/errors.mjs` | `ValidationError` (400), `NotFoundError` (404), `ConflictError` (409), `statusOf`. |
+| `services/pdf.mjs` | `exportDeckPdf(slides)`: recibe la lista de slides, no lee disco. |
+| `services/assets.mjs` | `uploadAsset`, `imageWidthFromHeader`; solo lanza Chromium si la imagen supera 512 px. |
+| `services/design-system.mjs` | Iconos del paquete `@chimichurricode/design-system`. |
+| `http/router.mjs` | Tabla de rutas `on(método, patrón, handler)` y `route(req, serveFile, uiDir, decksRoot)`. |
+| `http/validate.mjs` | Único sitio de validación: slug, nombre de slide, cuerpos JSON. |
+| `http/respond.mjs` | `json`, `err`, `fail`, `text`, `preflight`. |
+| `http/vercel-adapter.mjs` | Ejecuta un handler estilo Vercel sobre un `Request` de Bun (para `/api/remote`). |
+
+### Cómo funciona una petición
+
+1. `route()` busca la primera entrada de la tabla cuyo método y patrón coinciden. Los parámetros `:slug` y `:filename` se validan **por nombre** antes de llegar al handler.
+2. El handler recibe `{ req, url, params, decksRoot }`, llama al dominio y **devuelve datos** (o una `Response` si necesita controlar status o cabeceras).
+3. Un único `try/catch` convierte el resultado en JSON o el error en respuesta: los `AppError` llevan su status; cualquier otro es un 500 que además se registra en consola.
+
+`decksRoot` es opcional en todo lo que toca decks: los tests lo redirigen a un directorio temporal en lugar de mockear el sistema de ficheros.
+
+### API
+
+| Método | Ruta | Devuelve |
+|---|---|---|
+| GET | `/api/config` | `{ previewOrigin }` |
+| GET | `/api/decks` | decks con metadatos y config |
+| GET | `/api/templates` · `/api/template-slides` · `/api/template-scaffold?template=&variant=` | catálogo de templates |
+| GET | `/api/design-system/icons` | iconos del design system |
+| GET | `/api/git-status` | `{ modified: [...] }` |
+| GET/POST | `/api/decks/:slug/slides` | listar / crear |
+| GET/PUT/DELETE | `/api/decks/:slug/slides/:filename` | leer / guardar / borrar |
+| GET | `/api/decks/:slug/slides/:filename/raw` | Markdown sin procesar |
+| POST | `/api/decks/:slug/slides/:filename/move` · `/git-revert` | mover / revertir a HEAD |
+| POST | `/api/decks/:slug/reorder` | nuevo orden completo |
+| GET/POST | `/api/decks/:slug/structure` · `/structure/boundary` | secciones narrativas |
+| GET/POST | `/api/decks/:slug/assets` | listar / subir imagen |
+| POST | `/api/decks/:slug/export-pdf` | PDF |
+| `*` | `/api/remote` | relay del mando en memoria |
+
+Errores: `400` entrada inválida (slug, nombre de fichero, cuerpo, tipo de imagen), `404` slide/deck/estructura inexistente, `409` el asset ya existe, `500` el resto.
+
+### Configuración
+
+| Variable | Efecto |
+|---|---|
+| `ELEVENTY_URL` | Origen del preview (por defecto `http://localhost:8080`). La UI lo obtiene de `/api/config`. |
+| `EDITOR_PORT` | Puerto del editor (por defecto `3001`). |
+| `TALKS_DECKS_DIR` | Carpeta de decks alternativa (la usan los e2e). |
+| `KV_REST_API_URL` / `KV_REST_API_TOKEN` | Redis del relay. Bun carga `.env.local` automáticamente, así que **el editor local usa el Redis real** salvo que las dejes vacías. |
 
 ---
 
-## Slide File Format
+## 4. Formato de deck y de slide
 
-Each slide is a Markdown file with YAML frontmatter:
+```
+decks/<slug>/
+├── <slug>.11tydata.json   tags, permalink, deck{title,subtitle,author,date}, eleventyComputed
+├── deck.config.json       { slides: [ordered filenames], structure?: {...} }
+├── index.njk · deck.njk · speaker.njk
+└── slides/<name>.md       una slide; assets en slides/assets/
+```
+
+- **El orden vive en `deck.config.json`** (`slides`), no en el nombre del fichero ni en el frontmatter. `readSlides` calcula `order` (1-based) a partir de ahí; las slides que no aparecen en la lista van al final.
+- `structure` (opcional) define secciones contiguas sobre las posiciones: `{ id, label, description, start, end, children? }`. Siempre teselan el deck de 1 a N; al crear o borrar slides los límites se desplazan.
+- Una slide:
 
 ```yaml
 ---
 template: big-stat
 recipe: canvas-signal
-order: 5
-label: "Adoption · 300%"
+label: "Adopción · 300%"
 variant: default
 fields:
-  eyebrow: { content: "◆ Growth", meta: "Eyebrow_Label" }
   stat_number: { content: "300%", meta: "Stat_Number" }
-  explanation: { content: "YoY active users", meta: "Explanation_Text" }
 items:
-  - text: "Enterprise tier grew 4×"
-  - text: "SMB tier grew 2×"
-notes: Speaker notes (editor-only, not rendered in the slide)
+  - { text: "Enterprise tier creció 4×" }
+notes: Notas del orador (no se renderizan)
 ---
 ```
 
-- `template` — which Nunjucks layout to use (e.g. `big-stat`, `cover`, `word-cloud`).
-- `recipe` — color palette (`canvas-quiet`, `canvas-signal`, `paper`, `energy-loud`, etc.).
-- `order` — 1-based position; the filename prefix (`05-...`) must always match.
-- `fields` — structured content for the template; each value carries `content` (visible) and `meta` (label shown in `SLIDE_MODE=meta` debug mode).
-- `items` — ordered list content for list-style templates.
+`content` es lo visible; `meta` es la etiqueta que se muestra con `SLIDE_MODE=meta`. Las imágenes del deck se escriben como `assets/x.svg`; el build las expande (§7).
 
 ---
 
-## Rendering: Dual Mode
+## 5. UI del editor (`editor/ui`)
 
-Every template can render in two modes, toggled by the `SLIDE_MODE` environment variable:
+Módulos ES servidos tal cual (sin bundler). `app.js` es solo arranque y cableado (~100 líneas).
 
-| Mode | Description |
+```
+app.js ──▶ controller.js ──▶ save.js, sidebar.js, form/form.js, preview.js,
+   │            │             notes.js, gallery.js, context-menu.js, api-client.js
+   │            └─ suscribe eventos de las vistas
+   └──▶ wireEvents (controles de index.html)
+```
+
+| Módulo | Responsabilidad |
 |---|---|
-| `content` (default) | Shows real slide content |
-| `meta` | Shows field labels instead of content (for template documentation) |
+| `state.js` | **El** estado compartido, todos los campos declarados. |
+| `dom.js` | Referencias a elementos de `index.html`. |
+| `events.js` | Bus mínimo `on`/`emit`. Las vistas emiten, el controlador escucha (evita ciclos). |
+| `api-client.js` | Único sitio con URLs. Funciones con nombre (`getSlide`, `saveSlide`, `moveSlide`…). |
+| `controller.js` | Orquesta decks, selección y operaciones (guardar, añadir, duplicar, borrar, mover, revertir). |
+| `save.js` | Estado de guardado, cambios sin guardar, preview en vivo (debounce) y estado de git por slide. |
+| `sidebar.js` | Lista de slides, cabeceras de sección, tooltips, drag & drop. |
+| `form/` | `form.js` (render, lectura y reforma al cambiar de template), `controls.js`, `rich-text.js`, `items-editor.js`, `glyph-input.js`. |
+| `assets/` | `picker.js` (**un solo** selector de assets), `tiles.js`, `upload.js`, `icon-browser.js`. |
+| `preview.js`, `notes.js`, `gallery.js`, `context-menu.js`, `markdown-viewer.js`, `deck-actions.js`, `toast.js` | Una vista o acción cada uno. |
+| `lib/` | Lógica pura (sin DOM, con tests): `html-transform`, `glyph`, `template-rules`, `strings`, `editor-helpers`, `clipboard-svg`. |
 
-The `field()` Nunjucks macro in `theme/_includes/partials/field.njk` handles both branches.
+Reglas (comprobadas por `architecture.test.mjs`): solo `app.js` importa el controlador; `lib/` no importa nada de la UI; `state`, `dom`, `events`, `toast` y `api-client` no dependen de ninguna vista; no hay ciclos de imports.
 
----
-
-## Presentation Modes
-
-| Mode | Trigger | Behavior |
-|---|---|---|
-| Desktop presentation | viewport ≥ 768 px or `?view=presentation` | Fixed 1920×1080 canvas; `present.js` scales with CSS `transform: scale()` |
-| Mobile viewer | viewport < 768 px or `?view=mobile` | Full-viewport slides stacked vertically; CSS `scroll-snap-type: y mandatory` |
-
----
-
-## Design System Integration
-
-`@chimichurricode/design-system` provides:
-
-- **CSS tokens** — `--recipe-surface`, `--recipe-ink`, `--recipe-em`, `--recipe-accent`, `--recipe-warn` custom properties, one set per recipe.
-- **Recipes** — 7 named color palettes applied per slide via the `recipe` frontmatter key.
-- **Fonts** — Copied to `theme/styles/fonts/` at build time by `scripts/sync-fonts.mjs`.
-- **SEO utilities** — `renderSEOHeadHTML()` and `buildJsonLd()`, exposed as Eleventy filters.
-- **Analytics** — Passthrough-copied to `_site/analytics/`.
+Eventos: `form:changed`, `slide:select`, `slide:drop`, `section:move`, `slide:menu`.
 
 ---
 
-## Testing
+## 6. Player, speaker y mando (`theme/assets`)
 
-| Suite | Framework | Location | What it covers |
-|---|---|---|---|
-| Unit | Vitest | `tests/unit/` | `frontmatter.mjs` parse/serialize, `renumber.mjs` ordering logic, `slides.mjs` CRUD |
-| Integration | Vitest | `tests/integration/` | Router HTTP endpoints, template scaffold round-trip |
-| E2E | Playwright | `tests/e2e/` | Full editor UI: deck selection, slide editing, save, reorder |
+`deck.js` (player, iframe a pantalla completa) y `deck-speaker.js` (vista del orador y mando en móvil) son módulos ES (`type="module"`); `present.js` es el runtime de una slide dentro del iframe y sigue siendo un script clásico (debe ejecutarse síncrono antes del primer pintado).
 
-All API modules accept an optional `decksRoot` override so tests can redirect I/O to a temporary directory without mocking the filesystem.
+| Módulo | Contenido |
+|---|---|
+| `remote-client.mjs` | Sin DOM. `createRelay` (POST + long poll), `createSessionStore` (sesión persistida en un `Storage`), `createPoller` (bucle con reconexión; al perder la sala reinicia la versión y continúa con la sesión nueva). |
+| `remote-host.mjs` | Lado del player: sala por pestaña, panel con QR y código (tecla **R**), desvincular (**D**), estado en el HUD. |
+| `remote-phone.mjs` | Lado del móvil (`speaker/?phone=1`): canjear código (tecleado o `?code=`), botones anterior/siguiente, volver a emparejar si la sala caduca o te desvinculan. |
+| `slide-url.mjs` | `embeddedSrc`, `revealFor`, `hudText`, `indexByOrder`. |
+
+Flujo: el player (`?remote=1` o tecla R) crea una sala y muestra un código de un solo uso; el móvil lo canjea y recibe su propio token; el móvil envía `next`/`prev`/`goto`, el player los aplica y publica en qué slide está. Protocolo y modelo de seguridad: cabecera de `api/remote.mjs`.
+
+`slide.njk` calcula el manifiesto `window.__SLIDES__` y `data-slide-order` a partir de la colección del propio deck, así que las flechas también navegan entre slides abiertas fuera del player.
 
 ---
 
-## Build
+## 7. Eleventy y build
+
+- `eleventy.config.mjs` (ESM) importa el store del editor para listar decks, leer `<slug>.11tydata.json` y ordenar cada colección `deck:<slug>` según `deck.config.json`: **una sola implementación** de «cómo se lee un deck».
+- `theme/lib/deck-assets.mjs` — transformación `deckAssets`: expande `assets/x` a `/talks/decks/<slug>/assets/x` e incrusta como `<svg>` los SVG con `data-inline` o animados (así heredan fuentes y animaciones CSS).
+- `theme/lib/big-list.mjs` — `parseBigList`: Markdown → items (viñetas, numeradas, checklist, glosario, sub-items).
+- Se crea una colección por deck **al arrancar**: tras añadir un deck hay que reiniciar `eleventy --serve`. Editar un include o layout bajo `--serve` puede vaciar `window.__SLIDES__` hasta reiniciar.
 
 ```bash
-npm run build
-# 1. scripts/sync-fonts.mjs  — copy fonts from design-system package
-# 2. eleventy                — render _site/ (all decks + templates)
-# 3. scripts/build-seo.mjs   — post-build SEO metadata generation
+bun run build     # sync-fonts → eleventy → scripts/build-seo.mjs  (salida: _site/)
 ```
 
-Output is static HTML in `_site/`, deployable to any static host.
+---
+
+## 8. Scripts
+
+| Script | Uso |
+|---|---|
+| `scripts/new-deck.mjs` | `node scripts/new-deck.mjs <slug> "<título>" ["<autor>"]` — usa `createDeck`. |
+| `scripts/new-slide.mjs` | `node scripts/new-slide.mjs <deck> <template> ["<label>"] [--position N]` — usa `createSlide`, el mismo código que el editor. |
+| `scripts/format-decks.mjs` | `bun run decks:format[-check]` — reescribe las slides al YAML canónico (solo slides reales). |
+| `scripts/build-seo.mjs`, `sync-fonts.mjs` | Pasos del build. |
 
 ---
 
-## Issues and Improvement Opportunities
+## 9. Tests
 
-The following are observations about areas that deviate from clean separation of concerns or common best practices. None are blocking issues for a local dev tool, but they are worth knowing about.
+```bash
+npx vitest run        # unit + integration  (bun run test)
+npx playwright test   # e2e                 (bun run test:e2e)
+```
 
-### 1. Git operations live inside the router
+| Suite | Qué cubre |
+|---|---|
+| `tests/unit/` | Todo el backend (store, git, dominio, errores, servicios), la lógica pura de la UI, el cliente API (con `fetch` simulado), el cliente del mando y Eleventy (`big-list`, `deck-assets`). |
+| `tests/integration/` | El router contra un directorio temporal; round-trip de todas las slides y templates por el parser YAML. |
+| `tests/e2e/` | El editor real en Chromium sobre un **deck de fixture temporal** (`start-server.mjs`: repo git propio, estructura narrativa, puerto `:3101`). Nunca toca tus decks ni tu `:3001`. |
 
-**Where:** `router.mjs:132–147` (git-status) and `router.mjs:205–219` (git-revert).
+Puertas de calidad automáticas (no hay build ni tipos que las hagan):
 
-**Problem:** `spawnSync('git', ...)` is called directly inside the routing function. The router's job is to map HTTP requests to domain functions; running shell commands there mixes transport and domain concerns.
+- `browser-modules.test.mjs` — cada módulo del navegador: parsea como módulo, no declara dos veces un nombre, no usa nombres sin declarar, no importa nada sin usar, y cada import relativo apunta a un fichero y a un export que existen.
+- `architecture.test.mjs` — la regla de dependencias entre capas y la ausencia de ciclos en la UI.
 
-**Suggestion:** Extract a `git.mjs` module with `getStatus()` and `revertFile()` functions. The router delegates to it the same way it delegates to `slides.mjs` or `pdf.mjs`.
-
----
-
-### 2. `TALKS_ROOT` is owned by `decks.mjs`
-
-**Where:** `decks.mjs:11–12`, imported in `router.mjs:11`.
-
-**Problem:** The repository root path (`TALKS_ROOT`) is a global constant needed by multiple modules (currently the router for git commands). It lives in `decks.mjs` because that module was the first to need it, not because it logically belongs there. Importing a path constant from an unrelated module is a leaky dependency.
-
-**Suggestion:** Move shared path constants (`TALKS_ROOT`, `DECKS_DIR`) to a single `paths.mjs` (or `config.mjs`) module that all other modules import.
+Un test falla de forma conocida: `templates-roundtrip` con `decks/el-mito-de-la-productividad-toxica-freson/slides/media-hora.md`, una slide sin `template`. Es un dato del deck, no del código.
 
 ---
 
-### 3. `TEMPLATES_DIR` is defined in two places
+## 10. Cómo añadir…
 
-**Where:** `decks.mjs:13` and `slides.mjs:16`.
+**Un endpoint.** Función en `domain/` (lanza `NotFoundError`/`ValidationError`…), validación de la forma del cuerpo con `http/validate.mjs`, una línea `on(...)` en `http/router.mjs`, función con nombre en `ui/api-client.js` y test en `router.test.mjs`.
 
-**Problem:** Both modules independently compute the same path (`path.resolve(__dirname, '../../templates')`). If the templates directory moves, two files need updating.
+**Un template.** Layout en `theme/_includes/layouts/`, ejemplo en `templates/NN-<template>-<variante>.md`, entrada en `_data/templates.json`. Si necesita campos opcionales, items vacíos o es un campo de código en el editor: `editor/ui/lib/template-rules.mjs`.
 
-**Suggestion:** Define `TEMPLATES_DIR` once in the shared paths module described above.
-
----
-
-### 4. `listTemplateSlides` does not belong in `decks.mjs`
-
-**Where:** `decks.mjs:53–76`.
-
-**Problem:** The function reads template files and returns template metadata. It has nothing to do with decks. It lives in `decks.mjs` only because `TEMPLATES_DIR` was already defined there, which is itself a side effect of issue #3.
-
-**Suggestion:** Move `listTemplateSlides` to `templates.mjs`, alongside `getTemplatesMeta`.
+**Una vista o control del editor.** Módulo nuevo en `editor/ui/` que reciba lo que necesite y emita un evento en lugar de importar el controlador; se cablea en `app.js` o en `initController()`.
 
 ---
 
-### 5. Preview URLs hardcode `localhost:8080`
+## 11. Deuda conocida
 
-**Where:** `slides.mjs:124–126` (`slidePreviewUrl`) and `decks.mjs:73`.
-
-**Problem:** The Eleventy preview port is hardcoded as a string literal in two separate places. If someone runs Eleventy on a different port (e.g. due to a conflict), the editor's preview iframes break silently.
-
-**Suggestion:** Extract a single `PREVIEW_BASE_URL` constant (defaulting to `http://localhost:8080`, overridable via an environment variable like `ELEVENTY_PORT`) and reference it from both places.
-
----
-
-### 6. `pdf.mjs` is coupled to the filesystem
-
-**Where:** `pdf.mjs:26` — `exportDeckPdf` calls `listSlides(slug, decksRoot)` directly.
-
-**Problem:** The PDF export module reads slides from disk itself instead of receiving them as a parameter. This couples the export logic to the persistence layer and makes the function harder to test or reuse.
-
-**Suggestion:** Change the signature to `exportDeckPdf(slides)` and have the router (or caller) pass the already-loaded slide list. The router already has the slug in scope and can do the lookup.
-
----
-
-### 7. Playwright is launched fresh for every operation
-
-**Where:** `pdf.mjs:29`, `assets.mjs:80`.
-
-**Problem:** Each PDF export and each image upload that needs resizing launches and tears down a full Chromium instance. For a deck with many slides or multiple uploads in succession, startup overhead adds up (~1–2 s per launch).
-
-**Suggestion:** For a local dev tool this is acceptable, but a simple module-level singleton (launch once on server start, reuse across requests) would eliminate the repeated cold starts. Requires careful cleanup on shutdown.
-
----
-
-### 8. `.eleventy.js` uses CommonJS while everything else uses ESM
-
-**Where:** `.eleventy.js:1` uses `require()` and `module.exports`; all other files use `import`/`export`.
-
-**Problem:** Eleventy's config file is loaded as CJS (no `.mjs` extension, no `"type": "module"` in `package.json`). This forces async `import()` calls inside the config function (`import('@chimichurricode/design-system/...')`) as a workaround. The inconsistency can confuse contributors and prevents static analysis tools from working uniformly.
-
-**Suggestion:** Rename to `.eleventy.mjs` (Eleventy 3 supports it) and convert to top-level `import` statements. This aligns the config file with the rest of the codebase.
-
----
-
-### 9. `listDecks` logic is duplicated between the editor and Eleventy
-
-**Where:** `.eleventy.js:3–11` (inline `listDecks`), `decks.mjs:19–36` (full version).
-
-**Problem:** Both the Eleventy config and the editor API independently scan the `decks/` directory to build the deck list. The Eleventy version is a simplified subset. When the metadata schema changes, both places need updating.
-
-**Suggestion:** The Eleventy config could import `listDecks` from `editor/api/decks.mjs` (it is a pure filesystem read). This eliminates the duplication and keeps a single canonical implementation. Note that this would require converting `.eleventy.js` to ESM first (see issue #8).
-
----
-
-### 10. Image resize always outputs PNG regardless of input format
-
-**Where:** `assets.mjs:102`.
-
-**Problem:** When resizing a JPEG or WebP, the canvas API always outputs PNG. A 2 MB JPEG may become a larger PNG after resize. This behavior is documented in a code comment but is invisible to the user, who receives a `.jpg` filename containing PNG bytes.
-
-**Suggestion:** Use `canvas.toDataURL('image/jpeg')` or `'image/webp'` when the source format supports lossy compression, matching the extension to the actual output format, or document this as a known limitation and rename the file to `.png` on resize.
+- Playwright lanza un Chromium nuevo por cada exportación a PDF y por cada subida que necesita resize (~1–2 s). Aceptable para una herramienta local.
+- El resize de imágenes siempre produce PNG aunque el origen sea JPEG o WebP.
+- 203 de 333 slides no están en el YAML canónico del editor (`bun run decks:format-check`). No se ha reformateado nada para no generar un diff enorme.
+- `present.js` y `viz.js` siguen siendo scripts clásicos; compartir código con ellos requeriría convertirlos a módulos y comprobar el orden de pintado.
