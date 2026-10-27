@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { parseMd } from '../../editor/api/frontmatter.mjs';
-import { listSlides, getSlide, createSlide, updateSlide, removeSlide, reorderSlides, moveSlideTo } from '../../editor/api/slides.mjs';
+import { parseMd } from '../../editor/api/lib/frontmatter.mjs';
+import { listSlides, getSlide, createSlide, updateSlide, removeSlide, reorderSlides, moveSlideTo } from '../../editor/api/domain/slides.mjs';
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 

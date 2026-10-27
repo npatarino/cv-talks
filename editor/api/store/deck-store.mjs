@@ -7,7 +7,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { parseMd } from '../frontmatter.mjs';
+import { parseMd } from '../lib/frontmatter.mjs';
 import { DECKS_DIR } from '../../config.mjs';
 
 export const CONFIG_FILENAME = 'deck.config.json';

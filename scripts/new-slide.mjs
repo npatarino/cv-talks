@@ -5,7 +5,7 @@
 //   p. ej.: node scripts/new-slide.mjs mi-charla big-stat "Latencia" --position 5
 
 import { parseArgs } from 'node:util';
-import { createSlide } from '../editor/api/slides.mjs';
+import { createSlide } from '../editor/api/domain/slides.mjs';
 import { getTemplatesMeta } from '../editor/api/domain/templates.mjs';
 import { listDeckSlugs } from '../editor/api/store/deck-store.mjs';
 

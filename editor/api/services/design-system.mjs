@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { DESIGN_SYSTEM_ICONS_DIR } from '../config.mjs';
+import { DESIGN_SYSTEM_ICONS_DIR } from '../../config.mjs';
 
 export async function listDesignSystemIcons() {
   if (!fs.existsSync(DESIGN_SYSTEM_ICONS_DIR)) {

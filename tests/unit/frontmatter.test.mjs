@@ -5,7 +5,7 @@ import {
   serializeYaml,
   parseMd,
   serializeMd,
-} from '../../editor/api/frontmatter.mjs';
+} from '../../editor/api/lib/frontmatter.mjs';
 
 // ─── splitFrontmatter ────────────────────────────────────────────────────────
 

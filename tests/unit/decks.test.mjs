@@ -16,7 +16,9 @@ import os from 'node:os';
  * and verify it returns results for the actual templates/ directory.
  */
 
-import { listDecks, deckDir, listTemplateSlides, TALKS_ROOT } from '../../editor/api/decks.mjs';
+import { listDecks, deckDir } from '../../editor/api/store/deck-store.mjs';
+import { listTemplateSlides } from '../../editor/api/domain/templates.mjs';
+import { TALKS_ROOT } from '../../editor/config.mjs';
 
 // ─── deckDir ──────────────────────────────────────────────────────────────────
 

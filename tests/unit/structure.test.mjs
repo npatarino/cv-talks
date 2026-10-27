@@ -7,13 +7,12 @@ import {
   shiftOnInsert,
   shiftOnDelete,
   setBoundary,
-  readDeckConfig,
-  writeDeckConfig,
   getStructure,
   syncStructureOnInsert,
   syncStructureOnDelete,
   setStructureBoundary,
-} from '../../editor/api/structure.mjs';
+} from '../../editor/api/domain/structure.mjs';
+import { readDeckConfig, writeDeckConfig } from '../../editor/api/store/deck-store.mjs';
 
 // ─── fixtures ─────────────────────────────────────────────────────────────────
 

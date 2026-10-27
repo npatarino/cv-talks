@@ -11,7 +11,7 @@ const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cv-talks-e2e-'));
 process.env.TALKS_DECKS_DIR = root;   // lo lee editor/config.mjs al importarse
 
 const { createDeck } = await import('../../editor/api/domain/decks.mjs');
-const { createSlide } = await import('../../editor/api/slides.mjs');
+const { createSlide } = await import('../../editor/api/domain/slides.mjs');
 
 createDeck('e2e-deck', { title: 'E2E Deck', author: 'Test', date: '2026-10' }, root);
 createSlide('e2e-deck', { template: 'cover', label: 'E2E Cover' }, root);

@@ -12,7 +12,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { uploadAsset, imageWidthFromHeader } from '../../editor/api/assets.mjs';
+import { uploadAsset, imageWidthFromHeader } from '../../editor/api/services/assets.mjs';
 
 // 1x1 transparent PNG — well below the 512px resize threshold so no browser is launched.
 const PNG_1x1_B64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';

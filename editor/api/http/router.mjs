@@ -19,15 +19,15 @@ import { statusOf, ValidationError } from '../domain/errors.mjs';
 import { listDecks, deckDir, listAssets, getSlideDir } from '../store/deck-store.mjs';
 import { modifiedFiles, revertFile } from '../store/git.mjs';
 import { listTemplateSlides, getTemplatesMeta } from '../domain/templates.mjs';
-import { exportDeckPdf } from '../pdf.mjs';
-import { uploadAsset } from '../assets.mjs';
+import { exportDeckPdf } from '../services/pdf.mjs';
+import { uploadAsset } from '../services/assets.mjs';
 import {
   listSlides, getSlide, getSlideRaw, createSlide, updateSlide,
   removeSlide, reorderSlides, moveSlideTo,
-} from '../slides.mjs';
+} from '../domain/slides.mjs';
 import { loadTemplateScaffold } from '../domain/scaffold.mjs';
-import { getStructure, setStructureBoundary } from '../structure.mjs';
-import { listDesignSystemIcons } from '../design-system.mjs';
+import { getStructure, setStructureBoundary } from '../domain/structure.mjs';
+import { listDesignSystemIcons } from '../services/design-system.mjs';
 import { PREVIEW_ORIGIN } from '../../config.mjs';
 
 export { json, err, adaptVercel };
