@@ -39,6 +39,17 @@ async function openDeck(page, hash = '') {
 
 const item = (page, label) => page.locator('#slide-list .slide-item', { hasText: label });
 const select = async (page, label) => { await item(page, label).click(); await expect(page.locator('[data-field="label"]')).toHaveValue(label); };
+/** Arrastra una slide sobre otra con ratón real (más determinista que locator.dragTo). */
+async function dragSlide(page, fromLabel, toLabel, { holdMs = 0 } = {}) {
+  const from = await item(page, fromLabel).boundingBox();
+  const to = await item(page, toLabel).boundingBox();
+  await page.mouse.move(from.x + 40, from.y + from.height / 2);
+  await page.mouse.down();
+  if (holdMs) await page.waitForTimeout(holdMs);
+  await page.mouse.move(from.x + 40, from.y + from.height / 2 - 6);
+  await page.mouse.move(to.x + 40, to.y + to.height / 2, { steps: 8 });
+  await page.mouse.up();
+}
 const livePreview = (page, on) => page.locator('#toggle-live-preview').setChecked(on);
 
 // ─── guardar ──────────────────────────────────────────────────────────────────
@@ -239,7 +250,27 @@ test('dragging a slide onto another reorders the deck', async ({ page, request }
   await api.add(request, { template: 'big-concept', label: b });
   await openDeck(page);
 
-  await item(page, b).dragTo(item(page, a));
+  await dragSlide(page, b, a);
+  await expect.poll(async () => {
+    const labels = (await api.list(request)).map(s => s.label);
+    return labels.indexOf(b) < labels.indexOf(a);
+  }).toBe(true);
+});
+
+test('a late git-status refresh does not break a drag that is about to start', async ({ page, request }) => {
+  // La respuesta de /api/git-status repinta la sidebar; si llega con un arrastre en curso
+  // no debe destruir el nodo arrastrado (el drop dejaría de dispararse).
+  await page.route('**/api/git-status', async route => {
+    await new Promise(r => setTimeout(r, 900));
+    await route.continue();
+  });
+  const a = uniq('GitA'), b = uniq('GitB');
+  await api.add(request, { template: 'big-concept', label: a });
+  await api.add(request, { template: 'big-concept', label: b });
+  await openDeck(page);
+
+  await dragSlide(page, b, a, { holdMs: 1300 });         // la respuesta retrasada llega antes de que el drag empiece
+
   await expect.poll(async () => {
     const labels = (await api.list(request)).map(s => s.label);
     return labels.indexOf(b) < labels.indexOf(a);

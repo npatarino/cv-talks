@@ -639,7 +639,9 @@ async function refreshGitStatus() {
         const basename = f.split('/').pop();
         if (basename) state.uncommittedFiles.add(basename);
       });
-    renderSidebar();
+    // Rebuilding the list mid-drag removes the node being dragged (aborts the
+    // drag in some browsers); the drop itself re-renders, so just skip it.
+    if (state.draggingFilename == null && state.draggingSectionIndex == null) renderSidebar();
   } catch { /* git not available, ignore */ }
 }
 
