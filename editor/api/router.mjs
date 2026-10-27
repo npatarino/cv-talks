@@ -25,6 +25,7 @@ import {
 import { getTemplatesMeta } from './templates.mjs';
 import { getStructure, setStructureBoundary } from './structure.mjs';
 import { listDesignSystemIcons } from './design-system.mjs';
+import remoteHandler from '../../api/remote.mjs';
 
 // ---------- response helpers ----------
 
@@ -44,6 +45,27 @@ export function err(message, status = 400) {
 /** Guard against path traversal in URL slug segments. */
 function validSlug(s) {
   return typeof s === 'string' && /^[a-z0-9][a-z0-9_.-]*$/i.test(s) ? s : null;
+}
+
+/**
+ * Ejecuta un handler estilo Vercel (req, res) sobre un Request de Bun y
+ * devuelve un Response. Solo cubre lo que usa api/remote.mjs: query, body
+ * JSON, setHeader/status/json/end.
+ */
+export async function adaptVercel(handler, req, url) {
+  let body = null;
+  if (req.method === 'POST') { try { body = await req.json(); } catch { body = {}; } }
+  const vreq = { method: req.method, query: Object.fromEntries(url.searchParams), body };
+  const headers = {};
+  let status = 200, payload = null;
+  const vres = {
+    setHeader(k, v) { headers[k] = v; },
+    status(c) { status = c; return vres; },
+    json(d) { payload = JSON.stringify(d); headers['Content-Type'] = 'application/json'; return vres; },
+    end() { return vres; },
+  };
+  await handler(vreq, vres);
+  return new Response(payload, { status, headers });
 }
 
 // ---------- router ----------
@@ -72,6 +94,12 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
   }
 
   // ---- API routes ----
+
+  // Relay del mando a distancia, el mismo handler que en Vercel (api/remote.mjs)
+  // pero en memoria. El player lo usa con ?api=http://localhost:3001/api/remote.
+  if (pathname === '/api/remote') {
+    return adaptVercel(remoteHandler, req, url);
+  }
 
   if (method === 'GET' && pathname === '/api/decks') {
     return json(listDecks());

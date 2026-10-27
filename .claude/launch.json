@@ -4,8 +4,20 @@
     {
       "name": "slides",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["eleventy", "--serve", "--port=8080"],
+      "runtimeArgs": [
+        "eleventy",
+        "--serve",
+        "--port=8080"
+      ],
       "port": 8080
+    },
+    {
+      "name": "editor",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": [
+        "editor/server.mjs"
+      ],
+      "port": 3001
     }
   ]
 }
