@@ -5,9 +5,7 @@
  */
 
 import { ValidationError } from '../domain/errors.mjs';
-import { SLIDE_FILE_RE } from '../store/deck-store.mjs';
-
-const SLUG_RE = /^[a-z0-9][a-z0-9_.-]*$/i;
+import { SLIDE_FILE_RE, SLUG_RE } from '../store/deck-store.mjs';
 
 /** Slug de deck (también protege contra path traversal). */
 export function slug(value) {

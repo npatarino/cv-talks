@@ -84,12 +84,18 @@ Los slides con layouts densos o `position: absolute` pueden necesitar
 ajustes específicos en viewer mode — es un follow-up conocido y está
 fuera del alcance del rollout inicial.
 
-## Crear una slide nueva
+## Crear un deck y slides nuevos
+
+Desde el editor, o por línea de comandos (usan el mismo código que el editor):
 
 ```bash
-node scripts/new-slide.js <template> <order> <slug> "<label>"
-# ej: node scripts/new-slide.js big-stat 45 burnout "Big stat · burnout"
+node scripts/new-deck.mjs <slug> "<título>" ["<autor>"] [--subtitle "..."] [--date YYYY-MM]
+node scripts/new-slide.mjs <deck> <template> ["<label>"] [--variant V] [--recipe R] [--position N] [--slug S]
+# ej: node scripts/new-deck.mjs mi-charla "Mi charla" "Nicolás Patarino"
+# ej: node scripts/new-slide.mjs mi-charla big-stat "Big stat · burnout" --position 5
 ```
+
+Tras crear un deck hay que reiniciar `eleventy --serve` para que registre su colección.
 
 ## Templates → recipes
 

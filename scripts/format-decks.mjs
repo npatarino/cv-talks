@@ -1,40 +1,37 @@
 /**
- * Format all slide .md files in decks/ to canonical YAML style.
+ * Formatea las slides de decks/ al estilo YAML canónico del editor.
  *
- * Runs parse → serialize on every file. Files already in canonical form
- * are untouched (no write, no git noise). Files that differ get rewritten.
+ * Hace parse → serialize de cada slide (las que lista el deck: decks/<slug>/slides/*.md
+ * o decks/<slug>/*.md; los documentos auxiliares como analisis-*.md se ignoran).
+ * Los ficheros ya canónicos no se reescriben, así que no genera ruido en git.
  *
- * Usage:
- *   bun run format            # format all decks
- *   bun run format --check    # exit 1 if any file needs formatting (CI)
- *   bun run format <slug>     # format a single deck
+ * Uso:
+ *   bun run decks:format-check         # sale con 1 si alguna slide necesita formato (CI)
+ *   bun run decks:format               # formatea todos los decks
+ *   bun scripts/format-decks.mjs <slug>  # formatea un solo deck
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { parseMd, serializeMd } from '../editor/api/frontmatter.mjs';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DECKS_DIR = path.resolve(__dirname, '../decks');
+import { DECKS_DIR } from '../editor/config.mjs';
+import { deckDir, listDeckSlugs, readSlides } from '../editor/api/store/deck-store.mjs';
 
 const args = process.argv.slice(2);
 const checkOnly = args.includes('--check');
 const targetDeck = args.find(a => !a.startsWith('--'));
 
-const deckDirs = targetDeck
-  ? [path.join(DECKS_DIR, targetDeck)]
-  : fs.readdirSync(DECKS_DIR)
-      .map(d => path.join(DECKS_DIR, d))
-      .filter(d => fs.statSync(d).isDirectory());
+const slugs = targetDeck ? [targetDeck] : listDeckSlugs();
+if (targetDeck && !fs.existsSync(deckDir(targetDeck))) {
+  console.error(`deck no encontrado: ${targetDeck}`);
+  process.exit(1);
+}
 
 let changed = 0;
 let checked = 0;
 
-for (const deckDir of deckDirs) {
-  const files = fs.readdirSync(deckDir).filter(f => f.endsWith('.md')).sort();
-  for (const file of files) {
-    const filepath = path.join(deckDir, file);
+for (const slug of slugs) {
+  for (const { filepath } of readSlides(deckDir(slug))) {
     const raw = fs.readFileSync(filepath, 'utf8');
     let canonical;
     try {
@@ -61,15 +58,12 @@ for (const deckDir of deckDirs) {
 
 if (checkOnly) {
   if (changed > 0) {
-    console.log(`\n${changed} of ${checked} files need formatting. Run: bun run format`);
+    console.log(`\n${changed} of ${checked} files need formatting. Run: bun run decks:format`);
     process.exit(1);
-  } else {
-    console.log(`${checked} files already canonical.`);
   }
+  console.log(`${checked} files already canonical.`);
+} else if (changed > 0) {
+  console.log(`\nFormatted ${changed} of ${checked} files.`);
 } else {
-  if (changed > 0) {
-    console.log(`\nFormatted ${changed} of ${checked} files.`);
-  } else {
-    console.log(`${checked} files already canonical. Nothing to do.`);
-  }
+  console.log(`${checked} files already canonical. Nothing to do.`);
 }
