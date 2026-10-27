@@ -18,14 +18,14 @@ import { adaptVercel } from './vercel-adapter.mjs';
 import { statusOf, ValidationError } from '../domain/errors.mjs';
 import { listDecks, deckDir, listAssets, getSlideDir } from '../store/deck-store.mjs';
 import { modifiedFiles, revertFile } from '../store/git.mjs';
-import { listTemplateSlides } from '../decks.mjs';
+import { listTemplateSlides, getTemplatesMeta } from '../domain/templates.mjs';
 import { exportDeckPdf } from '../pdf.mjs';
 import { uploadAsset } from '../assets.mjs';
 import {
   listSlides, getSlide, getSlideRaw, createSlide, updateSlide,
-  removeSlide, reorderSlides, moveSlideTo, loadTemplateScaffold,
+  removeSlide, reorderSlides, moveSlideTo,
 } from '../slides.mjs';
-import { getTemplatesMeta } from '../templates.mjs';
+import { loadTemplateScaffold } from '../domain/scaffold.mjs';
 import { getStructure, setStructureBoundary } from '../structure.mjs';
 import { listDesignSystemIcons } from '../design-system.mjs';
 
@@ -110,7 +110,7 @@ on('POST', '/api/decks/:slug/slides/:filename/git-revert', ({ params, decksRoot 
 });
 
 on('POST', '/api/decks/:slug/export-pdf', async ({ params, decksRoot }) => {
-  const pdf = await exportDeckPdf(params.slug, decksRoot);
+  const pdf = await exportDeckPdf(listSlides(params.slug, decksRoot));
   return new Response(pdf, {
     status: 200,
     headers: {
