@@ -11,6 +11,7 @@ import { parseMd } from '../frontmatter.mjs';
 import { DECKS_DIR } from '../../config.mjs';
 
 export const CONFIG_FILENAME = 'deck.config.json';
+export const SLUG_RE = /^[a-z0-9][a-z0-9_.-]*$/i;
 export const SLIDE_FILE_RE = /^[a-z0-9_-]+\.md$/i;
 export const ASSET_FILE_RE = /\.(png|jpg|jpeg|svg|gif|webp|avif)$/i;
 
