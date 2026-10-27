@@ -1,0 +1,161 @@
+{
+  "structure": {
+    "type": "Historia",
+    "sections": [
+      {
+        "id": "I",
+        "label": "Portada",
+        "description": "Cuando el ego se disfraza de lógica.",
+        "start": 1,
+        "end": 1
+      },
+      {
+        "id": "H",
+        "label": "Mi historia",
+        "description": "De Argentina a España: lo que dejé, lo que me perdí, el pensamiento estoico.",
+        "start": 2,
+        "end": 15
+      },
+      {
+        "id": "A",
+        "label": "Autoconocimiento",
+        "description": "Dónde estoy, por qué quiero la promoción, por qué la merezco.",
+        "start": 16,
+        "end": 53,
+        "children": [
+          {
+            "id": "A1",
+            "label": "Dónde estoy",
+            "description": "Disclaimer, pasión, matriz de skills, carta FIFA, Staff Engineer, feedback, iluminar.",
+            "start": 17,
+            "end": 27
+          },
+          {
+            "id": "A2",
+            "label": "¿Por qué quiero esa promoción?",
+            "description": "Razones válidas, ego disfrazado de lógica, eje de motivación.",
+            "start": 28,
+            "end": 37
+          },
+          {
+            "id": "A3",
+            "label": "¿Por qué merecés esa promoción?",
+            "description": "El autoengaño, verdades que duelen, recompensa → consecuencia.",
+            "start": 38,
+            "end": 53
+          }
+        ]
+      },
+      {
+        "id": "R",
+        "label": "Remember the future",
+        "description": "La historia de tu promoción: una promo no se pide, se construye.",
+        "start": 54,
+        "end": 58
+      },
+      {
+        "id": "P",
+        "label": "Agarrá la pala",
+        "description": "Valores de empresa, mis valores, feedback.",
+        "start": 59,
+        "end": 63
+      },
+      {
+        "id": "M",
+        "label": "El manifiesto del crecimiento",
+        "description": "Ownership, accountability, visión, influencia, multiply, impacto, métricas.",
+        "start": 64,
+        "end": 74
+      },
+      {
+        "id": "C",
+        "label": "Cierre",
+        "description": "España como elección, tu historia, ¿y vos?",
+        "start": 75,
+        "end": 80
+      }
+    ]
+  },
+  "slides": [
+    "cover.md",
+    "argentina-espana.md",
+    "el-viaje.md",
+    "lo-que-deje.md",
+    "en-cuanto-puedas.md",
+    "control-sobre-mi-vida.md",
+    "mis-chistes.md",
+    "skype-messenger-icq.md",
+    "me-perdi.md",
+    "llore.md",
+    "me-relaje.md",
+    "pensamiento-estoico.md",
+    "epicteto.md",
+    "equipos-que-no-elegiste.md",
+    "epicteto-2.md",
+    "autoconocimiento.md",
+    "disclaimer.md",
+    "pasion.md",
+    "pasion-apagada.md",
+    "skills.md",
+    "carta-fifa.md",
+    "radar.md",
+    "staff-engineer.md",
+    "buen-trabajo-fracasar.md",
+    "feedback.md",
+    "iluminar.md",
+    "no-estas-iluminando.md",
+    "por-que-quiero.md",
+    "quiero-siguiente-paso.md",
+    "quiero-reconocimiento.md",
+    "quiero-autoridad.md",
+    "quiero-soy-bueno.md",
+    "razones-validas.md",
+    "ego-disfrazado.md",
+    "desde-el-yo.md",
+    "eje-de-motivacion.md",
+    "desde-el-impacto.md",
+    "por-que-mereces.md",
+    "consolide-impacto.md",
+    "autoengano-1.md",
+    "consolide-impacto-tachado.md",
+    "dedicacion-alta.md",
+    "autoengano-2.md",
+    "dedicacion-alta-tachado.md",
+    "impacto-mayor.md",
+    "autoengano-3.md",
+    "impacto-mayor-tachado.md",
+    "verdades-que-duelen.md",
+    "consecuencia.md",
+    "no-significa.md",
+    "tres-razones.md",
+    "autoconocimiento-check.md",
+    "autoconocimiento-ok.md",
+    "remember-the-future.md",
+    "mi-historia.md",
+    "una-promo-no-se-pide.md",
+    "cimientos.md",
+    "mi-historia-2.md",
+    "agarra-la-pala.md",
+    "valores-eventbrite.md",
+    "valores.md",
+    "mis-valores.md",
+    "feedback-2.md",
+    "manifiesto.md",
+    "ownership.md",
+    "accountability.md",
+    "vision.md",
+    "influencia.md",
+    "multiply.md",
+    "impacto.md",
+    "no-es.md",
+    "metricas.md",
+    "summary.md",
+    "summary-paneles.md",
+    "espana-mi-eleccion.md",
+    "tu-historia.md",
+    "y-vos.md",
+    "get-into-it.md",
+    "ofertas.md",
+    "y-vos-final.md"
+  ]
+}
