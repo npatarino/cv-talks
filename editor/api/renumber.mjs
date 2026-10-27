@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseMd, serializeMd } from './frontmatter.mjs';
+import { NotFoundError } from './domain/errors.mjs';
 
 const SLIDE_FILE_RE = /^[a-z0-9_-]+\.md$/i;
 
@@ -89,7 +90,7 @@ export function deleteSlide(deckDir, filename) {
   const config = readConfig(deckDir);
   const exists = fs.existsSync(filepath) || (config.slides && config.slides.includes(filename));
   if (!exists) {
-    throw new Error('Slide not found');
+    throw new NotFoundError('Slide not found');
   }
   if (fs.existsSync(filepath)) {
     fs.unlinkSync(filepath);
@@ -106,7 +107,7 @@ export function moveSlide(deckDir, filename, toPosition) {
   let slides = config.slides || [];
   
   const fromIdx = slides.indexOf(filename);
-  if (fromIdx === -1) throw new Error(`Slide not found in config: ${filename}`);
+  if (fromIdx === -1) throw new NotFoundError(`Slide not found in config: ${filename}`);
 
   const toIdx = Math.max(0, Math.min(slides.length - 1, toPosition - 1));
   const [moved] = slides.splice(fromIdx, 1);

@@ -26,6 +26,7 @@ import { getTemplatesMeta } from './templates.mjs';
 import { getStructure, setStructureBoundary } from './structure.mjs';
 import { listDesignSystemIcons } from './design-system.mjs';
 import remoteHandler from '../../api/remote.mjs';
+import { statusOf } from './domain/errors.mjs';
 
 // ---------- response helpers ----------
 
@@ -38,6 +39,11 @@ export function json(data, status = 200) {
 
 export function err(message, status = 400) {
   return json({ error: message }, status);
+}
+
+/** Respuesta de error para una excepción: usa su status si es un AppError. */
+function fail(e, fallback = 400) {
+  return err(e.message, statusOf(e, fallback));
 }
 
 // ---------- helpers ----------
@@ -117,7 +123,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     try {
       return json(await listDesignSystemIcons());
     } catch (e) {
-      return err(e.message, 500);
+      return fail(e, 500);
     }
   }
 
@@ -166,7 +172,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
       const result = await uploadAsset(slug, { basename, mimeType, buffer }, decksRoot);
       return json(result, 201);
     } catch (e) {
-      return err(e.message);
+      return fail(e);
     }
   }
 
@@ -194,7 +200,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     const slug = validSlug(structureMatch[1]);
     if (!slug) return err('Invalid deck slug', 400);
     try { return json(getStructure(slug, decksRoot)); }
-    catch (e) { return err(e.message, 404); }
+    catch (e) { return fail(e, 404); }
   }
 
   // POST /api/decks/:slug/structure/boundary — move where a section starts.
@@ -209,7 +215,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
         return err('index and start must be numbers');
       }
       return json(setStructureBoundary(slug, index, start, decksRoot));
-    } catch (e) { return err(e.message); }
+    } catch (e) { return fail(e); }
   }
 
   // /api/decks/:slug/slides[/:filename]
@@ -221,7 +227,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     const slug = validSlug(rawSlug);
     if (!slug) return err('Invalid deck slug', 400);
     try { return json(listSlides(slug, decksRoot)); }
-    catch (e) { return err(e.message, 404); }
+    catch (e) { return fail(e, 404); }
   }
 
   if (method === 'POST' && slidesMatch) {
@@ -231,7 +237,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     try {
       const body = await req.json();
       return json(createSlide(slug, body, decksRoot), 201);
-    } catch (e) { return err(e.message); }
+    } catch (e) { return fail(e); }
   }
 
   // POST /api/decks/:slug/reorder
@@ -246,7 +252,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
         return err('order must be an array of filenames');
       }
       return json(reorderSlides(slug, order, decksRoot));
-    } catch (e) { return err(e.message); }
+    } catch (e) { return fail(e); }
   }
 
   // GET /api/decks/:slug/slides/:filename/raw — markdown sin procesar
@@ -257,7 +263,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     if (!slug) return err('Invalid deck slug', 400);
     try {
       return new Response(getSlideRaw(slug, filename, decksRoot), { headers: { 'content-type': 'text/plain; charset=utf-8' } });
-    } catch (e) { return err(e.message, 404); }
+    } catch (e) { return fail(e, 404); }
   }
 
   if (method === 'GET' && slideMatch) {
@@ -265,7 +271,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     const slug = validSlug(rawSlug);
     if (!slug) return err('Invalid deck slug', 400);
     try { return json(getSlide(slug, filename, decksRoot)); }
-    catch (e) { return err(e.message, 404); }
+    catch (e) { return fail(e, 404); }
   }
 
   if (method === 'PUT' && slideMatch) {
@@ -275,7 +281,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     try {
       const body = await req.json();
       return json(updateSlide(slug, filename, body, decksRoot));
-    } catch (e) { return err(e.message); }
+    } catch (e) { return fail(e); }
   }
 
   // POST /api/decks/:slug/slides/:filename/git-revert
@@ -303,7 +309,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     const slug = validSlug(rawSlug);
     if (!slug) return err('Invalid deck slug', 400);
     try { return json(removeSlide(slug, filename, decksRoot)); }
-    catch (e) { return err(e.message, 404); }
+    catch (e) { return fail(e, 404); }
   }
 
   // POST /api/decks/:slug/slides/:filename/move
@@ -318,7 +324,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
         return err('position must be a number');
       }
       return json(moveSlideTo(slug, filename, position, decksRoot));
-    } catch (e) { return err(e.message); }
+    } catch (e) { return fail(e); }
   }
 
   // POST /api/decks/:slug/export-pdf
@@ -338,7 +344,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
         },
       });
     } catch (e) {
-      return err(e.message, 500);
+      return fail(e, 500);
     }
   }
 
