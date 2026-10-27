@@ -9,7 +9,8 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 
 export const TALKS_ROOT = path.resolve(here, '..');
-export const DECKS_DIR = path.join(TALKS_ROOT, 'decks');
+/** Carpeta de decks. Sobrescribible con TALKS_DECKS_DIR (los e2e usan un fixture temporal). */
+export const DECKS_DIR = process.env.TALKS_DECKS_DIR ? path.resolve(process.env.TALKS_DECKS_DIR) : path.join(TALKS_ROOT, 'decks');
 export const TEMPLATES_DIR = path.join(TALKS_ROOT, 'templates');
 export const TEMPLATES_META_PATH = path.join(TALKS_ROOT, '_data', 'templates.json');
 export const DESIGN_SYSTEM_ICONS_DIR = path.join(
