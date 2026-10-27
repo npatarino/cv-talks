@@ -7,9 +7,9 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
-import { listTemplateSlides, TALKS_ROOT } from './decks.mjs';
-import { listDecks, deckDir, listAssets } from './store/deck-store.mjs';
+import { listTemplateSlides } from './decks.mjs';
+import { modifiedFiles, revertFile } from './store/git.mjs';
+import { listDecks, deckDir, listAssets, SLIDE_FILE_RE } from './store/deck-store.mjs';
 import { exportDeckPdf } from './pdf.mjs';
 import { uploadAsset } from './assets.mjs';
 import { getSlideDir } from './store/deck-store.mjs';
@@ -170,20 +170,7 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
 
   // GET /api/git-status
   if (method === 'GET' && pathname === '/api/git-status') {
-    try {
-      const modified = spawnSync('git', ['diff', '--name-only', 'HEAD'], {
-        cwd: TALKS_ROOT, encoding: 'utf8',
-      });
-      const untracked = spawnSync('git', ['ls-files', '--others', '--exclude-standard'], {
-        cwd: TALKS_ROOT, encoding: 'utf8',
-      });
-      return json({
-        modified: [
-          ...(modified.stdout || '').trim().split('\n').filter(Boolean),
-          ...(untracked.stdout || '').trim().split('\n').filter(Boolean),
-        ],
-      });
-    } catch { return json({ modified: [] }); }
+    return json({ modified: modifiedFiles() });
   }
 
   // GET /api/decks/:slug/structure — narrative section map (or null)
@@ -282,14 +269,11 @@ export async function route(req, serveFile, uiDir = '', decksRoot = undefined) {
     const [, rawSlug, filename] = gitRevertMatch;
     const slug = validSlug(rawSlug);
     if (!slug) return err('Invalid deck slug', 400);
-    const slidesDirAbs = path.join(TALKS_ROOT, 'decks', slug, 'slides');
-    const hasSlidesDir = fs.existsSync(slidesDirAbs);
-    const relPath = hasSlidesDir ? `decks/${slug}/slides/${filename}` : `decks/${slug}/${filename}`;
-    const result = spawnSync('git', ['checkout', 'HEAD', '--', relPath], {
-      cwd: TALKS_ROOT, encoding: 'utf8',
-    });
-    if (result.status !== 0) {
-      return err(result.stderr || 'git checkout failed');
+    if (!SLIDE_FILE_RE.test(filename)) return err('Invalid slide filename', 400);
+    try {
+      revertFile(path.join(getSlideDir(deckDir(slug, decksRoot)), filename));
+    } catch (e) {
+      return err(e.message);
     }
     try { return json(getSlide(slug, filename, decksRoot)); }
     catch { return json({ ok: true }); }

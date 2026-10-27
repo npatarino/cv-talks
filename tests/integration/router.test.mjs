@@ -693,3 +693,31 @@ describe('deck structure routes', () => {
     expect(data.sections[1].start).toBe(5);
   });
 });
+
+// ─── git-revert ──────────────────────────────────────────────────────────────
+
+describe('POST /api/decks/:slug/slides/:filename/git-revert', () => {
+  it('rejects a filename that is not a slide file', async () => {
+    makeDeck('my-deck');
+    for (const bad of ['..%2F..%2Fx', 'notes.txt', '.md']) {
+      const { status } = await call('POST', `/api/decks/my-deck/slides/${bad}/git-revert`);
+      expect(status, bad).toBe(400);
+    }
+  });
+
+  it('restores the slide from git HEAD and returns it', async () => {
+    const { spawnSync } = await import('node:child_process');
+    const git = (...a) => spawnSync('git', ['-c', 'user.email=t@t', '-c', 'user.name=t', ...a], { cwd: tmpRoot, encoding: 'utf8' });
+    const dir = makeDeck('my-deck');
+    writeSlide(dir, 'a.md', 1, { label: 'Original' });
+    git('init', '-q'); git('add', '.'); git('commit', '-q', '-m', 'init');
+    const { data: before } = await call('GET', '/api/decks/my-deck/slides/a.md');
+    await call('PUT', '/api/decks/my-deck/slides/a.md', { data: { label: 'Changed' } });
+    const { data: changed } = await call('GET', '/api/decks/my-deck/slides/a.md');
+    expect(changed.data.label).toBe('Changed');
+
+    const { status, data } = await call('POST', '/api/decks/my-deck/slides/a.md/git-revert');
+    expect(status).toBe(200);
+    expect(data.data.label).toBe(before.data.label);
+  });
+});
