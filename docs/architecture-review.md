@@ -24,7 +24,7 @@ Plan ejecutado completo, en commits pequeños sobre `main`. La estructura result
 | 1 · Router | `http/{router,respond,validate,vercel-adapter}` con tabla de rutas y un solo `catch`; `store/git.mjs`; scaffold y templates en `domain/`; `exportDeckPdf(slides)`; `createSlide` simplificado. |
 | 2 · Eleventy y scripts | `eleventy.config.mjs` (ESM) sobre el store; `theme/lib/{big-list,deck-assets}`; `new-deck`/`new-slide` reescritos sobre el dominio; `format-decks` recorre slides reales. |
 | 3 · Mando | `remote-client`, `remote-host`, `remote-phone`, `slide-url` como módulos ES sin build. |
-| 4 · UI | `app.js` de 2.701 a 103 líneas en 25 módulos; un único selector de assets; estado, DOM, bus de eventos y cliente API propios. |
+| 4 · UI | `app.js` de 2.701 a 103 líneas en 30 módulos (6 de ellos puros, en `lib/`); un único selector de assets; estado, DOM, bus de eventos y cliente API propios. |
 | 5 · Cierre | Capas finales (`lib/store/domain/services/http`), shims eliminados, `architecture.md` reescrito. |
 
 Tests: de 626 a 905 unitarios/integración, y de 13 a 40 e2e. Siguen en verde salvo el fallo de datos conocido de `templates-roundtrip`.
