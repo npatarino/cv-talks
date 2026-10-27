@@ -14,6 +14,47 @@ Línea base de tests: `npx vitest run` → 623 pasan, 2 skipped, **1 falla**
 
 ---
 
+## Resultado de la ejecución
+
+Plan ejecutado completo, en commits pequeños sobre `main`. La estructura resultante está descrita en [architecture.md](architecture.md); este informe queda como registro del análisis.
+
+| Fase | Resultado |
+|---|---|
+| 0 · Cimientos | `editor/config.mjs` (rutas y origen del preview), errores tipados con status, `store/deck-store.mjs` único. |
+| 1 · Router | `http/{router,respond,validate,vercel-adapter}` con tabla de rutas y un solo `catch`; `store/git.mjs`; scaffold y templates en `domain/`; `exportDeckPdf(slides)`; `createSlide` simplificado. |
+| 2 · Eleventy y scripts | `eleventy.config.mjs` (ESM) sobre el store; `theme/lib/{big-list,deck-assets}`; `new-deck`/`new-slide` reescritos sobre el dominio; `format-decks` recorre slides reales. |
+| 3 · Mando | `remote-client`, `remote-host`, `remote-phone`, `slide-url` como módulos ES sin build. |
+| 4 · UI | `app.js` de 2.701 a 103 líneas en 25 módulos; un único selector de assets; estado, DOM, bus de eventos y cliente API propios. |
+| 5 · Cierre | Capas finales (`lib/store/domain/services/http`), shims eliminados, `architecture.md` reescrito. |
+
+Tests: de 626 a 905 unitarios/integración, y de 13 a 40 e2e. Siguen en verde salvo el fallo de datos conocido de `templates-roundtrip`.
+
+### Decisiones de la sección 5
+
+1. **Scripts**: `new-deck` reescrito y `new-slide` convertido en envoltorio de `createSlide` (se mantienen los dos; comparten código con el editor).
+2. **Navegación standalone**: arreglada en el layout, sin tocar cada deck.
+3. **HTTP**: PUT sobre slide inexistente pasa de 400 a 404; asset duplicado de 400 a 409.
+4. **Config de Eleventy**: renombrada a `eleventy.config.mjs`.
+5. **UI**: troceada por completo.
+
+### Cambios de comportamiento y bugs encontrados
+
+- **Mando**: tras recrear una sala caducada el player dejaba de escuchar (el bucle no se reiniciaba). Corregido en el poller compartido.
+- **Slide abierta sola**: el manifiesto leía una colección `slides` que no existe y `data-slide-order` salía vacío (el orden ya no está en el frontmatter), así que las flechas no navegaban. Corregido.
+- **`git-revert`**: el nombre de fichero llegaba sin validar a `git checkout`. Ahora se valida en todas las rutas de slide (400).
+- **`format-decks`**: solo revisaba documentos auxiliares (que habría corrompido en modo escritura) y no las slides.
+- **Icon browser**: ruta de iconos relativa al cwd; con otro cwd devolvía vacío sin error.
+- **`deck.config.json`**: dos escritores con formato distinto (uno sin salto de línea final); un JSON corrupto se leía como vacío y se sobrescribía. Ahora un único escritor y un JSON corrupto lanza.
+- **`index.html`**: `app.js?v=2` impedía el versionado por arranque del servidor.
+- **Sidebar**: ya no se repinta mientras hay un arrastre en curso.
+- **Relay local**: Bun carga `.env.local`, así que el editor local habla con el Redis real. No se ha cambiado; queda documentado.
+
+### Pendiente (no incluido en el alcance)
+
+Ver «Deuda conocida» en [architecture.md](architecture.md): Chromium por operación, resize siempre a PNG, 203 slides no canónicas, `present.js` y `viz.js` como scripts clásicos.
+
+---
+
 ## 1. Mapa de módulos actual
 
 ```
