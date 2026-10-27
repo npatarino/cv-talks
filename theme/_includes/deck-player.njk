@@ -134,6 +134,7 @@ window.__SLIDES__ = [
 // is a pure CSS scroll-snap layout, no JS coordination needed.
 if (document.documentElement.getAttribute('data-view') !== 'mobile') {
   var s = document.createElement('script');
+  s.type = 'module';
   s.src = "{{ '/talks/assets/deck.js' | url }}";
   document.head.appendChild(s);
 }
