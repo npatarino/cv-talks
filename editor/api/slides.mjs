@@ -7,14 +7,11 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { parseMd, serializeMd } from './frontmatter.mjs';
 import { readSlides, renumberSlides, deleteSlide, moveSlide, buildFilename, slugFromFilename, getSlideDir } from './renumber.mjs';
 import { deckDir } from './decks.mjs';
 import { syncStructureOnInsert, syncStructureOnDelete } from './structure.mjs';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const TEMPLATES_DIR = path.resolve(__dirname, '../../templates');
+import { TEMPLATES_DIR, slidePreviewUrl as buildPreviewUrl } from '../config.mjs';
 
 export function listSlides(slug, decksRoot) {
   const dir = deckDir(slug, decksRoot);
@@ -154,7 +151,7 @@ export function moveSlideTo(slug, filename, toPosition, decksRoot) {
 
 function slidePreviewUrl(slug, filename) {
   const fileSlug = filename.replace(/\.md$/, '');
-  return `http://localhost:8080/talks/decks/${slug}/${fileSlug}/`;
+  return buildPreviewUrl(slug, fileSlug);
 }
 
 /**
