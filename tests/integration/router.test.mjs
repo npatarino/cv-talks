@@ -259,7 +259,7 @@ describe('POST /api/decks/:slug/assets', () => {
     const { status, data } = await call('POST', '/api/decks/my-deck/assets', {
       basename: 'dup', mimeType: 'image/png', dataBase64: PNG_1x1,
     });
-    expect(status).toBe(400);
+    expect(status).toBe(409);
     expect(data.error).toMatch(/already exists/);
   });
 });
@@ -497,10 +497,10 @@ describe('PUT /api/decks/:slug/slides/:filename', () => {
     expect(saved.data.label).toBe('Updated');
   });
 
-  it('returns 400 for nonexistent slide', async () => {
+  it('returns 404 for nonexistent slide', async () => {
     makeDeck('my-deck');
     const { status } = await call('PUT', '/api/decks/my-deck/slides/missing.md', { data: {} });
-    expect(status).toBe(400);
+    expect(status).toBe(404);
   });
 });
 

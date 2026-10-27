@@ -26,6 +26,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { readSlides } from './renumber.mjs';
 import { deckDir } from './decks.mjs';
+import { NotFoundError } from './domain/errors.mjs';
 
 const CONFIG_FILENAME = 'deck.config.json';
 
@@ -185,7 +186,7 @@ export function syncStructureOnDelete(dir, order) {
 export function setStructureBoundary(slug, index, newStart, decksRoot) {
   const dir = deckDir(slug, decksRoot);
   const cfg = readDeckConfig(dir);
-  if (!cfg?.structure?.sections?.length) throw new Error('Deck has no structure');
+  if (!cfg?.structure?.sections?.length) throw new NotFoundError('Deck has no structure');
   const n = slideCount(dir);
   const normalized = normalizeSections(cfg.structure.sections, n);
   cfg.structure.sections = setBoundary(normalized, index, newStart, n);

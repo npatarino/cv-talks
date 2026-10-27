@@ -11,6 +11,7 @@ import { parseMd, serializeMd } from './frontmatter.mjs';
 import { readSlides, renumberSlides, deleteSlide, moveSlide, buildFilename, slugFromFilename, getSlideDir } from './renumber.mjs';
 import { deckDir } from './decks.mjs';
 import { syncStructureOnInsert, syncStructureOnDelete } from './structure.mjs';
+import { NotFoundError } from './domain/errors.mjs';
 import { TEMPLATES_DIR, slidePreviewUrl as buildPreviewUrl } from '../config.mjs';
 
 export function listSlides(slug, decksRoot) {
@@ -28,13 +29,13 @@ export function listSlides(slug, decksRoot) {
 
 export function getSlideRaw(slug, filename, decksRoot) {
   const filepath = path.join(getSlideDir(deckDir(slug, decksRoot)), filename);
-  if (!fs.existsSync(filepath)) throw new Error(`Slide not found: ${filename}`);
+  if (!fs.existsSync(filepath)) throw new NotFoundError(`Slide not found: ${filename}`);
   return fs.readFileSync(filepath, 'utf8');
 }
 
 export function getSlide(slug, filename, decksRoot) {
   const filepath = path.join(getSlideDir(deckDir(slug, decksRoot)), filename);
-  if (!fs.existsSync(filepath)) throw new Error(`Slide not found: ${filename}`);
+  if (!fs.existsSync(filepath)) throw new NotFoundError(`Slide not found: ${filename}`);
   const raw = fs.readFileSync(filepath, 'utf8');
   const { data, body } = parseMd(raw);
   return {
@@ -115,7 +116,7 @@ export function createSlide(slug, opts, decksRoot) {
 export function updateSlide(slug, filename, updates, decksRoot) {
   const dir = deckDir(slug, decksRoot);
   const filepath = path.join(getSlideDir(dir), filename);
-  if (!fs.existsSync(filepath)) throw new Error(`Slide not found: ${filename}`);
+  if (!fs.existsSync(filepath)) throw new NotFoundError(`Slide not found: ${filename}`);
 
   const raw = fs.readFileSync(filepath, 'utf8');
   const { data: existing, body: existingBody } = parseMd(raw);

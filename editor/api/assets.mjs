@@ -15,6 +15,7 @@ import path from 'node:path';
 import { chromium } from 'playwright';
 import { deckDir } from './decks.mjs';
 import { getSlideDir } from './renumber.mjs';
+import { ValidationError, ConflictError } from './domain/errors.mjs';
 
 const MAX_ICON_WIDTH = 512;
 
@@ -40,10 +41,10 @@ const EXT_BY_MIME = {
 export async function uploadAsset(slug, opts, decksRoot) {
   const { basename, mimeType, buffer } = opts;
   if (!basename || !/^[a-z0-9][a-z0-9_.-]*$/i.test(basename)) {
-    throw new Error('Invalid basename');
+    throw new ValidationError('Invalid basename');
   }
   const ext = EXT_BY_MIME[mimeType];
-  if (!ext) throw new Error(`Unsupported image type: ${mimeType}`);
+  if (!ext) throw new ValidationError(`Unsupported image type: ${mimeType}`);
 
   const baseDir = deckDir(slug, decksRoot);
   const assetsDir = path.join(getSlideDir(baseDir), 'assets');
@@ -52,7 +53,7 @@ export async function uploadAsset(slug, opts, decksRoot) {
   const filename = `${basename}.${ext}`;
   const targetPath = path.join(assetsDir, filename);
   if (fs.existsSync(targetPath)) {
-    throw new Error(`File already exists: ${filename}`);
+    throw new ConflictError(`File already exists: ${filename}`);
   }
 
   let finalBuffer = Buffer.from(buffer);
