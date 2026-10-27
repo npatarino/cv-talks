@@ -1,0 +1,15 @@
+{
+  "tags": "cuando-el-ego-se-disfraza-de-logica-slide",
+  "permalink": "talks/decks/cuando-el-ego-se-disfraza-de-logica/{{ page.fileSlug }}/index.html",
+  "deck": {
+    "title": "Cuando el ego se disfraza de lógica",
+    "subtitle": "El programador consciente · CommitConf 2025.",
+    "author": "Nicolás Patarino",
+    "date": "2025-09-18"
+  },
+  "eleventyComputed": {
+    "layout": "{% if template %}layouts/{{ template }}.njk{% else %}{{ layout }}{% endif %}",
+    "slideCss": "{% if template %}{{ template }}{% endif %}",
+    "effectiveMode": "{{ mode or site.mode }}"
+  }
+}
