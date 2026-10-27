@@ -1,10 +1,8 @@
 import { createRequire } from 'node:module';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
+import { TEMPLATES_META_PATH } from '../config.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 
 export function getTemplatesMeta() {
-  return require(path.resolve(__dirname, '../../_data/templates.json'));
+  return require(TEMPLATES_META_PATH);
 }

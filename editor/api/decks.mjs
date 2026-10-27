@@ -4,13 +4,8 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { parseMd } from './frontmatter.mjs';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const TALKS_ROOT = path.resolve(__dirname, '../..');
-const DECKS_DIR = path.join(TALKS_ROOT, 'decks');
-const TEMPLATES_DIR = path.join(TALKS_ROOT, 'templates');
+import { TALKS_ROOT, DECKS_DIR, TEMPLATES_DIR, templatePreviewUrl } from '../config.mjs';
 
 /**
  * List all available decks with their metadata.
@@ -78,7 +73,7 @@ export function listTemplateSlides() {
       recipe: data.recipe ?? 'canvas-quiet',
       label: data.label ?? fileSlug,
       order: data.order ?? 0,
-      previewUrl: `http://localhost:8080/talks/templates/${fileSlug}/`,
+      previewUrl: templatePreviewUrl(fileSlug),
     };
   });
 }

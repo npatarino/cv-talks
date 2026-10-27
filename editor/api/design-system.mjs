@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-
-const DESIGN_SYSTEM_ICONS_DIR = path.resolve('node_modules/@chimichurricode/design-system/assets/icons');
+import { DESIGN_SYSTEM_ICONS_DIR } from '../config.mjs';
 
 export async function listDesignSystemIcons() {
   if (!fs.existsSync(DESIGN_SYSTEM_ICONS_DIR)) {
