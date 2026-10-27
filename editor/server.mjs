@@ -18,7 +18,7 @@ import { route, err } from './api/router.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const UI_DIR = path.join(__dirname, 'ui');
-const PORT = 3001;
+const PORT = Number(process.env.EDITOR_PORT) || 3001;
 
 // Bumps every server start. Injected as ?v= on the editor's own assets so a
 // browser — or the port-forward proxy in front of it — can never pin a stale
