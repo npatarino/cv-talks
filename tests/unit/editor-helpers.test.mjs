@@ -20,7 +20,7 @@ import {
   buildAssetSrc,
   mergeFields,
   defaultInsertPosition,
-} from '../../editor/ui/editor-helpers.mjs';
+} from '../../editor/ui/lib/editor-helpers.mjs';
 
 // ─── buildAssetInsertHTML ───────────────────────────────────────────────────
 

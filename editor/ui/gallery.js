@@ -5,7 +5,7 @@
 
 import { getTemplateSlides } from './api-client.js';
 import { $, dom } from './dom.js';
-import { defaultInsertPosition } from './editor-helpers.mjs';
+import { defaultInsertPosition } from './lib/editor-helpers.mjs';
 import { escHtml } from './lib/strings.mjs';
 import { state } from './state.js';
 

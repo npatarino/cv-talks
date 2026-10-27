@@ -3,7 +3,7 @@
  * SVG copiado como texto), pedir un nombre y enviarlo al servidor.
  */
 
-import { extractSvgFromText } from '../clipboard-svg.mjs';
+import { extractSvgFromText } from '../lib/clipboard-svg.mjs';
 import { slugifyAssetName } from '../lib/strings.mjs';
 import { uploadAsset as uploadAssetApi } from '../api-client.js';
 import { toast } from '../toast.js';

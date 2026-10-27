@@ -5,7 +5,7 @@
 
 import { state } from '../state.js';
 import { emit } from '../events.js';
-import { buildAssetInsertHTML, buildAssetSrc } from '../editor-helpers.mjs';
+import { buildAssetInsertHTML, buildAssetSrc } from '../lib/editor-helpers.mjs';
 import { toEditorHTML as toEditorHTMLFor, cleanHTML as cleanHTMLFor } from '../lib/html-transform.mjs';
 import { openAssetPicker } from '../assets/picker.js';
 
