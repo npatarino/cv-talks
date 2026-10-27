@@ -2538,14 +2538,15 @@ async function presentDeck() {
 }
 
 /** Present online (talks.chimi.pro) with the phone remote enabled: opens the
- *  player with ?remote=1, which shows the phone URL + QR when you press R. */
+ *  player with ?remote=1, which creates a private room on load. Press R in the
+ *  player to show the one-time pairing code + QR for the phone. */
 const PUBLIC_SITE = 'https://talks.chimi.pro';
 function presentDeckWithPhone() {
   if (!state.currentDeck || state.slides.length === 0) return;
   const slide = state.slides.find(s => s.filename === state.selectedFilename) || state.slides[0];
   const playerUrl = `${PUBLIC_SITE}/talks/decks/${state.currentDeck}/deck/?remote=1#/${slide.order}`;
   window.open(playerUrl, '_blank');
-  toast('Player abierto con mando. Pulsa R en el player para ver el QR del móvil.', 'success');
+  toast('Player abierto con mando. Pulsa R en el player para ver el código y el QR del móvil.', 'success');
 }
 
 // ---- Helpers ----

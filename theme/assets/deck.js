@@ -87,6 +87,7 @@
     }
     else if (e.key === "f" || e.key === "F" || e.key === "p" || e.key === "P") { toggleFullscreen(); e.preventDefault(); }
     else if (e.key === "r" || e.key === "R") { remote.togglePanel(); e.preventDefault(); }
+    else if (e.key === "d" || e.key === "D") { remote.revoke(); e.preventDefault(); }
     else if (e.key === "q" || e.key === "Q" || e.key === "Escape") {
       quitToTOC();
       e.preventDefault();
@@ -108,7 +109,7 @@
       // Solo reenviamos teclas de chrome al parent (fullscreen, exit). Las
       // arrows/space son consumidas por present.js dentro del iframe.
       win.addEventListener("keydown", (e) => {
-        if (["f", "F", "p", "P", "q", "Q", "Escape", "Home", "End"].includes(e.key)) {
+        if (["f", "F", "p", "P", "q", "Q", "r", "R", "d", "D", "Escape", "Home", "End"].includes(e.key)) {
           window.dispatchEvent(new KeyboardEvent("keydown", { key: e.key }));
           e.preventDefault();
         }
@@ -117,6 +118,7 @@
   });
 
   document.querySelector('[data-action="fullscreen"]').addEventListener("click", toggleFullscreen);
+  document.querySelector('[data-action="remote"]').addEventListener("click", () => remote.togglePanel());
 
   channel.addEventListener('message', e => {
     const d = e.data;
@@ -139,15 +141,62 @@
     }
   });
 
-  // ── Mando a distancia (?remote=1) ────────────────────────────────────────
-  // Sala fija KJ7M en /api/remote. El móvil (speaker/?phone=1) publica next/prev/
-  // goto; el player los aplica como si fueran teclas y publica dónde está.
+  // ── Mando a distancia ────────────────────────────────────────────────────
+  // Una sala por pestaña de player (persistida en sessionStorage, así un reload
+  // no la pierde y dos pestañas nunca chocan). El player es el host; el móvil
+  // (speaker/?phone=1) se empareja canjeando un código de un solo uso que se
+  // muestra al pulsar R (QR + texto). Ver api/remote.mjs.
+  //   R · panel de emparejamiento (crea la sala si no existe)
+  //   D · desvincular todos los móviles
+  //   ?remote=1 · arranca la sala al cargar (sin esperar a R)
   const remote = (() => {
     const qs = new URLSearchParams(location.search);
-    const enabled = qs.get("remote") === "1";
     const api = qs.get("api") || "/api/remote";
+    const storeKey = "cv-talks-remote:" + location.pathname;
     const phoneUrl = location.origin + location.pathname.replace(/\/deck\/?$/, "/speaker/") + "?phone=1";
-    let lastV = -1, lastCmd = -1, panel = null;
+    let session = null;        // {room, hostToken}
+    let code = null;           // {code, expiresAt}
+    let panel = null;
+    let polling = false;
+    let lastV = -1, lastCmd = null, controllers = 0;
+
+    try { session = JSON.parse(sessionStorage.getItem(storeKey)); } catch (_) { session = null; }
+    if (session && !(session.room && session.hostToken)) session = null;
+
+    function save() {
+      try { session ? sessionStorage.setItem(storeKey, JSON.stringify(session)) : sessionStorage.removeItem(storeKey); } catch (_) {}
+    }
+
+    async function post(body) {
+      const r = await fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw Object.assign(new Error(data.error || `remote ${r.status}`), { status: r.status });
+      return data;
+    }
+
+    function dropSession() {
+      session = null; code = null; lastV = -1; lastCmd = null; controllers = 0;
+      save(); setStatus(null);
+    }
+
+    async function ensureRoom() {
+      if (session) { loop(); return session; }
+      const d = await post({ type: "create" });
+      session = { room: d.room, hostToken: d.hostToken };
+      code = { code: d.code, expiresAt: Date.now() + d.codeTtl * 1000 };
+      save();
+      loop();
+      return session;
+    }
+
+    async function freshCode() {
+      await ensureRoom();
+      // Reutiliza el código vigente si aún le queda margen; si no, pide otro.
+      if (code && code.expiresAt - Date.now() > 60 * 1000) return code;
+      const d = await post({ type: "pair", room: session.room, token: session.hostToken });
+      code = { code: d.code, expiresAt: Date.now() + d.codeTtl * 1000 };
+      return code;
+    }
 
     function apply(cmd) {
       if (cmd.action === "goto" && typeof cmd.order === "number") {
@@ -161,44 +210,89 @@
     }
 
     async function loop() {
-      while (true) {
-        try {
-          const r = await fetch(`${api}?v=${lastV}`, { cache: "no-store" });
+      if (polling) return;
+      polling = true;
+      try {
+        while (session) {
+          let r;
+          try {
+            r = await fetch(`${api}?room=${encodeURIComponent(session.room)}&token=${encodeURIComponent(session.hostToken)}&v=${lastV}`, { cache: "no-store" });
+          } catch (_) {
+            setStatus(false);
+            await new Promise((res) => setTimeout(res, 2000));
+            continue;
+          }
+          if (r.status === 404 || r.status === 403) {
+            // La sala caducó (o el servidor la perdió): empezamos una nueva.
+            // Los móviles tendrán que volver a emparejarse.
+            const hadPanel = !!panel;
+            dropSession();
+            await ensureRoom().catch(() => {});
+            if (hadPanel) { closePanel(); openPanel(); }
+            return;
+          }
+          if (!r.ok) { setStatus(false); await new Promise((res) => setTimeout(res, 2000)); continue; }
           const st = await r.json();
-          if (lastV === -1) { lastCmd = st.cmd ? st.cmd.id : -1; }   // ignora órdenes anteriores a abrir
+          if (lastV === -1) lastCmd = st.cmd ? st.cmd.id : null;   // ignora órdenes anteriores a abrir
           lastV = st.v;
-          if (st.cmd && st.cmd.id > lastCmd) { lastCmd = st.cmd.id; apply(st.cmd); }
+          if (st.cmd && st.cmd.id !== lastCmd) { lastCmd = st.cmd.id; apply(st.cmd); }
+          if (st.controllers > controllers && panel) closePanel();   // acaba de entrar un móvil
+          controllers = st.controllers;
           setStatus(true);
-        } catch (_) {
-          setStatus(false);
-          await new Promise((res) => setTimeout(res, 2000));
         }
-      }
+      } finally { polling = false; }
     }
 
     function publish(order) {
-      if (!enabled) return;
-      fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type: "state", order }) }).catch(() => {});
+      if (!session) return;
+      post({ type: "state", room: session.room, token: session.hostToken, order }).catch(() => {});
     }
 
     function setStatus(ok) {
-      hud.classList.toggle("remote-ok", ok);
-      hud.classList.toggle("remote-ko", !ok);
+      hud.classList.toggle("remote-ok", ok === true);
+      hud.classList.toggle("remote-ko", ok === false);
+      if (ok && controllers > 0) hud.dataset.remote = String(controllers);
+      else delete hud.dataset.remote;
     }
 
-    function togglePanel() {
-      if (panel) { panel.remove(); panel = null; return; }
+    function closePanel() { if (panel) { panel.remove(); panel = null; } }
+
+    async function openPanel() {
+      closePanel();
       panel = document.createElement("div");
       panel.className = "remote-panel";
-      panel.innerHTML = `<div class="remote-qr"></div><div class="remote-url">${phoneUrl}</div><div class="remote-hint">${enabled ? "mando activo · sala KJ7M" : "abre el player con ?remote=1 para activar el mando"} · R para cerrar</div>`;
+      panel.innerHTML = `<div class="remote-qr"></div><div class="remote-code">······</div><div class="remote-url">${phoneUrl}</div><div class="remote-hint">R cerrar</div>`;
       document.body.appendChild(panel);
-      const draw = () => { if (window.QRCode) new QRCode(panel.querySelector(".remote-qr"), { text: phoneUrl, width: 360, height: 360, colorDark: "#1c1c1c", colorLight: "#fafaf8" }); };
+      let c;
+      try { c = await freshCode(); }
+      catch (_) {
+        if (panel) panel.querySelector(".remote-hint").textContent = "no se puede crear la sala (¿sin /api/remote?) · R cerrar";
+        return;
+      }
+      if (!panel) return;
+      const url = `${phoneUrl}&code=${c.code}`;
+      panel.querySelector(".remote-code").textContent = c.code;
+      panel.querySelector(".remote-hint").textContent =
+        `escanea el QR o abre la URL y teclea el código · un solo uso, caduca en 10 min · ${controllers} móvil(es) · R cerrar · D desvincular`;
+      const draw = () => {
+        if (!panel || !window.QRCode) return;
+        new QRCode(panel.querySelector(".remote-qr"), { text: url, width: 320, height: 320, colorDark: "#1c1c1c", colorLight: "#fafaf8" });
+      };
       if (window.QRCode) draw();
       else { const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"; sc.onload = draw; document.head.appendChild(sc); }
     }
 
-    if (enabled) loop();
-    return { publish, togglePanel };
+    function togglePanel() { panel ? closePanel() : openPanel(); }
+
+    async function revoke() {
+      if (!session) return;
+      try { await post({ type: "revoke", room: session.room, token: session.hostToken }); controllers = 0; setStatus(true); }
+      catch (_) {}
+      if (panel) openPanel();
+    }
+
+    if (session || qs.get("remote") === "1") ensureRoom().catch(() => setStatus(false));
+    return { publish, togglePanel, revoke };
   })();
 
   window.addEventListener("hashchange", () => load(currentIndex()));

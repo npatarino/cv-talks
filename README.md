@@ -29,6 +29,29 @@ npm run build:meta       # → _site/  (modo meta, para review)
 - **Esc** · salir.
 - `?present=1` en la URL arranca directo.
 
+### Mando a distancia desde el móvil
+
+El player (`/talks/decks/<slug>/deck/`) puede controlarse desde el móvil a
+través de `/api/remote` (función Vercel + Redis, long polling; sin
+WebSockets). Cada pestaña de player tiene su propia **sala** privada, así
+que varias presentaciones abiertas a la vez nunca se pisan.
+
+1. En el player pulsa **R** (o el botón 📱 Mando). Se crea la sala y aparece
+   un **código de 6 caracteres** con su QR. El código es de **un solo uso** y
+   caduca a los 10 min: aunque lo vea el público, nadie puede colarse después.
+2. En el móvil abre `/talks/decks/<slug>/speaker/?phone=1` y teclea el
+   código, o escanea el QR (que ya lo lleva). El panel se cierra solo al
+   emparejar y el HUD muestra `📱 N` con los móviles conectados.
+3. El móvil sigue la slide actual y sus notas, y manda ← / →. La sesión se
+   guarda en el móvil (`localStorage`) y en la pestaña del player
+   (`sessionStorage`): un reload en cualquiera de los dos no rompe nada.
+4. **D** en el player desvincula todos los móviles. ✕ en el móvil se da de
+   baja. La sala muere a las 12 h sin actividad.
+
+`?remote=1` crea la sala al cargar sin esperar a R (es lo que usa el botón
+"Present + phone" del editor). En local el relay vive en el editor:
+`deck/?api=http://localhost:3001/api/remote` y lo mismo en el móvil.
+
 ## Render modes (presentation vs. mobile viewer)
 
 Cada deck y cada slide individual exponen dos modos de render que se

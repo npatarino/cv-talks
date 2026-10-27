@@ -67,10 +67,12 @@
   body.fullscreen .deck-hud { display: none; }
   .deck-hud.remote-ok::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #02b5b9; margin-right: 10px; vertical-align: middle; }
   .deck-hud.remote-ko::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ff2079; margin-right: 10px; vertical-align: middle; }
+  .deck-hud[data-remote]::after { content: " · 📱 " attr(data-remote); }
   .remote-panel { position: fixed; inset: 0; z-index: 50; background: rgba(28,28,28,.96); color: #fafaf8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; font-family: var(--font-mono, monospace); }
   .remote-panel .remote-qr { background: #fafaf8; padding: 20px; }
-  .remote-panel .remote-url { font-size: 22px; letter-spacing: .04em; user-select: all; }
-  .remote-panel .remote-hint { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; opacity: .6; }
+  .remote-panel .remote-code { font-size: 72px; letter-spacing: .3em; font-weight: 700; color: var(--lemon); user-select: all; }
+  .remote-panel .remote-url { font-size: 18px; letter-spacing: .04em; opacity: .7; user-select: all; }
+  .remote-panel .remote-hint { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; opacity: .6; max-width: 80vw; text-align: center; line-height: 1.7; }
 
   /* ─── Mobile viewer ─────────────────────────────────────────────── *
    *  Replaces the single-iframe + key-nav presentation with a
@@ -118,6 +120,7 @@
 
 <div class="deck-controls">
   <button data-action="fullscreen" title="F · Fullscreen">⛶ Fullscreen</button>
+  <button data-action="remote" title="R · Mando desde el móvil">📱 Mando</button>
 </div>
 <div class="deck-hud" id="deck-hud">— / —</div>
 

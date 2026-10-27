@@ -269,6 +269,19 @@
   body.phone #spk-phone-nav button { background: none; border: 1px solid rgba(255,255,255,0.25); color: var(--ivory); font-family: var(--font-mono); font-size: 18px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   body.phone #spk-phone-nav button:active { background: var(--lemon); color: #111; }
   body.phone #spk-phone-nav button:disabled { opacity: .2; }
+  body.phone #spk-btn-leave { display: flex; }
+  #spk-btn-leave { display: none; }
+
+  /* ── Emparejamiento (móvil sin sesión) ─────────────────────────────────── */
+  #spk-pair { display: none; position: fixed; inset: 0; z-index: 60; background: #0d0d0d; color: var(--ivory); flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px; text-align: center; }
+  body.phone.pairing #spk-pair { display: flex; }
+  #spk-pair .spk-pair-title { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; opacity: .5; }
+  #spk-pair .spk-pair-help { font-family: var(--font-ui), sans-serif; font-size: 16px; line-height: 1.5; opacity: .75; max-width: 32ch; }
+  #spk-pair-code { width: 9ch; font-family: var(--font-mono); font-size: 36px; letter-spacing: .3em; text-align: center; text-transform: uppercase; background: #111; color: var(--lemon); border: 1px solid rgba(255,255,255,.25); padding: 12px 0 12px .3em; outline: none; }
+  #spk-pair-code:focus { border-color: var(--lemon); }
+  #spk-pair-go { background: var(--lemon); color: #111; border: none; padding: 14px 28px; font-family: var(--font-mono); font-size: 14px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; cursor: pointer; }
+  #spk-pair-go:disabled { opacity: .4; }
+  #spk-pair-error { min-height: 1.4em; font-size: 13px; color: #ff2079; }
 </style>
 </head>
 <body>
@@ -284,7 +297,17 @@
   </div>
 
   <button id="spk-btn-open" title="Abrir ventana de presentación">▶ Presentar</button>
+  <button class="spk-btn-icon" id="spk-btn-leave" title="Desconectar el mando">✕</button>
 </div>
+
+<!-- Móvil: emparejamiento (solo con ?phone=1 y sin sesión) -->
+<form id="spk-pair" autocomplete="off">
+  <div class="spk-pair-title">Mando a distancia</div>
+  <div class="spk-pair-help">En el player pulsa <b>R</b> y teclea el código que aparece (o escanea el QR).</div>
+  <input id="spk-pair-code" inputmode="latin" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="6" placeholder="······" aria-label="Código de emparejamiento">
+  <button id="spk-pair-go" type="submit">Conectar</button>
+  <div id="spk-pair-error" role="alert"></div>
+</form>
 
 <!-- Main area: two columns -->
 <div id="spk-main">

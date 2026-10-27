@@ -193,39 +193,132 @@
   scaleAll();
 
   // ── Modo móvil (?phone=1): mando a distancia vía /api/remote ─────────────
-  // El player (deck/?remote=1) publica dónde está; aquí seguimos ese estado y
-  // publicamos next/prev. Sala fija KJ7M, sin seguridad, a propósito.
+  // El player crea una sala y muestra un código de un solo uso (R). Aquí lo
+  // canjeamos (tecleado o vía ?code= desde el QR) y guardamos el token del
+  // mando en localStorage, por deck, para que un reload no pida emparejar otra
+  // vez. Si la sala caduca o el player nos desvincula, volvemos a la pantalla
+  // de emparejamiento. Ver api/remote.mjs.
   const qs = new URLSearchParams(location.search);
   if (qs.get('phone') === '1') {
     document.body.classList.add('phone');
     const api = qs.get('api') || '/api/remote';
-    const phonePrev = document.getElementById('spk-phone-prev');
-    const phoneNext = document.getElementById('spk-phone-next');
+    const storeKey = 'cv-talks-remote-phone:' + location.pathname;
+    const phonePrev  = document.getElementById('spk-phone-prev');
+    const phoneNext  = document.getElementById('spk-phone-next');
+    const btnLeave   = document.getElementById('spk-btn-leave');
+    const pairForm   = document.getElementById('spk-pair');
+    const pairInput  = document.getElementById('spk-pair-code');
+    const pairGo     = document.getElementById('spk-pair-go');
+    const pairError  = document.getElementById('spk-pair-error');
+    let session = null;   // {room, token}
     let lastV = -1;
+    let following = false;
+
+    try { session = JSON.parse(localStorage.getItem(storeKey)); } catch (_) { session = null; }
+    if (session && !(session.room && session.token)) session = null;
+
+    function save() {
+      try { session ? localStorage.setItem(storeKey, JSON.stringify(session)) : localStorage.removeItem(storeKey); } catch (_) {}
+    }
+
+    async function post(body) {
+      const r = await fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw Object.assign(new Error(data.error || `remote ${r.status}`), { status: r.status });
+      return data;
+    }
+
+    function showPairing(msg) {
+      session = null; lastV = -1; save();
+      document.body.classList.add('pairing');
+      hudEl.classList.remove('remote-ko');
+      pairError.textContent = msg || '';
+      pairInput.value = '';
+      setTimeout(() => pairInput.focus(), 50);
+    }
+
+    function hidePairing() {
+      document.body.classList.remove('pairing');
+      pairError.textContent = '';
+    }
+
+    async function claim(code) {
+      pairGo.disabled = true;
+      pairError.textContent = '';
+      try {
+        const d = await post({ type: 'claim', code });
+        session = { room: d.room, token: d.controllerToken };
+        save();
+        hidePairing();
+        if (typeof d.order === 'number' && slides.some(s => s.order === d.order)) loadSlide(d.order);
+        follow();
+      } catch (e) {
+        showPairing(e.status === 404 ? 'Código no válido o ya usado. Pulsa R en el player para generar otro.' : 'No hay conexión con el servidor.');
+      } finally { pairGo.disabled = false; }
+    }
+
+    pairForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const code = pairInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (code.length === 6) claim(code);
+      else pairError.textContent = 'El código tiene 6 caracteres.';
+    });
+    pairInput.addEventListener('input', () => {
+      pairInput.value = pairInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+      if (pairInput.value.length === 6) pairForm.requestSubmit();
+    });
 
     function send(action) {
-      fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'nav', action }) }).catch(() => {});
+      if (!session) return;
+      post({ type: 'nav', room: session.room, token: session.token, action }).catch(e => {
+        if (e.status === 403 || e.status === 404) showPairing('El player ha cerrado la sala.');
+      });
     }
     phonePrev.addEventListener('click', () => send('prev'));
     phoneNext.addEventListener('click', () => send('next'));
 
-    (async function follow() {
-      while (true) {
-        try {
-          const r = await fetch(`${api}?v=${lastV}`, { cache: 'no-store' });
+    btnLeave.addEventListener('click', () => {
+      if (session) post({ type: 'leave', room: session.room, token: session.token }).catch(() => {});
+      showPairing('');
+    });
+
+    async function follow() {
+      if (following) return;
+      following = true;
+      try {
+        while (session) {
+          let r;
+          try {
+            r = await fetch(`${api}?room=${encodeURIComponent(session.room)}&token=${encodeURIComponent(session.token)}&v=${lastV}`, { cache: 'no-store' });
+          } catch (_) {
+            hudEl.classList.add('remote-ko');
+            await new Promise(res => setTimeout(res, 2000));
+            continue;
+          }
+          if (r.status === 403 || r.status === 404) {
+            showPairing(r.status === 403 ? 'El player te ha desvinculado.' : 'La sala ha caducado. Pulsa R en el player para emparejar de nuevo.');
+            return;
+          }
+          if (!r.ok) { hudEl.classList.add('remote-ko'); await new Promise(res => setTimeout(res, 2000)); continue; }
           const st = await r.json();
           lastV = st.v;
-          if (typeof st.order === 'number' && st.order !== currentOrder) {
-            const idx = slides.findIndex(s => s.order === st.order);
-            if (idx !== -1) loadSlide(st.order);
-          }
+          if (typeof st.order === 'number' && st.order !== currentOrder && slides.some(s => s.order === st.order)) loadSlide(st.order);
           hudEl.classList.remove('remote-ko');
-        } catch (_) {
-          hudEl.classList.add('remote-ko');
-          await new Promise(res => setTimeout(res, 2000));
         }
-      }
-    })();
+      } finally { following = false; }
+    }
+
+    // Arranque: ?code= (viene del QR) tiene prioridad sobre una sesión guardada.
+    const urlCode = qs.get('code');
+    if (urlCode) {
+      qs.delete('code');
+      history.replaceState(null, '', location.pathname + '?' + qs.toString());
+      claim(urlCode);
+    } else if (session) {
+      follow();
+    } else {
+      showPairing('');
+    }
   }
 
   // ── Init ─────────────────────────────────────────────────────────────────
