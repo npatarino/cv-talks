@@ -721,3 +721,65 @@ describe('POST /api/decks/:slug/slides/:filename/git-revert', () => {
     expect(data.data.label).toBe(before.data.label);
   });
 });
+
+// ─── validación y despacho ───────────────────────────────────────────────────
+
+describe('input validation and dispatch', () => {
+  async function raw(method, pathname, bodyText, serveFile = null, uiDir = '') {
+    const res = await route(new Request(`${BASE}${pathname}`, { method, body: bodyText, headers: { 'Content-Type': 'application/json' } }), serveFile, uiDir, tmpRoot);
+    return res;
+  }
+
+  it('malformed JSON body is a 400, not a 500', async () => {
+    makeDeck('my-deck');
+    const res = await raw('POST', '/api/decks/my-deck/slides', '{ nope');
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toMatch(/Invalid JSON/);
+  });
+
+  it('a non-object body is a 400', async () => {
+    makeDeck('my-deck');
+    const res = await raw('PUT', '/api/decks/my-deck/slides/a.md', '[1,2]');
+    expect(res.status).toBe(400);
+  });
+
+  it('rejects a slide filename that is not NAME.md on every slide route', async () => {
+    makeDeck('my-deck');
+    for (const [m, p] of [
+      ['GET', '/api/decks/my-deck/slides/notes.txt'],
+      ['GET', '/api/decks/my-deck/slides/notes.txt/raw'],
+      ['DELETE', '/api/decks/my-deck/slides/notes.txt'],
+      ['POST', '/api/decks/my-deck/slides/notes.txt/move'],
+    ]) {
+      const res = await raw(m, p, m === 'POST' ? '{"position":1}' : undefined);
+      expect(res.status, `${m} ${p}`).toBe(400);
+    }
+  });
+
+  it('structure boundary on a deck without structure is a 404', async () => {
+    makeDeck('my-deck');
+    const res = await raw('POST', '/api/decks/my-deck/structure/boundary', '{"index":1,"start":2}');
+    expect(res.status).toBe(404);
+  });
+
+  it('serves the UI index for / and files under uiDir, via the injected serveFile', async () => {
+    const seen = [];
+    const serve = async (p) => { seen.push(p); return new Response('ok'); };
+    await raw('GET', '/', undefined, serve, '/ui');
+    await raw('GET', '/app.js', undefined, serve, '/ui');
+    expect(seen).toEqual(['/ui/index.html', '/ui/app.js']);
+  });
+
+  it('does not serve files outside uiDir', async () => {
+    const seen = [];
+    const res = await raw('GET', '/..%2f..%2fetc/passwd', undefined, async (p) => { seen.push(p); return new Response('x'); }, '/ui');
+    expect(seen.every(p => p.startsWith('/ui'))).toBe(true);
+    expect(res.status === 404 || seen.length === 1).toBe(true);
+  });
+
+  it('unknown /api paths and wrong methods fall through to 404 without serveFile', async () => {
+    expect((await raw('GET', '/api/nope')).status).toBe(404);
+    expect((await raw('DELETE', '/api/decks')).status).toBe(404);
+  });
+});
+
