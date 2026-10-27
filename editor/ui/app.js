@@ -3,78 +3,23 @@
  */
 
 import { extractSvgFromText } from './clipboard-svg.mjs';
+import { $, dom } from './dom.js';
+import { state } from './state.js';
+import { toast } from './toast.js';
+import {
+  getConfig, getDecks, getTemplates, getTemplateSlides, getTemplateScaffold, getDesignSystemIcons, getGitStatus,
+  getSlides, getSlide, getSlideRaw, createSlide as createSlideApi, saveSlide, deleteSlide, reorderSlides,
+  moveSlide, revertSlide as revertSlideApi, getStructure, moveSectionBoundary as moveSectionBoundaryApi,
+  getAssets, uploadAsset as uploadAssetApi, exportPdf as exportPdfApi,
+} from './api-client.js';
 import { buildAssetInsertHTML, buildAssetSrc, mergeFields, defaultInsertPosition } from './editor-helpers.mjs';
 import { escHtml, slugifyAssetName } from './lib/strings.mjs';
 import { toEditorHTML as toEditorHTMLFor, cleanHTML as cleanHTMLFor } from './lib/html-transform.mjs';
 import { IMAGE_EXT_RE, glyphToDisplay, displayToGlyph } from './lib/glyph.mjs';
 import { TEMPLATE_OPTIONAL_FIELDS, isRawHtmlField, emptyItem, structuredItemsToMarkdown } from './lib/template-rules.mjs';
 
-const API = '';
-
-// The editor server (:3001) does not serve /talks assets — only Eleventy
-// (:8080) does. Slide HTML stores asset URLs as relative `/talks/...` paths so
-// the built site resolves them, but inside the contenteditable we must point
-// them at the Eleventy origin or the <img> renders broken.
-const PREVIEW_ORIGIN = 'http://localhost:8080';
 
 
-// Loaded async from /api/templates
-const TMPL = {};
-
-// ---- State ----
-const state = {
-  decks: [],
-  currentDeck: null,
-  slides: [],
-  selectedFilename: null,
-  slideData: null,
-  hasUnsaved: false,
-  draggingFilename: null,
-  dragOverFilename: null,
-  structure: null,            // narrative section map (ANSVA…) for the current deck
-  draggingSectionIndex: null, // section header being dragged to move its boundary
-  // Per-slide badges
-  dirtyFiles: new Set(),       // unsaved form changes (yellow)
-  uncommittedFiles: new Set(), // saved but not committed (teal)
-  livePreviewTimer: null,
-};
-
-// ---- DOM refs ----
-const $ = id => document.getElementById(id);
-const dom = {
-  deckSelector: $('deck-selector'),
-  deckTitle: $('deck-title'),
-  slideList: $('slide-list'),
-  previewScaler: $('preview-scaler'),
-  previewFrame: $('preview-frame'),
-  previewPlaceholder: $('preview-placeholder'),
-  previewLabel: $('preview-label'),
-  previewContainer: $('preview-container'),
-  formBody: $('form-body'),
-  saveStatus: $('save-status'),
-  btnSave: $('btn-save'),
-  btnAddSlide: $('btn-add-slide'),
-  btnRevert: $('btn-revert'),
-  btnMoveUp: $('btn-move-up'),
-  btnMoveDown: $('btn-move-down'),
-  btnDeleteSlide: $('btn-delete-slide'),
-  btnExportPdf: $('btn-export-pdf'),
-  btnPresent: $('btn-present'),
-  btnPresentPhone: $('btn-present-phone'),
-  notesPanel: $('notes-panel'),
-  notesTextarea: $('notes-textarea'),
-  btnViewMd: $('btn-view-md'),
-  btnNotesToggle: $('btn-notes-toggle'),
-  notesResizeHandle: $('notes-resize-handle'),
-  modalAdd: $('modal-add'),
-  modalConfirm: $('modal-confirm'),
-  newTemplate: $('new-template'),
-  newVariant: $('new-variant'),
-  newRecipe: $('new-recipe'),
-  newLabel: $('new-label'),
-  newPosition: $('new-position'),
-  confirmMessage: $('confirm-message'),
-};
 
 // ---- Preview scaling ----
 
@@ -94,34 +39,14 @@ function scalePreview() {
 
 new ResizeObserver(scalePreview).observe(document.getElementById('preview-container'));
 
-// ---- API ----
 
-async function apiFetch(path, opts = {}) {
-  const res = await fetch(API + path, {
-    headers: { 'Content-Type': 'application/json' },
-    ...opts,
-  });
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error(data.error || res.statusText);
-  }
-  return res.json();
-}
 
-// ---- Toast ----
 
-function toast(message, type = '') {
-  const el = document.createElement('div');
-  el.className = `toast${type ? ' ' + type : ''}`;
-  el.textContent = message;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 3000);
-}
 
 // ---- Deck loading ----
 
 async function loadDecks() {
-  const decks = await apiFetch('/api/decks');
+  const decks = await getDecks();
   state.decks = decks;
   dom.deckSelector.innerHTML =
     '<option value="">— select a deck —</option>' +
@@ -173,7 +98,7 @@ async function selectDeck(slug, initialOrder) {
 
 async function loadSlides() {
   if (!state.currentDeck) return;
-  const slides = await apiFetch(`/api/decks/${state.currentDeck}/slides`);
+  const slides = await getSlides(state.currentDeck);
   state.slides = slides;
   await loadStructure();
   renderSidebar();
@@ -184,7 +109,7 @@ async function loadSlides() {
 async function loadStructure() {
   if (!state.currentDeck) { state.structure = null; return; }
   try {
-    state.structure = await apiFetch(`/api/decks/${state.currentDeck}/structure`);
+    state.structure = await getStructure(state.currentDeck);
   } catch {
     state.structure = null; // deck has no structure — sidebar renders flat
   }
@@ -197,7 +122,7 @@ async function selectSlide(filename) {
   state.hasUnsaved = false;
   setStatus(false);
   pushUrlState(state.currentDeck, filename);
-  const slide = await apiFetch(`/api/decks/${state.currentDeck}/slides/${filename}`);
+  const slide = await getSlide(state.currentDeck, filename);
   state.slideData = slide;
   updatePreview(slide);
   renderForm(slide);
@@ -247,8 +172,9 @@ function updatePreview(slide) {
 /** Abre un modal con el markdown crudo de la slide seleccionada. */
 async function openMarkdownViewer() {
   if (!state.currentDeck || !state.selectedFilename) return;
-  const res = await fetch(`/api/decks/${state.currentDeck}/slides/${state.selectedFilename}/raw`);
-  const text = await res.text();
+  let text;
+  try { text = await getSlideRaw(state.currentDeck, state.selectedFilename); }
+  catch (e) { toast('Could not load markdown: ' + e.message, 'error'); return; }
   const backdrop = document.createElement('div');
   backdrop.className = 'modal-backdrop';
   const modal = document.createElement('div');
@@ -519,10 +445,7 @@ async function moveSectionBoundary(index, startOrder) {
   if (!state.currentDeck) return;
   try {
     setStatus('saving');
-    state.structure = await apiFetch(`/api/decks/${state.currentDeck}/structure/boundary`, {
-      method: 'POST',
-      body: JSON.stringify({ index, start: startOrder }),
-    });
+    state.structure = await moveSectionBoundaryApi(state.currentDeck, index, startOrder);
     renderSidebar();
     setStatus('saved');
     toast('Section boundary moved');
@@ -547,10 +470,7 @@ async function handleDrop(targetFilename) {
 
   try {
     setStatus('saving');
-    await apiFetch(`/api/decks/${state.currentDeck}/reorder`, {
-      method: 'POST',
-      body: JSON.stringify({ order: newOrder }),
-    });
+    await reorderSlides(state.currentDeck, newOrder);
     const sourceSlug = sourceFilename.replace(/^\d+-/, '');
     await loadSlides();
     // Find renamed slide (slug portion preserved)
@@ -581,10 +501,7 @@ async function moveSelected(direction) {
   const toPosition = direction === 'up' ? idx : idx + 2;
   try {
     setStatus('saving');
-    await apiFetch(`/api/decks/${state.currentDeck}/slides/${state.selectedFilename}/move`, {
-      method: 'POST',
-      body: JSON.stringify({ position: toPosition }),
-    });
+    await moveSlide(state.currentDeck, state.selectedFilename, toPosition);
     const oldSlug = state.selectedFilename.replace(/^\d+-/, '');
     await loadSlides();
     const updated = state.slides.find(s => s.filename.replace(/^\d+-/, '') === oldSlug);
@@ -609,10 +526,7 @@ async function revertSlide() {
   if (!state.selectedFilename || !state.currentDeck) return;
   try {
     // Run git checkout HEAD -- file on the server
-    const slide = await apiFetch(
-      `/api/decks/${state.currentDeck}/slides/${state.selectedFilename}/git-revert`,
-      { method: 'POST' }
-    );
+    const slide = await revertSlideApi(state.currentDeck, state.selectedFilename);
 
     state.slideData = slide;
     state.dirtyFiles.delete(state.selectedFilename);
@@ -783,7 +697,7 @@ async function onTemplateChange(newTemplate) {
 
   let scaffold;
   try {
-    scaffold = await apiFetch(`/api/template-scaffold?template=${encodeURIComponent(newTemplate)}&variant=${encodeURIComponent(newVariant)}`);
+    scaffold = await getTemplateScaffold(newTemplate, newVariant);
   } catch (e) {
     toast('Failed to load template scaffold: ' + e.message, 'error');
     return;
@@ -834,7 +748,7 @@ async function onVariantChange(newVariant) {
 
   let scaffold;
   try {
-    scaffold = await apiFetch(`/api/template-scaffold?template=${encodeURIComponent(template)}&variant=${encodeURIComponent(newVariant)}`);
+    scaffold = await getTemplateScaffold(template, newVariant);
   } catch {
     // Variant changes shouldn't be fatal — just mark unsaved and let the user save.
     markUnsaved();
@@ -925,11 +839,11 @@ function mkCheckbox(field, checked) {
 }
 
 function mkTemplateSelect(field, current) {
-  return mkSelect(field, Object.keys(TMPL).map(t => ({ value: t, label: t })), current);
+  return mkSelect(field, Object.keys(state.templates).map(t => ({ value: t, label: t })), current);
 }
 
 function mkVariantSelect(field, template, current) {
-  const variants = TMPL[template]?.variants ?? [{ name: 'default' }];
+  const variants = state.templates[template]?.variants ?? [{ name: 'default' }];
   return mkSelect(field, variants.map(v => ({ value: v.name, label: v.name + (v.usage ? ' — ' + v.usage.slice(0, 40) : '') })), current);
 }
 
@@ -1084,10 +998,7 @@ async function uploadAssetForDeck(deckSlug, blob, mimeType, suggestedName) {
 
   const dataBase64 = await blobToBase64(blob);
   try {
-    const result = await apiFetch(`/api/decks/${deckSlug}/assets`, {
-      method: 'POST',
-      body: JSON.stringify({ basename, mimeType, dataBase64 }),
-    });
+    const result = await uploadAssetApi(deckSlug, { basename, mimeType, dataBase64 });
     toast(result.resized ? `Saved (resized): ${result.filename}` : `Saved: ${result.filename}`, 'success');
     return result.filename;
   } catch (e) {
@@ -1181,7 +1092,7 @@ let iconBrowserData = null;
 async function openIconBrowser(deckSlug, onComplete) {
   if (!iconBrowserData) {
     try {
-      iconBrowserData = await apiFetch('/api/design-system/icons');
+      iconBrowserData = await getDesignSystemIcons();
     } catch (e) {
       toast('Failed to load icons: ' + e.message, 'error');
       return;
@@ -1192,7 +1103,7 @@ async function openIconBrowser(deckSlug, onComplete) {
   // they may have changed. These can be reused without re-uploading.
   let deckIcons = [];
   if (deckSlug) {
-    const assets = await apiFetch(`/api/decks/${deckSlug}/assets`).catch(() => []);
+    const assets = await getAssets(deckSlug).catch(() => []);
     deckIcons = (assets || []).filter(f => IMAGE_EXT_RE.test(f));
   }
 
@@ -1268,7 +1179,7 @@ async function openIconBrowser(deckSlug, onComplete) {
         const wrapper = document.createElement('div');
         wrapper.className = 'icon-svg-wrapper';
         const img = document.createElement('img');
-        img.src = `http://localhost:8080/talks/decks/${deckSlug}/assets/${filename}`;
+        img.src = `${state.previewOrigin}/talks/decks/${deckSlug}/assets/${filename}`;
         img.alt = filename;
         wrapper.appendChild(img);
 
@@ -1362,12 +1273,12 @@ async function openIconBrowser(deckSlug, onComplete) {
 
 /** Stored slide HTML → editor-renderable HTML. */
 function toEditorHTML(html) {
-  return toEditorHTMLFor(html, state.currentDeck, PREVIEW_ORIGIN);
+  return toEditorHTMLFor(html, state.currentDeck, state.previewOrigin);
 }
 
 /** Editor HTML → clean slide HTML. */
 function cleanHTML(html) {
-  return cleanHTMLFor(html, PREVIEW_ORIGIN);
+  return cleanHTMLFor(html, state.previewOrigin);
 }
 
 
@@ -1533,7 +1444,7 @@ function mkRichTextEditor(field, htmlValue, deckSlug, meta) {
     saveSelection();
     closePicker();
 
-    const assets = await apiFetch(`/api/decks/${deckSlug}/assets`).catch(() => []);
+    const assets = await getAssets(deckSlug).catch(() => []);
 
     pickerEl = document.createElement('div');
     pickerEl.className = 'asset-picker';
@@ -1603,7 +1514,7 @@ function mkRichTextEditor(field, htmlValue, deckSlug, meta) {
         const item = document.createElement('div');
         item.className = 'asset-item';
         item.title = filename;
-        item.innerHTML = `<img src="http://localhost:8080${src}" alt="${filename}"><span>${filename}</span>`;
+        item.innerHTML = `<img src="${state.previewOrigin}${src}" alt="${filename}"><span>${filename}</span>`;
         item.addEventListener('mousedown', e => {
           e.preventDefault();
           insertAsset(filename);
@@ -1678,7 +1589,7 @@ function mkGlyphInput(rawValue, deckSlug) {
   const preview = document.createElement('div');
   preview.className = 'glyph-preview';
   if (isImage && deckSlug) {
-    const imgSrc = `http://localhost:8080/talks/decks/${deckSlug}/assets/${displayValue}`;
+    const imgSrc = `${state.previewOrigin}/talks/decks/${deckSlug}/assets/${displayValue}`;
     preview.innerHTML = `<img src="${imgSrc}" alt="">`;
   } else {
     preview.textContent = displayValue || '—';
@@ -1693,7 +1604,7 @@ function mkGlyphInput(rawValue, deckSlug) {
   input.addEventListener('input', () => {
     const v = input.value.trim();
     if (IMAGE_EXT_RE.test(v) && deckSlug) {
-      preview.innerHTML = `<img src="http://localhost:8080/talks/decks/${deckSlug}/assets/${v}" alt="">`;
+      preview.innerHTML = `<img src="${state.previewOrigin}/talks/decks/${deckSlug}/assets/${v}" alt="">`;
     } else {
       preview.textContent = v || '—';
     }
@@ -1711,14 +1622,14 @@ function mkGlyphInput(rawValue, deckSlug) {
   let outsideClick = null;
   pickerBtn.addEventListener('click', async () => {
     if (pickerEl) { pickerEl.remove(); pickerEl = null; return; }
-    const assets = await apiFetch(`/api/decks/${deckSlug}/assets`).catch(() => []);
+    const assets = await getAssets(deckSlug).catch(() => []);
 
     pickerEl = document.createElement('div');
     pickerEl.className = 'asset-picker';
 
     function pickAsset(filename) {
       input.value = filename;
-      preview.innerHTML = `<img src="http://localhost:8080/talks/decks/${deckSlug}/assets/${filename}" alt="">`;
+      preview.innerHTML = `<img src="${state.previewOrigin}/talks/decks/${deckSlug}/assets/${filename}" alt="">`;
       markUnsaved();
       pickerEl.remove(); pickerEl = null;
       if (outsideClick) document.removeEventListener('mousedown', outsideClick);
@@ -1743,7 +1654,7 @@ function mkGlyphInput(rawValue, deckSlug) {
         const item2 = document.createElement('div');
         item2.className = 'asset-item';
         item2.title = filename;
-        item2.innerHTML = `<img src="http://localhost:8080/talks/decks/${deckSlug}/assets/${filename}" alt="${filename}"><span>${filename}</span>`;
+        item2.innerHTML = `<img src="${state.previewOrigin}/talks/decks/${deckSlug}/assets/${filename}" alt="${filename}"><span>${filename}</span>`;
         item2.addEventListener('click', () => pickAsset(filename));
         grid.appendChild(item2);
       });
@@ -1967,7 +1878,7 @@ function markUnsaved() {
 
 async function refreshGitStatus() {
   try {
-    const { modified } = await apiFetch('/api/git-status');
+    const { modified } = await getGitStatus();
     state.uncommittedFiles.clear();
     // Only consider files that are actual slide files (.md in decks/)
     modified
@@ -1986,10 +1897,7 @@ async function previewWrite() {
   const newData = collectFormData();
   if (!newData) return;
   try {
-    await apiFetch(`/api/decks/${state.currentDeck}/slides/${state.selectedFilename}`, {
-      method: 'PUT',
-      body: JSON.stringify({ data: newData }),
-    });
+    await saveSlide(state.currentDeck, state.selectedFilename, newData);
     state.slideData = { ...state.slideData, data: newData };
     // Eleventy detects the file change and rebuilds — iframe updates automatically
   } catch { /* silent — user can still manually save */ }
@@ -2025,10 +1933,7 @@ async function saveCurrentSlide(silent = false) {
   const savedFilename = state.selectedFilename;
   try {
     setStatus('saving');
-    await apiFetch(`/api/decks/${state.currentDeck}/slides/${savedFilename}`, {
-      method: 'PUT',
-      body: JSON.stringify({ data: newData }),
-    });
+    await saveSlide(state.currentDeck, savedFilename, newData);
     // Clear dirty badge, add uncommitted badge
     state.dirtyFiles.delete(savedFilename);
     state.uncommittedFiles.add(savedFilename);
@@ -2079,7 +1984,7 @@ async function openAddModal() {
   // Load template slides (cached after first load)
   if (tmplSlides.length === 0) {
     try {
-      tmplSlides = await apiFetch('/api/template-slides');
+      tmplSlides = await getTemplateSlides();
     } catch (e) {
       $('gallery-grid').innerHTML = `<div class="gallery-loading">Failed to load: ${escHtml(e.message)}</div>`;
       return;
@@ -2266,10 +2171,7 @@ async function addSlide() {
   const position = parseInt(dom.newPosition.value) || state.slides.length + 1;
   dom.modalAdd.hidden = true;
   try {
-    const result = await apiFetch(`/api/decks/${state.currentDeck}/slides`, {
-      method: 'POST',
-      body: JSON.stringify({ template, variant, recipe, label, position }),
-    });
+    const result = await createSlideApi(state.currentDeck, { template, variant, recipe, label, position });
     await loadSlides();
     await selectSlide(result.filename);
     toast('Slide added');
@@ -2280,13 +2182,11 @@ async function addSlide() {
 
 // ---- Delete slide ----
 
-let pendingDelete = null;
-
 function confirmDelete(filename) {
   const target = filename ?? state.selectedFilename;
   if (!target) return;
   const slide = state.slides.find(s => s.filename === target);
-  pendingDelete = target;
+  state.pendingDelete = target;
   dom.confirmMessage.textContent = `Delete "${slide?.label ?? target}"? This cannot be undone.`;
   dom.modalConfirm.hidden = false;
 }
@@ -2369,19 +2269,16 @@ function openSlideContextMenu(x, y, filename) {
 
 async function duplicateSlide(filename) {
   try {
-    const slide = await apiFetch(`/api/decks/${state.currentDeck}/slides/${filename}`);
+    const slide = await getSlide(state.currentDeck, filename);
     if (!slide) return;
 
     const idx = state.slides.findIndex(s => s.filename === filename);
     const pos = idx !== -1 ? idx + 2 : undefined;
 
-    const res = await apiFetch(`/api/decks/${state.currentDeck}/slides`, {
-      method: 'POST',
-      body: JSON.stringify({
-        ...slide.data,
-        slug: filename.replace(/\.md$/, ''),
-        position: pos,
-      }),
+    const res = await createSlideApi(state.currentDeck, {
+      ...slide.data,
+      slug: filename.replace(/\.md$/, ''),
+      position: pos,
     });
     await loadSlides();
     selectSlide(res.filename);
@@ -2391,15 +2288,15 @@ async function duplicateSlide(filename) {
 }
 
 async function doDelete() {
-  if (!pendingDelete) return;
-  const fn = pendingDelete;
-  pendingDelete = null;
+  if (!state.pendingDelete) return;
+  const fn = state.pendingDelete;
+  state.pendingDelete = null;
   dom.modalConfirm.hidden = true;
 
   const deletedIdx = state.slides.findIndex(s => s.filename === fn);
 
   try {
-    await apiFetch(`/api/decks/${state.currentDeck}/slides/${fn}`, { method: 'DELETE' });
+    await deleteSlide(state.currentDeck, fn);
     await loadSlides();
     if (state.slides.length > 0) {
       const nextIdx = deletedIdx > 0 ? deletedIdx - 1 : 0;
@@ -2431,12 +2328,7 @@ async function exportPdf() {
     <span>Exporting…</span>`;
 
   try {
-    const res = await fetch(`/api/decks/${state.currentDeck}/export-pdf`, { method: 'POST' });
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({ error: res.statusText }));
-      throw new Error(data.error || res.statusText);
-    }
-    const blob = await res.blob();
+    const blob = await exportPdfApi(state.currentDeck);
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -2481,7 +2373,7 @@ function presentDeckWithPhone() {
 function closeModals() {
   dom.modalAdd.hidden = true;
   dom.modalConfirm.hidden = true;
-  pendingDelete = null;
+  state.pendingDelete = null;
   if (zoomPopup) zoomPopup.style.display = 'none';
   closeSlideContextMenu();
 }
@@ -2561,14 +2453,17 @@ function wireEvents() {
 async function init() {
   wireEvents();
   try {
-    const meta = await apiFetch('/api/templates');
-    Object.assign(TMPL, meta);
+    state.previewOrigin = (await getConfig()).previewOrigin;
+  } catch { /* se queda con el origen por defecto */ }
+  try {
+    const meta = await getTemplates();
+    Object.assign(state.templates, meta);
   } catch {
     ['cover','big-concept','big-stat','quote','three-ideas','big-list','agenda','matrix',
      'roadmap','code-block','chart','comparison-table','kpi-grid','concept-shift',
      'resource-cards','speaker-bio','stack','faq','closing-qr','closing-socials',
      'demo','social-embed','icon','word-cloud'].forEach(n => {
-      TMPL[n] = { variants: [{ name: 'default' }] };
+      state.templates[n] = { variants: [{ name: 'default' }] };
     });
   }
   // Template gallery loads lazily when modal opens

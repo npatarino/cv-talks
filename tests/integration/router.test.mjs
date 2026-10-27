@@ -783,3 +783,11 @@ describe('input validation and dispatch', () => {
   });
 });
 
+describe('GET /api/config', () => {
+  it('exposes the preview origin used for slide previews', async () => {
+    const { status, data } = await call('GET', '/api/config');
+    expect(status).toBe(200);
+    expect(data.previewOrigin).toMatch(/^https?:\/\/[^/]+$/);
+  });
+});
+
