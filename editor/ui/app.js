@@ -4,8 +4,19 @@
 
 import { extractSvgFromText } from './clipboard-svg.mjs';
 import { buildAssetInsertHTML, buildAssetSrc, mergeFields, defaultInsertPosition } from './editor-helpers.mjs';
+import { escHtml, slugifyAssetName } from './lib/strings.mjs';
+import { toEditorHTML as toEditorHTMLFor, cleanHTML as cleanHTMLFor } from './lib/html-transform.mjs';
+import { IMAGE_EXT_RE, glyphToDisplay, displayToGlyph } from './lib/glyph.mjs';
+import { TEMPLATE_OPTIONAL_FIELDS, isRawHtmlField, emptyItem, structuredItemsToMarkdown } from './lib/template-rules.mjs';
 
 const API = '';
+
+// The editor server (:3001) does not serve /talks assets — only Eleventy
+// (:8080) does. Slide HTML stores asset URLs as relative `/talks/...` paths so
+// the built site resolves them, but inside the contenteditable we must point
+// them at the Eleventy origin or the <img> renders broken.
+const PREVIEW_ORIGIN = 'http://localhost:8080';
+
 
 // Loaded async from /api/templates
 const TMPL = {};
@@ -638,15 +649,6 @@ async function revertSlide() {
 
 // ---- Form rendering ----
 
-// Fields a template supports but a slide may not carry yet. They're surfaced
-// (empty) in the editor so the user can add them without hand-editing the .md.
-// Empty values are dropped on save (see collectFormData) so the markdown stays
-// clean for slides that don't use them.
-const TEMPLATE_OPTIONAL_FIELDS = {
-  'big-concept': { icon: { content: '', meta: 'Image_Src' } },
-  // Animaciones de fondo (HTML/JS) separadas de la imagen de fondo.
-  'cover': { animation: { content: '', meta: 'Animation_HTML' } },
-};
 
 function renderForm(slide) {
   const { data } = slide;
@@ -899,17 +901,6 @@ function mkTextarea(field, value) {
   return el;
 }
 
-/**
- * True when a field's content is a raw HTML/JS block rather than rich text.
- * Such content (animated backgrounds, embeds, absolutely/fixed-positioned
- * markup, <script>/<style>/<iframe>) breaks the contenteditable RTE — both
- * visually (overlay capturing pointer events) and on save (cleanHTML strips
- * style/script). These fields are edited as plain code in a textarea.
- */
-function isRawHtmlField(content, meta) {
-  return meta === 'Image_Background' || meta === 'Animation_HTML' || meta === 'Stage_HTML'
-    || /<script\b|<style\b|<iframe\b|position\s*:\s*(absolute|fixed)/i.test(content || '');
-}
 
 function mkSelect(field, options, current) {
   const el = document.createElement('select');
@@ -1013,16 +1004,6 @@ async function readClipboardImage() {
 }
 
 
-/** Slugify a filename for use as asset basename. */
-function slugifyAssetName(name) {
-  return name
-    .toLowerCase()
-    .replace(/\.[^.]+$/, '')          // strip extension
-    .normalize('NFD').replace(/[̀-ͯ]/g, '') // strip accents
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 60) || 'image';
-}
 
 /** Convert a Blob to base64 (without the data URL prefix). */
 function blobToBase64(blob) {
@@ -1379,21 +1360,16 @@ async function openIconBrowser(deckSlug, onComplete) {
 
 // ---- Rich text editor ----
 
-// The editor server (:3001) does not serve /talks assets — only Eleventy
-// (:8080) does. Slide HTML stores asset URLs as relative `/talks/...` paths so
-// the built site resolves them, but inside the contenteditable we must point
-// them at the Eleventy origin or the <img> renders broken.
-const PREVIEW_ORIGIN = 'http://localhost:8080';
-
-/** Stored slide HTML → editor-renderable HTML (absolutize asset URLs). */
+/** Stored slide HTML → editor-renderable HTML. */
 function toEditorHTML(html) {
-  // Los .md guardan paths cortos (`assets/x.svg`); para mostrarlos en el editor
-  // los absolutizamos contra el preview. cleanHTML() hace el camino inverso.
-  const deckBase = `${PREVIEW_ORIGIN}/talks/decks/${state.currentDeck}/assets/`;
-  return (html ?? '')
-    .replace(/(<img\b[^>]*\bsrc=")assets\//gi, `$1${deckBase}`)
-    .replace(/(<img\b[^>]*\bsrc=")\/talks\//gi, `$1${PREVIEW_ORIGIN}/talks/`);
+  return toEditorHTMLFor(html, state.currentDeck, PREVIEW_ORIGIN);
 }
+
+/** Editor HTML → clean slide HTML. */
+function cleanHTML(html) {
+  return cleanHTMLFor(html, PREVIEW_ORIGIN);
+}
+
 
 function mkRichTextEditor(field, htmlValue, deckSlug, meta) {
   const isImageOnly = meta === 'Image_Src';
@@ -1683,50 +1659,11 @@ function mkRichTextEditor(field, htmlValue, deckSlug, meta) {
   return wrapper;
 }
 
-/** Normalize contenteditable HTML back to clean slide HTML */
-function cleanHTML(html) {
-  return html
-    // Normalize bold/italic from browser defaults
-    .replace(/<b(\s[^>]*)?>/gi, '<strong$1>')
-    .replace(/<\/b>/gi, '</strong>')
-    .replace(/<i(\s[^>]*)?>/gi, '<em$1>')
-    .replace(/<\/i>/gi, '</em>')
-    // Remove contenteditable artifacts: <div>, <p> → flatten with <br>
-    .replace(/<div>/gi, '')
-    .replace(/<\/div>/gi, '<br>')
-    .replace(/<p>/gi, '')
-    .replace(/<\/p>/gi, '<br>')
-    // Strip trailing <br> at end
-    .replace(/(<br\s*\/?>\s*)+$/, '')
-    // Remove style attributes added by execCommand
-    .replace(/ style="[^"]*"/gi, '')
-    // Re-relativize asset URLs that were absolutized for in-editor rendering
-    .replace(/(<img\b[^>]*\bsrc=")https?:\/\/localhost:8080\//gi, '$1/')
-    // Assets del propio deck → path corto `assets/x` (lo expande el build)
-    .replace(/(<img\b[^>]*\bsrc=")\/talks\/decks\/[^/"]+\/assets\//gi, '$1assets/')
-    .trim();
-}
 
 // ---- Glyph field helpers ----
 
-const IMAGE_EXT_RE = /\.(png|jpg|jpeg|svg|gif|webp|avif)$/i;
-const IMG_ASSETS_RE = /^<img\s[^>]*src="(?:[^"]*\/)?assets\/([^"]+)"[^>]*>$/i;
 
-/** Extract display value from a glyph — filename or emoji/symbol */
-function glyphToDisplay(raw) {
-  const m = (raw ?? '').match(IMG_ASSETS_RE);
-  return m ? m[1] : (raw ?? '');
-}
 
-/** Convert display value back to glyph storage format */
-function displayToGlyph(display, deckSlug) {
-  if (!display) return '';
-  if (display.startsWith('<')) return display; // already HTML
-  if (IMAGE_EXT_RE.test(display)) {
-    return `<img src="assets/${display}" alt="">`;
-  }
-  return display; // emoji or plain text
-}
 
 function mkGlyphInput(rawValue, deckSlug) {
   const displayValue = glyphToDisplay(rawValue);
@@ -1862,17 +1799,6 @@ function mkAddItemBtn(container, items, template, variant) {
   return btn;
 }
 
-function emptyItem(template, variant) {
-  if (template === 'big-list') {
-    if (variant === 'glossary') return { term: '', desc: '' };
-    if (variant === 'checklist') return { text: '', state: 'todo' };
-    return { text: '' };
-  }
-  if (template === 'icon') return { glyph: '' };
-  if (template === 'three-ideas') return { title: '', desc: '' };
-  if (template === 'agenda') return { content: '' };
-  return { text: '' };
-}
 
 function addItemRow(container, item, idx, template, variant, deckSlug) {
   const row = document.createElement('div');
@@ -1994,7 +1920,7 @@ function collectFormData() {
         const key = el.dataset.itemField;
         if (el.dataset.glyphWrapper) {
           const textInput = el.querySelector('.glyph-text-input');
-          item[key] = displayToGlyph(textInput?.value ?? '', state.currentDeck);
+          item[key] = displayToGlyph(textInput?.value ?? '');
         } else {
           item[key] = el.value;
         }
@@ -2551,9 +2477,6 @@ function presentDeckWithPhone() {
 
 // ---- Helpers ----
 
-function escHtml(s) {
-  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
 
 function closeModals() {
   dom.modalAdd.hidden = true;
@@ -2662,40 +2585,5 @@ async function init() {
   }
 }
 
-function structuredItemsToMarkdown(items, variant) {
-  if (!Array.isArray(items)) return '';
-  let markdownLines = [];
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-    let line = '';
-    if (variant === 'bullets') {
-      line = `* ${item.text || ''}`;
-    } else if (variant === 'checklist') {
-      let box = ' ';
-      if (item.state === 'done') box = 'x';
-      else if (item.state === 'fail') box = '-';
-      line = `- [${box}] ${item.text || ''}`;
-    } else if (variant === 'glossary') {
-      const term = item.term || '';
-      const desc = item.desc || '';
-      line = `* **${term}**: ${desc}`;
-    } else {
-      const n = item.n || `${i + 1}`;
-      const displayN = /^[a-zA-Z0-9]+$/.test(n) ? `${n}.` : n;
-      line = `${displayN} ${item.text || ''}`;
-    }
-    markdownLines.push(line);
-
-    if (Array.isArray(item.sub)) {
-      for (let j = 0; j < item.sub.length; j++) {
-        const sub = item.sub[j];
-        const subN = sub.n || 'a';
-        const displaySubN = /^[a-zA-Z0-9]+$/.test(subN) ? `${subN}.` : subN;
-        markdownLines.push(`    ${displaySubN} ${sub.text || ''}`);
-      }
-    }
-  }
-  return markdownLines.join('\n');
-}
 
 init().catch(e => console.error('Editor init failed:', e));
