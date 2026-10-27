@@ -5,7 +5,7 @@ export default defineConfig({
     include: ['tests/unit/**/*.test.mjs', 'tests/integration/**/*.test.mjs'],
     coverage: {
       provider: 'v8',
-      include: ['editor/api/**'],
+      include: ['editor/api/**', 'theme/lib/**'],
       reporter: ['text', 'html'],
     },
   },
