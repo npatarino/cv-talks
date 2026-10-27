@@ -28,6 +28,7 @@ import {
 import { loadTemplateScaffold } from '../domain/scaffold.mjs';
 import { getStructure, setStructureBoundary } from '../structure.mjs';
 import { listDesignSystemIcons } from '../design-system.mjs';
+import { PREVIEW_ORIGIN } from '../../config.mjs';
 
 export { json, err, adaptVercel };
 
@@ -46,6 +47,8 @@ function on(method, pattern, handler) {
 const dir = ({ params, decksRoot }) => deckDir(params.slug, decksRoot);
 const body = async ({ req }) => v.object(await v.readJson(req));
 
+// Configuración que necesita la UI (dónde sirve Eleventy el preview).
+on('GET', '/api/config', () => ({ previewOrigin: PREVIEW_ORIGIN }));
 on('GET', '/api/decks', () => listDecks());
 on('GET', '/api/templates', () => getTemplatesMeta());
 on('GET', '/api/template-slides', () => listTemplateSlides());
