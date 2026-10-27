@@ -8,8 +8,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseMd, serializeMd } from './frontmatter.mjs';
-import { readSlides, renumberSlides, deleteSlide, moveSlide, buildFilename, slugFromFilename, getSlideDir } from './renumber.mjs';
-import { deckDir } from './decks.mjs';
+import { renumberSlides, deleteSlide, moveSlide, buildFilename } from './renumber.mjs';
+import { deckDir, getSlideDir, readSlides } from './store/deck-store.mjs';
 import { syncStructureOnInsert, syncStructureOnDelete } from './structure.mjs';
 import { NotFoundError } from './domain/errors.mjs';
 import { TEMPLATES_DIR, slidePreviewUrl as buildPreviewUrl } from '../config.mjs';
