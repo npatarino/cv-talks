@@ -11,6 +11,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { TALKS_ROOT } from '../../editor/config.mjs';
+import { findUndefinedNames } from '../helpers/undefined-names.mjs';
 
 function files(dir, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -25,7 +26,7 @@ const modules = [
   ...files(path.join(TALKS_ROOT, 'editor/ui')),
   ...files(path.join(TALKS_ROOT, 'theme/assets')),
   ...files(path.join(TALKS_ROOT, 'theme/lib')),
-].filter(f => !f.endsWith('theme/assets/viz.js') && !f.endsWith('theme/assets/present.js'));   // scripts clásicos
+];
 
 const rel = (f) => path.relative(TALKS_ROOT, f);
 
@@ -47,7 +48,9 @@ describe('browser modules', () => {
     describe(rel(file), () => {
       const code = fs.readFileSync(file, 'utf8');
 
-      it('parses as an ES module (no duplicate or invalid declarations)', () => {
+      const classicScript = /theme\/assets\/(present|viz)\.js$/.test(file);
+
+      it.skipIf(classicScript)('parses as an ES module (no duplicate or invalid declarations)', () => {
         // node --check solo trata el fichero como módulo si termina en .mjs
         const tmp = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'modcheck-')), 'm.mjs');
         fs.writeFileSync(tmp, code);
@@ -55,6 +58,12 @@ describe('browser modules', () => {
         fs.rmSync(path.dirname(tmp), { recursive: true, force: true });
         expect(r.stderr.split('\n').slice(0, 4).join('\n') + (r.status === 0 ? '' : ' [exit ' + r.status + ']')).toBe('');
         expect(r.status).toBe(0);
+      });
+
+      it('references only names it declares, imports or the browser provides', () => {
+        const classic = /theme\/assets\/(present|viz)\.js$/.test(file);
+        const missing = findUndefinedNames(code, { sourceType: classic ? 'script' : 'module' });
+        expect(missing.map(m => `${m.name} (line ${m.line})`)).toEqual([]);
       });
 
       it('imports only files and names that exist', () => {
