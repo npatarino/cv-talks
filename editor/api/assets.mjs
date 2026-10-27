@@ -13,8 +13,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { deckDir } from './decks.mjs';
-import { getSlideDir } from './renumber.mjs';
+import { deckDir, assetsDir } from './store/deck-store.mjs';
 import { ValidationError, ConflictError } from './domain/errors.mjs';
 
 const MAX_ICON_WIDTH = 512;
@@ -47,11 +46,11 @@ export async function uploadAsset(slug, opts, decksRoot) {
   if (!ext) throw new ValidationError(`Unsupported image type: ${mimeType}`);
 
   const baseDir = deckDir(slug, decksRoot);
-  const assetsDir = path.join(getSlideDir(baseDir), 'assets');
-  fs.mkdirSync(assetsDir, { recursive: true });
+  const targetDir = assetsDir(baseDir);
+  fs.mkdirSync(targetDir, { recursive: true });
 
   const filename = `${basename}.${ext}`;
-  const targetPath = path.join(assetsDir, filename);
+  const targetPath = path.join(targetDir, filename);
   if (fs.existsSync(targetPath)) {
     throw new ConflictError(`File already exists: ${filename}`);
   }

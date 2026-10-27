@@ -1,61 +1,21 @@
+/**
+ * Orden de las slides de un deck (`slides` en deck.config.json): renumerar,
+ * mover y borrar. La lectura y escritura de disco vive en store/deck-store.mjs.
+ */
+
 import fs from 'node:fs';
 import path from 'node:path';
-import { parseMd, serializeMd } from './frontmatter.mjs';
 import { NotFoundError } from './domain/errors.mjs';
+import { getSlideDir, readDeckConfig, writeDeckConfig, readSlides } from './store/deck-store.mjs';
 
-const SLIDE_FILE_RE = /^[a-z0-9_-]+\.md$/i;
-
-function getConfigPath(deckDir) {
-  return path.join(deckDir, 'deck.config.json');
-}
+// Compatibilidad: estos símbolos vivían aquí antes de existir el store.
+export { getSlideDir, readSlides };
 
 function readConfig(deckDir) {
-  const p = getConfigPath(deckDir);
-  if (fs.existsSync(p)) return JSON.parse(fs.readFileSync(p, 'utf8'));
-  return { slides: [] };
+  return readDeckConfig(deckDir) ?? { slides: [] };
 }
 
-function writeConfig(deckDir, config) {
-  fs.writeFileSync(getConfigPath(deckDir), JSON.stringify(config, null, 2), 'utf8');
-}
-
-export function getSlideDir(deckDir) {
-  const slidesDir = path.join(deckDir, 'slides');
-  return fs.existsSync(slidesDir) ? slidesDir : deckDir;
-}
-
-export function readSlides(deckDir) {
-  if (!fs.existsSync(deckDir)) return [];
-
-  const config = readConfig(deckDir);
-  const slideOrder = config.slides || [];
-
-  const targetDir = getSlideDir(deckDir);
-  const files = fs.readdirSync(targetDir).filter(f => {
-    if (!f.endsWith('.md')) return false;
-    if (f === 'index.md') return false;
-    return SLIDE_FILE_RE.test(f);
-  });
-
-  const slides = files.map(filename => {
-    const filepath = path.join(targetDir, filename);
-    const raw = fs.readFileSync(filepath, 'utf8');
-    const { data, body } = parseMd(raw);
-    
-    let order = slideOrder.indexOf(filename);
-    if (order === -1) order = Infinity; // Push unordered to the end
-
-    return { filename, filepath, data, body, _order: order };
-  });
-
-  slides.sort((a, b) => a._order - b._order);
-
-  // Inject computed order so rest of the app thinks it's 1-indexed
-  return slides.map((s, i) => {
-    s.data.order = i + 1;
-    return s;
-  });
-}
+const writeConfig = writeDeckConfig;
 
 export function slugFromFilename(filename) {
   return filename.replace(/\.md$/, '');

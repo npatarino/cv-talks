@@ -22,31 +22,12 @@
  * The deckDir-level helpers wrap them with config read/write.
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
 import { readSlides } from './renumber.mjs';
-import { deckDir } from './decks.mjs';
+import { deckDir, readDeckConfig, writeDeckConfig, configPath } from './store/deck-store.mjs';
 import { NotFoundError } from './domain/errors.mjs';
 
-const CONFIG_FILENAME = 'deck.config.json';
-
-export function configPath(dir) {
-  return path.join(dir, CONFIG_FILENAME);
-}
-
-export function readDeckConfig(dir) {
-  const p = configPath(dir);
-  if (!fs.existsSync(p)) return null;
-  try {
-    return JSON.parse(fs.readFileSync(p, 'utf8'));
-  } catch {
-    return null;
-  }
-}
-
-export function writeDeckConfig(dir, config) {
-  fs.writeFileSync(configPath(dir), JSON.stringify(config, null, 2) + '\n', 'utf8');
-}
+// Compatibilidad: estos símbolos vivían aquí antes de existir el store.
+export { configPath, readDeckConfig, writeDeckConfig };
 
 function slideCount(dir) {
   return readSlides(dir).length;
