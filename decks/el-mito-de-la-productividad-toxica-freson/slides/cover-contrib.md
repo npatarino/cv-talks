@@ -9,6 +9,5 @@ fields:
   logo: { content: '<img src="assets/logo-freson-fest.svg" alt="FresON fest">', meta: Image_Logo }
   title: { content: El mito de la productividad tóxica, meta: Title_Hero }
   deck: { content: "", meta: Subtitle_Text }
-notes: |
-  Portada: el fondo es un gráfico de actividad tipo GitHub que se llena de verde cada vez más rápido, se pone rojo y explota.
+notes: 'Agradecer la presentación, y empezar directamente con la historia del viernes a las 15:30.'
 ---
