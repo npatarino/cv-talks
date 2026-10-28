@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Pruebas · continuidad · sobreesfuerzo'
+label: Pruebas · continuidad · sobreesfuerzo
 variant: default
 fields:
   stage:

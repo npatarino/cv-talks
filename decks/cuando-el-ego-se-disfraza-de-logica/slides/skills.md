@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Skills · matriz de habilidades'
+label: Skills · matriz de habilidades
 variant: default
 fields:
   stage:
@@ -25,6 +25,6 @@ fields:
 steps: 0
 notes: |
   Y una buena forma de empezar a hacerse una ida de qué es uno, y dónde está es con una matriz de habilidades.
-
+  
   ¿Quién tiene una matriz de habilidades definida en su trabajo? Un montón, ¿y cuántos de ustedes abren ese documento más de 1 vez al año.
 ---

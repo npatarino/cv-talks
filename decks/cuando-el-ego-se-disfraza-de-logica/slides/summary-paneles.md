@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Summary · el control de mi carrera'
+label: Summary · el control de mi carrera
 variant: default
 fields:
   stage:

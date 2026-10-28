@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Ownership'
+label: Ownership
 variant: default
 fields:
   stage:
@@ -25,12 +25,12 @@ fields:
 steps: 0
 notes: |
   Ser consciente del ownership. ¿Propiedad?
-
+  
   Tu nivel de ownership es tu capacidad de agarrar los challenges. Es tu actitud.
-
+  
   Si pensás, alguien debería hacer eso... Da un pasito adelante y hacelo vos.
-
+  
   Eso es ownership, y no hay crecimiento sin ownership.
-
+  
   Mi VP me puso la cara colorada.
 ---

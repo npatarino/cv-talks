@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Sesgo de género'
+label: Sesgo de género
 variant: default
 fields:
   stage:

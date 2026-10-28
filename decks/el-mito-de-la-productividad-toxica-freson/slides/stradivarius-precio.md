@@ -1,7 +1,7 @@
 ---
 template: big-stat
 recipe: energy-loud
-label: Stradivari · $15,9M por un violín
+label: 'Stradivari · $15,9M por un violín'
 variant: default
 fields:
   stat_number: { content: '$<span id="cnt159">15,9</span>', meta: Stat_Value }

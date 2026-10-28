@@ -18,7 +18,7 @@ items:
       const trigger = document.getElementById("cube-anim-trigger");
       let animating = !trigger.hasAttribute("data-reveal-hidden");
       let startT = animating ? performance.now() : null;
-
+      
       const observer = new MutationObserver(() => {
         const isHidden = trigger.hasAttribute("data-reveal-hidden");
         if (!isHidden && !animating) {
@@ -29,14 +29,14 @@ items:
         }
       });
       observer.observe(trigger, { attributes: true, attributeFilter: ["data-reveal-hidden"] });
-
+      
       (function f(t){
         let k = 0;
         if (animating && startT !== null) {
           const r = ((t - startT) % 7000) / 7000;
           k = r < .1 ? 0 : r < .4 ? ez((r - .1) / .3) : r < .6 ? 1 : r < .9 ? 1 - ez((r - .6) / .3) : 0;
         }
-
+      
         const rx=-.419*k,ry=.593*k,p=1/((1-k)/6e4+k/1400);
         const P=V.map(v=>{
           const x=v[0]+12*k,y=v[1]+8*k,z=v[2];

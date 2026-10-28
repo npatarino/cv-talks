@@ -1,7 +1,7 @@
 ---
 template: word-cloud
 recipe: canvas-dark
-label: 'Skills de tu empresa'
+label: Skills de tu empresa
 variant: default
 fields:
   words: { content: 'Ownership, Ambiguity, Communication, Technical complexity, Impact, Execution, Process improvement, Knowledge / judgement, Mentorship, Collaboration', meta: Words }

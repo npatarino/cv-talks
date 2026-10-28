@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Portada'
+label: Portada
 variant: default
 fields:
   stage:

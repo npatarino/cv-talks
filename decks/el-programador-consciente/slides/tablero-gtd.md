@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Tablero GTD · mise-en-place'
+label: Tablero GTD · mise-en-place
 variant: default
 fields:
   stage:

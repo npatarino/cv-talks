@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Verdades que duelen'
+label: Verdades que duelen
 variant: default
 fields:
   stage:
@@ -26,8 +26,8 @@ steps: 0
 notes: |
   La verdad es que, si cambiaba mi perspectiva, desde mi hacia los demás. Tal vez no merecía esa promoción.
   En realidad sentía que si no la conseguía es que yo no estaba haciendo las cosas bien, YO no estaba bien. Que no valía lo suficiente.
-
+  
   Porque cómo no voy a tener esa promoción con todo lo que construí.
-
+  
   Pero estaba buscando esa promoción desde mi inseguridad, desde mis miedos, en lugar de desde yo podía sumar, aportar a los demás.
 ---

@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Mis valores'
+label: Mis valores
 variant: default
 fields:
   stage:
@@ -25,9 +25,9 @@ fields:
 steps: 0
 notes: |
   Sé consciente de quién sos, de qué sos.
-
+  
   Yo dediqué bastante tiempo a definir cuáles son mis valores, por qué estos y no otros.
   Pero esto me ayuda a tomar decisiones, es lo que nos mantiene haciendo lo correcto cuando nadie mira.
-
+  
   Tener bien definidos tus valores te va a ayudar a ser quien querés ser, a ser esa persona que se merecerá la promoción.
 ---

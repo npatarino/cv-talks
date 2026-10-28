@@ -58,7 +58,7 @@ fields:
         go(parseInt(section.dataset.step || '0', 10));
       })();
       </script>
-  note: { content: 'Datos inventadísimos.', meta: Note_Text }
+  note: { content: Datos inventadísimos., meta: Note_Text }
 notes: |
   Speed: PR throughput, lead time, deployment frequency, perceived rate of delivery. Seguimos midiendo la velocidad, pero como una guía, como una referencia, no como el objetivo. Porque nos ayudan a encontrar posibles mejoras.
   Effectiveness: Developer Experience Index, time to 10th PR, ease of delivery, regrettable attrition.

@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Porque soy muy bueno en lo que hago'
+label: Porque soy muy bueno en lo que hago
 variant: default
 fields:
   stage:

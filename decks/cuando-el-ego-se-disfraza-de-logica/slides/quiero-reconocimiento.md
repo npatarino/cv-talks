@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Quiero que se reconozca todo el esfuerzo que hago'
+label: Quiero que se reconozca todo el esfuerzo que hago
 variant: default
 fields:
   stage:

@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Reflexioná'
+label: Reflexioná
 variant: default
 fields:
   stage:

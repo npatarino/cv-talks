@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Qué podés ser · escalera'
+label: Qué podés ser · escalera
 variant: default
 fields:
   stage:

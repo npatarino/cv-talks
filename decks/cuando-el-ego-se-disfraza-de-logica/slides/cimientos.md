@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Gaps · impacto · evidencias · checkpoints'
+label: Gaps · impacto · evidencias · checkpoints
 variant: default
 fields:
   stage:
@@ -26,19 +26,19 @@ steps: 4
 revealStart: 1
 notes: |
   Encontrando los gaps que hay en mi matriz. Feedback.
-
+  
   Impact (ask). En mi caso no es sólo relevante que en lo que trabaje potencialmente tenga impacto, sino que lo tenga realmente.
   Evidences (Mentor). Tengo que dejar huella que se pueda analizar. Colaboración, open to challenge...
-
+  
   Checkpoint (Mánager). Analyze all the 1:1 con tu mánager. Ahí hay info muy importante.
   A mí me pasa que, algunas veces, me dice cosas que no me gustan, que no me hacen sentir bien, pero que las acepto, las analizo en frío y las asimilo.
-
+  
   Una promo no se pide, se construye.
-
+  
   Checkpoint (Mánager). Analyze all the 1:1 con tu mánager. Ahí hay info muy importante.
-
+  
   Es importante tener humildad en este caso
   A mí me pasa que, algunas veces, me dice cosas que no me gustan, que no me hacen sentir bien, que sean incómodas.
-
+  
   Pero sobre todo soy profesional, así que las acepto, las analizo en frío y las asimilo. Igual no todo lo que te digan hay que cambiar. Los polos.
 ---

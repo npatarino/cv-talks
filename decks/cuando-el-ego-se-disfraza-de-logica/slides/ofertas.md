@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Ofertas abiertas'
+label: Ofertas abiertas
 variant: default
 fields:
   stage:

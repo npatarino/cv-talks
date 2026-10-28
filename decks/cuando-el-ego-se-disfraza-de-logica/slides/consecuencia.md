@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Recompensa → consecuencia'
+label: Recompensa → consecuencia
 variant: default
 fields:
   stage:

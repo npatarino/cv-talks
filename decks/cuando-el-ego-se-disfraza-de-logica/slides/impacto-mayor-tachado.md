@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Tengo un impacto mayor a algunas personas de ese rol · tachado'
+label: Tengo un impacto mayor a algunas personas de ese rol · tachado
 variant: default
 fields:
   stage:
@@ -25,7 +25,7 @@ fields:
 steps: 0
 notes: |
   Compararse descontextualiza.
-
+  
   Las decisiones de lidership se hacen con información sistémica, no percepciones locales.
   Es decir... Tal vez tu visión parece real, vista desde tu posición, pero desde otra perspectiva no lo es.
   No sabés la performance de la otra persona. Que una persona de otro rol no tenga una buena performance no hace que vos que performás excepcionalmente estés impactando al nivel que se espera del siguiente rol.

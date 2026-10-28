@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Company values · Eventbrite'
+label: Company values · Eventbrite
 variant: default
 fields:
   stage:

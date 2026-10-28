@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Lo que dejé'
+label: Lo que dejé
 variant: default
 fields:
   stage:
@@ -27,7 +27,7 @@ revealStart: 1
 notes: |
   Dejé mi casa, mis amigos, mis costumbres, y aunque no lo parezca, también dejé mi acento. (Son muchas las veces que se me escapa el acento madrileño o frases es españolas)
   En definitiva, dejé mi tierra, y con eso una parte de mí.
-
+  
   Dejé mi casa, mis amigos, mis costumbres, y aunque no lo parezca, también dejé mi acento. (Son muchas las veces que se me escapa un Madriz o un ejque)
   En definitiva, dejé mi tierra, y con eso una parte de mí.
 ---

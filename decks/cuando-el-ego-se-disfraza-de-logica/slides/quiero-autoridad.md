@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Poder validar mi autoridad'
+label: Poder validar mi autoridad
 variant: default
 fields:
   stage:

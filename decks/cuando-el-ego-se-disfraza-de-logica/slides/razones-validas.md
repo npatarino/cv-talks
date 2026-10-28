@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Razones válidas'
+label: Razones válidas
 variant: default
 fields:
   stage:

@@ -53,7 +53,7 @@ fields:
         function apply(){ var st=parseInt(sec.dataset.step||'0',10); sec.querySelectorAll('.slot').forEach(function(el){ el.classList.toggle('down', st>=1); }); }
         sec.addEventListener('vizstep', apply); apply(); window.addEventListener('load', apply); })();
       </script>
-  note: { content: 'Ilustración conceptual.', meta: Note_Text }
+  note: { content: Ilustración conceptual., meta: Note_Text }
 notes: |
   Bus factor de uno. Todo el conocimiento de algo importante está en una sola persona, y el proyecto queda a un autobús de distancia de pararse.
   Y a veces esa persona sos vos. Sos el salvador.

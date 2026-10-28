@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Proceso · 37'' por día'
+label: "Proceso · 37' por día"
 variant: default
 fields:
   stage:

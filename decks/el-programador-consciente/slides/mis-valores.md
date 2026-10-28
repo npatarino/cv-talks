@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: energy-loud
-label: 'Mis valores'
+label: Mis valores
 variant: default
 fields:
   stage:

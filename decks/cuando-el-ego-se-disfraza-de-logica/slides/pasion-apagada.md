@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'La pasión se apaga'
+label: La pasión se apaga
 variant: default
 fields:
   stage:
@@ -25,63 +25,63 @@ fields:
 steps: 0
 notes: |
   Y no digo que siempre tengamos que estar motivados. No somos máquinas de pasión.
-
+  
   Al final del día, somos profesionales. Nos pagan por lo que hacemos.
-
+  
   Pero ese es el síntoma, no la causa.
   Porque creo, esto tiene menos validez que un vídeo de Tiktok, que es porque en algún momento dejaron de preguntarse qué querían.
-
+  
   Dejaron de cuestionar.
-
+  
   Dejaron de decidir.
-
+  
   Y se dejaron llevar.
-
+  
   Ahora están viviendo la vida que otros fueron diseñando para ellos.
-
+  
   El mánager que los rotó de proyecto.
-
+  
   La empresa que les definió una carrera “tipo”.
-
+  
   El mercado que empujó hacia lo que estaba de moda.
-
+  
   Y así, sin notarlo, dejaron de liderar su camino… y empezaron a seguir uno que no eligieron.
-
+  
   Están en un lugar donde tal vez nunca hubieran querido estar…
-
+  
   si hubieran sido conscientes de qué querían.
-
+  
   Y por eso, el primer paso para tomar el control de tu carrera no es cambiar de empresa.
-
+  
   No es pedir una promo.
-
+  
   No es hacer un curso de inteligencia artificial. (Aunque si es el de Javi y Rafa de Codely sí, ese sí que vale la pena)
-
+  
   El primer paso es conocerte.
-
+  
   Saber quién sos.
-
+  
   Dónde estás parado.
-
+  
   Qué querés realmente.
-
+  
   Y, lo más importante, por qué lo querés.
-
+  
   Y lo sé porque me pasó.
-
+  
   Porque yo también estuve en piloto automático.
-
+  
   Porque durante años hice las cosas “bien”, laburando mucho, resolviendo tickets, aceptando todos los challenges que me venían, sin preguntarme si eran las cosas correctas para mí.
-
+  
   Hasta que un día me senté conmigo mismo y me hice tres preguntas:
-
+  
   ¿Dónde estoy?
-
+  
   ¿Dónde quiero estar?
-
+  
   y ¿Por qué?
-
+  
   Y fue en ese momento donde empezó el cambio.
-
+  
   El verdadero. El momento en el que empezó mi camino de programador consciente.
 ---

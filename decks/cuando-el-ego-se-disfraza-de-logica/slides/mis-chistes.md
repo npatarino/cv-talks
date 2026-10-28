@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Una ciudad que no entendía mis chistes'
+label: Una ciudad que no entendía mis chistes
 variant: default
 fields:
   stage:
@@ -26,6 +26,6 @@ steps: 2
 revealStart: 0
 notes: |
   Estaba en una ciudad que no entendía mis chistes, ni muchas de mis palabras.
-
+  
   Estaba en un país que todavía no había ganado un mundial. Na, humor argentino. Ven cómo no se entiende mis chistes.
 ---

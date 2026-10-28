@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Cita · Epicteto.'
+label: Cita · Epicteto.
 variant: default
 fields:
   stage:
@@ -25,13 +25,13 @@ fields:
 steps: 0
 notes: |
   Seguramente lo dijo con un acento menos argentino.
-
+  
   Y esto no sólo es algo que aplica a tu vida personal, sino también a tu laburo, a tu trabajo.
   A veces te tocan equipos que no elegiste, mánagers que no te entienden, apoyan o guían, o momentos en los que sentís que todo lo hacés no alcanza.
   ¿Quién se sintió alguna vez que le tocó un equipo, un mánager, un compañero o un proyecto que no hubieran elegido?
-
+  
   Ahí estamos, a partir de ahora, cada vez que piensen que les tocó algo que no elegiriean, les tiene que resonar esta frase.
-
+  
   ¿Y cómo respondés a eso?
   ¿Con bronca? ¿Con resignación? ¿Con cinismo?
   Y ahí empieza el primer paso de verdad para controlar cómo respondés.

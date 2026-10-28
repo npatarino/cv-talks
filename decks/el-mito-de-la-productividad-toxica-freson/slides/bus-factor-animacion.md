@@ -57,7 +57,7 @@ fields:
         function apply(){ var st=parseInt(sec.dataset.step||'0',10); sec.querySelectorAll('.slot').forEach(function(el,i){ el.classList.toggle('down', st>=i+1); }); }
         sec.addEventListener('vizstep', apply); apply(); window.addEventListener('load', apply); })();
       </script>
-  note: { content: 'Ilustración conceptual.', meta: Note_Text }
+  note: { content: Ilustración conceptual., meta: Note_Text }
 notes: |
   Cuanto más bajo el bus factor, más frágil es el proyecto.
   Si cinco personas tienen el conocimiento, el bus tiene que atropellar a cinco. Si lo tiene una sola, basta con un bus.

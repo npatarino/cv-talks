@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: energy-loud
-label: 'Push → Pull'
+label: Push → Pull
 variant: default
 fields:
   title: { content: '<span style="color:#E24A6E">Push</span> → <span style="color:#3B6FE0">Pull</span>', meta: Title_Text }

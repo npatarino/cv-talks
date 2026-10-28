@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Multiply'
+label: Multiply
 variant: default
 fields:
   stage:
@@ -25,18 +25,18 @@ fields:
 steps: 0
 notes: |
   MULTIPLY. Multiplicación.
-
+  
   Vos crecés, pero hacés que otros también crezcan.
-
+  
   Mentorías. 
-
+  
   Te enseño, te acompaño, te hago crecer.
-
+  
   Estoy a tu lado.
-
+  
   Sponsorship.
-
+  
   Te impulso, te expongo, hablo por vos cuando vos no estás.
-
+  
   Estoy delante tuyo.
 ---

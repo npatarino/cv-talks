@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Documentos de dirección'
+label: Documentos de dirección
 variant: default
 fields:
   stage:

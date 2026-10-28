@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Tengo un impacto mayor a algunas personas de ese rol'
+label: Tengo un impacto mayor a algunas personas de ese rol
 variant: default
 fields:
   stage:

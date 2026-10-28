@@ -1,7 +1,7 @@
 ---
 template: icon
 recipe: cool-fresh
-label: 'Casino · 2017'
+label: Casino · 2017
 variant: default
 items:
   - { glyph: '<img src="assets/casino.png" alt="" style="width:auto;height:3.2em">' }

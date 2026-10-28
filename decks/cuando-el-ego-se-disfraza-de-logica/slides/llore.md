@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Lloré'
+label: Lloré
 variant: default
 fields:
   stage:

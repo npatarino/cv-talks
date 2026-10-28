@@ -1,7 +1,7 @@
 ---
 template: big-list
 recipe: canvas-quiet
-label: 'Impacto no es'
+label: Impacto no es
 variant: bullets
 fields:
   title: { content: 'Impacto<br><em>no es</em>…', meta: Title_Text }

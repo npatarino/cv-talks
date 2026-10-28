@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'La historia de mi promoción · ahora'
+label: La historia de mi promoción · ahora
 variant: default
 fields:
   stage:

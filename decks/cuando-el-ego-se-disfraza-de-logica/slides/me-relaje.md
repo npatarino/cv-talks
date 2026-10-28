@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Me relajé'
+label: Me relajé
 variant: default
 fields:
   stage:

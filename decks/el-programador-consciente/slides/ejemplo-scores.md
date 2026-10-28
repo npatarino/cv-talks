@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Ejemplo · carta FIFA'
+label: Ejemplo · carta FIFA
 variant: default
 fields:
   stage:

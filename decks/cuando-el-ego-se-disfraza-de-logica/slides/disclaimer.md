@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Disclaimer · tu trabajo no te define'
+label: Disclaimer · tu trabajo no te define
 variant: default
 fields:
   stage:
@@ -26,7 +26,7 @@ steps: 1
 revealStart: 0
 notes: |
   No sos mejor o peor persona si usás clean architecture, no sos mejor o peor persona si conocés patrones de diseño. No sos mejor o peor persona si sos junior, senior, o principal. Ni tu rol, ni tu código te define.
-
+  
   Te define como sos con tus amigos, con tu pareja, con tus padres, con tus hijos, con tus mascotas o con tus vecinos.
   Igualmente en esta charla vamos a centrarnos en nuestra parte profesional, porque no creo que hayan venido a escucharme hablar de cómo mejorar dinámicas familiares.
 ---

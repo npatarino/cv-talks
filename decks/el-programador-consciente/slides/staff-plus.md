@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: paper
-label: 'Staff+ · arquetipos'
+label: Staff+ · arquetipos
 variant: default
 fields:
   stage:

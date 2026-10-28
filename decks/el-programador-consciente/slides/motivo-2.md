@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: energy-loud
-label: 'Motivo 02 · continuidad'
+label: Motivo 02 · continuidad
 variant: default
 fields:
   stage:

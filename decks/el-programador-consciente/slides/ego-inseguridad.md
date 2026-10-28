@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Ego · inseguridad'
+label: Ego · inseguridad
 variant: default
 fields:
   stage:

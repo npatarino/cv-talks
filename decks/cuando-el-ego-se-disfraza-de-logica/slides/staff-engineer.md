@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Libro · Staff Engineer'
+label: Libro · Staff Engineer
 variant: default
 fields:
   stage:

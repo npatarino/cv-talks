@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Sesgo de afinidad'
+label: Sesgo de afinidad
 variant: default
 fields:
   stage:

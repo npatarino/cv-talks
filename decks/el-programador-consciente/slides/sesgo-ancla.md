@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Sesgo de ancla'
+label: Sesgo de ancla
 variant: default
 fields:
   stage:

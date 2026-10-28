@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Agarrá la pala'
+label: Agarrá la pala
 variant: default
 fields:
   stage:
@@ -25,8 +25,8 @@ fields:
 steps: 0
 notes: |
   En Argentina tenemos una frase que usamos un montón, agarrá la pala.
-
+  
   Y como pueden imaginar significa dejá de mirar y ponete a laburar, ponete a trabajar. Hacete cargo, tomá la responsabilidad de convertir tu historia en realidad.
-
+  
   Pero justo antes de empezar, y ya con este nivel alto de autoconocimiento, porque te hiciste las preguntas incómodas de dónde estoy, por qué quiero realmente la promoción, y ese análisis honesto y doloroso de si te la merecés o no, estás en el momento perfecto para definir lo que muchas empresas tienen bien definido, pero son muy pocos los ingenieros, product mánager, diseñadores, e incluso líderes de nuestro sector que lo tienen a nivel personal.
 ---

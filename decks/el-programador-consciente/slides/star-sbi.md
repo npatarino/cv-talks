@@ -4,7 +4,7 @@ recipe: canvas-quiet
 label: 'STAR & SBI'
 variant: glossary
 fields:
-  title: { content: 'Frameworks.', meta: Title_Text }
+  title: { content: Frameworks., meta: Title_Text }
 itemsMarkdown: |
   * **STAR**: Situation · Task · Action · Result.
   * **SBI**: Situation · Behaviour · Impact.

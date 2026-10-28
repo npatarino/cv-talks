@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Influencia'
+label: Influencia
 variant: default
 fields:
   stage:

@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Utilidad'
+label: Utilidad
 variant: default
 fields:
   stage:

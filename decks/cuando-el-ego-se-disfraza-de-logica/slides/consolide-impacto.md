@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Ya consolidé mi impacto en mi rol'
+label: Ya consolidé mi impacto en mi rol
 variant: default
 fields:
   stage:

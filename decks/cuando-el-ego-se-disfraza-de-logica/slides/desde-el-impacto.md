@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Razones desde el impacto'
+label: Razones desde el impacto
 variant: default
 fields:
   stage:
@@ -25,6 +25,6 @@ fields:
 steps: 0
 notes: |
   “Una promoción no va a sanar mis inseguridades, no va a validar mi talento, y no va a llenar un vacío que no soy capaz de nombrar.
-
+  
   La quiero… pero la quiero por lo que me permite hacer. No por lo que espero que me haga sentir.”
 ---

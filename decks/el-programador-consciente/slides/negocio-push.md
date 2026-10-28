@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Negocio · push notifications'
+label: Negocio · push notifications
 variant: default
 fields:
   stage:

@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Vengo sosteniendo un nivel de dedicación muy alto'
+label: Vengo sosteniendo un nivel de dedicación muy alto
 variant: default
 fields:
   stage:

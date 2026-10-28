@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Documento · ADR'
+label: Documento · ADR
 variant: default
 fields:
   stage:

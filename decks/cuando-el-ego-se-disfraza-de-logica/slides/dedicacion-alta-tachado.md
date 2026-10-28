@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Vengo sosteniendo un nivel de dedicación muy alto · tachado'
+label: Vengo sosteniendo un nivel de dedicación muy alto · tachado
 variant: default
 fields:
   stage:
@@ -25,6 +25,6 @@ fields:
 steps: 0
 notes: |
   Otra vez, el compromiso no reemplaza al impacto.
-
+  
   Puede ser mala priorización, no de madurez.
 ---

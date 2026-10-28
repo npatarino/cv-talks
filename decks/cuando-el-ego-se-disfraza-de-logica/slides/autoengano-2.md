@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'El autoengaño'
+label: El autoengaño
 variant: default
 fields:
   stage:
