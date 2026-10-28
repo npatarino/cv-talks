@@ -62,7 +62,7 @@ Se corrigieron con tests, la comparación con gray-matter quedó como test perma
 
 ### Pendiente (no incluido en el alcance)
 
-Ver «Deuda conocida» en [architecture.md](architecture.md): Chromium por operación, resize siempre a PNG, 203 slides no canónicas, `present.js` y `viz.js` como scripts clásicos.
+Ver «Deuda conocida» en [architecture.md](architecture.md): Chromium por operación, resize siempre a PNG, `present.js` y `viz.js` como scripts clásicos.
 
 ---
 
