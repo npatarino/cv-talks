@@ -8,7 +8,13 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 import { parseMd, serializeMd } from '../../editor/api/lib/frontmatter.mjs';
+
+// Parser YAML de referencia (el que usa Eleventy): nuestro parser propio debe
+// coincidir con él en todos los ficheros reales, antes y después de serializar.
+const matter = createRequire(import.meta.url)('gray-matter');
+const asRef = (v) => JSON.parse(JSON.stringify(v, (k, x) => (x instanceof Date ? x.toISOString() : x)));
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
@@ -72,6 +78,24 @@ describe('Deck slide files — parse/serialize round-trip', () => {
 
       expect(data2, `${rel}: data round-trip failed`).toEqual(data);
       expect(body2, `${rel}: body round-trip failed`).toBe(body);
+    });
+  }
+});
+
+describe('Our parser agrees with the real YAML parser (gray-matter)', () => {
+  for (const filepath of [...templateFiles, ...deckFiles]) {
+    const rel = path.relative(ROOT, filepath);
+    it(`agrees: ${rel}`, () => {
+      const original = fs.readFileSync(filepath, 'utf8');
+      const ref = matter(original);
+      const ours = parseMd(original);
+      expect(asRef(ours.data), `${rel}: parse differs from gray-matter`).toEqual(asRef(ref.data));
+      expect(ours.body, `${rel}: body differs from gray-matter`).toBe(ref.content);
+
+      const reserialized = serializeMd(ours.data, ours.body);
+      const ref2 = matter(reserialized);
+      expect(asRef(ref2.data), `${rel}: serialized output reads differently in gray-matter`).toEqual(asRef(ref.data));
+      expect(ref2.content, `${rel}: serialized body differs`).toBe(ref.content);
     });
   }
 });
