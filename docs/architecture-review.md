@@ -27,7 +27,18 @@ Plan ejecutado completo, en commits pequeños sobre `main`. La estructura result
 | 4 · UI | `app.js` de 2.701 a 103 líneas en 30 módulos (6 de ellos puros, en `lib/`); un único selector de assets; estado, DOM, bus de eventos y cliente API propios. |
 | 5 · Cierre | Capas finales (`lib/store/domain/services/http`), shims eliminados, `architecture.md` reescrito. |
 
-Tests: de 626 a 905 unitarios/integración, y de 13 a 40 e2e. Siguen en verde salvo el fallo de datos conocido de `templates-roundtrip`.
+Tests: de 626 a 1.292 unitarios/integración, y de 13 a 40 e2e. Todo en verde: el fallo de datos de `templates-roundtrip` era una slide sin el `---` de cierre y se corrigió.
+
+### Formateo canónico y bugs del parser YAML
+
+Al pasar las 333 slides al YAML canónico (`bun run decks:format`) se comparó el resultado con gray-matter (el parser que usa Eleventy) y salieron cuatro bugs en `lib/frontmatter.mjs` que habrían perdido datos al reescribir:
+
+- Strings que YAML lee como número o booleano (`"2012."`, `"+15"`, `yes`/`no`) salían sin comillas.
+- Los espacios finales dentro de `notes: |` se perdían.
+- Los items de lista con varias claves (`- label: x` + `cells:`) o con bloque (`- glyph: |`) se truncaban al primer par: desaparecían la animación del cubo y las filas de la tabla de skills.
+- Las colecciones inline anidadas (`[..]` dentro de `{..}`) se leían como texto.
+
+Se corrigieron con tests, la comparación con gray-matter quedó como test permanente, y después se reformatearon 201 slides con contenido idéntico y build byte a byte igual.
 
 ### Decisiones de la sección 5
 

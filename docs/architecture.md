@@ -256,7 +256,7 @@ Puertas de calidad automáticas (no hay build ni tipos que las hagan):
 - `browser-modules.test.mjs` — cada módulo del navegador: parsea como módulo, no declara dos veces un nombre, no usa nombres sin declarar, no importa nada sin usar, y cada import relativo apunta a un fichero y a un export que existen.
 - `architecture.test.mjs` — la regla de dependencias entre capas y la ausencia de ciclos en la UI.
 
-Un test falla de forma conocida: `templates-roundtrip` con `decks/el-mito-de-la-productividad-toxica-freson/slides/media-hora.md`, una slide sin `template`. Es un dato del deck, no del código.
+`templates-roundtrip` comprueba además que nuestro parser YAML (`lib/frontmatter.mjs`) coincide con gray-matter, el que usa Eleventy, en todas las slides y templates, antes y después de serializar.
 
 ---
 
@@ -274,5 +274,4 @@ Un test falla de forma conocida: `templates-roundtrip` con `decks/el-mito-de-la-
 
 - Playwright lanza un Chromium nuevo por cada exportación a PDF y por cada subida que necesita resize (~1–2 s). Aceptable para una herramienta local.
 - El resize de imágenes siempre produce PNG aunque el origen sea JPEG o WebP.
-- 203 de 333 slides no están en el YAML canónico del editor (`bun run decks:format-check`). No se ha reformateado nada para no generar un diff enorme.
 - `present.js` y `viz.js` siguen siendo scripts clásicos; compartir código con ellos requeriría convertirlos a módulos y comprobar el orden de pintado.
