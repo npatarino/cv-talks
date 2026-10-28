@@ -1,0 +1,93 @@
+---
+permalink: /talks/offline/index.html
+eleventyExcludeFromCollections: true
+layout: false
+---
+<!doctype html>
+<html lang="es">
+<head>
+<meta name="chimi-seo-skip" content="offline fallback served by the service worker, not a public landing">
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sin conexión · ChimiChurri Code</title>
+<link rel="stylesheet" href="{{ '/talks/styles/tokens.css' | url }}">
+<link rel="stylesheet" href="{{ '/talks/styles/base.css' | url }}">
+<style>
+  /* Página que el Service Worker sirve cuando falta una página y no hay red.
+     Mismo lenguaje que un big-concept con recipe critical: superficie plasma,
+     título display con la palabra clave en itálica editorial, todo centrado.
+     Se adapta al viewport (ocupa una pestaña o el iframe del player). */
+  html, body { height: 100%; }
+  body.offline-page {
+    margin: 0;
+    background: var(--recipe-surface);
+    color: var(--recipe-ink);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+  .offline-page main { padding: 4vmin; }
+  .offline-page h1 {
+    font-family: var(--recipe-font-display);
+    font-weight: var(--recipe-weight-display);
+    letter-spacing: var(--recipe-letter-spacing-primary);
+    font-size: clamp(48px, 13vmin, 220px);
+    line-height: 0.95;
+    margin: 0;
+  }
+  .offline-page h1 em {
+    font-family: var(--font-editorial); font-style: italic; font-weight: 600;
+    font-size: 1.4em; line-height: 0.95;
+    color: var(--recipe-em);
+  }
+  .offline-page .note {
+    margin: 4vmin auto 0;
+    font-family: var(--recipe-font-editorial);
+    font-size: clamp(18px, 4vmin, 56px);
+    line-height: 1.25;
+    max-width: 28ch;
+    opacity: 0.9;
+  }
+  .offline-page .retry {
+    margin-top: 5vmin;
+    font-family: var(--font-mono);
+    font-size: clamp(11px, 1.8vmin, 20px);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .offline-page .retry::before {
+    content: ""; display: inline-block; width: 0.7em; height: 0.7em; border-radius: 50%;
+    background: var(--recipe-em); margin-right: 0.9em; vertical-align: middle;
+    animation: offline-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes offline-pulse { 50% { opacity: 0.2; transform: scale(0.7); } }
+  @media (prefers-reduced-motion: reduce) { .offline-page .retry::before { animation: none; } }
+</style>
+</head>
+<body class="offline-page" data-recipe="critical">
+<main>
+  <h1>Sin <em>conexión</em>.</h1>
+  <p class="note">Esta slide no está guardada en este equipo.</p>
+  <p class="retry">Reintentando</p>
+</main>
+<script>
+// Cuando vuelve la red se recarga la URL original (el worker sirve esta página en
+// su lugar). El sondeo lleva una cabecera que el worker deja pasar siempre a la
+// red: sin ella respondería desde la caché y parecería que hay conexión.
+(function () {
+  var busy = false;
+  function probe() {
+    if (busy) return;
+    busy = true;
+    fetch(location.href, { cache: 'no-store', headers: { 'X-Offline-Probe': '1' } })
+      .then(function (r) { if (r.ok) location.reload(); })
+      .catch(function () {})
+      .then(function () { busy = false; });
+  }
+  window.addEventListener('online', probe);
+  setInterval(probe, 3000);
+})();
+</script>
+</body>
+</html>
