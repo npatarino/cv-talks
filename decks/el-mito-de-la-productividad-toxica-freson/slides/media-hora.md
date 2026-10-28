@@ -10,3 +10,4 @@ notes: |
   Bloqueen media hora en el calendario, antes de abrir Jira y antes de contestar el primer Slack, y háganse una sola pregunta: de todo lo que tengo por delante esta semana, ¿qué genera impacto y qué solo me mantiene ocupado? Y elijan una cosa. Una métrica que no tiene sentido, algo que borrar, algo que automatizar, algo que soltar. Una.
   Media hora. Si no la encuentran, ese ya es el primer dato.
   Porque si no lo hacen... solo van a conseguir que su productividad sea cada vez...
+---
