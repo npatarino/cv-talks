@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Mentoring · informal'
+label: Mentoring · informal
 variant: default
 fields:
   stage:

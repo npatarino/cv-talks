@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Remember the future'
+label: Remember the future
 variant: default
 fields:
   stage:
@@ -26,8 +26,8 @@ steps: 1
 revealStart: 0
 notes: |
   Segunda etapa de nuestro camino. Yo la llamo, remeber the future.
-
+  
   Imaginate que estás en el próximo ciclo de promociones. Y se presentó tu candidatura. Y conseguiste la promoción.
-
+  
   ¿Qué decía esa historia?
 ---

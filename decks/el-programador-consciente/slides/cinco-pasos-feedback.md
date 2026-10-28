@@ -1,7 +1,7 @@
 ---
 template: big-list
 recipe: canvas-quiet
-label: 'Cinco pasos · feedback'
+label: Cinco pasos · feedback
 variant: numeric
 fields:
   title: { content: 'Cinco pasos para que el<br>feedback te haga <em>crecer</em>.', meta: Title_Text }

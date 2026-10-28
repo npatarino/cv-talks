@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Métricas'
+label: Métricas
 variant: default
 fields:
   stage:

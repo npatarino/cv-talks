@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'SMART'
+label: SMART
 variant: default
 fields:
   stage:

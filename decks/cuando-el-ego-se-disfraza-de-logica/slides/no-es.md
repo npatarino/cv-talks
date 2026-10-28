@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Impacto no es…'
+label: Impacto no es…
 variant: default
 fields:
   stage:

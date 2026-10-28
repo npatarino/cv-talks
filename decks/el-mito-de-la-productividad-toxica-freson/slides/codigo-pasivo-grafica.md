@@ -22,7 +22,7 @@ fields:
         <span data-from="2" style="--c:var(--recipe-em)">Coste</span>
         <span data-from="3" style="--c:var(--recipe-ink)">Valor</span>
       </div>
-  note: { content: '', meta: Note_Text }
+  note: { content: "", meta: Note_Text }
 notes: |
   Cada línea que escribimos es, desde el segundo uno, código legacy. Es una superficie nueva para que aparezcan bugs, una dependencia que hay que actualizar y una carga cognitiva para el que venga después.
   Las líneas acumuladas suben, pero el coste de mantenerlas sube más rápido y acaba por superarlas, mientras el valor que entregamos se aplana.

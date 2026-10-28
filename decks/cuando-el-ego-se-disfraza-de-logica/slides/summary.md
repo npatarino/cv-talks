@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Summary'
+label: Summary
 variant: default
 fields:
   stage:

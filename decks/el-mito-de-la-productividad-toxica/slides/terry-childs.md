@@ -5,7 +5,7 @@ label: Terry Childs · 2008
 variant: divider
 fields:
   title: { content: 'TERRY<br><em>CHILDS</em>', meta: Title_Text }
-  sub: { content: 2008 · San Francisco - California., meta: Subtitle_Text }
+  sub: { content: '2008 · San Francisco - California.', meta: Subtitle_Text }
 notes: |
   No creo que nadie conozca a Terry Childs porque no es muy conocida su historia, pero sí que armó un quilombito en California a principios de los 2000.
   Terry Childs era el administrador de redes de la ciudad de San Francisco. Un tipo brillante que trabajaba muchísimo y que diseñó toda la infraestructura de la red de San Francisco, controlando incluso la red eléctrica del ayuntamiento.

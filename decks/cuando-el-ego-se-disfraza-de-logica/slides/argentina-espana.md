@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Argentina → España'
+label: Argentina → España
 variant: default
 fields:
   stage:
@@ -25,6 +25,6 @@ fields:
 steps: 0
 notes: |
   Yo no decidí venir a España.
-
+  
   Yo no quería venir a España.
 ---

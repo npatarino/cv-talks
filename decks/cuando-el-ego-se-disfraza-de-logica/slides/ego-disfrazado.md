@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Ego disfrazado de lógica'
+label: Ego disfrazado de lógica
 variant: default
 fields:
   stage:

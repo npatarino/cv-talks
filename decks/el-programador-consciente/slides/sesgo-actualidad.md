@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Sesgo de actualidad'
+label: Sesgo de actualidad
 variant: default
 fields:
   stage:

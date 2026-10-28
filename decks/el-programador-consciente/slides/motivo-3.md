@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: energy-loud
-label: 'Motivo 03 · sobreesfuerzo'
+label: Motivo 03 · sobreesfuerzo
 variant: default
 fields:
   stage:

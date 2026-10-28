@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Get into it with Eventbrite'
+label: Get into it with Eventbrite
 variant: default
 fields:
   stage:

@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Quizás no sos vos el que elige cómo empieza tu historia'
+label: Quizás no sos vos el que elige cómo empieza tu historia
 variant: default
 fields:
   stage:

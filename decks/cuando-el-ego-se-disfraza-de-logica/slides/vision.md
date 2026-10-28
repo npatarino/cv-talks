@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Visión'
+label: Visión
 variant: default
 fields:
   stage:
@@ -26,6 +26,6 @@ steps: 0
 notes: |
   Mirar más allá del ticket.
   Entender el por qué hacemos las cosas. Entender a nuestros usuarios, a nuestro producto, entender las consecuencias.
-
+  
   Teniendo una visión clara, vamos a saber decir cuándo sí y cuándo no.
 ---

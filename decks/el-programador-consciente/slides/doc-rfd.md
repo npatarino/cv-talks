@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Documento · RFD'
+label: Documento · RFD
 variant: default
 fields:
   stage:

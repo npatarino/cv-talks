@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Que no te promocionen no significa que no tengas las habilidades'
+label: Que no te promocionen no significa que no tengas las habilidades
 variant: default
 fields:
   stage:

@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Pensamiento estoico'
+label: Pensamiento estoico
 variant: default
 fields:
   stage:
@@ -26,6 +26,6 @@ steps: 0
 notes: |
   Con los años descubrí que ese había sido un pensamiento bastante estoico.
   Pero estoico del bueno, del estoicismo Epicteto, Séneca o Marco Aurelio, no el estoicismo falso de estos pseudo-gurús que te dicen que no valés para nada si no te despertás a las 5 de la mañana, te duchás con agua fría y hacés 50 burpees antes de tomarte tu primer batido de proteínas.
-
+  
   La máxima más importante del pensamiento estoico es...
 ---

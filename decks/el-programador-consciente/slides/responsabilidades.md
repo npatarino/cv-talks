@@ -1,7 +1,7 @@
 ---
 template: big-list
 recipe: canvas-quiet
-label: 'Evolución de las  responsabilidades'
+label: Evolución de las  responsabilidades
 variant: numeric
 fields:
   title: { content: 'Evolución de las<br><em>responsabilidades</em>.', meta: Title_Text }

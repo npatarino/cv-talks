@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Por qué merecés esa promoción'
+label: Por qué merecés esa promoción
 variant: default
 fields:
   stage:

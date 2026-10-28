@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Quiero dar mi siguiente paso'
+label: Quiero dar mi siguiente paso
 variant: default
 fields:
   stage:

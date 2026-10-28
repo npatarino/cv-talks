@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Por qué quiero esa promoción'
+label: Por qué quiero esa promoción
 variant: default
 fields:
   stage:

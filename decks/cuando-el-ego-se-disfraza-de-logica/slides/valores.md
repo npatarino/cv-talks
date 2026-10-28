@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Valores'
+label: Valores
 variant: default
 fields:
   stage:

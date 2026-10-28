@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Cita · Epicteto.'
+label: Cita · Epicteto.
 variant: default
 fields:
   stage:

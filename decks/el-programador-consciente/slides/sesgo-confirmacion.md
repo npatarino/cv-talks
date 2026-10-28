@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Sesgo de confirmación'
+label: Sesgo de confirmación
 variant: default
 fields:
   stage:

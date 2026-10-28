@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Pasión'
+label: Pasión
 variant: default
 fields:
   stage:
@@ -25,8 +25,8 @@ fields:
 steps: 0
 notes: |
   No quiero generalizar, pero muchos de nosotros entramos a este mundo por pasión. Porque nos fascinaba resolver problemas. Porque nos encantaba construir.
-
+  
   Esa sensación de compilar algo y que funcione. De ver una app andando. De que alguien te diga: “che, gracias por esto, me cambió el día”.
-
+  
   Pero ahora veo compañeras y compañeros que después de algún tiempo, ese brillo en los ojos empieza a apagarse.
 ---

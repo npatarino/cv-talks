@@ -29,7 +29,7 @@ notes: |
   Y tal vez no me hubiera dado cuenta si no hubiera tenido ese feedback.
   Por eso pido feedback, a menudo.
   Pequeños dos consejitos...
-
+  
   Hay dos tipos de feedback. El informal y el formal. Si tenés el formal en tu empresa, aprovechalo. Usalo en tu favor.
   Pedí feedback específico tanto en tiempo como en situación.
 ---

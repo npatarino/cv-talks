@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'El viaje'
+label: El viaje
 variant: default
 fields:
   stage:

@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Ya consolidé mi impacto en mi rol · tachado'
+label: Ya consolidé mi impacto en mi rol · tachado
 variant: default
 fields:
   stage:
@@ -25,7 +25,7 @@ fields:
 steps: 0
 notes: |
   Consolidar tu impacto no implica escalar tu impacto.
-
+  
   Ni la antigüedad no es sinónimo de seniority.
   El tiempo suma experiencia, pero el crecimiento se demuestra con impacto.
   IMPACTO.

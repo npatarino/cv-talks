@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Control sobre mi vida'
+label: Control sobre mi vida
 variant: default
 fields:
   stage:

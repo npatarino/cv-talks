@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Documento · detallado'
+label: Documento · detallado
 variant: default
 fields:
   stage:

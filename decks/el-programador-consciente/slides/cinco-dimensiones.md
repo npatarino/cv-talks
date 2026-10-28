@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Cinco dimensiones'
+label: Cinco dimensiones
 variant: default
 fields:
   stage:

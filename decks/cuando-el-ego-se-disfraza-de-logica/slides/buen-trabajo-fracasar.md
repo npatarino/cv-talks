@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Podés hacer un muy buen trabajo y fracasar en tu rol'
+label: Podés hacer un muy buen trabajo y fracasar en tu rol
 variant: default
 fields:
   stage:

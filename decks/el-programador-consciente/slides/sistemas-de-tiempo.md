@@ -1,10 +1,10 @@
 ---
 template: big-list
 recipe: canvas-quiet
-label: 'Sistemas de gestión del tiempo'
+label: Sistemas de gestión del tiempo
 variant: numeric
 fields:
-  title: { content: 'Sistemas.', meta: Title_Text }
+  title: { content: Sistemas., meta: Title_Text }
 itemsMarkdown: |
   1. To-do list
   2. GTD (Get Things Done)

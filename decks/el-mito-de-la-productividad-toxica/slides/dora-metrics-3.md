@@ -9,5 +9,4 @@ fields:
   icon: { content: '<img src="assets/rocket.png" alt="" class="title-icon">', meta: Image_Src }
 notes: |
   Introducido por GitHub/Microsoft para recordar que los ingenieros no son fábricas de código.
-  
 ---

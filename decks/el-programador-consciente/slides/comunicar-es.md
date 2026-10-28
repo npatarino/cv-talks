@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Comunicar es'
+label: Comunicar es
 variant: default
 fields:
   stage:

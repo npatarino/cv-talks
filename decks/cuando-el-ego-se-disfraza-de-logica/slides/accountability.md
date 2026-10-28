@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Accountability'
+label: Accountability
 variant: default
 fields:
   stage:
@@ -26,6 +26,6 @@ steps: 0
 notes: |
   Hacete cargo. Hacete cargo no sólo de la tarea, también del resultado. Tomá la responsabilidad. Responsabilidad.
   Cambiá el pensamiento de "ya hice mi tarea" por ¿ya está resuelto o todavía tengo algo que hacer?
-
+  
   Imaginate que tu tarea es hacer un cambio en el sistema de l10n de tu app, y lo hacés, lo cambiás. Y además, vas más allá de tu tarea y creás tickets para que el resto de equipos actualicen a la nueva versión. Eso está bien, pero no es accountability. Accountability es que además, hagas seguimiento, hagas push, y que no pares hasta que los cambios de todos los equipos estén hechos.
 ---

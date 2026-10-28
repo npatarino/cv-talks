@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Eje de motivación'
+label: Eje de motivación
 variant: default
 fields:
   stage:
@@ -26,8 +26,8 @@ steps: 3
 revealStart: 0
 notes: |
   El eje de la motivación: de mí → hacia el impacto”
-
+  
   El eje de la motivación: de mí → hacia el impacto”
-
+  
   Suena a premio, no a responsabilidad.
 ---

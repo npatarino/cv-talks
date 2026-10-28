@@ -1,7 +1,7 @@
 ---
 template: big-list
 recipe: canvas-quiet
-label: 'Impacto · op-ex'
+label: Impacto · op-ex
 variant: numeric
 fields:
   title: { content: '¿Impacto<br>en <em>qué</em>?', meta: Title_Text }

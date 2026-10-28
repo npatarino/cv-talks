@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Un buen documento da'
+label: Un buen documento da
 variant: default
 fields:
   stage:

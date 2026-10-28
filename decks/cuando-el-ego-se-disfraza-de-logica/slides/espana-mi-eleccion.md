@@ -26,6 +26,6 @@ steps: 2
 revealStart: 0
 notes: |
   Y así, yo, después de años de reflexión, entendí que no es el lugar lo que te hace quedarte o querer irte, sino que es lo que decidís hacer en ese lugar. España dejó de ser una imposición y se convirtió en mi elección.
-
+  
   Y ahí construí mi camino, mi historia, que se fue llenando de un montón de amigos, de un montón de personas a las que tengo muchísimo cariño, y mi historia se convirtió en una más grande cuando encontré a la persona más maravillosa del mundo y con ella seguimos construyendo la mejor historia que podíamos construir.
 ---

@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Sacá tiempo para analizarte'
+label: Sacá tiempo para analizarte
 variant: default
 fields:
   stage:

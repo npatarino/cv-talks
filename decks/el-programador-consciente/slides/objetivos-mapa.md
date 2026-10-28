@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: paper
-label: 'Objetivos · mapa'
+label: Objetivos · mapa
 variant: default
 fields:
   stage:

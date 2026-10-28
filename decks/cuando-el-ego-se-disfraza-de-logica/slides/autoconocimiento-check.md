@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Autoconocimiento · hecho'
+label: Autoconocimiento · hecho
 variant: default
 fields:
   stage:

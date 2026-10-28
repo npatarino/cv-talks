@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Feedback'
+label: Feedback
 variant: default
 fields:
   stage:

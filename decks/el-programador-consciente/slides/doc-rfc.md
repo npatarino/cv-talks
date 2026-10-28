@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Documento · RFC'
+label: Documento · RFC
 variant: default
 fields:
   stage:

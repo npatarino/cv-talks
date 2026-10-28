@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Brillar e iluminar'
+label: Brillar e iluminar
 variant: default
 fields:
   stage:
@@ -25,11 +25,11 @@ fields:
 steps: 0
 notes: |
   El caso de antes es un caso muy claro, quería ponerlo para que se viera bien lo que quiero decir, pero normalmente no es tan obvio. 
-
+  
   A veces ejecuto de más. A veces escribo una propuesta técnica y la implemento. A veces tengo el conocimiento de cómo implementar algo y lo hago. A veces hay una tarea bloqueada, la hago y la desbloqueo.
-
+  
   ¿Cómo lo sé? Por el feedback. Porque mi mánayer, mis compañeros u otros líderes me dieron ese feedback, algunos me lo regalaron directamente, a otros les pedí feedback sobre mi comportamiento.
-
+  
   Implementar, desbloquear... Eso es bueno. Pero no es lo que se espera, por lo menos no es lo que se espera siempre de mi rol.
   Tengo que dar la oportunidad de poder implementar a otros compañeros, de compartir algo de conocimiento ya sea de la tecnología o del negocio, tengo que habilitar a que las tareas se desbloqueen, no a convertirme en un cuello de botella.
   Dicen que hay momentos en los que en tu carrera tenés que brillar y en otros iluminar. Pues yo no estaba iluminando.

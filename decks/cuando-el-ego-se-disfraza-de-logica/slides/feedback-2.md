@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Feedback · pedilo bien'
+label: Feedback · pedilo bien
 variant: default
 fields:
   stage:
@@ -26,16 +26,16 @@ steps: 0
 notes: |
   Ya hablamos antes del feedback, pero quiero volver un poquito porque no sólo nos ayuda a saber dónde estamos, sino también en cómo progresamos.
   Porque es una herramienta para visibilizar el desempeño, comportamiento o acciones de una persona, con el objetivo de reconocer lo que se hace bien, identificar áreas de mejora y fomentar el crecimiento continuo.
-
+  
   ¿Quiénes tienen en su empresa ciclos de feedback? ¿Y los usan?
   Súper bien, y a la vez súper mal si sólo usan esos ciclos. Sean inteligentes.
   Sé consciente de cómo pedís feedback. Agarrá el control. No digas quiero que me des feedback.
-
+  
   Pedí honestidad. Hacele saber que te la bancás. Y bancátela.
-
+  
   Sé específico en tu petición. Tanto en temas como en fechas.
-
+  
   Escuchá de verdad. Pedí aclaraciones. Parafraseá.
-
+  
   Comprometete y hacé seguimiento.
 ---

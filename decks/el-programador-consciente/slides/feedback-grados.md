@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Feedback 90º · 180º · 360º'
+label: Feedback 90º · 180º · 360º
 variant: default
 fields:
   stage:

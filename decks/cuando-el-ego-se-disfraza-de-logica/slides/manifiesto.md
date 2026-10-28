@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'El manifiesto del crecimiento'
+label: El manifiesto del crecimiento
 variant: default
 fields:
   stage:

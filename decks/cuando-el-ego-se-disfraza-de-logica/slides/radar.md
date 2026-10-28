@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Matriz · mi rol y el siguiente'
+label: Matriz · mi rol y el siguiente
 variant: default
 fields:
   stage:

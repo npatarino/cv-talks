@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'La historia de mi promoción'
+label: La historia de mi promoción
 variant: default
 fields:
   stage:
@@ -30,6 +30,6 @@ notes: |
   Reducir en un 30% los tiempos de compilación eliminando código muerto.
   Conducir un postmortem, con su documentación, su reunión de postmortem y haciendo follow up de los action points.
   Convertirte en la go-to-person de algún componente en específico.
-
+  
   ¿Qué queremos conseguir con esta historia?
 ---

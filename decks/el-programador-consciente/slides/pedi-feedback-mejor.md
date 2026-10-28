@@ -1,7 +1,7 @@
 ---
 template: big-list
 recipe: canvas-quiet
-label: 'Pedí feedback mejor'
+label: Pedí feedback mejor
 variant: numeric
 fields:
   title: { content: 'Pedí feedback<br><em>mejor</em>.', meta: Title_Text }

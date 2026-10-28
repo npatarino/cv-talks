@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Documento · extensión'
+label: Documento · extensión
 variant: default
 fields:
   stage:

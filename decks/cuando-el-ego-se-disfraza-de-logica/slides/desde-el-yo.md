@@ -1,7 +1,7 @@
 ---
 template: viz
 recipe: canvas-quiet
-label: 'Razones desde el yo'
+label: Razones desde el yo
 variant: default
 fields:
   stage:
@@ -25,24 +25,24 @@ fields:
 steps: 0
 notes: |
   Están pensadas desde el yo.
-
+  
   Yo quiero ser reconocido.
-
+  
   Yo necesito tener autoridad.
-
+  
   Yo soy muy bueno en lo que hago.
-
+  
   Todo eso puede ser emocionalmente cierto, pero desde el punto de vista de un líder, no alcanza.
-
+  
   Porque, otra vez, son autorreferenciales.
-
+  
   • Porque no hablan del sistema, del equipo, del producto ni del negocio.
-
+  
   • Porque están basadas en lo que te pasa a vos, no en lo que podés hacer por otros.
-
+  
   • Porque suenan a premio, no a responsabilidad.
-
+  
   Porque una promo es una inversión que hace la empresa.
-
+  
   Y como toda inversión, tiene que tener retorno.
 ---
