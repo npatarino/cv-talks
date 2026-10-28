@@ -4,6 +4,7 @@
 // Módulo ES (lo carga deck-speaker.njk con type="module"). El modo móvil
 // (?phone=1) vive en remote-phone.mjs; helpers de URL/HUD en slide-url.mjs.
 import { createPhoneController } from "./remote-phone.mjs";
+import { startOffline, renderOfflineStatus } from "./offline.mjs";
 import { indexByOrder, embeddedSrc, hudText } from "./slide-url.mjs";
 
 {
@@ -222,6 +223,19 @@ import { indexByOrder, embeddedSrc, hudText } from "./slide-url.mjs";
       showSlide: loadSlide,
       initialCode: urlCode,
     });
+  }
+
+  // ── Precarga offline (no en el móvil: no hace falta y gastaría datos) ────
+  if (qs.get('phone') !== '1') {
+    startOffline({
+      urls: [
+        location.pathname,
+        window.__DECK_URL__,                                // player
+        new URL('../', location.href).pathname,             // índice del deck
+        ...slides.map(s => s.url),
+      ].filter(Boolean),
+      onStatus: (status) => renderOfflineStatus(document.getElementById('spk-offline'), status),
+    }).catch(() => {});
   }
 
   // ── Init ─────────────────────────────────────────────────────────────────

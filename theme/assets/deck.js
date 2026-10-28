@@ -7,6 +7,7 @@
 // Módulo ES (lo carga deck-player.njk con type="module"). El mando a distancia
 // vive en remote-host.mjs; helpers de URL/HUD en slide-url.mjs.
 import { createRemoteHost } from "./remote-host.mjs";
+import { startOffline, renderOfflineStatus } from "./offline.mjs";
 import { indexByOrder, revealFor, embeddedSrc, hudText } from "./slide-url.mjs";
 
 {
@@ -151,6 +152,20 @@ import { indexByOrder, revealFor, embeddedSrc, hudText } from "./slide-url.mjs";
     onCommand: applyRemoteCommand,
     autostart: qs.get("remote") === "1",
   });
+
+  // ── Precarga offline ─────────────────────────────────────────────────────
+  // Guarda el deck entero en el navegador (Service Worker) para que un corte de
+  // red durante la charla no se note. La etiqueta de abajo a la derecha dice
+  // cuándo está listo: «offline ✓». Solo en producción (o con ?offline=1).
+  startOffline({
+    urls: [
+      location.pathname,                                  // este mismo player, para poder recargarlo sin red
+      new URL("../speaker/", location.href).pathname,     // vista del orador
+      new URL("../", location.href).pathname,             // índice del deck
+      ...slides.map((s) => s.url),
+    ],
+    onStatus: (status) => renderOfflineStatus(document.getElementById("deck-offline"), status),
+  }).catch(() => {});
 
   window.addEventListener("hashchange", () => load(currentIndex()));
   load(currentIndex());

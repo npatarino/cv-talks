@@ -1,0 +1,11 @@
+---
+permalink: /sw.js
+eleventyExcludeFromCollections: true
+layout: false
+---
+// Service Worker de la charla (generado por Eleventy; la lógica está en offline-sw.mjs).
+// El build va aquí para que cada despliegue cambie este fichero y el navegador
+// instale el worker nuevo, que estrena caché.
+import { installOfflineWorker } from "{{ '/talks/assets/offline-sw.mjs' | url }}";
+
+installOfflineWorker(self, { buildId: {{ build.id | dump | safe }} });
