@@ -30,6 +30,9 @@ slides (.md) ──▶ Eleventy ──▶ _site/            player, speaker, TOC
 ```
 cv-talks/
 ├── eleventy.config.mjs        Config de Eleventy (ESM). Lee decks vía el store del editor.
+├── sw.njk                     Genera /sw.js (Service Worker de la precarga offline, con el build id).
+├── offline.njk                Página «Sin conexión» que sirve el worker (recipe critical).
+├── _data/build.js             Identificador del build (nombre de la caché offline).
 ├── api/remote.mjs             Relay del mando (Vercel + Redis, mini-Redis en memoria).
 ├── editor/
 │   ├── config.mjs             Rutas absolutas y origen del preview (único sitio).
@@ -207,10 +210,33 @@ Eventos: `form:changed`, `slide:select`, `slide:drop`, `section:move`, `slide:me
 | `remote-host.mjs` | Lado del player: sala por pestaña, panel con QR y código (tecla **R**), desvincular (**D**), estado en el HUD. |
 | `remote-phone.mjs` | Lado del móvil (`speaker/?phone=1`): canjear código (tecleado o `?code=`), botones anterior/siguiente, volver a emparejar si la sala caduca o te desvinculan. |
 | `slide-url.mjs` | `embeddedSrc`, `revealFor`, `hudText`, `indexByOrder`. |
+| `offline.mjs` | Cliente de la precarga offline (ver más abajo): activa o no el worker, pide guardar el deck y pinta el estado en el HUD. |
+| `offline-sw.mjs` | Núcleo del Service Worker: rastreo, caché, respuestas y cableado de eventos. Todo el estado entra por parámetros, así que se prueba sin navegador. |
 
 Flujo: el player (`?remote=1` o tecla R) crea una sala y muestra un código de un solo uso; el móvil lo canjea y recibe su propio token; el móvil envía `next`/`prev`/`goto`, el player los aplica y publica en qué slide está. Protocolo y modelo de seguridad: cabecera de `api/remote.mjs`.
 
 `slide.njk` calcula el manifiesto `window.__SLIDES__` y `data-slide-order` a partir de la colección del propio deck, así que las flechas también navegan entre slides abiertas fuera del player.
+
+### Precarga offline
+
+Para que perder la red durante una charla no se note, el player y el speaker guardan el deck entero en el navegador con un Service Worker y, a partir de ahí, sirven **siempre desde la caché**.
+
+```
+player/speaker ──startOffline()──▶ registra /sw.js (módulo, scope /)
+                                  └▶ mensaje {warm, urls}
+/sw.js (offline-sw.mjs) ◀────────── rastrea cada página + lo que carga (CSS, fuentes, JS, imágenes)
+        └▶ caché `cv-talks-<build>`     ──▶ progreso/final al HUD
+```
+
+- **Qué se guarda.** El worker descarga las páginas que le pide el cliente (player, speaker, índice y todas las slides) y sigue sus referencias: etiquetas `link/script/img/source/iframe`, `url()` y `@import` de CSS, imports de JS y rutas absolutas bajo `/talks/`, `/design-system/` o `/analytics/` que aparezcan entre comillas (así encuentra lo que un script carga dinámicamente). No ejecuta nada, de modo que no cuenta visitas en analytics. Lo ya guardado no se vuelve a pedir.
+- **Cómo responde.** Caché primero, siempre; la query se ignora (las slides se piden con `?present=1&reveal=…`). Si falta, va a la red y lo guarda. Nunca intercepta `/api/` (el mando), otros orígenes, peticiones no GET ni con `Range`.
+- **Sin red y sin caché.** Una navegación (o un iframe) recibe `/talks/offline/` en lugar del error del navegador: pantalla plasma con «Sin *conexión*» que reintenta sola y recarga la URL original en cuanto vuelve la red (el sondeo lleva la cabecera `X-Offline-Probe`, que el worker deja pasar siempre a la red).
+- **HUD.** Etiqueta abajo a la derecha del player (y en la barra del speaker): `offline 37%` guardando, `offline ✓` listo, `offline ✗ N` fallaron N ficheros (se reintenta al volver la red), `offline ↻ recarga` hay una versión nueva. Se oculta en pantalla completa, como el HUD.
+- **Versiones.** El build id (`_data/build.js`: SHA de Vercel, o uno local) va dentro de `/sw.js`, así que cada despliegue instala un worker nuevo con caché nueva. Las cachés de builds anteriores **solo se borran cuando la del build actual está completa**; hasta entonces sirven de último recurso con la red caída. Tras una versión nueva el cliente la guarda en segundo plano y avisa de que conviene recargar.
+- **Dónde se activa.** Solo fuera de `localhost` (producción). En local: `?offline=1` para probarlo; `?offline=0` desinstala el worker, le pide vaciarse y borra la caché. Con la precarga activa en local, recuerda que sirve caché primero: no la dejes activada mientras editas.
+- **Un 404 recordado.** Las rutas que no existen (p. ej. una mencionada en un comentario) se guardan como «no existe»: no se vuelven a pedir ni cuentan como fallo cuando se pierde la red.
+
+Qué **no** cubre: el mando del móvil depende de la red (`/api/remote`). Sin red el player sigue funcionando con teclado o clicker; al volver la conexión publica la slide actual y el móvil se resincroniza.
 
 ---
 
@@ -250,6 +276,7 @@ npx playwright test   # e2e                 (bun run test:e2e)
 | `tests/unit/` | Todo el backend (store, git, dominio, errores, servicios), la lógica pura de la UI, el cliente API (con `fetch` simulado), el cliente del mando y Eleventy (`big-list`, `deck-assets`). |
 | `tests/integration/` | El router contra un directorio temporal; round-trip de todas las slides y templates por el parser YAML. |
 | `tests/e2e/` | El editor real en Chromium sobre un **deck de fixture temporal** (`start-server.mjs`: repo git propio, estructura narrativa, puerto `:3101`). Nunca toca tus decks ni tu `:3001`. |
+| `tests/e2e/offline.spec.js` | La precarga offline en Chromium real contra el **sitio construido** (`site-server.mjs`, puerto `:3201`), que se puede apagar de verdad (conexión rechazada): avanzar, saltar, recargar el player y abrir el speaker sin red; página de respaldo y recuperación sola; publicar una versión nueva; `/api/` fuera de la caché; local sin `?offline=1`; `?offline=0`. |
 
 Puertas de calidad automáticas (no hay build ni tipos que las hagan):
 

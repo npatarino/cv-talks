@@ -29,6 +29,19 @@ npm run build:meta       # → _site/  (modo meta, para review)
 - **Esc** · salir.
 - `?present=1` en la URL arranca directo.
 
+### Antes de salir al escenario (offline)
+
+El player guarda la charla entera en el navegador para que un corte de red no
+se note. **Abre el player en producción con conexión y espera a ver
+`OFFLINE ✓`** abajo a la derecha (unos segundos, solo la primera vez en cada
+versión). A partir de ahí puedes perder la red: las slides, el speaker y
+recargar el player siguen funcionando. El mando del móvil sí necesita red;
+sin ella, usa teclado o clicker y se resincroniza al volver.
+
+- `offline ✗ N`: faltaron N ficheros; se reintenta solo al volver la red.
+- `offline ↻ recarga`: hay una versión nueva; recarga (F5) con red.
+- Probarlo en local: añade `?offline=1`; `?offline=0` lo desinstala.
+
 ### Mando a distancia desde el móvil
 
 El player (`/talks/decks/<slug>/deck/`) puede controlarse desde el móvil a
