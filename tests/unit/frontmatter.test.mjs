@@ -482,3 +482,69 @@ describe('parseMd / serializeMd', () => {
     expect(body2).toBe(body);
   });
 });
+
+// ─── Casos encontrados al comparar con el parser YAML real (gray-matter) ──────
+
+describe('agreement with real YAML: scalars that look like other types', () => {
+  it('quotes strings that start like a number, date or time', () => {
+    for (const v of ['2012.', '+15', '.5', '1e3', '0x1F', '12:30', '2026-10-27', '1_000', '007']) {
+      const out = serializeYaml({ k: v });
+      expect(out, v).toMatch(/k: ['"]/);
+      expect(parseYaml(out.replace(/^---\n|---\n$/g, '')).k).toBe(v);
+    }
+  });
+
+  it('quotes YAML 1.1 booleans and list/document markers', () => {
+    for (const v of ['yes', 'No', 'ON', 'off', 'y', 'n', 'Null', '~', '- item', '---', '...']) {
+      expect(serializeYaml({ k: v }), v).toMatch(/k: ['"]/);
+    }
+    expect(serializeYaml({ k: 'nope' })).toBe('---\nk: nope\n---\n');
+    expect(serializeYaml({ k: 'a-1' })).toBe('---\nk: a-1\n---\n');
+  });
+});
+
+describe('agreement with real YAML: block scalars keep trailing spaces', () => {
+  it('preserves trailing whitespace inside | blocks and round-trips it', () => {
+    const raw = 'notes: |\n  Mentorías. \n\n  Te enseño.  \n';
+    const data = parseYaml(raw);
+    expect(data.notes).toBe('Mentorías. \n\nTe enseño.  \n');
+    const back = parseYaml(serializeYaml(data).replace(/^---\n|---\n$/g, ''));
+    expect(back.notes).toBe(data.notes);
+  });
+});
+
+describe('agreement with real YAML: list items that are mappings', () => {
+  it('reads a multi-key mapping whose first pair is on the dash line', () => {
+    const raw = 'rows:\n  - label: A\n    cells:\n      - { kind: num, value: x }\n      - { kind: num, value: y }\n  - label: B\n    cells:\n      - { kind: num, value: z }\n';
+    expect(parseYaml(raw).rows).toEqual([
+      { label: 'A', cells: [{ kind: 'num', value: 'x' }, { kind: 'num', value: 'y' }] },
+      { label: 'B', cells: [{ kind: 'num', value: 'z' }] },
+    ]);
+  });
+
+  it('reads a block scalar inside a list item (- glyph: |)', () => {
+    const raw = 'items:\n  - glyph: |\n      <svg></svg>\n      <script>1</script>\n    n: 1\n  - glyph: ok\n';
+    expect(parseYaml(raw).items).toEqual([{ glyph: '<svg></svg>\n<script>1</script>\n', n: 1 }, { glyph: 'ok' }]);
+  });
+
+  it('serializes nested lists/objects/blocks inside list items at the right indent', () => {
+    const data = {
+      rows: [
+        { label: 'A', cells: [{ kind: 'num', value: 'x' }], note: 'l1\nl2\n' },
+        { label: 'B', layers: [{ items: ['a', 'b'] }] },
+      ],
+    };
+    const out = serializeYaml(data);
+    expect(out).toContain('rows:\n  - label: A\n    cells:\n      - { kind: num, value: x }\n    note: |\n      l1\n      l2\n  - label: B\n');
+    expect(parseYaml(out.replace(/^---\n|---\n$/g, ''))).toEqual(data);
+  });
+});
+
+describe('agreement with real YAML: inline collections nest', () => {
+  it('parses arrays and objects inside inline objects and arrays', () => {
+    expect(parseYaml('a: { label: Edge, items: ["x", "y"], meta: { k: 1 } }\nb: [{ k: v }, [1, 2]]\n')).toEqual({
+      a: { label: 'Edge', items: ['x', 'y'], meta: { k: 1 } },
+      b: [{ k: 'v' }, [1, 2]],
+    });
+  });
+});

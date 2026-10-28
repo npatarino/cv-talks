@@ -130,19 +130,20 @@ function parseBlockScalar(lines, startIndex, indent, folded = false) {
 
   while (i < lines.length) {
     const line = lines[i];
-    const trimmedEnd = line.trimEnd();
 
     // Empty line in a block scalar — preserve as blank line
-    if (trimmedEnd.trim() === '') {
+    if (line.trim() === '') {
       collected.push('');
       i++;
       continue;
     }
 
-    const lineIndent = trimmedEnd.length - trimmedEnd.trimStart().length;
+    const lineIndent = line.length - line.trimStart().length;
     if (lineIndent < indent) break;
 
-    collected.push(trimmedEnd.slice(indent));
+    // Keep the raw line (trailing spaces included): inside a block scalar
+    // they are content, and the real YAML parser preserves them.
+    collected.push(line.slice(indent));
     i++;
   }
 
@@ -195,23 +196,22 @@ function parseArray(lines, startIndex, indent) {
       }
       result.push(null);
       i++;
+    } else if (itemContent.startsWith('[')) {
+      result.push(parseInlineArray(itemContent));
+      i++;
+    } else if ((itemContent.includes(': ') || itemContent.endsWith(':')) && colonPos(itemContent) !== -1) {
+      // "- key: val" opens a mapping whose first pair sits on the dash line.
+      // The item may continue with more keys (indented to the content column),
+      // a block scalar (`- glyph: |`) or nested lists, so hand the whole thing
+      // to parseBlock with the dash replaced by spaces.
+      const contentIndent = lineIndent + (trimStart.length - trimStart.slice(1).trimStart().length);
+      const patched = lines.slice();
+      patched[i] = ' '.repeat(contentIndent) + itemContent;
+      const nested = parseBlock(patched, i, contentIndent);
+      result.push(nested.value);
+      i = nested.nextIndex;
     } else {
-      // Could be "- text" (simple scalar) or "- key: val"
-      if (itemContent.includes(': ') || itemContent.endsWith(':')) {
-        // Treat as inline key:value for simple cases
-        const obj = {};
-        const cp = colonPos(itemContent);
-        if (cp !== -1) {
-          const k = itemContent.slice(0, cp).trim();
-          const v = itemContent.slice(cp + 1).trim();
-          obj[k] = parseScalar(v);
-          result.push(obj);
-        } else {
-          result.push(parseScalar(itemContent));
-        }
-      } else {
-        result.push(parseScalar(itemContent));
-      }
+      result.push(parseScalar(itemContent));
       i++;
     }
   }
@@ -252,9 +252,16 @@ function parseInlineObject(str) {
     if (cp === -1) continue;
     const key = pair.slice(0, cp).trim();
     const val = pair.slice(cp + 1).trim();
-    obj[key] = parseScalar(val);
+    obj[key] = parseInlineValue(val);
   }
   return obj;
+}
+
+/** Value inside an inline collection: nested {…} / […] or a scalar. */
+function parseInlineValue(val) {
+  if (val.startsWith('{')) return parseInlineObject(val);
+  if (val.startsWith('[')) return parseInlineArray(val);
+  return parseScalar(val);
 }
 
 /**
@@ -264,7 +271,7 @@ function parseInlineArray(str) {
   const s = str.trim();
   if (s === '[]') return [];
   const inner = s.slice(1, s.lastIndexOf(']')).trim();
-  return splitInlineCommas(inner).map(v => parseScalar(v.trim()));
+  return splitInlineCommas(inner).map(v => parseInlineValue(v.trim()));
 }
 
 /**
@@ -351,7 +358,7 @@ function dumpObject(obj, indent) {
     if (Array.isArray(v)) {
       out += `${pad}${key}:\n`;
       for (const item of v) {
-        out += `${pad}  - ${dumpArrayItem(item, indent + 1)}\n`;
+        out += `${pad}  - ${dumpArrayItem(item, indent + 2)}\n`;
       }
     } else if (v !== null && typeof v === 'object') {
       if (isShallowInlineCandidate(v)) {
@@ -389,16 +396,11 @@ function dumpArrayItem(item, indent) {
   if (typeof item !== 'object') return dumpValue(item, indent);
   // Inline if shallow
   if (isShallowInlineCandidate(item)) return serializeInlineObject(item);
-  // Multi-line — first key on same line as dash, rest indented
-  const keys = Object.keys(item);
-  if (keys.length === 0) return '{}';
+  // Multi-line — render as a mapping block at this indent (handles nested
+  // lists, objects and block scalars) and put its first line on the dash line.
+  if (Object.keys(item).length === 0) return '{}';
   const pad = '  '.repeat(indent);
-  const [first, ...rest] = keys;
-  let out = `${first}: ${dumpValue(item[first], indent)}`;
-  for (const k of rest) {
-    out += `\n${pad}${k}: ${dumpValue(item[k], indent)}`;
-  }
-  return out;
+  return dumpObject(item, indent).replace(/\n$/, '').slice(pad.length);
 }
 
 function isShallowInlineCandidate(obj) {
@@ -424,9 +426,13 @@ function quoteString(str) {
   const needsQuoting =
     /[:#\[\]{},|>&*!'"@`%?]|^\s|\s$/.test(str) ||
     str.includes('\n') ||
-    // Strings that look like scalars must be quoted to round-trip correctly
-    str === 'true' || str === 'false' || str === 'null' || str === '~' ||
-    /^-?\d+(\.\d+)?$/.test(str);
+    // Strings a YAML reader could take for a non-string must be quoted:
+    // booleans/null (YAML 1.1 also reads yes/no/on/off), anything that starts
+    // like a number, date or time ("2012.", "+15", ".5", "1e3", "12:30",
+    // "2026-10-27"), and document/list markers.
+    /^(true|false|null|~|y|yes|n|no|on|off)$/i.test(str) ||
+    /^[-+.]?\d/.test(str) ||
+    /^-( |$)|^---|^\.\.\./.test(str);
   if (!needsQuoting) return str;
   // Use single quotes if no single quotes in string
   if (!str.includes("'")) return `'${str}'`;
