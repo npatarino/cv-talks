@@ -19,7 +19,7 @@ setInterval clearInterval requestAnimationFrame cancelAnimationFrame getComputed
 IntersectionObserver FileReader Blob File Image KeyboardEvent MouseEvent Event CustomEvent BroadcastChannel DOMParser
 XMLSerializer QRCode performance alert confirm prompt Node Element HTMLElement TextEncoder TextDecoder atob btoa crypto
 structuredClone queueMicrotask globalThis arguments Intl Reflect Proxy Uint8Array ArrayBuffer DataTransfer ClipboardItem
-AbortController getSelection matchMedia Buffer process escape unescape
+AbortController getSelection matchMedia Buffer process escape unescape Response Request Headers MessageChannel
 `.split(/\s+/).filter(Boolean));
 
 const CHILD_KEYS = (node) => Object.keys(node).filter(k => k !== 'type' && k !== 'start' && k !== 'end' && k !== 'loc');
