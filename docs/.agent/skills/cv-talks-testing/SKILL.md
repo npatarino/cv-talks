@@ -8,7 +8,7 @@ description: >
 
 # Testing
 
-The project lives at `/Users/juansp/projects/chimi/cv-talks`.
+Run every command from the repository root (the `cv-talks` checkout that contains `package.json`).
 
 We use **Vitest** for unit testing and **Playwright** for end-to-end (E2E) testing.
 
@@ -17,7 +17,6 @@ We use **Vitest** for unit testing and **Playwright** for end-to-end (E2E) testi
 To run all unit tests once:
 
 ```bash
-cd /Users/juansp/projects/chimi/cv-talks
 bun run test
 ```
 

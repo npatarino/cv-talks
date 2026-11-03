@@ -8,7 +8,7 @@ description: >
 
 # Assets & Formatting
 
-The project lives at `/Users/juansp/projects/chimi/cv-talks`.
+Run every command from the repository root (the `cv-talks` checkout that contains `package.json`).
 
 ## Formatting Decks
 
@@ -16,7 +16,6 @@ Decks are written in markdown and need to follow strict formatting conventions.
 
 To automatically format all decks:
 ```bash
-cd /Users/juansp/projects/chimi/cv-talks
 bun run decks:format
 ```
 
