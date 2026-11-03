@@ -1,19 +1,16 @@
 #!/usr/bin/env node
-import fs from "node:fs";
+// Copies the licensed brand fonts into theme/styles/fonts/ (git-ignored). They live in the
+// private repo npatarino/cv-fonts; see "Fonts" in README.md for
+// CHIMI_FONTS_TOKEN / CHIMI_FONTS_DIR. Pass --require to fail without them.
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { fetchFonts } from "./fetch-fonts.mjs";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "..");
-const SRC = path.resolve(ROOT, "node_modules/@chimichurricode/design-system/assets/fonts");
-const DEST = path.resolve(ROOT, "theme/styles/fonts");
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-fs.mkdirSync(DEST, { recursive: true });
-
-let count = 0;
-for (const entry of fs.readdirSync(SRC, { withFileTypes: true })) {
-  if (!entry.isFile()) continue;
-  fs.copyFileSync(path.join(SRC, entry.name), path.join(DEST, entry.name));
-  count++;
+try {
+  await fetchFonts({ cwd: ROOT, outDir: "theme/styles/fonts", require: process.argv.includes("--require") });
+} catch (err) {
+  console.error(`✗ ${err.message}`);
+  process.exit(1);
 }
-console.log(`✓ synced ${count} fonts → theme/styles/fonts`);
