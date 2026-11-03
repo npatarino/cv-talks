@@ -9,7 +9,7 @@ description: >
 
 # Local Servers Management
 
-The project lives at `/Users/juansp/projects/chimi/cv-talks`.
+Run every command from the repository root (the `cv-talks` checkout that contains `package.json`).
 
 Two servers form the local development infrastructure:
 | Server | Port | Purpose |
@@ -21,10 +21,9 @@ Two servers form the local development infrastructure:
 
 To start both servers simultaneously:
 ```bash
-cd /Users/juansp/projects/chimi/cv-talks
 bun run servers:start
 ```
-*(This command syncs fonts and starts both processes in the background. Press Ctrl-C to stop both)*
+*(This command syncs fonts and starts both processes from the same terminal. Press Ctrl-C to stop both.)*
 
 **URLs once running:**
 - **Slides preview** → http://localhost:8080
@@ -34,14 +33,14 @@ bun run servers:start
 
 To force kill any running instance of the servers:
 ```bash
-cd /Users/juansp/projects/chimi/cv-talks
 bun run servers:stop
 ```
 
 ## Troubleshooting
 
-If a port is already in use, `bun run servers:stop` should fix it. Alternatively, manually:
+If a port is already in use, `bun run servers:stop` should fix it (it finds the
+listening processes with `lsof`, falling back to `fuser` or `ss`). Alternatively, manually:
 ```bash
-lsof -ti :8080 | xargs kill -9
-lsof -ti :3001 | xargs kill -9
+lsof -t -i tcp:8080 -s TCP:LISTEN | xargs kill -9
+lsof -t -i tcp:3001 -s TCP:LISTEN | xargs kill -9
 ```

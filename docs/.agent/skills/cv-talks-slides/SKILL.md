@@ -9,7 +9,7 @@ description: >
 
 # Slides Generation
 
-The project lives at `/Users/juansp/projects/chimi/cv-talks`.
+Run every command from the repository root (the `cv-talks` checkout that contains `package.json`).
 
 The core slide generation is handled by Eleventy.
 
@@ -18,7 +18,6 @@ The core slide generation is handled by Eleventy.
 To build the static HTML for the slides and generate SEO metadata:
 
 ```bash
-cd /Users/juansp/projects/chimi/cv-talks
 bun run slides:build
 ```
 
