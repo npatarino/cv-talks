@@ -1,55 +1,42 @@
 #!/usr/bin/env node
 /**
- * Capture screenshots of slides, web pages, or arbitrary URLs at multiple
- * viewports. Originally a slide-only harness used to validate the recipe
- * migration; extended in W7 of the responsive-webs-mobile-first change to
- * cover webs at mobile / tablet / desktop sizes.
+ * Capture screenshots of the slide templates (or an arbitrary URL) with
+ * headless Chrome, at one or more viewports. Used to eyeball/diff template
+ * changes against the PNGs in tests/snapshots/<target>/.
  *
- * Usage
+ * Requires: a built site (`bun run build`), python3 (static server for
+ * _site/) and Google Chrome/Chromium (set CHROME_PATH if it is not found).
+ *
+ * Usage (from the repo root)
  * -----
- *   # Slides (back-compatible default — captures every template at desktop)
- *   node packages/talks/scripts/screenshot-templates.mjs
- *   node packages/talks/scripts/screenshot-templates.mjs --target current
- *   node packages/talks/scripts/screenshot-templates.mjs --slug 14-big-stat-default
+ *   # Every template at desktop → tests/snapshots/baseline/
+ *   node scripts/screenshot-templates.mjs
+ *   node scripts/screenshot-templates.mjs --target current
+ *   node scripts/screenshot-templates.mjs --slug 15-big-stat-default
  *
- *   # Slides at multiple viewports (use this to QA viewer-mobile mode)
- *   node packages/talks/scripts/screenshot-templates.mjs \
- *     --source slides --viewports mobile,tablet,desktop
+ *   # Templates at multiple viewports (use this to QA viewer-mobile mode)
+ *   node scripts/screenshot-templates.mjs --viewports mobile,tablet,desktop
  *
  *   # An arbitrary URL captured at all three viewports
- *   node packages/talks/scripts/screenshot-templates.mjs \
- *     --source http://localhost:4321/blog/ \
+ *   node scripts/screenshot-templates.mjs \
+ *     --source http://localhost:8080/talks/decks/<slug>/deck/ \
  *     --viewports all --target current
- *
- *   # The webs roster (called from `npm run screenshots:webs` at the root)
- *   node packages/talks/scripts/screenshot-templates.mjs \
- *     --source web --viewports mobile,tablet,desktop --target current
  *
  * Flags
  * -----
- *   --source <slides|web|<url>>
- *       What to capture. Defaults to `slides` for back-compat with the
- *       `npm run snapshot:baseline|current` scripts. `web` requires the
- *       per-web dev servers to be running on their canonical ports — see
- *       packages/design-system/responsive.md for the table. A literal URL
- *       captures only that page.
+ *   --source <slides|<url>>
+ *       What to capture. Defaults to `slides` (every template in
+ *       templates/). A literal URL captures only that page.
  *   --viewports <list>
  *       Comma-separated viewports. Allowed: mobile, tablet, desktop, all.
- *       Defaults to `desktop` for slides (back-compat) and to all three
- *       for `web`/`<url>`. Each viewport produces its own screenshot file.
+ *       Defaults to `desktop` for slides and to all three for a URL. Each
+ *       viewport produces its own screenshot file.
  *   --target <name>
- *       Output subdir under `packages/talks/tests/snapshots/`. Default
- *       `baseline`. Multi-viewport runs save under
- *       `<target>/<viewport>/<slug>.png` so adding viewports doesn't
- *       clobber existing baselines.
+ *       Output subdir under `tests/snapshots/`. Default `baseline`.
+ *       Multi-viewport runs save under `<target>/<viewport>/<slug>.png`
+ *       so adding viewports doesn't clobber existing baselines.
  *   --slug <slug>
  *       Capture a single slide template by name. Slides only.
- *
- * Note: the harness deviates from the W7 plan's wording (`--target` for
- * source type) because `--target` was already in use as the output dir
- * name in the prior snapshot:baseline / snapshot:current workflow.
- * Renaming would have broken the existing scripts and any local muscle
- * memory; instead, this version adds `--source` for the new dimension.
  */
 
 import { spawn } from "node:child_process";
@@ -58,12 +45,20 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(HERE, "../../..");
+const REPO_ROOT = resolve(HERE, "..");
 const SITE_DIR = resolve(REPO_ROOT, "_site");
-const TEMPLATES_DIR = resolve(REPO_ROOT, "packages/talks/templates");
-const SNAPSHOTS_ROOT = resolve(REPO_ROOT, "packages/talks/tests/snapshots");
+const TEMPLATES_DIR = resolve(REPO_ROOT, "templates");
+const SNAPSHOTS_ROOT = resolve(REPO_ROOT, "tests/snapshots");
 
-const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const CHROME_CANDIDATES = [
+  process.env.CHROME_PATH,
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "/usr/bin/google-chrome",
+  "/usr/bin/google-chrome-stable",
+  "/usr/bin/chromium",
+  "/usr/bin/chromium-browser",
+].filter(Boolean);
+const CHROME = CHROME_CANDIDATES.find((p) => existsSync(p)) || CHROME_CANDIDATES[0];
 const SLIDE_PORT = 9000;
 const VIRTUAL_TIME_BUDGET_MS = 4000;
 const PARALLELISM = 6;
@@ -73,16 +68,6 @@ const VIEWPORTS = {
   tablet:  { width:  768, height: 1024 },
   desktop: { width: 1920, height: 1080 },
 };
-
-// Each web is expected to be running on its canonical dev-server port.
-// Override with `--source <url>` if you want to capture a single URL.
-const WEB_TARGETS = [
-  { id: "blog",        url: "http://localhost:4321/",          pages: ["", "blog/", "sobre-mi/", "mentorias/", "contacto/"] },
-  { id: "techconf",    url: "http://localhost:4322/",          pages: ["", "calendar/", "map/", "insights/"] },
-  { id: "rfp",         url: "http://localhost:4323/",          pages: ["", "about/"] },
-  { id: "pdf",         url: "http://localhost:4324/",          pages: ["", "pdf-to-images/"] },
-  { id: "poker",       url: "http://localhost:4325/",          pages: ["", "join/"] },
-];
 
 const args = parseArgs(process.argv.slice(2));
 const target = args.target || "baseline";
@@ -99,7 +84,7 @@ main().catch((err) => {
 
 async function main() {
   if (!existsSync(CHROME)) {
-    throw new Error(`Google Chrome not found at ${CHROME}. Install Chrome or update the CHROME path.`);
+    throw new Error(`Google Chrome not found (tried: ${CHROME_CANDIDATES.join(", ")}). Install Chrome or set CHROME_PATH.`);
   }
 
   mkdirSync(outRoot, { recursive: true });
@@ -107,16 +92,13 @@ async function main() {
   if (source === "slides") {
     return runSlides();
   }
-  if (source === "web") {
-    return runWebs();
-  }
   // Otherwise treat --source as a literal URL.
   return runUrl(source);
 }
 
 function resolveViewports(raw, srcKind) {
   if (!raw) {
-    // Back-compat: slides default to desktop only; web/url defaults to all.
+    // Slides default to desktop only; a URL defaults to all.
     return srcKind === "slides" ? ["desktop"] : ["mobile", "tablet", "desktop"];
   }
   if (raw === "all") return ["mobile", "tablet", "desktop"];
@@ -143,11 +125,11 @@ function printHelp() {
   console.log(`Usage: screenshot-templates.mjs [options]
 
   --target <name>         Output dir under tests/snapshots/ (default: baseline)
-  --source <slides|web|<url>>
-                          What to capture. Default: slides.
+  --source <slides|<url>>  What to capture. Default: slides.
   --viewports <list>      Comma list of mobile,tablet,desktop, or 'all'.
-                          Default: desktop for slides; all for web/url.
+                          Default: desktop for slides; all for a URL.
   --slug <slug>           Capture only this template (slides source only).
+  CHROME_PATH=<path>      Env var: Chrome/Chromium binary to use.
   --help                  Show this help.`);
 }
 
@@ -156,7 +138,7 @@ function printHelp() {
 // ────────────────────────────────────────────────────────────────────────
 async function runSlides() {
   if (!existsSync(SITE_DIR)) {
-    throw new Error(`_site/ not found at ${SITE_DIR}. Run \`npm run build:talks\` first.`);
+    throw new Error(`_site/ not found at ${SITE_DIR}. Run \`bun run build\` first.`);
   }
   const slugs = listSlugs(slugFilter);
   if (slugs.length === 0) {
@@ -205,41 +187,11 @@ async function captureSlugs(slugs, viewportName, dir) {
 }
 
 // ────────────────────────────────────────────────────────────────────────
-// Source: web — iterates the WEB_TARGETS roster and captures each page
-// at the requested viewports. Expects each web's dev server to be up.
-// ────────────────────────────────────────────────────────────────────────
-async function runWebs() {
-  console.log(`→ Capturing ${WEB_TARGETS.length} web(s) at ${viewports.length} viewport(s) → ${outRoot}/`);
-
-  for (const web of WEB_TARGETS) {
-    const reachable = await isReachable(web.url);
-    if (!reachable) {
-      console.warn(`  ⚠ ${web.id} dev server not reachable at ${web.url} — skipping. Start it with \`npm run dev:${web.id}\`.`);
-      continue;
-    }
-    for (const vp of viewports) {
-      const viewportDir = resolve(outRoot, vp, web.id);
-      mkdirSync(viewportDir, { recursive: true });
-      const viewport = VIEWPORTS[vp];
-      if (!viewport) throw new Error(`Unknown viewport: ${vp}`);
-      for (const path of web.pages) {
-        const url = web.url + path;
-        const slug = path === "" ? "home" : path.replace(/\/$/, "").replace(/\//g, "-");
-        const out = resolve(viewportDir, `${slug}.png`);
-        process.stdout.write(`  · [${vp}] ${web.id}/${slug}\n`);
-        await captureOne(url, out, viewport);
-      }
-    }
-  }
-  console.log(`✓ Done.`);
-}
-
-// ────────────────────────────────────────────────────────────────────────
 // Source: <url> — single literal URL at the requested viewports
 // ────────────────────────────────────────────────────────────────────────
 async function runUrl(url) {
   if (!/^https?:\/\//.test(url)) {
-    throw new Error(`--source must be 'slides', 'web', or an absolute URL (got: ${url})`);
+    throw new Error(`--source must be 'slides' or an absolute URL (got: ${url})`);
   }
   console.log(`→ Capturing ${url} at ${viewports.length} viewport(s) → ${outRoot}/`);
 
@@ -265,15 +217,6 @@ async function runUrl(url) {
 // ────────────────────────────────────────────────────────────────────────
 // Helpers
 // ────────────────────────────────────────────────────────────────────────
-async function isReachable(url) {
-  try {
-    const res = await fetch(url, { method: "HEAD" }).catch(() => null);
-    return res != null;
-  } catch {
-    return false;
-  }
-}
-
 function startStaticServer(dir, port) {
   return new Promise((resolveStart, rejectStart) => {
     const proc = spawn("python3", ["-m", "http.server", String(port)], {
