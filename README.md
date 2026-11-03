@@ -257,3 +257,7 @@ eyebrow:
 ```
 
 Global: `SLIDE_MODE=meta` (or `bun run slides:serve-meta`). Per-slide override: `mode: meta` in the frontmatter.
+
+## Known issues
+
+- The template screenshots in `tests/snapshots/baseline/` are stale: they were captured before templates were renumbered and renamed (e.g. `04-hero-title-default.png`), so they don't match `templates/*.md` anymore. Regenerate them with `bun run build && node scripts/screenshot-templates.mjs` before using them for comparisons.
