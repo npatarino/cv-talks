@@ -1,170 +1,170 @@
 # cv-talks
 
-Sistema de slides **local-first** de Chimichurri Code. Cada charla (deck) es una carpeta de ficheros Markdown con frontmatter YAML versionados con Git; Eleventy los convierte en un sitio estático con player, vista de speaker y galería de plantillas, y un editor local (Bun) permite crear y editar slides con preview en vivo. Las slides se montan sobre 43 templates que consumen las **recipes** del design system (`@chimichurricode/design-system`), así que el estilo es coherente sin escribir CSS por charla. No hay base de datos: el sistema de ficheros es la fuente de verdad.
+Chimichurri Code's **local-first** slide system. Each talk (deck) is a folder of Markdown files with YAML frontmatter, versioned with Git; Eleventy turns them into a static site with a player, a speaker view and a template gallery, and a local editor (Bun) lets you create and edit slides with a live preview. Slides are built on 43 templates that consume the design system's **recipes** (`@chimichurricode/design-system`), so the styling stays consistent without writing CSS per talk. There is no database: the file system is the source of truth.
 
-![Editor de slides: lista de slides por secciones, preview en vivo, propiedades y notas del orador](docs/images/editor.png)
+![Slide editor: slide list grouped by section, live preview, properties and speaker notes](docs/images/editor.png)
 
-## Funcionalidades
+## Features
 
-- **Editor local** (`:3001`): lista de slides agrupada por secciones con drag & drop, formulario por template, preview en vivo, notas del orador, estado de Git por slide (revertir a lo commiteado) y exportación a PDF.
-- **Player** a 1920×1080 escalado al viewport, con navegación por teclado, fullscreen y **modo móvil** automático (< 768px).
-- **Vista de speaker** con slide actual, siguientes, notas y cronómetro.
-- **Mando desde el móvil** vía `/api/remote` (función Vercel + Redis, long polling).
-- **Precarga offline** (Service Worker): la charla sigue funcionando si se cae la red.
-- **Galería de plantillas** (`/talks/template-gallery/`) y **modo meta** que muestra los nombres de los campos en lugar del contenido.
-- CLI para crear decks y slides con el mismo código que el editor.
+- **Local editor** (`:3001`): slide list grouped by section with drag & drop, a form per template, live preview, speaker notes, per-slide Git status (revert to the committed version) and PDF export.
+- **Player** at 1920×1080 scaled to the viewport, with keyboard navigation, fullscreen and automatic **mobile mode** (< 768px).
+- **Speaker view** with the current slide, upcoming slides, notes and a timer.
+- **Phone remote** via `/api/remote` (Vercel function + Redis, long polling).
+- **Offline preload** (Service Worker): the talk keeps working if the network drops.
+- **Template gallery** (`/talks/template-gallery/`) and a **meta mode** that shows field names instead of content.
+- CLI to create decks and slides with the same code as the editor.
 
-| Player | Speaker | Galería de plantillas |
+| Player | Speaker | Template gallery |
 |---|---|---|
-| ![Player](docs/images/deck.png) | ![Speaker](docs/images/speaker.png) | ![Galería](docs/images/gallery.png) |
+| ![Player](docs/images/deck.png) | ![Speaker](docs/images/speaker.png) | ![Gallery](docs/images/gallery.png) |
 
 ## Quick start
 
-**Requisitos:** [Bun](https://bun.sh) (scripts, editor e instalación; el proyecto usa `bun.lock`) y Node.js (algunos scripts se ejecutan con `node`). `lsof` para `servers:stop`.
+**Requirements:** [Bun](https://bun.sh) (scripts, editor and install; the project uses `bun.lock`) and Node.js (some scripts run with `node`). `servers:stop` needs `lsof`, `fuser` or `ss`.
 
 ```bash
 git clone https://github.com/npatarino/cv-talks.git
 cd cv-talks
 bun install
-bun run servers:start    # sincroniza fuentes y arranca Eleventy + editor (Ctrl-C para parar ambos)
+bun run servers:start    # syncs fonts and starts Eleventy + the editor (Ctrl-C stops both)
 ```
 
-- **Slides** → http://localhost:8080 (índice de charlas; cada deck en `/talks/decks/<slug>/deck/`)
+- **Slides** → http://localhost:8080 (talk index; each deck at `/talks/decks/<slug>/deck/`)
 - **Editor** → http://localhost:3001
 
-Si un puerto se queda ocupado: `bun run servers:stop`.
+If a port stays busy: `bun run servers:stop`.
 
-## Tareas comunes
+## Common tasks
 
-| Comando | Qué hace |
+| Command | What it does |
 |---|---|
-| `bun run servers:start` / `servers:stop` | Arranca / mata Eleventy (`:8080`) y el editor (`:3001`). |
-| `bun run editor:start` | Solo el editor (necesita Eleventy en `:8080` para el preview). |
-| `bun run slides:serve` | Solo Eleventy con live-reload. |
-| `bun run slides:serve-meta` | Igual, en modo meta (nombres de campos). |
-| `bun run build` | Build de producción → `_site/` (fuentes + Eleventy + SEO: iconos, manifest, `robots.txt`, `sitemap.xml`). |
-| `bun run test` | Tests unitarios y de integración (Vitest). |
-| `bun run test:watch` / `test:coverage` | Vitest en watch / con cobertura. |
-| `bun run test:e2e` | E2E con Playwright (levanta su propio editor en `:3101` sobre un deck de fixture y el sitio construido en `:3201`; no toca tus decks). Requiere los navegadores de Playwright (`bunx playwright install chromium`). |
-| `bun run decks:format` / `decks:format-check` | Reescribe / comprueba las slides en el YAML canónico. |
-| `bun run fonts:sync` | Copia las fuentes del design system a `theme/styles/fonts/` (lo hacen solos `servers:start` y `build`). |
+| `bun run servers:start` / `servers:stop` | Starts / kills Eleventy (`:8080`) and the editor (`:3001`). |
+| `bun run editor:start` | Editor only (needs Eleventy on `:8080` for the preview). |
+| `bun run slides:serve` | Eleventy only, with live-reload. |
+| `bun run slides:serve-meta` | Same, in meta mode (field names). |
+| `bun run build` | Production build → `_site/` (fonts + Eleventy + SEO: icons, manifest, `robots.txt`, `sitemap.xml`). |
+| `bun run test` | Unit and integration tests (Vitest). |
+| `bun run test:watch` / `test:coverage` | Vitest in watch mode / with coverage. |
+| `bun run test:e2e` | E2E with Playwright (starts its own editor on `:3101` over a fixture deck and the built site on `:3201`; it doesn't touch your decks). Requires the Playwright browsers (`bunx playwright install chromium`). |
+| `bun run decks:format` / `decks:format-check` | Rewrites / checks slides in the canonical YAML. |
+| `bun run fonts:sync` | Copies the design system fonts to `theme/styles/fonts/` (`servers:start` and `build` do it for you). |
 
-Para un build en modo meta: `SLIDE_MODE=meta bun run build`.
+For a build in meta mode: `SLIDE_MODE=meta bun run build`.
 
-### Crear un deck y slides nuevos
+### Creating a new deck and slides
 
-Desde el editor, o por línea de comandos (usan el mismo código que el editor):
+From the editor, or from the command line (same code as the editor):
 
 ```bash
-node scripts/new-deck.mjs <slug> "<título>" ["<autor>"] [--subtitle "..."] [--date YYYY-MM]
+node scripts/new-deck.mjs <slug> "<title>" ["<author>"] [--subtitle "..."] [--date YYYY-MM]
 node scripts/new-slide.mjs <deck> <template> ["<label>"] [--variant V] [--recipe R] [--position N] [--slug S]
-# ej: node scripts/new-deck.mjs mi-charla "Mi charla" "Nicolás Patarino"
-# ej: node scripts/new-slide.mjs mi-charla big-stat "Big stat · burnout" --position 5
+# e.g.: node scripts/new-deck.mjs mi-charla "Mi charla" "Nicolás Patarino"
+# e.g.: node scripts/new-slide.mjs mi-charla big-stat "Big stat · burnout" --position 5
 ```
 
-Tras crear un deck hay que reiniciar Eleventy para que registre su colección.
+After creating a deck, restart Eleventy so it registers the deck's collection.
 
-## Estructura del proyecto
+## Project structure
 
 ```
 cv-talks/
-├── decks/<slug>/          Un deck: <slug>.11tydata.json, deck.config.json (orden y secciones), slides/*.md, *.njk
-├── templates/             Una slide de ejemplo por template/variante (alimenta la galería)
+├── decks/<slug>/          A deck: <slug>.11tydata.json, deck.config.json (order and sections), slides/*.md, *.njk
+├── templates/             One sample slide per template/variant (feeds the gallery)
 ├── theme/
-│   ├── _includes/         Layouts Nunjucks (uno por template), player, speaker, TOC, partials
-│   ├── assets/            JS del navegador: present.js, player, speaker, mando, offline
-│   ├── lib/               Lógica pura de Eleventy
+│   ├── _includes/         Nunjucks layouts (one per template), player, speaker, TOC, partials
+│   ├── assets/            Browser JS: present.js, player, speaker, remote, offline
+│   ├── lib/               Pure Eleventy logic
 │   └── styles/            CSS
 ├── editor/
-│   ├── server.mjs         Bun.serve: UI estática + API REST
-│   ├── api/               Backend por capas (http → domain → store/services)
-│   └── ui/                Frontend en módulos ES sin bundler
-├── api/remote.mjs         Relay del mando (función Vercel)
-├── _data/                 Datos globales de Eleventy (templates.json, site.js, build.js…)
-├── scripts/               CLI: new-deck, new-slide, format-decks, build-seo, sync-fonts, start/stop-servers
-├── tests/                 unit/, integration/, e2e/, helpers/
-├── docs/                  Arquitectura y revisión de arquitectura
-└── eleventy.config.mjs    Config de Eleventy (lee los decks con el mismo store que el editor)
+│   ├── server.mjs         Bun.serve: static UI + REST API
+│   ├── api/               Layered backend (http → domain → store/services)
+│   └── ui/                Frontend as ES modules, no bundler
+├── api/remote.mjs         Remote relay (Vercel function)
+├── _data/                 Eleventy global data (templates.json, site.js, build.js…)
+├── scripts/               CLI: new-deck, new-slide, format-decks, build-seo, sync-fonts, start/stop-servers, screenshot-templates
+├── tests/                 unit/, integration/, e2e/, helpers/, snapshots/ (template screenshots)
+├── docs/                  Architecture and architecture review
+└── eleventy.config.mjs    Eleventy config (reads decks with the same store as the editor)
 ```
 
-Formato de deck y slide, capas del editor, API y cómo añadir templates o endpoints: ver **[docs/architecture.md](docs/architecture.md)**. El porqué de esa estructura está en [docs/architecture-review.md](docs/architecture-review.md).
+Deck and slide format, editor layers, the API and how to add templates or endpoints: see **[docs/architecture.md](docs/architecture.md)**. The reasoning behind that structure is in [docs/architecture-review.md](docs/architecture-review.md).
 
-## Configuración
+## Configuration
 
-Variables de entorno (todas opcionales en local):
+Environment variables (all optional locally):
 
-| Variable | Uso |
+| Variable | Purpose |
 |---|---|
-| `EDITOR_PORT` | Puerto del editor (por defecto `3001`). |
-| `ELEVENTY_URL` | Origen del preview que usa el editor (por defecto `http://localhost:8080`). |
-| `TALKS_DECKS_DIR` | Carpeta de decks alternativa (la usan los e2e). |
-| `SLIDE_MODE` | `meta` para renderizar nombres de campos en lugar del contenido. |
-| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Redis (Upstash) del relay del mando. Sin ellas se usa un Redis en memoria. Bun carga `.env.local` automáticamente, así que si existe, **el editor local usa el Redis real**. |
-| `VERCEL_GIT_COMMIT_SHA`, `VERCEL_DEPLOYMENT_ID` | Las pone Vercel; identifican el build (nombre de la caché offline). |
+| `EDITOR_PORT` | Editor port (default `3001`). |
+| `ELEVENTY_URL` | Preview origin used by the editor (default `http://localhost:8080`). |
+| `TALKS_DECKS_DIR` | Alternative decks folder (used by the e2e tests). |
+| `SLIDE_MODE` | `meta` to render field names instead of content. |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Redis (Upstash) for the remote relay. Without them an in-memory Redis is used. Bun loads `.env.local` automatically, so if it exists **the local editor uses the real Redis**. |
+| `VERCEL_GIT_COMMIT_SHA`, `VERCEL_DEPLOYMENT_ID` | Set by Vercel; they identify the build (name of the offline cache). |
 
-## Despliegue
+## Deployment
 
-Vercel, según [`vercel.json`](vercel.json): `bun install`, `bun run slides:build`, se publica `_site/` y la función `api/remote.mjs` (región `fra1`). En producción solo existe el sitio estático y esa función; el editor es solo local.
+Vercel, per [`vercel.json`](vercel.json): `bun install`, `bun run slides:build`, publishes `_site/` and the `api/remote.mjs` function (region `fra1`). In production only the static site and that function exist; the editor is local-only.
 
-## Presentar
+## Presenting
 
-- **P** · toggle modo presentación (escala 16:9 al viewport).
-- **F** · fullscreen + presentación.
-- **←** / **→** / **Espacio** · navegar entre slides.
-- **Esc** · salir.
-- `?present=1` en la URL arranca directo.
+- **P** · toggle presentation mode (16:9 scaled to the viewport).
+- **F** · fullscreen + presentation.
+- **←** / **→** / **Space** · move between slides.
+- **Esc** · exit.
+- `?present=1` in the URL starts presenting right away.
 
-### Antes de salir al escenario (offline)
+### Before going on stage (offline)
 
-El player guarda la charla entera en el navegador para que un corte de red no
-se note. **Abre el player en producción con conexión y espera a ver
-`OFFLINE ✓`** abajo a la derecha (unos segundos, solo la primera vez en cada
-versión). A partir de ahí puedes perder la red: las slides, el speaker y
-recargar el player siguen funcionando. El mando del móvil sí necesita red;
-sin ella, usa teclado o clicker y se resincroniza al volver.
+The player stores the whole talk in the browser so a network outage goes
+unnoticed. **Open the player in production while online and wait until you
+see `OFFLINE ✓`** at the bottom right (a few seconds, only the first time for
+each version). From then on you can lose the network: the slides, the speaker
+view and reloading the player keep working. The phone remote does need the
+network; without it, use the keyboard or a clicker, and it resyncs when the
+network comes back.
 
-- `offline ✗ N`: faltaron N ficheros; se reintenta solo al volver la red.
-- `offline ↻ recarga`: hay una versión nueva; recarga (F5) con red.
-- Probarlo en local: añade `?offline=1`; `?offline=0` lo desinstala.
+- `offline ✗ N`: N files were missing; it retries on its own when the network comes back.
+- `offline ↻ recarga`: there is a new version; reload (F5) while online.
+- To try it locally: add `?offline=1`; `?offline=0` uninstalls it.
 
-### Mando a distancia desde el móvil
+### Phone remote
 
-El player (`/talks/decks/<slug>/deck/`) puede controlarse desde el móvil a
-través de `/api/remote` (función Vercel + Redis, long polling; sin
-WebSockets). Cada pestaña de player tiene su propia **sala** privada, así
-que varias presentaciones abiertas a la vez nunca se pisan.
+The player (`/talks/decks/<slug>/deck/`) can be controlled from a phone
+through `/api/remote` (Vercel function + Redis, long polling; no
+WebSockets). Each player tab has its own private **room**, so several
+presentations open at the same time never step on each other.
 
-1. En el player pulsa **R** (o el botón 📱 Mando). Se crea la sala y aparece
-   un **código de 6 caracteres** con su QR. El código es de **un solo uso** y
-   caduca a los 10 min: aunque lo vea el público, nadie puede colarse después.
-2. En el móvil abre `/talks/decks/<slug>/speaker/?phone=1` y teclea el
-   código, o escanea el QR (que ya lo lleva). El panel se cierra solo al
-   emparejar y el HUD muestra `📱 N` con los móviles conectados.
-3. El móvil sigue la slide actual y sus notas, y manda ← / →. La sesión se
-   guarda en el móvil (`localStorage`) y en la pestaña del player
-   (`sessionStorage`): un reload en cualquiera de los dos no rompe nada.
-4. **D** en el player desvincula todos los móviles. ✕ en el móvil se da de
-   baja. La sala muere a las 12 h sin actividad.
+1. In the player press **R** (or the 📱 Mando button). The room is created and
+   a **6-character code** appears with its QR. The code is **single-use** and
+   expires after 10 min: even if the audience sees it, nobody can sneak in later.
+2. On the phone open `/talks/decks/<slug>/speaker/?phone=1` and type the
+   code, or scan the QR (which already includes it). The panel closes on its own
+   once paired, and the HUD shows `📱 N` with the number of connected phones.
+3. The phone follows the current slide and its notes, and sends ← / →. The
+   session is stored on the phone (`localStorage`) and in the player tab
+   (`sessionStorage`): reloading either one doesn't break anything.
+4. **D** in the player unpairs every phone. ✕ on the phone leaves the room.
+   The room dies after 12 h without activity.
 
-`?remote=1` crea la sala al cargar sin esperar a R (es lo que usa el botón
-"Present + phone" del editor). En local el relay vive en el editor:
-`deck/?api=http://localhost:3001/api/remote` y lo mismo en el móvil.
+`?remote=1` creates the room on load without waiting for R (this is what the
+editor's "Present + phone" button uses). Locally the relay lives in the editor:
+`deck/?api=http://localhost:3001/api/remote`, and the same on the phone.
 
 ## Render modes (presentation vs. mobile viewer)
 
-Cada deck y cada slide individual exponen dos modos de render que se
-seleccionan automáticamente y pueden forzarse con un query param.
+Every deck and every individual slide expose two render modes that are
+selected automatically and can be forced with a query param.
 
-- **`view=presentation` (default ≥ 768px)** · cada slide ocupa un canvas
-  fijo de 1920×1080 px y `present.js` aplica un `transform: scale(...)`
-  para encajar en el viewport. El deck-player es un único iframe con
-  navegación por teclado.
-- **`view=mobile` (default < 768px)** · cada slide se re-renderiza en
-  `100vw × 100svh` con tipografía web-scale (definida en
-  `theme/styles/viewer-mobile.css`); el deck-player se convierte en una
-  pila vertical de iframes con `scroll-snap-type: y mandatory`, para
-  deslizar un slide por pantalla. Las recipes y `--recipe-*` funcionan
-  igual en ambos modos.
+- **`view=presentation` (default ≥ 768px)** · each slide fills a fixed
+  1920×1080 px canvas and `present.js` applies a `transform: scale(...)`
+  to fit the viewport. The deck player is a single iframe with keyboard
+  navigation.
+- **`view=mobile` (default < 768px)** · each slide is re-rendered at
+  `100vw × 100svh` with web-scale typography (defined in
+  `theme/styles/viewer-mobile.css`); the deck player becomes a vertical
+  stack of iframes with `scroll-snap-type: y mandatory`, so you swipe one
+  slide per screen. Recipes and `--recipe-*` work the same in both modes.
 
 ```
 /talks/decks/<slug>/deck/?view=presentation
@@ -172,16 +172,16 @@ seleccionan automáticamente y pueden forzarse con un query param.
 /talks/decks/<slug>/<slide>/?view=mobile
 ```
 
-El umbral de 768px coincide con el token `--md` del design system. Los
-slides con layouts densos o `position: absolute` pueden necesitar ajustes
-específicos en modo móvil (follow-up conocido).
+The 768px breakpoint matches the design system's `--md` token. Slides
+with dense layouts or `position: absolute` may need specific tweaks in
+mobile mode (known follow-up).
 
 ## Templates → recipes
 
-Cada `templates/*.md` declara una recipe en frontmatter; el layout pasa
-`recipe` al `<section>` como `data-recipe="..."` y el CSS solo consume
-`--recipe-{surface,ink,em,accent,warn}`. El modelo completo (recipes, el
-patrón `critical-fg`, las excepciones nombradas) está en
+Each `templates/*.md` declares a recipe in its frontmatter; the layout passes
+`recipe` to the `<section>` as `data-recipe="..."` and the CSS only consumes
+`--recipe-{surface,ink,em,accent,warn}`. The full model (recipes, the
+`critical-fg` pattern, the named exceptions) is in
 [cv-design-system · docs/recipes.md](https://github.com/npatarino/cv-design-system/blob/main/docs/recipes.md).
 
 ```yaml
@@ -195,7 +195,7 @@ fields:
 ---
 ```
 
-| # | Template | Recipe | Notas |
+| # | Template | Recipe | Notes |
 |---|---|---|---|
 | 01 | cover-default | canvas-quiet | |
 | 02 | speaker-bio-default | canvas-quiet | |
@@ -221,8 +221,8 @@ fields:
 | 22 | three-ideas-default | canvas-signal | `allowMultipleAccents`+`Stats` |
 | 23 | big-list-numeric | canvas-quiet | |
 | 24 | big-list-bullets | canvas-quiet | |
-| 25 | big-list-checklist | canvas-quiet | boxes ✓/✗ a escala big |
-| 26 | big-list-glossary | canvas-quiet | grid 2-col término + definición |
+| 25 | big-list-checklist | canvas-quiet | ✓/✗ boxes at big scale |
+| 26 | big-list-glossary | canvas-quiet | 2-col grid: term + definition |
 | 27 | big-list-critical | canvas-quiet + `critical-fg-marker` | bullets plasma |
 | 28 | concept-shift-default | canvas-quiet | |
 | 29 | matrix-default | canvas-quiet | `allowMultipleAccents` |
@@ -241,19 +241,19 @@ fields:
 | 42 | word-cloud-default | canvas-dark | |
 | 43 | media-still | canvas-quiet | |
 
-Templates compuestos (con variantes): `big-concept` (default/divider/transition/prompt/disclaimer), `quote` (default/xl/testimonial/punch/critical), `big-stat` (default/multiplier/critical), `big-list` (numeric/bullets/checklist/glossary/critical), `chart` (bar/line), `code-block` (default/anti), `roadmap` (default/timeline), `resource-cards` (default/team).
+Composite templates (with variants): `big-concept` (default/divider/transition/prompt/disclaimer), `quote` (default/xl/testimonial/punch/critical), `big-stat` (default/multiplier/critical), `big-list` (numeric/bullets/checklist/glossary/critical), `chart` (bar/line), `code-block` (default/anti), `roadmap` (default/timeline), `resource-cards` (default/team).
 
-Las excepciones nombradas (`allowMultipleAccents`, `allowMultipleStats`, `allowDeckOverride`) viven en [`tokens/type.recipe.json`](https://github.com/npatarino/cv-design-system/blob/main/tokens/type.recipe.json) del design system, bajo `_namedExceptions`.
+The named exceptions (`allowMultipleAccents`, `allowMultipleStats`, `allowDeckOverride`) live in the design system's [`tokens/type.recipe.json`](https://github.com/npatarino/cv-design-system/blob/main/tokens/type.recipe.json), under `_namedExceptions`.
 
 ## Dual-mode
 
-Cada campo tiene un valor visible y una etiqueta meta:
+Every field has a visible value and a meta label:
 
 ```yaml
 eyebrow:
-  content: "◆ Dato duro"     # render normal
-  meta: "Eyebrow_Label"       # render debug/review
-  source: "opcional: trazabilidad"
+  content: "◆ Dato duro"     # normal render
+  meta: "Eyebrow_Label"       # debug/review render
+  source: "optional: traceability"
 ```
 
-Global: `SLIDE_MODE=meta` (o `bun run slides:serve-meta`). Override por slide: `mode: meta` en frontmatter.
+Global: `SLIDE_MODE=meta` (or `bun run slides:serve-meta`). Per-slide override: `mode: meta` in the frontmatter.
