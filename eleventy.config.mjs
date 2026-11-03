@@ -76,6 +76,12 @@ export default function (eleventyConfig) {
   eleventyConfig.ignores.add('node_modules/**');
   eleventyConfig.ignores.add('README.md');
   eleventyConfig.ignores.add('scripts/**');
+  // Repo-only docs and agent skills: not part of the published site.
+  eleventyConfig.ignores.add('docs/**');
+  eleventyConfig.ignores.add('.agents/**');
+  eleventyConfig.ignores.add('.claude/**');
+  // The editor UI is served by editor/server.mjs from editor/ui, never from _site.
+  eleventyConfig.ignores.add('editor/**');
 
   return {
     dir: {
