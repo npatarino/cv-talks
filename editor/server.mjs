@@ -9,12 +9,14 @@
  *   bun editor/server.mjs
  *
  * Then open http://localhost:3001
- * Run Eleventy separately: bun run serve  (on :8080)
+ * Run Eleventy separately: bun run slides:serve  (on :8080)
+ * or start both at once with: bun run servers:start
  */
 
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { route, err } from './api/http/router.mjs';
+import { PREVIEW_ORIGIN } from './config.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const UI_DIR = path.join(__dirname, 'ui');
@@ -65,12 +67,17 @@ const server = Bun.serve({
   },
 });
 
-console.log(`
-╔════════════════════════════════════════╗
-║  cv-talks Slide Editor                 ║
-║  http://localhost:${PORT}                  ║
-╠════════════════════════════════════════╣
-║  Make sure Eleventy is running on :8080 ║
-║  bun run serve  (in another terminal)  ║
-╚════════════════════════════════════════╝
-`);
+const BANNER_WIDTH = 44;
+const bannerLine = (text = '') => `║  ${text.padEnd(BANNER_WIDTH - 2)}║`;
+const bannerRule = (l, r) => `${l}${'═'.repeat(BANNER_WIDTH)}${r}`;
+console.log([
+  '',
+  bannerRule('╔', '╗'),
+  bannerLine('cv-talks Slide Editor'),
+  bannerLine(`http://localhost:${PORT}`),
+  bannerRule('╠', '╣'),
+  bannerLine(`Needs Eleventy at ${PREVIEW_ORIGIN.replace(/^https?:\/\//, '')}`),
+  bannerLine('bun run slides:serve  (another terminal)'),
+  bannerRule('╚', '╝'),
+  '',
+].join('\n'));
