@@ -1,27 +1,112 @@
-# slides-templates
+# cv-talks
 
-Sistema modular de slides con Eleventy + dual-mode rendering.
-44 templates canónicos en `templates/`, cada uno declara una **recipe** del DS y consume solo `--recipe-*` desde el CSS.
+Sistema de slides **local-first** de Chimichurri Code. Cada charla (deck) es una carpeta de ficheros Markdown con frontmatter YAML versionados con Git; Eleventy los convierte en un sitio estático con player, vista de speaker y galería de plantillas, y un editor local (Bun) permite crear y editar slides con preview en vivo. Las slides se montan sobre 43 templates que consumen las **recipes** del design system (`@chimichurricode/design-system`), así que el estilo es coherente sin escribir CSS por charla. No hay base de datos: el sistema de ficheros es la fuente de verdad.
 
-> Para el modelo completo (las 7 recipes, el patrón `critical-fg`, las excepciones nombradas) ver [`packages/design-system/docs/recipes.md`](../design-system/docs/recipes.md).
+![Editor de slides: lista de slides por secciones, preview en vivo, propiedades y notas del orador](docs/images/editor.png)
 
-## Setup
+## Funcionalidades
+
+- **Editor local** (`:3001`): lista de slides agrupada por secciones con drag & drop, formulario por template, preview en vivo, notas del orador, estado de Git por slide (revertir a lo commiteado) y exportación a PDF.
+- **Player** a 1920×1080 escalado al viewport, con navegación por teclado, fullscreen y **modo móvil** automático (< 768px).
+- **Vista de speaker** con slide actual, siguientes, notas y cronómetro.
+- **Mando desde el móvil** vía `/api/remote` (función Vercel + Redis, long polling).
+- **Precarga offline** (Service Worker): la charla sigue funcionando si se cae la red.
+- **Galería de plantillas** (`/talks/template-gallery/`) y **modo meta** que muestra los nombres de los campos en lugar del contenido.
+- CLI para crear decks y slides con el mismo código que el editor.
+
+| Player | Speaker | Galería de plantillas |
+|---|---|---|
+| ![Player](docs/images/deck.png) | ![Speaker](docs/images/speaker.png) | ![Galería](docs/images/gallery.png) |
+
+## Quick start
+
+**Requisitos:** [Bun](https://bun.sh) (scripts, editor e instalación; el proyecto usa `bun.lock`) y Node.js (algunos scripts se ejecutan con `node`). `lsof` para `servers:stop`.
 
 ```bash
-cd slides-templates
-npm install --registry=https://registry.npmjs.org/
-npm run serve            # modo content (texto real) · http://localhost:8080
-npm run serve:meta       # modo meta (nombres de campos)
+git clone https://github.com/npatarino/cv-talks.git
+cd cv-talks
+bun install
+bun run servers:start    # sincroniza fuentes y arranca Eleventy + editor (Ctrl-C para parar ambos)
 ```
 
-## Build
+- **Slides** → http://localhost:8080 (índice de charlas; cada deck en `/talks/decks/<slug>/deck/`)
+- **Editor** → http://localhost:3001
+
+Si un puerto se queda ocupado: `bun run servers:stop`.
+
+## Tareas comunes
+
+| Comando | Qué hace |
+|---|---|
+| `bun run servers:start` / `servers:stop` | Arranca / mata Eleventy (`:8080`) y el editor (`:3001`). |
+| `bun run editor:start` | Solo el editor (necesita Eleventy en `:8080` para el preview). |
+| `bun run slides:serve` | Solo Eleventy con live-reload. |
+| `bun run slides:serve-meta` | Igual, en modo meta (nombres de campos). |
+| `bun run build` | Build de producción → `_site/` (fuentes + Eleventy + SEO: iconos, manifest, `robots.txt`, `sitemap.xml`). |
+| `bun run test` | Tests unitarios y de integración (Vitest). |
+| `bun run test:watch` / `test:coverage` | Vitest en watch / con cobertura. |
+| `bun run test:e2e` | E2E con Playwright (levanta su propio editor en `:3101` sobre un deck de fixture y el sitio construido en `:3201`; no toca tus decks). Requiere los navegadores de Playwright (`bunx playwright install chromium`). |
+| `bun run decks:format` / `decks:format-check` | Reescribe / comprueba las slides en el YAML canónico. |
+| `bun run fonts:sync` | Copia las fuentes del design system a `theme/styles/fonts/` (lo hacen solos `servers:start` y `build`). |
+
+Para un build en modo meta: `SLIDE_MODE=meta bun run build`.
+
+### Crear un deck y slides nuevos
+
+Desde el editor, o por línea de comandos (usan el mismo código que el editor):
 
 ```bash
-npm run build            # → _site/  (modo content)
-npm run build:meta       # → _site/  (modo meta, para review)
+node scripts/new-deck.mjs <slug> "<título>" ["<autor>"] [--subtitle "..."] [--date YYYY-MM]
+node scripts/new-slide.mjs <deck> <template> ["<label>"] [--variant V] [--recipe R] [--position N] [--slug S]
+# ej: node scripts/new-deck.mjs mi-charla "Mi charla" "Nicolás Patarino"
+# ej: node scripts/new-slide.mjs mi-charla big-stat "Big stat · burnout" --position 5
 ```
 
-## Presentación
+Tras crear un deck hay que reiniciar Eleventy para que registre su colección.
+
+## Estructura del proyecto
+
+```
+cv-talks/
+├── decks/<slug>/          Un deck: <slug>.11tydata.json, deck.config.json (orden y secciones), slides/*.md, *.njk
+├── templates/             Una slide de ejemplo por template/variante (alimenta la galería)
+├── theme/
+│   ├── _includes/         Layouts Nunjucks (uno por template), player, speaker, TOC, partials
+│   ├── assets/            JS del navegador: present.js, player, speaker, mando, offline
+│   ├── lib/               Lógica pura de Eleventy
+│   └── styles/            CSS
+├── editor/
+│   ├── server.mjs         Bun.serve: UI estática + API REST
+│   ├── api/               Backend por capas (http → domain → store/services)
+│   └── ui/                Frontend en módulos ES sin bundler
+├── api/remote.mjs         Relay del mando (función Vercel)
+├── _data/                 Datos globales de Eleventy (templates.json, site.js, build.js…)
+├── scripts/               CLI: new-deck, new-slide, format-decks, build-seo, sync-fonts, start/stop-servers
+├── tests/                 unit/, integration/, e2e/, helpers/
+├── docs/                  Arquitectura y revisión de arquitectura
+└── eleventy.config.mjs    Config de Eleventy (lee los decks con el mismo store que el editor)
+```
+
+Formato de deck y slide, capas del editor, API y cómo añadir templates o endpoints: ver **[docs/architecture.md](docs/architecture.md)**. El porqué de esa estructura está en [docs/architecture-review.md](docs/architecture-review.md).
+
+## Configuración
+
+Variables de entorno (todas opcionales en local):
+
+| Variable | Uso |
+|---|---|
+| `EDITOR_PORT` | Puerto del editor (por defecto `3001`). |
+| `ELEVENTY_URL` | Origen del preview que usa el editor (por defecto `http://localhost:8080`). |
+| `TALKS_DECKS_DIR` | Carpeta de decks alternativa (la usan los e2e). |
+| `SLIDE_MODE` | `meta` para renderizar nombres de campos en lugar del contenido. |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Redis (Upstash) del relay del mando. Sin ellas se usa un Redis en memoria. Bun carga `.env.local` automáticamente, así que si existe, **el editor local usa el Redis real**. |
+| `VERCEL_GIT_COMMIT_SHA`, `VERCEL_DEPLOYMENT_ID` | Las pone Vercel; identifican el build (nombre de la caché offline). |
+
+## Despliegue
+
+Vercel, según [`vercel.json`](vercel.json): `bun install`, `bun run slides:build`, se publica `_site/` y la función `api/remote.mjs` (región `fra1`). En producción solo existe el sitio estático y esa función; el editor es solo local.
+
+## Presentar
 
 - **P** · toggle modo presentación (escala 16:9 al viewport).
 - **F** · fullscreen + presentación.
@@ -70,19 +155,16 @@ que varias presentaciones abiertas a la vez nunca se pisan.
 Cada deck y cada slide individual exponen dos modos de render que se
 seleccionan automáticamente y pueden forzarse con un query param.
 
-- **`view=presentation` (default ≥ 768px)** · el modo histórico:
-  cada slide ocupa un canvas fijo de 1920×1080 px y `present.js`
-  aplica un `transform: scale(...)` para encajar en el viewport. El
-  deck-player es un único iframe con navegación por teclado.
-- **`view=mobile` (default < 768px)** · pensado para mostrar la charla
-  en un teléfono. Cada slide se re-renderiza en `100vw × 100svh`
-  usando tipografía web-scale (definida en
-  `theme/styles/viewer-mobile.css`); el deck-player se convierte en
-  una pila vertical de iframes con `scroll-snap-type: y mandatory`,
-  para que el lector deslice un slide por pantalla con el dedo. Los
-  recipes y `--recipe-*` siguen funcionando intactos en ambos modos.
-
-Forzar modo manualmente:
+- **`view=presentation` (default ≥ 768px)** · cada slide ocupa un canvas
+  fijo de 1920×1080 px y `present.js` aplica un `transform: scale(...)`
+  para encajar en el viewport. El deck-player es un único iframe con
+  navegación por teclado.
+- **`view=mobile` (default < 768px)** · cada slide se re-renderiza en
+  `100vw × 100svh` con tipografía web-scale (definida en
+  `theme/styles/viewer-mobile.css`); el deck-player se convierte en una
+  pila vertical de iframes con `scroll-snap-type: y mandatory`, para
+  deslizar un slide por pantalla. Las recipes y `--recipe-*` funcionan
+  igual en ambos modos.
 
 ```
 /talks/decks/<slug>/deck/?view=presentation
@@ -90,29 +172,17 @@ Forzar modo manualmente:
 /talks/decks/<slug>/<slide>/?view=mobile
 ```
 
-El umbral de 768px coincide con el token `--md` del design system,
-así que el comportamiento auto coincide con el de los webs (blog,
-techconf, recall-for-papers, simple-pdf-converter, simple-scrum-poker).
-Los slides con layouts densos o `position: absolute` pueden necesitar
-ajustes específicos en viewer mode — es un follow-up conocido y está
-fuera del alcance del rollout inicial.
-
-## Crear un deck y slides nuevos
-
-Desde el editor, o por línea de comandos (usan el mismo código que el editor):
-
-```bash
-node scripts/new-deck.mjs <slug> "<título>" ["<autor>"] [--subtitle "..."] [--date YYYY-MM]
-node scripts/new-slide.mjs <deck> <template> ["<label>"] [--variant V] [--recipe R] [--position N] [--slug S]
-# ej: node scripts/new-deck.mjs mi-charla "Mi charla" "Nicolás Patarino"
-# ej: node scripts/new-slide.mjs mi-charla big-stat "Big stat · burnout" --position 5
-```
-
-Tras crear un deck hay que reiniciar `eleventy --serve` para que registre su colección.
+El umbral de 768px coincide con el token `--md` del design system. Los
+slides con layouts densos o `position: absolute` pueden necesitar ajustes
+específicos en modo móvil (follow-up conocido).
 
 ## Templates → recipes
 
-Cada `templates/*.md` declara una recipe en frontmatter:
+Cada `templates/*.md` declara una recipe en frontmatter; el layout pasa
+`recipe` al `<section>` como `data-recipe="..."` y el CSS solo consume
+`--recipe-{surface,ink,em,accent,warn}`. El modelo completo (recipes, el
+patrón `critical-fg`, las excepciones nombradas) está en
+[cv-design-system · docs/recipes.md](https://github.com/npatarino/cv-design-system/blob/main/docs/recipes.md).
 
 ```yaml
 ---
@@ -124,8 +194,6 @@ fields:
   ...
 ---
 ```
-
-El partial Njk pasa `recipe` al `<section>` como `data-recipe="..."`. El CSS solo consume `--recipe-{surface,ink,em,accent,warn}`.
 
 | # | Template | Recipe | Notas |
 |---|---|---|---|
@@ -169,29 +237,17 @@ El partial Njk pasa `recipe` al `<section>` como `data-recipe="..."`. El CSS sol
 | 38 | faq-default | paper | |
 | 39 | closing-qr-default | paper | |
 | 40 | closing-socials-default | canvas-quiet | `allowDeckOverride` |
+| 41 | icon-default | paper | |
+| 42 | word-cloud-default | canvas-dark | |
+| 43 | media-still | canvas-quiet | |
 
 Templates compuestos (con variantes): `big-concept` (default/divider/transition/prompt/disclaimer), `quote` (default/xl/testimonial/punch/critical), `big-stat` (default/multiplier/critical), `big-list` (numeric/bullets/checklist/glossary/critical), `chart` (bar/line), `code-block` (default/anti), `roadmap` (default/timeline), `resource-cards` (default/team).
 
-Excepciones nombradas (`allowMultipleAccents`, `allowMultipleStats`, `allowDeckOverride`) viven en [`packages/design-system/tokens/type.recipe.json`](../design-system/tokens/type.recipe.json) bajo `_namedExceptions`.
-
-## Estructura
-
-```
-src/
-├── _data/site.js              # config global (mode content/meta)
-├── _includes/
-│   ├── layouts/               # un .njk por template + slide.njk base
-│   └── partials/field.njk     # macro dual-mode
-├── slides/*.md                # datos por slide (1 archivo = 1 slide)
-├── styles/
-│   ├── tokens.css             # design tokens compartidos
-│   ├── base.css               # .slide, .sl-label, present mode
-│   └── slides/*.css           # CSS scoped por template
-├── assets/present.js          # modo presentación
-└── index.njk                  # índice con TOC + botón "Iniciar presentación"
-```
+Las excepciones nombradas (`allowMultipleAccents`, `allowMultipleStats`, `allowDeckOverride`) viven en [`tokens/type.recipe.json`](https://github.com/npatarino/cv-design-system/blob/main/tokens/type.recipe.json) del design system, bajo `_namedExceptions`.
 
 ## Dual-mode
+
+Cada campo tiene un valor visible y una etiqueta meta:
 
 ```yaml
 eyebrow:
@@ -200,4 +256,4 @@ eyebrow:
   source: "opcional: trazabilidad"
 ```
 
-Global: `SLIDE_MODE=meta npm run build`. Override por slide: `mode: meta` en frontmatter.
+Global: `SLIDE_MODE=meta` (o `bun run slides:serve-meta`). Override por slide: `mode: meta` en frontmatter.
