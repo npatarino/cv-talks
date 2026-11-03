@@ -1,5 +1,7 @@
 # cv-talks
 
+[![CI](https://github.com/npatarino/cv-talks/actions/workflows/ci.yml/badge.svg)](https://github.com/npatarino/cv-talks/actions/workflows/ci.yml)
+
 Chimichurri Code's **local-first** slide system. Each talk (deck) is a folder of Markdown files with YAML frontmatter, versioned with Git; Eleventy turns them into a static site with a player, a speaker view and a template gallery, and a local editor (Bun) lets you create and edit slides with a live preview. Slides are built on 43 templates that consume the design system's **recipes** (`@chimichurricode/design-system`), so the styling stays consistent without writing CSS per talk. There is no database: the file system is the source of truth.
 
 ![Slide editor: slide list grouped by section, live preview, properties and speaker notes](docs/images/editor.png)
