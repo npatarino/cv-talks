@@ -49,7 +49,7 @@ If a port stays busy: `bun run servers:stop`.
 | `bun run test:watch` / `test:coverage` | Vitest in watch mode / with coverage. |
 | `bun run test:e2e` | E2E with Playwright (starts its own editor on `:3101` over a fixture deck and the built site on `:3201`; it doesn't touch your decks). Requires the Playwright browsers (`bunx playwright install chromium`). |
 | `bun run decks:format` / `decks:format-check` | Rewrites / checks slides in the canonical YAML. |
-| `bun run fonts:sync` | Copies the design system fonts to `theme/styles/fonts/` (`servers:start` and `build` do it for you). |
+| `bun run fonts:sync` | Copies the brand fonts to `theme/styles/fonts/` (see [Fonts](#fonts)) (`servers:start` and `build` do it for you). |
 
 For a build in meta mode: `SLIDE_MODE=meta bun run build`.
 
@@ -263,3 +263,12 @@ Global: `SLIDE_MODE=meta` (or `bun run slides:serve-meta`). Per-slide override: 
 ## Known issues
 
 - The template screenshots in `tests/snapshots/baseline/` are stale: they were captured before templates were renumbered and renamed (e.g. `04-hero-title-default.png`), so they don't match `templates/*.md` anymore. Regenerate them with `bun run build && node scripts/screenshot-templates.mjs` before using them for comparisons.
+
+## Fonts
+
+The brand fonts are licensed, so they are not in this repo or in the design-system package: they live in the private repo [`npatarino/cv-fonts`](https://github.com/npatarino/cv-fonts). `bun run fonts:sync` ([`scripts/sync-fonts.mjs`](scripts/sync-fonts.mjs), using [`scripts/fetch-fonts.mjs`](scripts/fetch-fonts.mjs) vendored from the design system) copies them into `theme/styles/fonts/` (git-ignored) from the first source available:
+
+- `CHIMI_FONTS_DIR`: a local folder, e.g. `CHIMI_FONTS_DIR=~/code/cv-fonts/fonts` with a clone of cv-fonts (local dev).
+- `CHIMI_FONTS_TOKEN`: a fine-grained GitHub token with *Contents: read-only* on `npatarino/cv-fonts`. Set it in the Vercel project (Production and Preview). The download is cached in `node_modules/.cache/chimi-fonts`.
+- The fonts still bundled in `@chimichurricode/design-system` ≤ 0.8.0 (temporary, until the token is set and the design system is upgraded).
+- None: the build still passes, with a warning, and the site falls back to system fonts.
