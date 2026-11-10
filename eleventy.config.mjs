@@ -14,6 +14,7 @@ import { DECKS_DIR } from './editor/config.mjs';
 import { deckDir, deckMetaPath, listDeckSlugs, readSlideOrder } from './editor/api/store/deck-store.mjs';
 import { expandDeckAssets } from './theme/lib/deck-assets.mjs';
 import { parseBigList } from './theme/lib/big-list.mjs';
+import { groupTalks } from './theme/lib/talks.mjs';
 
 export default function (eleventyConfig) {
   eleventyConfig.addFilter('seoHead', (props) => renderSEOHeadHTML(props));
@@ -66,12 +67,15 @@ export default function (eleventyConfig) {
     });
   }
 
-  eleventyConfig.addGlobalData('decks', () =>
+  const readDecks = () =>
     listDeckSlugs(DECKS_DIR).map((slug) => {
       const metaPath = deckMetaPath(slug, DECKS_DIR);
       const raw = metaPath ? JSON.parse(fs.readFileSync(metaPath, 'utf8')) : {};
       return { slug, ...(raw.deck || {}) };
-    }));
+    });
+  eleventyConfig.addGlobalData('decks', readDecks);
+  // Charlas: una por `deck.talk`, con todas sus ediciones (ver theme/lib/talks.mjs).
+  eleventyConfig.addGlobalData('talks', () => groupTalks(readDecks()));
 
   eleventyConfig.ignores.add('node_modules/**');
   eleventyConfig.ignores.add('README.md');

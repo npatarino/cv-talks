@@ -1,0 +1,115 @@
+---
+pagination:
+  data: talks
+  size: 1
+  alias: talk
+  before: (talks) => talks.filter((t) => t.editions.length > 1)
+permalink: "/talks/{{ talk.key }}/index.html"
+eleventyExcludeFromCollections: true
+layout: false
+---
+{% set talkUrl = "/talks/" + talk.key + "/" %}
+{% set seoProps = {
+  site: "talks",
+  title: talk.title,
+  description: talk.subtitle or ("Charla de Nicolás Patarino · " + (talk.editions | length) + " ediciones."),
+  pathname: talkUrl,
+  isHome: false,
+  og: { type: "article" },
+  jsonLd: [
+    { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Charlas", item: "https://talks.chimi.pro/" },
+      { "@type": "ListItem", position: 2, name: talk.title, item: "https://talks.chimi.pro" + talkUrl }
+    ] }
+  ]
+} %}
+<!doctype html>
+<html lang="es">
+  <head>
+    {% include "partials/seo-head.njk" %}
+    <link rel="stylesheet" href="/design-system/tokens.css" />
+    <style>
+      :root {
+        --page-max: 960px;
+        --page-pad: clamp(16px, 4vw, 48px);
+        --stack-sm: 16px;
+        --stack-md: 24px;
+        --stack-lg: 48px;
+        --hairline:        color-mix(in srgb, var(--recipe-ink) 12%, transparent);
+        --muted:           color-mix(in srgb, var(--recipe-ink) 62%, transparent);
+        --muted-strong:    color-mix(in srgb, var(--recipe-ink) 80%, transparent);
+        --row-bg:          color-mix(in srgb, var(--recipe-ink) 4%, transparent);
+        --row-bg-hover:    color-mix(in srgb, var(--recipe-accent) 8%, transparent);
+        --web-display-lg: 700 clamp(32px, 5vw, 64px)/0.98 var(--chimi-font-family-display);
+        --web-display-sm: 700 clamp(22px, 2.4vw, 30px)/1.1 var(--chimi-font-family-display);
+        --web-body-md: 500 clamp(15px, 1.1vw, 17px)/1.55 var(--chimi-font-family-body);
+        --web-eyebrow: 500 12px/1 var(--chimi-font-family-code);
+        --web-meta:    500 13px/1.4 var(--chimi-font-family-body);
+      }
+      *, *::before, *::after { box-sizing: border-box; }
+      body { margin: 0; background: var(--recipe-surface); color: var(--recipe-ink); font: var(--web-body-md); -webkit-font-smoothing: antialiased; }
+      a { color: inherit; text-decoration: none; }
+      .container { max-width: var(--page-max); margin-inline: auto; padding-inline: var(--page-pad); }
+      .eyebrow { font: var(--web-eyebrow); letter-spacing: 0.18em; text-transform: uppercase; color: var(--recipe-accent); }
+      .eyebrow a:hover { color: var(--recipe-ink); }
+      .hero { padding-block: var(--stack-lg) var(--stack-md); }
+      .hero h1 { font: var(--web-display-lg); letter-spacing: -0.015em; margin: var(--stack-sm) 0 0; }
+      .lede { color: var(--muted-strong); max-width: 60ch; margin-top: var(--stack-sm); }
+      .deck-list { list-style: none; padding: 0; margin: var(--stack-md) 0 0; display: flex; flex-direction: column; gap: 1px; }
+      .deck-row { display: grid; grid-template-columns: 1fr auto; gap: var(--stack-md); align-items: center; padding: var(--stack-md); background: var(--row-bg); border-radius: 8px; }
+      .deck-row:hover { background: var(--row-bg-hover); }
+      .deck-open { display: grid; grid-template-columns: auto 1fr; gap: var(--stack-md); align-items: baseline; min-width: 0; }
+      .deck-open:hover { color: var(--recipe-accent); }
+      .deck-date { font: var(--web-meta); color: var(--muted); font-variant-numeric: tabular-nums; }
+      .deck-title { font: var(--web-display-sm); margin: 0; }
+      .deck-subtitle { display: block; font: var(--web-meta); color: var(--muted-strong); margin-top: 4px; }
+      .deck-actions { display: flex; gap: 8px; flex-shrink: 0; }
+      .deck-action { font: var(--web-eyebrow); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; padding: 8px 12px; border: 1px solid var(--hairline); border-radius: 6px; transition: color 0.12s, border-color 0.12s; }
+      .deck-action:hover { color: var(--recipe-accent); border-color: var(--recipe-accent); }
+      .footer { margin-top: var(--stack-lg); padding-block: var(--stack-md) var(--stack-lg); border-top: 1px solid var(--hairline); }
+      .footer p { margin: 0; font: var(--web-meta); color: var(--muted); }
+      .footer a { color: var(--muted-strong); }
+      .footer a:hover { color: var(--recipe-accent); }
+      @media (max-width: 600px) {
+        .deck-row { grid-template-columns: 1fr; gap: var(--stack-sm); }
+        .deck-open { grid-template-columns: 1fr; gap: 4px; }
+        .deck-actions { flex-wrap: wrap; }
+        .deck-action { flex: 1 1 auto; text-align: center; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header class="hero">
+        <p class="eyebrow"><a href="/">Chimichurri Code · Charlas</a> · {{ talk.editions | length }} ediciones</p>
+        <h1>{{ talk.title }}</h1>
+        {% if talk.subtitle %}<p class="lede">{{ talk.subtitle }}</p>{% endif %}
+      </header>
+
+      <ul class="deck-list">
+        {% for deck in talk.editions %}
+          <li>
+            <div class="deck-row">
+              <a class="deck-open" href="/talks/decks/{{ deck.slug }}/">
+                <span class="deck-date">{{ deck.month }}</span>
+                <span>
+                  <span class="deck-title">{{ deck.edition or deck.slug }}</span>
+                  <span class="deck-subtitle">Ver el índice de slides</span>
+                </span>
+              </a>
+              <span class="deck-actions">
+                <a class="deck-action" href="/talks/decks/{{ deck.slug }}/deck/">▶ Present</a>
+                <a class="deck-action" href="/talks/decks/{{ deck.slug }}/speaker/">◉ Present + notes</a>
+              </span>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <footer class="footer">
+        <p><a href="/">← volver al inicio</a></p>
+      </footer>
+    </main>
+    {% include "partials/analytics.njk" %}
+  </body>
+</html>
