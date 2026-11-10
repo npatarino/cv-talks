@@ -141,12 +141,13 @@ Errores: `400` entrada inválida (slug, nombre de fichero, cuerpo, tipo de image
 
 ```
 decks/<slug>/
-├── <slug>.11tydata.json   tags, permalink, deck{title,subtitle,author,date}, eleventyComputed
+├── <slug>.11tydata.json   tags, permalink, deck{title,subtitle,author,date,talk?,edition?}, eleventyComputed
 ├── deck.config.json       { slides: [ordered filenames], structure?: {...} }
 ├── index.njk · deck.njk · speaker.njk
 └── slides/<name>.md       una slide; assets en slides/assets/
 ```
 
+- **Una charla, varias ediciones.** Si la misma charla se da más de una vez, cada vez es un deck propio con `deck.edition` ("CommitConf 2026") y todas comparten `deck.talk` (clave de agrupación). `theme/lib/talks.mjs` las agrupa en el global `talks`: el índice muestra una fila por charla, fechada con el mes y año de la edición más reciente, y `/talks/<talk>/` deja elegir edición. Sin `talk`, el deck es una charla de una sola edición.
 - **El orden vive en `deck.config.json`** (`slides`), no en el nombre del fichero ni en el frontmatter. `readSlides` calcula `order` (1-based) a partir de ahí; las slides que no aparecen en la lista van al final.
 - `structure` (opcional) define secciones contiguas sobre las posiciones: `{ id, label, description, start, end, children? }`. Siempre teselan el deck de 1 a N; al crear o borrar slides los límites se desplazan.
 - Una slide:

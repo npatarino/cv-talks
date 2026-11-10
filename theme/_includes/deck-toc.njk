@@ -29,7 +29,7 @@
 <div class="mode-flag">Mode · {{ site.mode }}</div>
 <h1>{{ deck.title }}</h1>
 <p style="font-family: var(--font-editorial); font-style: italic; font-size: 22px; opacity: 0.7; max-width: 60ch; margin-bottom: 48px;">
-  {% if deck.author %}Charla de {{ deck.author }} · {% endif %}{{ slides | length }} slides.
+  {% if deck.edition %}{{ deck.edition }} · {% endif %}{% if deck.author %}Charla de {{ deck.author }} · {% endif %}{{ slides | length }} slides.
 </p>
 <div class="toc">
   {% for slide in slides %}

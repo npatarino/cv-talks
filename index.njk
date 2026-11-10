@@ -82,6 +82,7 @@ layout: false
       .deck-date { font: var(--web-meta); color: var(--muted); font-variant-numeric: tabular-nums; }
       .deck-title { font: var(--web-display-sm); margin: 0; }
       .deck-subtitle { display: block; font: var(--web-meta); color: var(--muted-strong); margin-top: 4px; }
+      .deck-editions { display: block; font: var(--web-eyebrow); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
       .deck-actions { display: flex; gap: 8px; flex-shrink: 0; }
       .deck-action {
         font: var(--web-eyebrow);
@@ -145,19 +146,26 @@ layout: false
       </header>
 
       <ul class="deck-list">
-        {% for deck in decks %}
+        {% for talk in talks %}
+          {% set many = talk.editions | length > 1 %}
+          {% set openHref = ("/talks/" + talk.key + "/") if many else ("/talks/decks/" + talk.latest.slug + "/") %}
           <li>
             <div class="deck-row">
-              <a class="deck-open" href="/talks/decks/{{ deck.slug }}/">
-                <span class="deck-date">{{ deck.date or deck.slug.split('-')[0] }}</span>
+              <a class="deck-open" href="{{ openHref }}">
+                <span class="deck-date">{{ talk.month or talk.key.split('-')[0] }}</span>
                 <span>
-                  <span class="deck-title">{{ deck.title or deck.slug }}</span>
-                  {% if deck.subtitle %}<span class="deck-subtitle">{{ deck.subtitle }}</span>{% endif %}
+                  <span class="deck-title">{{ talk.title }}</span>
+                  {% if talk.subtitle %}<span class="deck-subtitle">{{ talk.subtitle }}</span>{% endif %}
+                  {% if many %}<span class="deck-editions">{{ talk.editions | length }} ediciones · última: {{ talk.latest.edition or talk.latest.slug }}</span>{% endif %}
                 </span>
               </a>
               <span class="deck-actions">
-                <a class="deck-action" href="/talks/decks/{{ deck.slug }}/deck/">▶ Present</a>
-                <a class="deck-action" href="/talks/decks/{{ deck.slug }}/speaker/">◉ Present + notes</a>
+                {% if many %}
+                  <a class="deck-action" href="{{ openHref }}">▸ Elegir edición</a>
+                {% else %}
+                  <a class="deck-action" href="/talks/decks/{{ talk.latest.slug }}/deck/">▶ Present</a>
+                  <a class="deck-action" href="/talks/decks/{{ talk.latest.slug }}/speaker/">◉ Present + notes</a>
+                {% endif %}
               </span>
             </div>
           </li>
