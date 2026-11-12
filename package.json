@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@chimichurricode/analytics": "^0.1.0",
-    "@chimichurricode/design-system": "^0.7.6"
+    "@chimichurricode/design-system": "^0.9.1"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
