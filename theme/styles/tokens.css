@@ -122,7 +122,7 @@
   --patagonia-deep: var(--chimi-primitives-color-patagonia-base);
   --patagonia-soft: var(--chimi-primitives-color-patagonia-soft);
   --lemon:          var(--chimi-primitives-color-lemon-base);
-  --red:            var(--chimi-primitives-color-red-base);
+  --red:            var(--chimi-primitives-color-wada-base);
 
   --font-display:   var(--chimi-font-family-display);
   --font-ui:        var(--chimi-font-family-body);
