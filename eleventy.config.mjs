@@ -17,7 +17,16 @@ import { parseBigList } from './theme/lib/big-list.mjs';
 import { groupTalks } from './theme/lib/talks.mjs';
 
 export default function (eleventyConfig) {
-  eleventyConfig.addFilter('seoHead', (props) => renderSEOHeadHTML(props));
+  // Talks serves the fonts from /talks/styles/fonts/ (theme/styles/tokens.css),
+  // not /fonts/, and its pages have no SiteHeader, so the design system's
+  // preload sets don't fit. Default: the faces the index pages paint above
+  // the fold (measured). A page can pass its own `preloadFontUrls`.
+  const TALKS_FONTS = '/talks/styles/fonts/';
+  const INDEX_PRELOADS = ['CHANEY-Extended', 'AtAero-Medium', 'NudicaMono-Medium'].map((f) => `${TALKS_FONTS}${f}.woff2`);
+  eleventyConfig.addFilter('seoHead', (props) => renderSEOHeadHTML({
+    ...props,
+    preloadFontUrls: props.preloadFontUrls ?? INDEX_PRELOADS,
+  }));
   eleventyConfig.addFilter('seoJsonLd', (data, kind, siteId) =>
     buildJsonLd({ kind, siteId: siteId || 'talks', data }));
 

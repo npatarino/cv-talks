@@ -10,6 +10,7 @@
   pathname: deckUrl,
   isHome: false,
   og: { type: "article" },
+  preloadFontUrls: ["/talks/styles/fonts/CHANEY-Extended.woff2", "/talks/styles/fonts/ScillaNarrow-RegularItalic.woff2", "/talks/styles/fonts/NudicaMono-Regular.woff2"],
   jsonLd: [
     { "@context": "https://schema.org", "@type": "PresentationDigitalDocument", name: deck.title, description: deck.subtitle or "", url: "https://talks.chimi.pro" + deckUrl, datePublished: deck.date or "", inLanguage: "es", numberOfPages: (slides | length), author: { "@type": "Person", name: deck.author or "Nicolás Patarino", url: "https://chimi.pro/sobre-mi" } },
     { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
@@ -21,6 +22,7 @@
 <!doctype html>
 <html lang="es">
 <head>
+    <meta charset="utf-8" />
 {% include "partials/seo-head.njk" %}
 <link rel="stylesheet" href="{{ '/talks/styles/tokens.css' | url }}">
 <link rel="stylesheet" href="{{ '/talks/styles/base.css' | url }}">

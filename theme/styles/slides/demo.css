@@ -90,7 +90,7 @@ section.slide.s-demo {
   font-size: 54px; line-height: 1; margin-top: 6px;
 }
 .s-demo .browser .cards .c1 .v { color: var(--chimi-primitives-color-patagonia-base); }
-.s-demo .browser .cards .c2 .v { color: var(--chimi-primitives-color-red-base); }
+.s-demo .browser .cards .c2 .v { color: var(--chimi-primitives-color-wada-base); }
 .s-demo .browser .cards .c3 .v { color: var(--chimi-primitives-color-charcoal-100); }
 .s-demo .cap {
   margin-top: 22px;
