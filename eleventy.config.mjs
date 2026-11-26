@@ -84,6 +84,8 @@ export default function (eleventyConfig) {
   eleventyConfig.ignores.add('docs/**');
   eleventyConfig.ignores.add('.agents/**');
   eleventyConfig.ignores.add('.claude/**');
+  // Drafts and writing notes: kept in the repo, never published.
+  eleventyConfig.ignores.add('scratch/**');
   // The editor UI is served by editor/server.mjs from editor/ui, never from _site.
   eleventyConfig.ignores.add('editor/**');
 

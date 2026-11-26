@@ -6,7 +6,7 @@
 {% set seoProps = {
   site: "talks",
   title: deck.title,
-  description: deck.subtitle or ("Charla de " + (deck.author or "Nicolás Patarino") + " — " + (slides | length) + " slides."),
+  description: deck.subtitle or ("Charla de " + (deck.author or "Nicolás Patarino") + ", " + (slides | length) + " slides."),
   pathname: deckUrl,
   isHome: false,
   og: { type: "article" },

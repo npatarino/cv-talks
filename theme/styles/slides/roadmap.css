@@ -52,7 +52,8 @@ section.slide.s-roadmap {
 .s-roadmap .step.now::before {
   background: var(--recipe-em);
   border-color: var(--recipe-em);
-  box-shadow: 0 0 0 8px color-mix(in srgb, var(--recipe-em) 20%, transparent);
+  outline: 2px solid var(--recipe-em);
+  outline-offset: 6px;
 }
 
 .s-roadmap .step:nth-child(odd)  { padding-bottom: 18px; justify-content: flex-end; }

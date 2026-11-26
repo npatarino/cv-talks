@@ -6,7 +6,7 @@
       "name": "@chimichurricode/talks",
       "dependencies": {
         "@chimichurricode/analytics": "^0.1.0",
-        "@chimichurricode/design-system": "^0.9.1",
+        "@chimichurricode/design-system": "^0.11.0",
       },
       "devDependencies": {
         "@11ty/eleventy": "^3.0.0",
@@ -47,7 +47,7 @@
 
     "@chimichurricode/analytics": ["@chimichurricode/analytics@0.1.0", "", { "dependencies": { "web-vitals": "^4.2.0" } }, "sha512-XchHDYlS7AYjLebLOl+XLJiE0vFL2wQ7Kz9iOXrTHpKHP658G5ReVR3EXjasbINqvtXujlRxrexpmKA4fvQCcA=="],
 
-    "@chimichurricode/design-system": ["@chimichurricode/design-system@0.9.1", "", { "dependencies": { "node-html-parser": "^9.0.6", "postcss": "^8.4.0", "postcss-custom-media": "^12.0.0" }, "peerDependencies": { "astro": "^5.0.0 || ^6.0.0 || ^7.0.0" }, "optionalPeers": ["astro"], "bin": { "chimi-fetch-fonts": "scripts/fetch-fonts.mjs" } }, "sha512-zGT9jywmLStZ0byIKtsYVcg5rbMUnIp/fl7j33Q3aeegxxwszIDMcKLPvgtYlELi0S0dafe+SSDgVFTHCE7vdQ=="],
+    "@chimichurricode/design-system": ["@chimichurricode/design-system@0.11.0", "", { "dependencies": { "node-html-parser": "^9.0.6", "postcss": "^8.4.0", "postcss-custom-media": "^12.0.0" }, "peerDependencies": { "astro": "^5.0.0 || ^6.0.0 || ^7.0.0" }, "optionalPeers": ["astro"], "bin": { "chimi-check-slop": "scripts/check-slop.mjs", "chimi-check-prose": "scripts/check-prose.mjs", "chimi-fetch-fonts": "scripts/fetch-fonts.mjs" } }, "sha512-twTBrBN+AKopszi8IzfBf9pQZYppKzJlbgdkkDptDXqHK63M32LEFT1Xk/A5ODLjIAJowaquWzomBtVviGpQwQ=="],
 
     "@csstools/cascade-layer-name-parser": ["@csstools/cascade-layer-name-parser@3.0.2", "", { "peerDependencies": { "@csstools/css-parser-algorithms": "^4.0.2", "@csstools/css-tokenizer": "^4.0.2" } }, "sha512-B731RJ9pfJj3D5GJPp8ccsaaHMdwBmlOb4QWAYQUFpmMxonxJvNeeIoo0E89CjMJaKDvQXy9MKpSXY/i7XgeFA=="],
 

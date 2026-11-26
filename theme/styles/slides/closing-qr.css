@@ -40,10 +40,10 @@ section.slide.s-closing-qr {
   justify-self: end; width: 100%; max-width: 440px;
 }
 .s-closing-qr .qr .grid {
-  flex: 1; background-image:
-    linear-gradient(90deg, var(--chimi-primitives-color-ivory-base) 0 12%, transparent 12% 20%, var(--chimi-primitives-color-ivory-base) 20% 28%, transparent 28% 40%, var(--chimi-primitives-color-ivory-base) 40% 52%, transparent 52% 60%, var(--chimi-primitives-color-ivory-base) 60% 72%, transparent 72% 84%, var(--chimi-primitives-color-ivory-base) 84% 100%),
-    linear-gradient(0deg, var(--chimi-primitives-color-ivory-base) 0 8%, transparent 8% 16%, var(--chimi-primitives-color-ivory-base) 16% 32%, transparent 32% 44%, var(--chimi-primitives-color-ivory-base) 44% 56%, transparent 56% 72%, var(--chimi-primitives-color-ivory-base) 72% 80%, transparent 80% 92%, var(--chimi-primitives-color-ivory-base) 92% 100%);
-  background-size: 100% 100%; background-blend-mode: multiply;
+  /* QR placeholder: ivory field with charcoal modules, drawn as an SVG
+     (flat fills, no gradients). */
+  flex: 1;
+  background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><rect width='100' height='100' fill='%23FAFAF8'/><g fill='%231C1C1C'><rect x='12' y='84' width='8' height='8'/><rect x='12' y='56' width='8' height='12'/><rect x='12' y='28' width='8' height='16'/><rect x='12' y='8' width='8' height='12'/><rect x='28' y='84' width='12' height='8'/><rect x='28' y='56' width='12' height='12'/><rect x='28' y='28' width='12' height='16'/><rect x='28' y='8' width='12' height='12'/><rect x='52' y='84' width='8' height='8'/><rect x='52' y='56' width='8' height='12'/><rect x='52' y='28' width='8' height='16'/><rect x='52' y='8' width='8' height='12'/><rect x='72' y='84' width='12' height='8'/><rect x='72' y='56' width='12' height='12'/><rect x='72' y='28' width='12' height='16'/><rect x='72' y='8' width='12' height='12'/></g></svg>") center / 100% 100% no-repeat;
 }
 .s-closing-qr .qr .cap {
   font-family: var(--font-mono); font-size: 18px;

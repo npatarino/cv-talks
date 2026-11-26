@@ -18,3 +18,7 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run test
       - run: bun run build
+      # Strict. The --max values in package.json cover only the slides that
+      # reproduce real-world pieces; any new finding fails the build.
+      - run: bun run check:slop
+      - run: bun run check:prose

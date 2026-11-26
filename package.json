@@ -20,6 +20,10 @@
     "decks:format": "bun scripts/format-decks.mjs",
     "decks:format-check": "bun scripts/format-decks.mjs --check",
 
+    "// ----- CHECKS DE MARCA -----": "Estrictos. Los --max cubren solo las slides que reproducen piezas reales (carta FIFA, Eventbrite, ofertas, calendario, scores, halo, pictograma Jevons, cita en inglés y viñetas con emoji); cualquier caso nuevo falla",
+    "check:slop": "node node_modules/@chimichurricode/design-system/scripts/check-slop.mjs --strict --max gradients=7 --max side-borders=1 --max stat-rows=1 _site",
+    "check:prose": "node node_modules/@chimichurricode/design-system/scripts/check-prose.mjs --strict --max rayas=5 --max emoji-icono=44 _site",
+
     "// ----- TESTING -----": "Pruebas unitarias, cobertura y E2E",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -28,7 +32,7 @@
   },
   "dependencies": {
     "@chimichurricode/analytics": "^0.1.0",
-    "@chimichurricode/design-system": "^0.9.1"
+    "@chimichurricode/design-system": "^0.11.0"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",

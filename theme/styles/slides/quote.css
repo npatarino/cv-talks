@@ -62,7 +62,6 @@ section.slide.s-quote {
 .s-quote.punch .cite {
   margin-top: 72px;
   padding-left: 28px;
-  border-left: 4px solid var(--recipe-accent);
 }
 .s-quote.punch .cite .who {
   color: var(--recipe-accent);

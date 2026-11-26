@@ -61,24 +61,25 @@
     padding: 8px 16px; font-family: var(--font-mono); font-size: 13px;
     letter-spacing: 0.15em; text-transform: uppercase;
     background: var(--charcoal-90); color: var(--ivory); opacity: 0.7;
-    border-left: 3px solid var(--lemon); pointer-events: none;
+    pointer-events: none;
     z-index: 100;
   }
   body.fullscreen .deck-hud { display: none; }
   .deck-hud.remote-ok::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #02b5b9; margin-right: 10px; vertical-align: middle; }
   .deck-hud.remote-ko::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ff2079; margin-right: 10px; vertical-align: middle; }
-  .deck-hud[data-remote]::after { content: " · 📱 " attr(data-remote); }
+  .deck-hud[data-remote]::after { content: " · mando " attr(data-remote); }
   /* Estado de la precarga offline (ver offline.mjs): esquina inferior derecha. */
   .deck-offline {
     position: fixed; bottom: 20px; right: 20px;
     padding: 8px 16px; font-family: var(--font-mono); font-size: 13px;
     letter-spacing: 0.15em; text-transform: uppercase;
     background: var(--charcoal-90); color: var(--ivory); opacity: 0.7;
-    border-left: 3px solid var(--patagonia); pointer-events: none; z-index: 100;
+    pointer-events: none; z-index: 100;
   }
-  .deck-offline[data-state="ok"]   { border-left-color: #02b5b9; }
-  .deck-offline[data-state="bad"]  { border-left-color: #ff2079; }
-  .deck-offline[data-state="warn"] { border-left-color: var(--lemon); }
+  /* State as a dot before the label, like the remote HUD: never a coloured side rule. */
+  .deck-offline[data-state]::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--patagonia); margin-right: 10px; vertical-align: middle; }
+  .deck-offline[data-state="bad"]::before  { background: #ff2079; }
+  .deck-offline[data-state="warn"]::before { background: var(--lemon); }
   body.fullscreen .deck-offline { display: none; }
   .remote-panel { position: fixed; inset: 0; z-index: 50; background: rgba(28,28,28,.96); color: #fafaf8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; font-family: var(--font-mono, monospace); }
   .remote-panel .remote-qr { background: #fafaf8; padding: 20px; }
@@ -132,8 +133,8 @@
 </div>
 
 <div class="deck-controls">
-  <button data-action="fullscreen" title="F · Fullscreen">⛶ Fullscreen</button>
-  <button data-action="remote" title="R · Mando desde el móvil">📱 Mando</button>
+  <button data-action="fullscreen" title="F · Pantalla completa">Pantalla completa</button>
+  <button data-action="remote" title="R · Mando desde el móvil">Mando</button>
 </div>
 <div class="deck-hud" id="deck-hud">— / —</div>
 <div class="deck-offline" id="deck-offline" hidden></div>
