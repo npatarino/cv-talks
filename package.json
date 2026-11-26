@@ -20,6 +20,10 @@
     "decks:format": "bun scripts/format-decks.mjs",
     "decks:format-check": "bun scripts/format-decks.mjs --check",
 
+    "// ----- CHECKS DE MARCA -----": "Informan sin fallar: las slides todavía tienen hallazgos (ver CI)",
+    "check:slop": "node node_modules/@chimichurricode/design-system/scripts/check-slop.mjs _site",
+    "check:prose": "node node_modules/@chimichurricode/design-system/scripts/check-prose.mjs _site",
+
     "// ----- TESTING -----": "Pruebas unitarias, cobertura y E2E",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -28,7 +32,7 @@
   },
   "dependencies": {
     "@chimichurricode/analytics": "^0.1.0",
-    "@chimichurricode/design-system": "^0.9.1"
+    "@chimichurricode/design-system": "^0.11.0"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
