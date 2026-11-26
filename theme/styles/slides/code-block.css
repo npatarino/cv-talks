@@ -17,13 +17,11 @@ section.slide.s-code-block {
   margin: 0;
   background: color-mix(in srgb, var(--recipe-ink) 6%, transparent);
   padding: 28px 0;
-  border-left: 10px solid var(--recipe-accent);
   font-family: var(--font-mono); font-size: 22px; line-height: 1.5; overflow: hidden;
 }
 
-/* Anti · marca con --recipe-warn (red). */
+/* Anti · marca con --recipe-warn (wada) en la tinta, sin regla lateral. */
 .s-code-block.anti pre.code {
-  border-left-color: var(--recipe-warn);
   color: var(--recipe-warn);
   font-size: 36px; line-height: 1.5; padding: 44px 56px;
 }
